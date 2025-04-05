@@ -20,10 +20,10 @@ const buttonVariants = cva(
         "outline-gray": "border-gray-500 !text-gray-200",
       },
       size: {
-        sm: "!px-[16px] !h-[36px] rounded-[8px] text-s font-medium",
-        md: "!px-[24px] !h-[44px] rounded-[8px] text-sm font-medium",
-        lg: "!px-[24px] !h-[48px] rounded-[12px] text-[15px] font-semibold",
-        xl: "!px-[32px] !h-[56px] rounded-[12px] text-base font-semibold",
+        sm: "px-[16px] h-[36px] rounded-[8px] text-s font-medium",
+        md: "px-[24px] h-[44px] rounded-[8px] text-sm font-medium",
+        lg: "px-[24px] h-[48px] rounded-[12px] text-[15px] font-semibold",
+        xl: "px-[32px] h-[56px] rounded-[12px] text-base font-semibold",
       },
     },
     defaultVariants: {
