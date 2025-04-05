@@ -13,7 +13,12 @@
     "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/lines-between-class-members": "off",
-    "@typescript-eslint/no-throw-literal": "off"
+    "@typescript-eslint/no-throw-literal": "off",
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "import", "next": "*" },
+      { "blankLine": "any", "prev": "import", "next": "import" }
+    ]
   },
   "parser": "@typescript-eslint/parser"
 }
