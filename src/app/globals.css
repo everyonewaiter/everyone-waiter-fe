@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
 @theme {
   /* Colors */
   --color-primary: #F22020;
@@ -52,4 +59,13 @@
   --breakpoint-sm: 360px;
   --breakpoint-md: 960px;
   --breakpoint-lg: 1920px;
+
+  /* FontWeight */
+  --font-weight-regular: 400
+}
+
+@layer {
+  body {
+    font-family: Pretendard;
+  }
 }
