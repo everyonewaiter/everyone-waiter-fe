@@ -41,7 +41,7 @@ export default function Login() {
           <input
             id="email"
             placeholder="이메일을 입력해주세요."
-            className="md:text-s sm:text-s"
+            className="md:text-s sm:text-s flex grow-1 border border-gray-600 placeholder:text-gray-300 sm:h-9 sm:rounded-[8px] sm:px-3 md:h-9 md:rounded-[8px] md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:pr-3 lg:pl-4 lg:text-[15px]"
             {...register("email")}
           />
         </div>
@@ -56,7 +56,7 @@ export default function Login() {
             id="password"
             type="password"
             placeholder="비밀번호를 입력해주세요."
-            className="md:text-s sm:text-s"
+            className="md:text-s sm:text-s flex grow-1 border border-gray-600 placeholder:text-gray-300 sm:h-9 sm:rounded-[8px] sm:px-3 md:h-9 md:rounded-[8px] md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:pr-3 lg:pl-4 lg:text-[15px]"
             {...register("password")}
           />
         </div>

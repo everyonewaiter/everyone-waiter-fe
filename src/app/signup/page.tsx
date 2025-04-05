@@ -73,7 +73,7 @@ export default function Signup() {
           <input
             id="email"
             placeholder="이메일을 입력해주세요."
-            className="md:text-s sm:text-s flex grow-1 lg:text-[15px]"
+            className="md:text-s sm:text-s flex grow-1 border border-gray-600 placeholder:text-gray-300 sm:h-9 sm:rounded-[8px] sm:px-3 md:h-9 md:rounded-[8px] md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:pr-3 lg:pl-4 lg:text-[15px]"
             {...register("email", {
               required: true,
             })}
@@ -101,7 +101,7 @@ export default function Signup() {
               id="phone"
               type="tel"
               placeholder="휴대폰번호를 입력해주세요. (-없이 숫자만 입력)"
-              className="md:text-s sm:text-s flex grow-1 lg:text-[15px]"
+              className="md:text-s sm:text-s flex grow-1 border border-gray-600 placeholder:text-gray-300 sm:h-9 sm:rounded-[8px] sm:px-3 md:h-9 md:rounded-[8px] md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:pr-3 lg:pl-4 lg:text-[15px]"
               {...register("phone", {
                 required: true,
                 pattern: {
@@ -137,7 +137,7 @@ export default function Signup() {
               id="authNumber"
               type="tel"
               placeholder="인증번호를 입력해주세요."
-              className="md:text-s sm:text-s w-full pr-12 lg:text-[15px]"
+              className="md:text-s sm:text-s flex grow-1 border border-gray-600 placeholder:text-gray-300 sm:h-9 sm:rounded-[8px] sm:px-3 md:h-9 md:rounded-[8px] md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:pr-3 lg:pl-4 lg:text-[15px]"
               {...register("authNumber")}
             />
             {isAuthSubmitted && (
@@ -166,7 +166,7 @@ export default function Signup() {
           <input
             id="password"
             placeholder="비밀번호를 입력해주세요."
-            className="md:text-s sm:text-s flex grow-1 lg:text-[15px]"
+            className="md:text-s sm:text-s flex grow-1 border border-gray-600 placeholder:text-gray-300 sm:h-9 sm:rounded-[8px] sm:px-3 md:h-9 md:rounded-[8px] md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:pr-3 lg:pl-4 lg:text-[15px]"
             {...register("password", {
               required: true,
               minLength: {
@@ -203,7 +203,7 @@ export default function Signup() {
           <input
             id="confirm"
             placeholder="비밀번호를 다시 입력해주세요."
-            className="md:text-s sm:text-s flex grow-1 lg:text-[15px]"
+            className="md:text-s sm:text-s flex grow-1 border border-gray-600 placeholder:text-gray-300 sm:h-9 sm:rounded-[8px] sm:px-3 md:h-9 md:rounded-[8px] md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:pr-3 lg:pl-4 lg:text-[15px]"
             {...register("confirm", {
               required: true,
             })}
@@ -238,7 +238,7 @@ export default function Signup() {
           type="submit"
           color="primary"
           size="lg"
-          className="sm:font-regular w-full sm:h-9 md:mt-6 md:mb-6 lg:mt-8"
+          className="sm:font-regular w-full sm:h-9 md:mt-6 md:mb-6 lg:mt-8 lg:h-12"
           disabled={!isConsentGiven}
         >
           가입하기
