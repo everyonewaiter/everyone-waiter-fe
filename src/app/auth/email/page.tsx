@@ -8,7 +8,9 @@ export default function EmailError() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
 
-  if (!["401", "403"].includes(code!)) return null;
+  if (!["401", "403"].includes(code!)) {
+    window.location.href = "/";
+  }
 
   return (
     <>
