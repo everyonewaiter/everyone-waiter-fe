@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable no-alert */
 import { Button } from "@/components/common/Button";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,14 +11,19 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/common/Form";
+} from "@/components/common/form";
 import Input from "@/components/common/Input";
 import { Info } from "lucide-react";
 import { loginSchema, TypeLogin } from "@/schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/lib/api/auth.api";
+import { useRouter } from "next/navigation";
+import { setCookie } from "@/lib/cookies";
 import SignupLayout from "../signup/layout";
 
 export default function Login() {
+  const navigate = useRouter();
   const form = useForm<TypeLogin>({
     mode: "onChange",
     resolver: zodResolver(loginSchema),
@@ -26,6 +32,25 @@ export default function Login() {
       password: "",
     },
   });
+  const { mutate } = useMutation({
+    mutationFn: login,
+  });
+
+  const submitHandler = (formData: Pick<TAccount, "email" | "password">) => {
+    mutate(formData, {
+      onSuccess: (data) => {
+        alert("로그인 되었습니다.");
+        setCookie("accessToken", data.accessToken);
+        setCookie("refreshToken", data.refreshToken);
+        navigate.push("/");
+      },
+      onError: (error) => {
+        const { message } = (error as any).response.data;
+        form.setError("email", { message });
+        form.setError("password", { message });
+      },
+    });
+  };
 
   return (
     <SignupLayout>
@@ -39,10 +64,7 @@ export default function Login() {
       <Form {...form}>
         <form
           className="mt-12 flex flex-col sm:w-[320px] md:w-[292px] lg:w-[432px]"
-          onSubmit={form.handleSubmit((data) => {
-            // 여기에 로그인 처리 로직 추가
-            console.log(data);
-          })}
+          onSubmit={form.handleSubmit(submitHandler)}
         >
           <FormField
             control={form.control}

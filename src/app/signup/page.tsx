@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable no-alert */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import {
@@ -9,17 +11,21 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/common/Form";
+} from "@/components/common/form";
 import Input from "@/components/common/Input";
+import useSignup from "@/hooks/useSignup";
 import { TypeSignup, signupSchema } from "@/schema/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function Signup() {
+  const navigate = useRouter();
   const [isAuthSubmitted, setIsAuthSubmitted] = useState(false);
+  const [isPhoneAuthenticated, setIsPhoneAuthenticated] = useState(false);
   const [isConsentGiven, setIsConsentGiven] = useState(false);
   const [authTime, setAuthTime] = useState(300);
   const form = useForm<TypeSignup>({
@@ -34,6 +40,10 @@ export default function Signup() {
     },
   });
 
+  const { mutateSendPhoneAuthCode, mutateVerifyAuthCode, mutateSignup } =
+    useSignup({ form, setIsPhoneAuthenticated, setAuthTime });
+
+  // NOTE - 타이머
   useEffect(() => {
     const interval = setInterval(() => {
       setAuthTime((prev) => {
@@ -49,7 +59,57 @@ export default function Signup() {
     return () => clearInterval(interval);
   }, [isAuthSubmitted]);
 
-  const submitHandler = () => {};
+  // NOTE - 비밀번호, 비밀번호 확인 비교 및 에러 표시
+  useEffect(() => {
+    const password = form.watch("password");
+    const confirm = form.watch("confirm");
+
+    if (password.length > 0 && confirm!.length > 0 && password !== confirm) {
+      form.setError("confirm", { message: "비밀번호가 일치하지 않습니다." });
+    } else {
+      form.clearErrors("confirm");
+    }
+  }, [form.watch("password"), form.watch("confirm")]);
+
+  const submitHandler = (data: TypeSignup) => {
+    mutateSignup(
+      {
+        email: data.email,
+        password: data.password,
+        phoneNumber: data.phone,
+      },
+      {
+        onSuccess: () => {
+          navigate.push(`/signup/completed?email=${data.email}`);
+        },
+      }
+    );
+  };
+
+  // NOTE - 인증 요청
+  const handleAuthentication = (phoneNumber: string) => {
+    setAuthTime(300);
+    setIsAuthSubmitted(true);
+    mutateSendPhoneAuthCode({ phoneNumber });
+  };
+
+  // NOTE - 인증 확인
+  const handleCheckAuth = (value: string) => {
+    mutateVerifyAuthCode(
+      {
+        phoneNumber: form.getValues("phone"),
+        code: Number(value),
+      },
+      {
+        onSuccess: () => {
+          alert("인증되었습니다.");
+          setAuthTime(0);
+          setIsAuthSubmitted(false);
+          setIsPhoneAuthenticated(true);
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -115,11 +175,11 @@ export default function Signup() {
                     color="black"
                     size="lg"
                     className="md:text-s sm:font-regular font-semibold sm:h-10 sm:w-[94px] sm:text-sm md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px] lg:text-[15px]"
-                    disabled={!isAuthSubmitted && !form.watch("phone")?.length}
-                    onClick={() => {
-                      setIsAuthSubmitted(true);
-                      setAuthTime(300);
-                    }}
+                    disabled={
+                      (!isAuthSubmitted && !form.watch("phone")?.length) ||
+                      isPhoneAuthenticated
+                    }
+                    onClick={() => handleAuthentication(field.value)}
                   >
                     {isAuthSubmitted ? "재인증" : "인증요청"}
                   </Button>
@@ -139,18 +199,19 @@ export default function Signup() {
             render={({ field }) => (
               <FormItem className="flex w-full flex-col gap-1">
                 <FormLabel>인증 번호</FormLabel>
-                <div className="flex gap-3">
+                <div className="relative flex gap-3">
                   <FormControl>
                     <Input
-                      type="number"
                       placeholder="인증 번호를 입력해주세요."
                       className="flex grow-1 placeholder:text-gray-300"
                       hasError={!!form.formState.errors.authNumber?.message}
+                      disabled={isPhoneAuthenticated}
                       {...field}
                     />
                   </FormControl>
-                  {isAuthSubmitted && (
-                    <div className="font-regular absolute top-0 right-0 text-[15px] text-gray-200">
+                  {isAuthSubmitted && !authTime && (
+                    <div className="font-regular absolute top-1/2 right-0 -translate-y-1/2 transform text-[15px] text-gray-200 transition-all duration-300 ease-in-out sm:right-25 sm:mt-[-2px]">
+                      {" "}
                       {`${String(Math.floor(authTime / 60)).padStart(2, "0")}:${String(authTime % 60).padStart(2, "0")}`}
                     </div>
                   )}
@@ -159,7 +220,8 @@ export default function Signup() {
                     color="black"
                     size="lg"
                     className="md:text-s sm:font-regular text-[15px] font-semibold sm:h-10 sm:w-[94px] md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px]"
-                    disabled={!isAuthSubmitted}
+                    disabled={!isAuthSubmitted || isPhoneAuthenticated}
+                    onClick={() => handleCheckAuth(field.value!)}
                   >
                     확인
                   </Button>
