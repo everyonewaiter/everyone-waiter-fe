@@ -26,19 +26,7 @@ export const signupSchema = z.object({
     )
     .trim()
     .min(1, "비밀번호는 필수입니다."),
-  confirm: z
-    .string()
-    .optional()
-    .refine(
-      (val) =>
-        !val ||
-        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(
-          val
-        ),
-      {
-        message: "영문, 숫자, 특수문자를 조합하여 8자리 이상이어야 합니다.",
-      }
-    ),
+  confirm: z.string().optional(),
 });
 
 export type TypeSignup = z.infer<typeof signupSchema>;

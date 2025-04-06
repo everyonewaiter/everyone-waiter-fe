@@ -18,7 +18,8 @@
       "error",
       { "blankLine": "always", "prev": "import", "next": "*" },
       { "blankLine": "any", "prev": "import", "next": "import" }
-    ]
+    ],
+    "import/no-cycle": "off"
   },
   "parser": "@typescript-eslint/parser"
 }
