@@ -1,6 +1,12 @@
+"use client";
+
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 export default function SignupCompleted() {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+
   return (
     <div className="mt-[-100px] flex h-full w-full flex-col items-center justify-center gap-6 text-center md:mt-[-20px]">
       <Image
@@ -16,7 +22,7 @@ export default function SignupCompleted() {
         </p>
         {/* Show at Mobile - start */}
         <div className="mt-4 mb-5 hidden items-center justify-center rounded-[12px] bg-gray-700 text-gray-300 sm:flex sm:h-14 md:h-[51px] md:w-[292px] md:text-lg md:font-medium lg:h-[60px] lg:w-[432px] lg:text-xl">
-          asdfasdf@gmail.com
+          {email}
         </div>
         <div className="font-regular hidden flex-col gap-1 text-center text-gray-300 sm:flex sm:text-sm">
           <span className="text-base font-medium text-[#191919]">
