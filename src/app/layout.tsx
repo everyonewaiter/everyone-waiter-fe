@@ -7,6 +7,9 @@ import QueryProviders from "./query-providers";
 export const metadata: Metadata = {
   title: "모두의 웨이터",
   description: "모두의 웨이터",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
@@ -18,7 +21,6 @@ export default function RootLayout({
     <html lang="en">
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/x-icon" href="/logo.ico" />
       </Head>
       <body>
         <QueryProviders>{children}</QueryProviders>
