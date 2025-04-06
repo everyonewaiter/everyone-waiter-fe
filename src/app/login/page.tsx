@@ -1,7 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import { Button } from "@/components/common/Button";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,6 +21,10 @@ export default function Login() {
   const form = useForm<TypeLogin>({
     mode: "onChange",
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   return (
@@ -37,7 +39,10 @@ export default function Login() {
       <Form {...form}>
         <form
           className="mt-12 flex flex-col sm:w-[320px] md:w-[292px] lg:w-[432px]"
-          // onSubmit={handleSubmit(submitHandler)}
+          onSubmit={form.handleSubmit((data) => {
+            // 여기에 로그인 처리 로직 추가
+            console.log(data);
+          })}
         >
           <FormField
             control={form.control}
