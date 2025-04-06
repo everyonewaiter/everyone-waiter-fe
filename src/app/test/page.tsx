@@ -10,6 +10,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/common/form";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/common/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -57,6 +65,32 @@ export default function Page() {
           Submit
         </Button>
       </form>
+      <div className="my-4">
+        <Select>
+          <SelectTrigger className="w-[290px]">
+            <SelectValue placeholder="Dropdown" />
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="apple">Apple</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="orange">Orange</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </SelectTrigger>
+        </Select>
+      </div>
+      <Select>
+        <SelectTrigger disabled className="w-[290px]">
+          <SelectValue placeholder="Dropdown" />
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="apple">Apple</SelectItem>
+              <SelectItem value="banana">Banana</SelectItem>
+              <SelectItem value="orange">Orange</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </SelectTrigger>
+      </Select>
     </div>
   );
 }
