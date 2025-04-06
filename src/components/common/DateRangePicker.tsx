@@ -6,7 +6,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/common/popover";
+} from "@/components/common/Popover";
 import cn from "@/lib/utils";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -27,8 +27,7 @@ export default function DatePickerWithRange({
         <PopoverTrigger asChild>
           <Button
             id="date"
-            variant="outline"
-            color="black"
+            color="outline-black"
             className={cn(
               "w-[300px] justify-start text-left font-normal",
               !date && "text-muted-foreground"
@@ -45,7 +44,7 @@ export default function DatePickerWithRange({
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>YYYY.MM.DD ~ YYYY.MM.DD</span>
             )}
             <CalendarIcon />
           </Button>
