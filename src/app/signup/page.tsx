@@ -9,7 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/common/Form";
+} from "@/components/common/form";
 import Input from "@/components/common/Input";
 import { TypeSignup, signupSchema } from "@/schema/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,13 +56,13 @@ export default function Signup() {
       <Image
         src="/images/logo-with-text.svg"
         alt="logo with text"
-        className="sm:mb-5 md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
+        className="mb-5 md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
         width={154}
         height={94}
       />
       <Form {...form}>
         <form
-          className="flex gap-4 not-only:flex-col sm:w-[320px] md:mt-10 md:w-[292px] lg:mt-12 lg:w-[432px]"
+          className="flex w-[320px] gap-4 not-only:flex-col md:mt-10 md:w-[292px] lg:mt-12 lg:w-[432px]"
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FormField
@@ -81,12 +81,12 @@ export default function Signup() {
                 </FormControl>
 
                 {form.formState.errors.email?.message ? (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 sm:text-xs md:text-xs">
+                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
                     <Info className="stroke-error mb-[1px] h-4 w-4" />
                     {form.formState.errors.email.message}
                   </div>
                 ) : (
-                  <FormDescription className="lg:text-s text-gray-400 sm:text-xs md:text-xs">
+                  <FormDescription className="lg:text-s text-xs text-gray-400 md:text-xs">
                     이메일 인증 절차가 남아 있어요. 정확한 이메일을
                     입력해주세요!
                   </FormDescription>
@@ -114,7 +114,7 @@ export default function Signup() {
                     type="button"
                     color="black"
                     size="lg"
-                    className="md:text-s sm:font-regular font-semibold sm:h-10 sm:w-[94px] sm:text-sm md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px] lg:text-[15px]"
+                    className="md:text-s font-regular h-10 w-[94px] text-sm md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px] lg:text-[15px] lg:font-semibold"
                     disabled={!isAuthSubmitted && !form.watch("phone")?.length}
                     onClick={() => {
                       setIsAuthSubmitted(true);
@@ -125,7 +125,7 @@ export default function Signup() {
                   </Button>
                 </div>
                 {form.formState.errors.phone?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 sm:text-xs md:text-xs">
+                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
                     <Info className="stroke-error mb-[1px] h-4 w-4" />
                     {form.formState.errors.phone.message}
                   </div>
@@ -158,14 +158,14 @@ export default function Signup() {
                     type="button"
                     color="black"
                     size="lg"
-                    className="md:text-s sm:font-regular text-[15px] font-semibold sm:h-10 sm:w-[94px] md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px]"
+                    className="md:text-s font-regular h-10 w-[94px] text-[15px] md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px] lg:font-semibold"
                     disabled={!isAuthSubmitted}
                   >
                     확인
                   </Button>
                 </div>
                 {form.formState.errors.authNumber?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 sm:text-xs md:text-xs">
+                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs">
                     <Info className="stroke-error mb-[1px] h-4 w-4" />
                     {form.formState.errors.authNumber.message}
                   </div>
@@ -190,12 +190,12 @@ export default function Signup() {
                 </FormControl>
 
                 {form.formState.errors.password?.message ? (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 sm:text-xs md:text-xs">
+                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs">
                     <Info className="stroke-errr mb-[1px] h-4 w-4" />
                     {form.formState.errors.password.message}
                   </div>
                 ) : (
-                  <FormDescription className="lg:text-s text-gray-400 sm:text-xs md:text-xs">
+                  <FormDescription className="lg:text-s text-xs text-gray-400">
                     영문, 숫자, 특수문자를 조합하여 8자리 이상이어야 합니다.
                   </FormDescription>
                 )}
@@ -219,7 +219,7 @@ export default function Signup() {
                 </FormControl>
 
                 {form.formState.errors.confirm?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 sm:text-xs md:text-xs">
+                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs">
                     <Info className="stroke-error mb-[1px] h-4 w-4" />
                     {form.formState.errors.confirm.message}
                   </div>
@@ -228,7 +228,7 @@ export default function Signup() {
             )}
           />
           <div className="flex w-full flex-col gap-6 rounded-[10px] border border-gray-600 p-4 md:h-[212px] lg:h-[177px]">
-            <span className="text-s font-regular sm:text-s text-[#767676]">
+            <span className="text-s font-regular text-[#767676]">
               회원가입을 통해 수집한 회원의 정보는 서비스 제공에 관한 계약 성립
               및 이행(회원 및 본인식 및 본인의사 확인 등), 새로운 기능 정보
               안내(제공), 회원 관리(불만처리 등 민원처리, 고지사항 전달 등)의
@@ -241,7 +241,7 @@ export default function Signup() {
                 checked={isConsentGiven}
                 onCheckedChange={() => setIsConsentGiven((prev) => !prev)}
               />
-              <span className="font-regular md:text-s text-gray-0 sm:text-s lg:text-sm">
+              <span className="font-regular text-gray-0 text-s lg:text-sm">
                 개인정보 수집을 동의합니다 (필수)
               </span>
             </div>
@@ -250,7 +250,7 @@ export default function Signup() {
             type="submit"
             color="primary"
             size="lg"
-            className="sm:font-regular w-full sm:h-9 md:mt-6 md:mb-6 lg:mt-8 lg:h-12"
+            className="font-regular h-9 w-full md:mt-6 md:mb-6 lg:mt-8 lg:h-12"
             disabled={!isConsentGiven}
           >
             가입하기

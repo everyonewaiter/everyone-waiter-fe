@@ -9,7 +9,7 @@ export default function Splash({
 }) {
   return (
     <div
-      className={`bg-primary ${fadeOut ? "opacity-0" : "opacity-100"} hidden h-screen w-screen items-center justify-center duration-${duration} fixed sm:flex`}
+      className={`bg-primary ${fadeOut ? "opacity-0" : "opacity-100"} hidden h-screen w-screen items-center justify-center duration-${duration} fixed flex`}
     >
       <Image
         src="/images/logo-with-text-white.svg"

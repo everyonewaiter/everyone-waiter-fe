@@ -10,7 +10,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/common/Form";
+} from "@/components/common/form";
 import Input from "@/components/common/Input";
 import { Info } from "lucide-react";
 import { loginSchema, TypeLogin } from "@/schema/login.schema";
@@ -32,13 +32,13 @@ export default function Login() {
       <Image
         src="/images/logo-with-text.svg"
         alt="logo with text"
-        className="sm:h-[97px] sm:w-[160px] md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
+        className="h-[97px] w-[160px] md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
         width={200}
         height={124}
       />
       <Form {...form}>
         <form
-          className="mt-12 flex flex-col sm:w-[320px] md:w-[292px] lg:w-[432px]"
+          className="mt-12 flex w-[320px] flex-col md:w-[292px] lg:w-[432px]"
           onSubmit={form.handleSubmit((data) => {
             // 여기에 로그인 처리 로직 추가
             console.log(data);
@@ -60,7 +60,7 @@ export default function Login() {
                 </FormControl>
 
                 {form.formState.errors.email?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 sm:text-xs md:text-xs">
+                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
                     <Info className="stroke-error mb-[1px] h-4 w-4" />
                     {form.formState.errors.email.message}
                   </div>
@@ -84,7 +84,7 @@ export default function Login() {
                 </FormControl>
 
                 {form.formState.errors.password?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 sm:text-xs md:text-xs">
+                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
                     <Info className="stroke-error mb-[1px] h-4 w-4" />
                     {form.formState.errors.password.message}
                   </div>
@@ -95,13 +95,13 @@ export default function Login() {
           <Button
             type="submit"
             color="primary"
-            className="font-regular mt-8 w-full sm:h-9 md:h-9 lg:h-12"
+            className="font-regular mt-8 h-9 w-full md:h-9 lg:h-12"
           >
             로그인
           </Button>
         </form>
       </Form>
-      <span className="text-regular md:text-s mt-5 text-gray-300 sm:text-xs lg:text-sm">
+      <span className="text-regular md:text-s mt-5 text-xs text-gray-300 lg:text-sm">
         계정이 없으신가요? 간편하게{" "}
         <Link
           href="/signup"

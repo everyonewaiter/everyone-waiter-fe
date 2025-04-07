@@ -10,7 +10,7 @@ export default function BlankLayout({ children }: { children: ReactNode }) {
           alt="이메일 인증 만료"
           width={180}
           height={180}
-          className="sm:mb-5 sm:h-[140px] sm:w-[140px] md:mb-5 md:h-[140px] md:w-[140px] lg:mb-10 lg:h-[180px] lg:w-[180px]"
+          className="mb-5 h-[140px] w-[140px] md:mb-5 md:h-[140px] md:w-[140px] lg:mb-10 lg:h-[180px] lg:w-[180px]"
         />
         {children}
       </div>

@@ -26,7 +26,7 @@ export default function Alert({
   return (
     <AlertDialog>
       <AlertDialogTrigger>{triggerChildren}</AlertDialogTrigger>
-      <AlertDialogContent className="sm:hidden">
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
         </AlertDialogHeader>
