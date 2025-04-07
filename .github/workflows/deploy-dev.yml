@@ -3,7 +3,7 @@ name: Deploy To OCI
 on:
   push:
     branches:
-      - SKEU-22/dev-cicd
+      - develop
 
 jobs:
   Deploy:
@@ -54,15 +54,6 @@ jobs:
           docker tag everyonewaiter-frontend:${{ github.sha }} ${{ steps.get-ocir-repository.outputs.repo_path }}:${{ github.sha }}
           docker push ${{ steps.get-ocir-repository.outputs.repo_path }}:${{ github.sha }}
 
-      - name: Export Next.js Cache
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile
-          target: nextjs-cache
-          outputs: type=local,dest=.
-          push: false
-
       - name: Create OCI Bastion Session
         uses: domenikk/oci-bastion-action@v1
         id: bastion
@@ -96,3 +87,12 @@ jobs:
             sudo docker image ls --filter=reference="${{ steps.get-ocir-repository.outputs.repo_path }}*" --format "{{.ID}}" | xargs sudo docker rmi || true
             sudo docker pull ${{ steps.get-ocir-repository.outputs.repo_path }}:${{ github.sha }}
             sudo docker run -d -p 3000:3000 --name everyonewaiter-frontend --network everyonewaiter-network ${{ steps.get-ocir-repository.outputs.repo_path }}:${{ github.sha }}
+
+      - name: Export Next.js Cache
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          target: nextjs-cache
+          outputs: type=local,dest=.
+          push: false
