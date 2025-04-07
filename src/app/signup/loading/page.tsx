@@ -10,11 +10,11 @@ export default function SignupLoading() {
         alt="회원가입 로딩 이미지"
         className="object-cover md:h-[200px] md:w-[200px] lg:h-[300px] lg:w-[300px]"
       />
-      <div className="mt-[-30px] flex flex-col sm:gap-1 md:gap-1 lg:gap-2">
-        <p className="text-gray-0 font-semibold sm:text-lg md:text-lg lg:text-2xl">
+      <div className="mt-[-30px] flex flex-col gap-1 lg:gap-2">
+        <p className="text-gray-0 text-lg font-semibold lg:text-2xl">
           가입 절차를 마무리하고 있어요!
         </p>
-        <span className="font-regular text-gray-300 sm:text-sm md:text-sm lg:text-lg">
+        <span className="font-regular text-sm text-gray-300 lg:text-lg">
           잠깐만 기다려주세요.
         </span>
       </div>
