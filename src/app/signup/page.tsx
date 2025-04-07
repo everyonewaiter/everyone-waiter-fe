@@ -11,7 +11,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/common/form";
+} from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import useSignup from "@/hooks/useSignup";
 import { TypeSignup, signupSchema } from "@/schema/signup.schema";
@@ -58,18 +58,6 @@ export default function Signup() {
 
     return () => clearInterval(interval);
   }, [isAuthSubmitted]);
-
-  // NOTE - 비밀번호, 비밀번호 확인 비교 및 에러 표시
-  useEffect(() => {
-    const password = form.watch("password");
-    const confirm = form.watch("confirm");
-
-    if (password.length > 0 && confirm!.length > 0 && password !== confirm) {
-      form.setError("confirm", { message: "비밀번호가 일치하지 않습니다." });
-    } else {
-      form.clearErrors("confirm");
-    }
-  }, [form.watch("password"), form.watch("confirm")]);
 
   const submitHandler = (data: TypeSignup) => {
     mutateSignup(
