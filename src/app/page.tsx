@@ -5,10 +5,12 @@ import { getAccount } from "@/lib/api/auth.api";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "@/hooks/store/useAccount";
 import { getToken } from "@/lib/cookies";
+import { useRouter } from "next/navigation";
 import Splash from "./(splash)/page";
 
 export default function Home() {
   const FADE_OUT_DURATION = 1000;
+  const navigate = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [token, setToken] = useState("");
@@ -18,7 +20,12 @@ export default function Home() {
   useEffect(() => {
     const fetchToken = async () => {
       const accessToken = await getToken("accessToken");
-      setToken(accessToken!);
+      if (!accessToken) {
+        alert("로그인이 필요합니다.");
+        navigate.push("/login");
+      } else {
+        setToken(accessToken!);
+      }
     };
     fetchToken();
   }, []);
