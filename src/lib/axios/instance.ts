@@ -1,11 +1,21 @@
+/* eslint-disable no-console */
+/* eslint-disable no-alert */
 import axios from "axios";
 
 import { deleteCookie, getToken, setCookie } from "../cookies";
+import { renewToken } from "../api/auth.api";
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+// NOTE - 로그인/회원가입 등 토큰이 필요 없는 instance
+export const authInstance = axios.create({
+  headers: {
+    "Content-Type": "application/json",
+  },
+  timeout: 5000,
+});
 
 const instance = axios.create({
-  baseURL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -38,25 +48,20 @@ instance.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest.isRetry) {
       originalRequest.isRetry = true;
 
+      if (error.response.data.code === "UNAUTHORIZED") {
+        alert(error.response.data.message);
+        window.location.href = "/login";
+      }
+
       try {
         const refreshToken = await getToken("refreshToken");
         if (!refreshToken) {
           return await Promise.reject(error);
         }
-        const response = await axios.post(
-          `${baseURL}/authentication/token/renew`,
-          {
-            refreshToken,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
 
-        const newAccessToken = response.data.accessToken;
+        const { accessToken } = await renewToken({ refreshToken });
+
+        const newAccessToken = accessToken;
         if (newAccessToken) {
           await setCookie("accessToken", newAccessToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
