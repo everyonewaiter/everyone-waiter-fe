@@ -26,7 +26,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "flex min-w-[550px] items-center justify-center rounded-3xl bg-white p-6 shadow-xs",
+        "w-[340px] bg-white p-5 shadow-xs lg:flex lg:w-[550px] lg:flex-col lg:items-center lg:p-6",
         className
       )}
       formatters={{
@@ -35,46 +35,52 @@ function Calendar({
       }}
       classNames={{
         // 월 컨테이너
-        months: "flex flex-col sm:flex-row gap-2",
-        month: "flex flex-col gap-8",
+        months: "flex flex-col lg:flex-row gap-2",
+        month: "flex flex-col gap-6",
         // 상단 네비게이션 영역
-        caption: "flex justify-center pt-1 relative items-center w-full",
+        caption: "flex justify-center mb-0 relative items-center w-full",
         caption_label: "text-xl font-bold text-gray-0",
         nav: "flex items-center gap-1",
         nav_button: "size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-        nav_button_previous: "absolute left-36 text-gray-200",
-        nav_button_next: "absolute right-32 text-gray-200",
+        nav_button_previous: "absolute left-10 lg:left-10 text-gray-200",
+        nav_button_next: "absolute right-7 lg:right-7 text-gray-200",
         // 달력 테이블
         table: "w-full border-collapse space-x-1",
-        head_row: "flex items-center gap-[46px]",
+        head_row: "flex items-center h-[32px] lg:h-10",
         head_cell:
-          "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2 flex items-center gap-[37px]",
+          "text-gray-0 text-s w-[calc(100%/7)] font-normal w-[32px] lg:w-10 ",
+        row: "flex w-full mt-[6px] lg:mt-2 flex items-center",
         // 날짜 셀과 날짜
         cell: cn(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-md",
-          props.mode === "range"
-            ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
-            : "[&:has([aria-selected])]:rounded-md"
+          "w-[calc(100%/7)] relative p-0",
+          // 범위 선택된 셀들을 하나의 배경으로 연결
+          "[&:has(.day-range-start)]:bg-primary/[0.06]",
+          "[&:has(.day-range-end)]:bg-primary/[0.06]",
+          "[&:has(.day-range-middle)]:bg-primary/[0.06]",
+          // 시작과 끝 셀의 모서리만 둥글게
+          "[&:has(.day-range-start)]:rounded-l-full",
+          "[&:has(.day-range-end)]:rounded-r-full"
         ),
         day: cn(
-          "hover:cursor-pointer disabled:cursor-not-allowed hover:bg-primary/[0.06] rounded-full size-10 p-0 font-normal aria-selected:text-white text-gray-0 text-sm"
+          " size-[32px] lg:size-10",
+          "flex items-center justify-center",
+          "hover:bg-primary/[0.06]",
+          "text-gray-0"
         ),
         // 특수 상태의 날짜
         // 선택된 날짜
-        day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-full",
+        day_selected: "bg-primary  focus:bg-primary rounded-full",
         // 오늘 날짜
         day_today: "bg-accent text-accent-foreground",
         // 현재 월에 속하지 않는 날짜
         day_outside: "text-gray-800",
         // 비활성화된 날짜
-        day_disabled: "text-muted-foreground opacity-50",
+        day_disabled: "opacity-50",
         // 범위 선택 시 스타일
         day_range_start:
-          "day-range-start aria-selected:bg-primary rounded-full ",
-        day_range_end: "day-range-end aria-selected:bg-primary rounded-full ",
-        day_range_middle: "aria-selected:bg-primary/[0.06]",
+          "day-range-start text-white rounded-r-full aria-selected:bg-primary ",
+        day_range_end: "text-white rounded-r-full aria-selected:bg-primary ",
+        day_range_middle: "day-range-middle bg-primary/[0.06] rounded-none",
         // 숨겨진 날짜
         day_hidden: "invisible",
         ...classNames,
