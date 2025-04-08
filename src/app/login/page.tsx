@@ -10,7 +10,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/common/form";
+} from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import { Info } from "lucide-react";
 import { loginSchema, TypeLogin } from "@/schema/login.schema";
@@ -62,7 +62,7 @@ export default function Login() {
       />
       <Form {...form}>
         <form
-          className="mt-12 flex flex-col w-[320px] md:w-[292px] lg:w-[432px]"
+          className="mt-12 flex w-[320px] flex-col md:w-[292px] lg:w-[432px]"
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FormField
