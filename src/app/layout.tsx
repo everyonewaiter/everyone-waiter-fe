@@ -4,6 +4,7 @@ import Head from "next/head";
 import "./globals.css";
 import Script from "next/script";
 import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
+
 import QueryProviders from "./query-providers";
 
 export const metadata: Metadata = {
