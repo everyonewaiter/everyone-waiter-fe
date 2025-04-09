@@ -15,7 +15,7 @@ export default function SideBarButton() {
     <button
       type="button"
       onClick={handleOpenSidebar}
-      className="absolute left-5"
+      className="absolute left-5 cursor-pointer"
     >
       <Menu color="#222" width={24} height={24} />
     </button>
