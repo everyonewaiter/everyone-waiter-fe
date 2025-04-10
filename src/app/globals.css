@@ -2,39 +2,48 @@
 @import "tw-animate-css";
 
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
   font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-B.woff2")
+    format("woff2");
+  font-weight: 700;
   font-style: normal;
 }
 
 @theme {
   /* Colors */
-  --color-primary: #F22020;
-  --color-point: #FF8E8E;
+  --color-primary: #f22020;
+  --color-point: #ff8e8e;
   --color-gray-0: #222222;
   --color-gray-100: #333333;
   --color-gray-200: #555555;
   --color-gray-300: #999999;
-  --color-gray-400: #C1C1C1;
-  --color-gray-500: #DADADA;
-  --color-gray-600: #E7E7E7;
-  --color-gray-700: #F7F7F7;
+  --color-gray-400: #c1c1c1;
+  --color-gray-500: #dadada;
+  --color-gray-600: #e7e7e7;
+  --color-gray-700: #f7f7f7;
   --color-white: #ffffff;
   --color-black: #000000;
   --color-opacity-100: #00000060;
   --color-opacity-200: #ffffff04;
   --color-opacity-300: #00000030;
-  --color-status-error: #D02006;
-  --color-status-warning: #F0D36A;
-  --color-status-success: #6BD876;
-  --color-status-info: #61B1EA;
-  --color-component: #FF9000;
+  --color-status-error: #d02006;
+  --color-status-warning: #f0d36a;
+  --color-status-success: #6bd876;
+  --color-status-info: #61b1ea;
+  --color-component: #ff9000;
   --color-bgColor: #161616;
-  --color-bgContent: #1A1A1A;
+  --color-bgContent: #1a1a1a;
 
   /* fontStyle */
-    --text-xxs: 10px;
+  --text-xxs: 10px;
   --text-xxs--line-height: 1.5;
   --text-xs: 12px;
   --text-xs--line-height: 1.5;
@@ -61,11 +70,14 @@
   --breakpoint-lg: 1920px;
 
   /* FontWeight */
-  --font-weight-regular: 400
+  --font-weight-regular: 400;
 }
 
 @layer {
   body {
     font-family: Pretendard;
+  }
+  .font-hakgyo {
+    font-family: "HakgyoansimDunggeunmisoTTF-B";
   }
 }
