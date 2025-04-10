@@ -1,9 +1,9 @@
 import SideBarButton from "@/app/(main)/_components/SideBarButton";
 import Image from "next/image";
 
-export default function Header() {
+export default function MobileHeader() {
   return (
-    <header className="flex h-[60px] items-center border-b border-gray-600 bg-white px-5">
+    <header className="flex h-[60px] items-center border-b border-gray-600 bg-white px-5 md:hidden">
       <SideBarButton />
       <div className="flex w-full items-center justify-center gap-3">
         <Image

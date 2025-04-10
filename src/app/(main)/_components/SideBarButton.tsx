@@ -1,6 +1,6 @@
 "use client";
 
-import Sidebar from "@/components/common/Sidebar";
+import MobileSidebar from "@/app/(main)/_components/MobileSidebar";
 import useOverlay from "@/hooks/use-overlay";
 import { Menu } from "lucide-react";
 
@@ -8,7 +8,7 @@ export default function SideBarButton() {
   const { open, close } = useOverlay();
 
   const handleOpenSidebar = () => {
-    open(() => <Sidebar onClose={close} />);
+    open(() => <MobileSidebar onClose={close} />);
   };
 
   return (

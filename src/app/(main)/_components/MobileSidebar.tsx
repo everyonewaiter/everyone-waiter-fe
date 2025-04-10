@@ -10,7 +10,7 @@ interface SideBarProps {
   onClose: () => void;
 }
 
-export default function Sidebar({ onClose }: SideBarProps) {
+export default function MobileSidebar({ onClose }: SideBarProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useOutsideClick({ ref, handler: onClose });
