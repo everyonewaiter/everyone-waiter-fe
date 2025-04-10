@@ -4,21 +4,14 @@ import { Button } from "@/components/common/Button";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/common/Form";
-import Input from "@/components/common/Input";
-import { Info } from "lucide-react";
+import { Form } from "@/components/common/form";
 import { loginSchema, TypeLogin } from "@/schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/lib/api/auth.api";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/lib/cookies";
+import LabeledInput from "@/components/common/LabeledInput";
 import SignupLayout from "../signup/layout";
 
 export default function Login() {
@@ -65,53 +58,17 @@ export default function Login() {
           className="mt-12 flex w-[320px] flex-col md:w-[292px] lg:w-[432px]"
           onSubmit={form.handleSubmit(submitHandler)}
         >
-          <FormField
-            control={form.control}
+          <LabeledInput
+            form={form}
             name="email"
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-1">
-                <FormLabel>이메일</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="이메일을 입력해주세요."
-                    className="flex grow-1 placeholder:text-gray-300"
-                    {...field}
-                  />
-                </FormControl>
-
-                {form.formState.errors.email?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
-                    <Info className="stroke-error mb-[1px] h-4 w-4" />
-                    {form.formState.errors.email.message}
-                  </div>
-                )}
-              </FormItem>
-            )}
+            label="이메일"
+            placeholder="이메일을 입력해주세요."
           />
-          <FormField
-            control={form.control}
+          <LabeledInput
+            form={form}
             name="password"
-            render={({ field }) => (
-              <FormItem className="mt-3 flex w-full flex-col gap-1">
-                <FormLabel>비밀번호</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="비밀번호를 입력해주세요."
-                    className="flex grow-1 placeholder:text-gray-300"
-                    {...field}
-                  />
-                </FormControl>
-
-                {form.formState.errors.password?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
-                    <Info className="stroke-error mb-[1px] h-4 w-4" />
-                    {form.formState.errors.password.message}
-                  </div>
-                )}
-              </FormItem>
-            )}
+            label="비밀번호"
+            placeholder="비밀번호를 입력해주세요."
           />
           <Button
             type="submit"

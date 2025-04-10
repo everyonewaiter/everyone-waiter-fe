@@ -1,22 +1,14 @@
 "use client";
 
 /* eslint-disable no-alert */
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/no-unstable-nested-components */
 import { Button } from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/common/Form";
-import Input from "@/components/common/Input";
+import { Form } from "@/components/common/form";
+import LabeledInput from "@/components/common/LabeledInput";
 import useSignup from "@/hooks/useSignup";
 import { TypeSignup, signupSchema } from "@/schema/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Info } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -113,169 +105,73 @@ export default function Signup() {
           className="flex w-[320px] gap-4 not-only:flex-col md:mt-10 md:w-[292px] lg:mt-12 lg:w-[432px]"
           onSubmit={form.handleSubmit(submitHandler)}
         >
-          <FormField
-            control={form.control}
+          <LabeledInput
+            form={form}
             name="email"
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-1">
-                <FormLabel>이메일</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="이메일을 입력해주세요."
-                    className="flex grow-1 placeholder:text-gray-300"
-                    hasError={!!form.formState.errors.email?.message}
-                    {...field}
-                  />
-                </FormControl>
-
-                {form.formState.errors.email?.message ? (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
-                    <Info className="stroke-error mb-[1px] h-4 w-4" />
-                    {form.formState.errors.email.message}
-                  </div>
-                ) : (
-                  <FormDescription className="lg:text-s text-xs text-gray-400 md:text-xs">
-                    이메일 인증 절차가 남아 있어요. 정확한 이메일을
-                    입력해주세요!
-                  </FormDescription>
-                )}
-              </FormItem>
-            )}
+            label="이메일"
+            placeholder="이메일을 입력해주세요."
+            defaultMessage="이메일 인증 절차가 남아 있어요. 정확한 이메일을 입력해주세요!"
           />
-          <FormField
-            control={form.control}
+          <LabeledInput
+            form={form}
             name="phone"
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-1">
-                <FormLabel>휴대폰 번호</FormLabel>
-                <div className="flex gap-3">
-                  <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="휴대폰 번호를 입력해주세요. (-없이 숫자만 입력)"
-                      className="flex grow-1 placeholder:text-gray-300"
-                      hasError={!!form.formState.errors.phone?.message}
-                      {...field}
-                    />
-                  </FormControl>
-                  <Button
-                    type="button"
-                    color="black"
-                    size="lg"
-                    className="md:text-s font-regular h-10 w-[94px] text-sm md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px] lg:text-[15px] lg:font-semibold"
-                    disabled={
-                      (!isAuthSubmitted && !form.watch("phone")?.length) ||
-                      isPhoneAuthenticated
-                    }
-                    onClick={() => handleAuthentication(field.value)}
-                  >
-                    {isAuthSubmitted ? "재인증" : "인증요청"}
-                  </Button>
-                </div>
-                {form.formState.errors.phone?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
-                    <Info className="stroke-error mb-[1px] h-4 w-4" />
-                    {form.formState.errors.phone.message}
-                  </div>
-                )}
-              </FormItem>
+            label="휴대폰 번호"
+            placeholder="휴대폰 번호를 입력해주세요. (-없이 숫자만 입력)"
+            rightComponent={(field) => (
+              <Button
+                type="button"
+                variant="default"
+                color="black"
+                size="lg"
+                className="md:text-s font-regular h-10 w-[94px] text-sm md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px] lg:text-[15px] lg:font-semibold"
+                disabled={
+                  (!isAuthSubmitted && !form.watch("phone")?.length) ||
+                  isPhoneAuthenticated
+                }
+                onClick={() => handleAuthentication(field.value!)}
+              >
+                {isAuthSubmitted ? "재인증" : "인증요청"}
+              </Button>
             )}
           />
-          <FormField
-            control={form.control}
+          <LabeledInput
+            form={form}
             name="authNumber"
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-1">
-                <FormLabel>인증 번호</FormLabel>
-                <div className="relative flex gap-3">
-                  <FormControl>
-                    <Input
-                      placeholder="인증 번호를 입력해주세요."
-                      className="flex grow-1 placeholder:text-gray-300"
-                      hasError={!!form.formState.errors.authNumber?.message}
-                      disabled={isPhoneAuthenticated}
-                      {...field}
-                    />
-                  </FormControl>
-                  {isAuthSubmitted && !authTime && (
-                    <div className="font-regular absolute top-1/2 right-0 -translate-y-1/2 transform text-[15px] text-gray-200 transition-all duration-300 ease-in-out sm:right-25 sm:mt-[-2px]">
-                      {" "}
-                      {`${String(Math.floor(authTime / 60)).padStart(2, "0")}:${String(authTime % 60).padStart(2, "0")}`}
-                    </div>
-                  )}
-                  <Button
-                    type="button"
-                    color="black"
-                    size="lg"
-                    className="md:text-s font-regular h-10 w-[94px] text-[15px] md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px] lg:font-semibold"
-                    disabled={!isAuthSubmitted || isPhoneAuthenticated}
-                    onClick={() => handleCheckAuth(field.value!)}
-                  >
-                    확인
-                  </Button>
-                </div>
-                {form.formState.errors.authNumber?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs">
-                    <Info className="stroke-error mb-[1px] h-4 w-4" />
-                    {form.formState.errors.authNumber.message}
+            label="인증 번호"
+            placeholder="인증 번호를 입력해주세요."
+            rightComponent={(field) => (
+              <>
+                {isAuthSubmitted && !authTime && (
+                  <div className="font-regular absolute top-1/2 right-0 -translate-y-1/2 transform text-[15px] text-gray-200 transition-all duration-300 ease-in-out sm:right-25 sm:mt-[-2px]">
+                    {" "}
+                    {`${String(Math.floor(authTime / 60)).padStart(2, "0")}:${String(authTime % 60).padStart(2, "0")}`}
                   </div>
                 )}
-              </FormItem>
+                <Button
+                  type="button"
+                  color="black"
+                  size="lg"
+                  className="md:text-s font-regular h-10 w-[94px] text-[15px] md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[120px] lg:font-semibold"
+                  disabled={!isAuthSubmitted || isPhoneAuthenticated}
+                  onClick={() => handleCheckAuth(field.value!)}
+                >
+                  확인
+                </Button>
+              </>
             )}
           />
-          <FormField
-            control={form.control}
+          <LabeledInput
+            form={form}
             name="password"
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-1">
-                <FormLabel>비밀번호</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="비밀번호를 입력해주세요."
-                    className="flex grow-1 placeholder:text-gray-300"
-                    hasError={!!form.formState.errors.password?.message}
-                    {...field}
-                  />
-                </FormControl>
-
-                {form.formState.errors.password?.message ? (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs">
-                    <Info className="stroke-errr mb-[1px] h-4 w-4" />
-                    {form.formState.errors.password.message}
-                  </div>
-                ) : (
-                  <FormDescription className="lg:text-s text-xs text-gray-400">
-                    영문, 숫자, 특수문자를 조합하여 8자리 이상이어야 합니다.
-                  </FormDescription>
-                )}
-              </FormItem>
-            )}
+            label="비밀번호"
+            placeholder="비밀번호를 입력해주세요."
+            defaultMessage="영문, 숫자, 특수문자를 조합하여 8자리 이상이어야 합니다."
           />
-          <FormField
-            control={form.control}
+          <LabeledInput
+            form={form}
             name="confirm"
-            render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-1">
-                <FormLabel>비밀번호 확인</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="비밀번호를 다시 입력해주세요."
-                    className="flex grow-1 placeholder:text-gray-300"
-                    hasError={!!form.formState.errors.confirm?.message}
-                    {...field}
-                  />
-                </FormControl>
-
-                {form.formState.errors.confirm?.message && (
-                  <div className="lg:text-s text-status-error flex items-center gap-1 text-xs">
-                    <Info className="stroke-error mb-[1px] h-4 w-4" />
-                    {form.formState.errors.confirm.message}
-                  </div>
-                )}
-              </FormItem>
-            )}
+            label="비밀번호 확인"
+            placeholder="비밀번호를 다시 입력해주세요."
           />
           <div className="flex w-full flex-col gap-6 rounded-[10px] border border-gray-600 p-4 md:h-[212px] lg:h-[177px]">
             <span className="text-s font-regular text-[#767676]">
