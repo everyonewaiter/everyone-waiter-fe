@@ -12,9 +12,9 @@ const buttonVariants = cva(
         default: "",
       },
       color: {
-        primary: "bg-primary !text-white hover:bg-point",
-        black: "bg-gray-0 !text-white",
-        grey: "bg-gray-700 !text-gray-300",
+        primary: "bg-primary text-white hover:bg-point",
+        black: "bg-gray-0 text-white",
+        grey: "bg-gray-700 text-gray-300",
         "outline-primary": "border-primary !text-primary",
         "outline-black": "border-gray-200 !text-gray-200",
         "outline-gray": "border-gray-500 !text-gray-200",
