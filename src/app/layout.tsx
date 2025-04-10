@@ -28,9 +28,14 @@ export default function RootLayout({
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
       />
-      <body>
+      <body className="bg-gray-700">
         <OverlayStoreProvider>
-          <QueryProviders>{children}</QueryProviders>
+          <QueryProviders>
+            <div className="h-[60px] md:h-[76px] lg:h-[112px]" />
+            <div className="flex h-[calc(100vh-60px)] w-full items-center justify-center md:h-[calc(100vh-76px)] lg:h-[calc(100vh-112px)]">
+              {children}
+            </div>
+          </QueryProviders>
         </OverlayStoreProvider>
       </body>
     </html>
