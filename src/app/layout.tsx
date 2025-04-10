@@ -3,6 +3,7 @@ import Head from "next/head";
 
 import "./globals.css";
 import Script from "next/script";
+import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
 import QueryProviders from "./query-providers";
 
 export const metadata: Metadata = {
@@ -28,7 +29,9 @@ export default function RootLayout({
         src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
       />
       <body className="select-none">
-        <QueryProviders>{children}</QueryProviders>
+        <OverlayStoreProvider>
+          <QueryProviders>{children}</QueryProviders>
+        </OverlayStoreProvider>
       </body>
     </html>
   );
