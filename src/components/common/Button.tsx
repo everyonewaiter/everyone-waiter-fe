@@ -12,12 +12,16 @@ const buttonVariants = cva(
         default: "",
       },
       color: {
-        primary: "bg-primary text-white hover:bg-point",
-        black: "bg-gray-0 text-white",
+        primary: "bg-primary !text-white hover:bg-point",
+        black: "bg-gray-0 !text-white",
         grey: "bg-gray-700 text-gray-300",
         "outline-primary": "border-primary !text-primary",
         "outline-black": "border-gray-200 !text-gray-200",
         "outline-gray": "border-gray-500 !text-gray-200",
+        accepted: "bg-gray-400 !text-white",
+        rejected: "bg-[#FF5555] !text-white",
+        succeed: "bg-[#2E8CFF] !text-white",
+        "re-accepted": "bg-[#FFAB45] !text-white",
       },
       size: {
         sm: "px-[16px] h-[36px] rounded-[8px] text-s font-medium",
@@ -34,22 +38,36 @@ const buttonVariants = cva(
   }
 );
 
+export type ButtonColors =
+  | "primary"
+  | "black"
+  | "grey"
+  | "outline-primary"
+  | "outline-black"
+  | "outline-gray"
+  | "accepted"
+  | "rejected"
+  | "succeed"
+  | "re-accepted";
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  color:
-    | "primary"
-    | "black"
-    | "grey"
-    | "outline-primary"
-    | "outline-black"
-    | "outline-gray";
+  color?: ButtonColors;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, color, disabled, asChild = false, ...props },
+    {
+      className,
+      variant,
+      size,
+      color = "primary",
+      disabled,
+      asChild = false,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";

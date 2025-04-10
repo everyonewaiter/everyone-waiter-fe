@@ -6,7 +6,8 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 import { Info } from "lucide-react";
-import { ReactNode } from "react";
+import { InputHTMLAttributes, ReactNode } from "react";
+import cn from "@/lib/utils";
 import {
   FormControl,
   FormDescription,
@@ -16,13 +17,17 @@ import {
 } from "./form";
 import Input from "./Input";
 
-interface IProps<T extends FieldValues> {
+interface IProps<T extends FieldValues>
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "form"> {
   form: UseFormReturn<T>;
   name: Path<T>;
+  type?: string;
   label: string;
-  placeholder: string;
+  placeholder?: string;
   defaultMessage?: string;
   rightComponent?: (field: ControllerRenderProps<T, Path<T>>) => ReactNode;
+  inputClassname?: string;
+  labelDisabled?: boolean;
 }
 
 export default function LabeledInput<T extends FieldValues>({
@@ -32,6 +37,10 @@ export default function LabeledInput<T extends FieldValues>({
   placeholder,
   defaultMessage,
   rightComponent,
+  inputClassname,
+  type = "text",
+  labelDisabled,
+  ...props
 }: IProps<T>) {
   return (
     <FormField
@@ -39,14 +48,18 @@ export default function LabeledInput<T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className="flex w-full flex-col gap-1">
-          <FormLabel>{label}</FormLabel>
+          <FormLabel labelDisabled={labelDisabled!}>{label}</FormLabel>
           <div className="flex gap-3">
             <FormControl>
               <Input
-                type="password"
+                type={type}
                 placeholder={placeholder}
-                className="flex grow-1 placeholder:text-gray-300"
+                className={cn(
+                  "flex grow-1 placeholder:text-gray-300",
+                  inputClassname
+                )}
                 hasError={!!form.formState.errors[name]?.message}
+                {...props}
                 {...field}
               />
             </FormControl>
