@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   PaginationContent,
   PaginationItem,
@@ -12,27 +11,37 @@ import {
   PaginationFastPrev,
 } from "./Component";
 
-export default function Paginations({ totalPages }: { totalPages: number }) {
-  const [currentPage, setCurrentPage] = useState(1);
+interface IProps {
+  totalPages: number;
+  className?: string;
+  onSetCurrentPage: (value: number) => void;
+  currentPage: number;
+}
 
+export default function Paginations({
+  totalPages,
+  className,
+  onSetCurrentPage,
+  currentPage,
+}: IProps) {
   const handlePagination = (type: "prev" | "next") => {
     if (currentPage > 1 && type === "prev") {
-      setCurrentPage((state) => state - 1);
+      onSetCurrentPage(currentPage - 1);
     } else if (currentPage < totalPages && type === "next") {
-      setCurrentPage((state) => state + 1);
+      onSetCurrentPage(currentPage + 1);
     }
   };
 
   const handleFastPagination = (type: "prev" | "next") => {
     if (currentPage > 5 && type === "prev") {
-      setCurrentPage((state) => state - 5);
+      onSetCurrentPage(currentPage - 5);
     } else if (currentPage <= totalPages - 5 && type === "next") {
-      setCurrentPage((state) => state + 5);
+      onSetCurrentPage(currentPage + 5);
     }
   };
 
   return (
-    <Pagination>
+    <Pagination className={className}>
       <PaginationContent>
         <PaginationItem>
           <PaginationFastPrev
