@@ -33,11 +33,12 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
             alt="사업자 등록 아이콘"
             width={40}
             height={40}
+            className="h-8 w-8 md:h-10 md:w-10"
           />
-          <strong className="mt-3 font-medium text-gray-100 md:text-sm lg:text-base">
+          <strong className="mt-3 text-sm font-medium text-gray-100 lg:text-base">
             사업자 등록증을 제출하세요
           </strong>
-          <span className="lg:text-s font-regular mt-1 text-gray-300 md:text-xs">
+          <span className="lg:text-s font-regular mt-1 text-xs text-gray-300">
             JPG, PNG, PDF로 제출 가능합니다.
           </span>
           <input

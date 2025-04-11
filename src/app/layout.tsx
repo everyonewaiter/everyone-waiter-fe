@@ -31,7 +31,6 @@ export default function RootLayout({
       <body>
         <OverlayStoreProvider>
           <QueryProviders>
-            <div className="h-[60px] md:h-[76px] lg:h-[112px]" />
             <div className="flex h-[calc(100vh-60px)] w-full md:h-[calc(100vh-76px)] lg:h-[calc(100vh-112px)]">
               {children}
             </div>

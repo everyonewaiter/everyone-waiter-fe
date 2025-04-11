@@ -61,12 +61,12 @@ export default function StoreList() {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
-    <div className="w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-0 lg:min-h-[1016px] lg:w-[1800px]">
-      <header className="flex justify-between border-b border-b-gray-500 md:h-10 md:flex-row md:items-center lg:h-[68px] lg:flex-col">
+    <div className="w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
+      <header className="flex justify-between border-b border-b-gray-500 md:h-10 md:items-center lg:h-[68px]">
         <h1 className="text-gray-0 mb-3 text-lg font-semibold md:mb-0 md:text-base md:font-bold lg:text-[28px]">
           매장 등록 신청 현황
         </h1>
-        <button type="button" className="hidden md:block">
+        <button type="button" className="hidden md:block lg:hidden">
           <Image
             src="/icons/hamburger.svg"
             alt="사이드 메뉴"
@@ -107,7 +107,7 @@ export default function StoreList() {
           color="outline-primary"
           className={cn(
             "flex lg:gap-[6px]",
-            buttonSize("lg", "md"),
+            buttonSize("lg", "lg"),
             buttonSize("md", "sm"),
             "md:h-8 md:px-3 lg:h-10 lg:pr-5 lg:pl-4"
           )}

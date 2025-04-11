@@ -69,10 +69,10 @@ export default function StoreApplicationModal({ close }: IProps) {
         isUpdating ? (
           <Button
             className={cn(
-              "h-10 w-full lg:h-14",
-              buttonSize(null, "sm"),
-              buttonSize("md", "sm"),
               buttonSize("lg", "xl"),
+              buttonSize("md", "sm"),
+              buttonSize(null, "sm"),
+              "h-10 w-full lg:h-14",
               "lg:text-lg lg:font-semibold"
             )}
             color="primary"
@@ -84,10 +84,10 @@ export default function StoreApplicationModal({ close }: IProps) {
           <Button
             color="black"
             className={cn(
-              "h-10 w-full lg:h-14",
-              buttonSize(null, "sm"),
-              buttonSize("md", "sm"),
               buttonSize("lg", "xl"),
+              buttonSize("md", "sm"),
+              buttonSize(null, "sm"),
+              "h-10 w-full lg:h-14",
               "lg:text-lg lg:font-semibold"
             )}
             onClick={() => setIsUpdating(true)}
@@ -104,7 +104,7 @@ export default function StoreApplicationModal({ close }: IProps) {
           isActive={active}
         />
       </div>
-      <div className="mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] md:overflow-y-scroll lg:mt-5 lg:mb-[33px]">
+      <div className="mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] md:overflow-y-scroll lg:mt-5 lg:mb-[33px] lg:h-[424px]">
         {active === 0 ? (
           <FormProvider {...form}>
             <form className="flex flex-col gap-4">

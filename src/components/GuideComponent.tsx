@@ -12,7 +12,7 @@ interface IProps {
     size: number;
   };
   gap?: number;
-  isFromHome: boolean;
+  isFromHome?: boolean;
 }
 
 export default function GuideComponent({

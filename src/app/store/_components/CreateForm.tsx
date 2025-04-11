@@ -55,7 +55,7 @@ export default function CreateForm() {
   };
 
   return (
-    <div className="flex justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
+    <div className="flex w-full justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
       <div className="hidden flex-col md:flex">
         <Image
           src="/logo.svg"
@@ -73,7 +73,7 @@ export default function CreateForm() {
           간단한 정보만 입력하면 바로 시작할 수 있어요!
         </p>
       </div>
-      <div className="flex w-[320px] flex-col gap-[16px] lg:w-100">
+      <div className="flex w-[320px] flex-col gap-[16px] lg:w-[400px]">
         <h1 className="text-gray-0 mb-8 flex w-full justify-center text-xl font-semibold md:hidden">
           매장 등록
         </h1>

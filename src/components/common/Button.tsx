@@ -75,6 +75,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         ref={ref}
         disabled={disabled}
+        {...(asChild ? {} : { type: "button" })}
         {...props}
       />
     );

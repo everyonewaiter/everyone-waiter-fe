@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { Button, ButtonColors } from "@/components/common/Button";
 import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
@@ -25,8 +26,7 @@ export default function MobileTableItem({ ...item }: IProps) {
   };
 
   return (
-    <button
-      type="button"
+    <div
       className="w-[320px] cursor-pointer rounded-[16px] border border-gray-600"
       onClick={handleOpenModal}
       onKeyDown={(e) => {
@@ -58,6 +58,6 @@ export default function MobileTableItem({ ...item }: IProps) {
           </div>
         </div>
       ))}
-    </button>
+    </div>
   );
 }
