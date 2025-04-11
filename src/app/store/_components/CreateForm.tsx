@@ -8,10 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Address, useDaumPostcodePopup } from "react-daum-postcode";
 import Label from "@/components/common/label";
 import Input from "@/components/common/Input";
-import phoneNumberPattern from "@/lib/check-phone-number";
+import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
+import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
+import UploadPhoto from "./UploadPhoto";
 
 export default function CreateForm() {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -28,10 +30,6 @@ export default function CreateForm() {
     },
   });
 
-  const open = useDaumPostcodePopup(
-    "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
-  );
-
   const submitHandler = () => {};
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,27 +40,7 @@ export default function CreateForm() {
     }
   };
 
-  const handleAddressComplete = (data: Address) => {
-    let fullAddress = data.address;
-    let extraAddress = "";
-
-    if (data.addressType === "R") {
-      if (data.bname !== "") {
-        extraAddress += data.bname;
-      }
-      if (data.buildingName !== "") {
-        extraAddress +=
-          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-      }
-      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
-    }
-
-    form.setValue("address", fullAddress);
-  };
-
-  const handleOpenAddress = () => {
-    open({ onComplete: handleAddressComplete });
-  };
+  const { handleOpenAddress } = useOpenDaumPostcode(form);
 
   const handlePhoneNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
@@ -70,13 +48,8 @@ export default function CreateForm() {
   };
 
   const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
-    let str = e.target.value.replace(/[^0-9]/g, "");
-
-    if (str.length > 5) {
-      str = `${str.slice(0, 3)}-${str.slice(3, 5)}-${str.slice(5, 10)}`;
-    }
-
-    form.setValue("businessNumber", str);
+    const str = e.target.value.replace(/[^0-9]/g, "");
+    form.setValue("businessNumber", formatBusinessNumber(str));
   };
 
   return (
@@ -136,43 +109,7 @@ export default function CreateForm() {
                 onChange={handleBusinessNumber}
               />
             </div>
-            <button
-              type="button"
-              className={`flex h-40 w-full border-spacing-4 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[16px] border-1 border-dashed border-gray-500 bg-gray-700 ${image ? "" : "p-6"}`}
-              onClick={() => fileRef.current?.click()}
-            >
-              {image ? (
-                <Image
-                  src={image}
-                  alt="사업자 등록중"
-                  width={400}
-                  height={160}
-                  className="object-contain"
-                />
-              ) : (
-                <>
-                  <Image
-                    src="/icons/file-attach.svg"
-                    alt="사업자 등록 아이콘"
-                    width={40}
-                    height={40}
-                  />
-                  <strong className="mt-3 text-base font-medium text-gray-100">
-                    사업자 등록증을 제출하세요
-                  </strong>
-                  <span className="text-s font-regular mt-1 text-gray-300">
-                    JPG, PNG, PDF로 제출 가능합니다.
-                  </span>
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    hidden
-                    accept=".jpg, .jpeg, .png, .pdf"
-                    onChange={handleFile}
-                  />
-                </>
-              )}
-            </button>
+            <UploadPhoto ref={fileRef} handleFile={handleFile} image={image!} />
             <Button type="submit" className="mt-4" size="lg">
               신청하기
             </Button>
