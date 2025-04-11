@@ -8,7 +8,7 @@ function Label({
   className,
   disabled,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root> & { disabled: boolean }) {
+}: React.ComponentProps<typeof LabelPrimitive.Root> & { disabled?: boolean }) {
   return (
     <LabelPrimitive.Root
       data-slot="label"
