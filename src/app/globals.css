@@ -77,7 +77,14 @@
   body {
     font-family: Pretendard;
   }
+  
   .font-hakgyo {
     font-family: "HakgyoansimDunggeunmisoTTF-B";
   }
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

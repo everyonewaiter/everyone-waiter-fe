@@ -4,9 +4,11 @@
 /* eslint-disable no-alert */
 import { Button } from "@/components/common/Button";
 import { verifyEmail } from "@/lib/api/auth.api";
+import { buttonSize } from "@/styles/responsiveButton";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import cn from "@/lib/utils";
 
 export default function EmailError() {
   const navigate = useRouter();
@@ -61,8 +63,13 @@ export default function EmailError() {
       </div>
       <Button
         color="black"
-        size="lg"
-        className="sm:font-regular mt-8 w-111 sm:mt-5 sm:h-11 sm:w-80"
+        className={cn(
+          "mt-8",
+          buttonSize("lg", "lg"),
+          buttonSize("md", "md"),
+          buttonSize(null, "md"),
+          "font-regular"
+        )}
       >
         이메일 재발송하기
       </Button>
