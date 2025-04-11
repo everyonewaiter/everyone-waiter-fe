@@ -29,7 +29,7 @@ export default function RootLayout({
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
       />
-      <body>
+      <body className="select-none">
         <OverlayStoreProvider>
           <QueryProviders>{children}</QueryProviders>
         </OverlayStoreProvider>
