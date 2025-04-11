@@ -12,6 +12,8 @@ import { login } from "@/lib/api/auth.api";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/lib/cookies";
 import LabeledInput from "@/components/common/LabeledInput";
+import cn from "@/lib/utils";
+import { buttonSize } from "@/styles/responsiveButton";
 import SignupLayout from "../signup/layout";
 
 export default function Login() {
@@ -31,7 +33,6 @@ export default function Login() {
   const submitHandler = (formData: Pick<TAccount, "email" | "password">) => {
     mutate(formData, {
       onSuccess: (data) => {
-        alert("로그인 되었습니다.");
         setCookie("accessToken", data.accessToken);
         setCookie("refreshToken", data.refreshToken);
         navigate.push("/");
@@ -76,7 +77,13 @@ export default function Login() {
           <Button
             type="submit"
             color="primary"
-            className="font-regular mt-8 h-9 w-full md:h-9 lg:h-12"
+            className={cn(
+              "mt-8 w-full",
+              buttonSize("lg", "lg"),
+              buttonSize("md", "sm"),
+              buttonSize(null, "sm"),
+              "font-regular"
+            )}
           >
             로그인
           </Button>

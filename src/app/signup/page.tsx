@@ -13,6 +13,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import cn from "@/lib/utils";
+import { buttonSize } from "@/styles/responsiveButton";
 
 export default function Signup() {
   const navigate = useRouter();
@@ -122,8 +124,12 @@ export default function Signup() {
                 type="button"
                 variant="default"
                 color="black"
-                size="lg"
-                className="md:text-s font-regular h-10 w-[94px] text-sm md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[100px] lg:text-[15px] lg:font-semibold"
+                className={cn(
+                  "h-10 rounded-[8px] text-[15px]",
+                  buttonSize("md", "sm"),
+                  buttonSize("lg", "lg"),
+                  "font-regular w-[120px] md:w-[94px]"
+                )}
                 disabled={
                   (!isAuthSubmitted && !form.watch("phone")?.length) ||
                   isPhoneAuthenticated
@@ -150,8 +156,12 @@ export default function Signup() {
                 <Button
                   type="button"
                   color="black"
-                  size="lg"
-                  className="md:text-s font-regular h-10 w-[94px] text-[15px] md:h-9 md:w-[92px] md:font-medium lg:h-12 lg:w-[120px] lg:font-semibold"
+                  className={cn(
+                    "h-10 rounded-[8px] text-[15px]",
+                    buttonSize("md", "sm"),
+                    buttonSize("lg", "lg"),
+                    "font-regular w-[120px] md:w-[94px]"
+                  )}
                   disabled={!isAuthSubmitted || isPhoneAuthenticated}
                   onClick={() => handleCheckAuth(field.value!)}
                 >
@@ -195,8 +205,12 @@ export default function Signup() {
           <Button
             type="submit"
             color="primary"
-            size="lg"
-            className="font-regular h-9 w-full md:mt-6 md:mb-6 lg:mt-8 lg:h-12"
+            className={cn(
+              buttonSize("lg", "lg"),
+              buttonSize("md", "md"),
+              buttonSize(null, "sm"),
+              "font-regular w-full sm:mb-6 md:my-6"
+            )}
             disabled={!isConsentGiven}
           >
             가입하기

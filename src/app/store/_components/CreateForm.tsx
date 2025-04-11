@@ -13,6 +13,8 @@ import Input from "@/components/common/Input";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
+import { buttonSize } from "@/styles/responsiveButton";
+import cn from "@/lib/utils";
 import UploadPhoto from "./UploadPhoto";
 
 export default function CreateForm() {
@@ -54,7 +56,7 @@ export default function CreateForm() {
 
   return (
     <div className="flex justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
-      <div className="flex flex-col">
+      <div className="hidden flex-col md:flex">
         <Image
           src="/logo.svg"
           alt="로고"
@@ -71,7 +73,10 @@ export default function CreateForm() {
           간단한 정보만 입력하면 바로 시작할 수 있어요!
         </p>
       </div>
-      <div className="flex flex-col gap-[16px] md:w-[321px] lg:w-100">
+      <div className="flex w-[320px] flex-col gap-[16px] lg:w-100">
+        <h1 className="text-gray-0 mb-8 flex w-full justify-center text-xl font-semibold md:hidden">
+          매장 등록
+        </h1>
         <FormProvider {...form}>
           <form
             onSubmit={form.handleSubmit(submitHandler)}
@@ -88,8 +93,10 @@ export default function CreateForm() {
               name="owner"
               label="대표자명"
               placeholder="대표자명 입력해주세요."
+              className="hidden md:block"
+              containerClassName="hidden md:block"
             />
-            <div>
+            <div className="hidden md:block">
               <Label className="mb-1">소재지</Label>
               <Input
                 {...form.register("address")}
@@ -99,7 +106,7 @@ export default function CreateForm() {
                 className="cursor-pointer placeholder:text-gray-300"
               />
             </div>
-            <div>
+            <div className="hidden md:block">
               <Label className="mb-1">매장 전화번호</Label>
               <Input
                 {...form.register("phoneNumber")}
@@ -118,7 +125,15 @@ export default function CreateForm() {
               />
             </div>
             <UploadPhoto ref={fileRef} handleFile={handleFile} image={image!} />
-            <Button type="submit" className="mt-4" size="responsive">
+            <Button
+              type="submit"
+              className={cn(
+                buttonSize("lg", "lg"),
+                buttonSize("md", "sm"),
+                "h-10 rounded-[8px] text-sm font-medium text-white",
+                "mt-4"
+              )}
+            >
               신청하기
             </Button>
           </form>

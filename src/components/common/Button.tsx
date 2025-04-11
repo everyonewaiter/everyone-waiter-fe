@@ -23,17 +23,10 @@ const buttonVariants = cva(
         succeed: "bg-[#2E8CFF] !text-white",
         "re-accepted": "bg-[#FFAB45] !text-white",
       },
-      size: {
-        sm: "px-[16px] h-[36px] rounded-[8px] text-s font-medium",
-        md: "px-[24px] h-[44px] rounded-[8px] text-sm font-medium",
-        lg: "px-[24px] h-[48px] rounded-[12px] text-[15px] font-semibold",
-        xl: "px-[32px] h-[56px] rounded-[12px] text-base font-semibold",
-      },
     },
     defaultVariants: {
       variant: "default",
       color: "primary",
-      size: "sm",
     },
   }
 );
@@ -62,7 +55,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     {
       className,
       variant,
-      size,
       color = "primary",
       disabled,
       asChild = false,
@@ -77,7 +69,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           buttonVariants({
             variant,
-            size,
             color: disabled ? "grey" : color,
             className,
           })
