@@ -4,6 +4,7 @@ import Head from "next/head";
 import "./globals.css";
 import Script from "next/script";
 import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
+
 import QueryProviders from "./query-providers";
 
 export const metadata: Metadata = {
@@ -28,7 +29,7 @@ export default function RootLayout({
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
       />
-      <body>
+      <body className="select-none">
         <OverlayStoreProvider>
           <QueryProviders>
             <div className="flex h-[calc(100vh-60px)] w-full md:h-[calc(100vh-76px)] lg:h-[calc(100vh-112px)]">
