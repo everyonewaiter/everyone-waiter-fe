@@ -1,19 +1,20 @@
 "use client";
 
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { TypeStore } from "@/schema/store.schema";
-import Image from "next/image";
 import { Button } from "@/components/common/Button";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import formatDate from "@/lib/formatting/formatDate";
 import Label from "@/components/common/label";
 import Input from "@/components/common/Input";
+import { buttonSize } from "@/styles/responsiveButton";
+import cn from "@/lib/utils";
 import StepIndicator from "../StepIndicator";
-import UploadPhoto from "../UploadPhoto";
+import PhotoForBusiness from "./PhotoForBusiness";
 
 type FormState = Pick<TypeStore, "storeName" | "businessNumber" | "address"> & {
   applicationDate: string;
@@ -25,20 +26,9 @@ interface IProps {
 }
 
 export default function StoreApplicationModal({ close }: IProps) {
-  const fileRef = useRef<HTMLInputElement>(null);
-
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isPhotoUpdating, setIsPhotoUpdating] = useState(false);
-  const [image, setImage] = useState("");
-
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
-    }
-  };
 
   const form = useForm<FormState>({
     mode: "onChange",
@@ -78,18 +68,28 @@ export default function StoreApplicationModal({ close }: IProps) {
       buttonComponent={
         isUpdating ? (
           <Button
-            className="w-full"
+            className={cn(
+              "h-10 w-full lg:h-14",
+              buttonSize(null, "sm"),
+              buttonSize("md", "sm"),
+              buttonSize("lg", "xl"),
+              "lg:text-lg lg:font-semibold"
+            )}
             color="primary"
-            size="lg"
             onClick={() => null}
           >
             재신청하기
           </Button>
         ) : (
           <Button
-            className="w-full"
             color="black"
-            size="lg"
+            className={cn(
+              "h-10 w-full lg:h-14",
+              buttonSize(null, "sm"),
+              buttonSize("md", "sm"),
+              buttonSize("lg", "xl"),
+              "lg:text-lg lg:font-semibold"
+            )}
             onClick={() => setIsUpdating(true)}
           >
             수정하고 재신청하기
@@ -97,14 +97,14 @@ export default function StoreApplicationModal({ close }: IProps) {
         )
       }
     >
-      <div className="flex w-full justify-center">
+      <div className="hidden w-full justify-center md:flex">
         <StepIndicator
           steps={["매장 정보 입력", "파일 첨부"]}
           onSetActive={setActive}
           isActive={active}
         />
       </div>
-      <div className="mt-5 mb-[33px]">
+      <div className="mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] md:overflow-y-scroll lg:mt-5 lg:mb-[33px]">
         {active === 0 ? (
           <FormProvider {...form}>
             <form className="flex flex-col gap-4">
@@ -164,43 +164,20 @@ export default function StoreApplicationModal({ close }: IProps) {
                 }
               />
             </form>
+            <div className="flex w-full md:hidden">
+              <PhotoForBusiness
+                isUpdating={isUpdating}
+                isPhotoUpdating={isPhotoUpdating}
+                onResetPhoto={() => setIsPhotoUpdating(true)}
+              />
+            </div>
           </FormProvider>
         ) : (
-          <div className="mb-10 flex w-full flex-col items-center justify-center px-12">
-            {/* 예시 이미지 */}
-            {isPhotoUpdating ? (
-              <div className="h-[457px] w-[380px]">
-                <UploadPhoto
-                  ref={fileRef}
-                  handleFile={handleFile}
-                  image={image!}
-                  width="380"
-                  height="457"
-                />
-              </div>
-            ) : (
-              <>
-                <Image
-                  src="/gif/no-stores.gif"
-                  alt="사업자 등록증"
-                  width={380}
-                  height={457}
-                  className="h-[457px] w-[380px] rounded-[16px] border border-gray-600"
-                />
-                {isUpdating && (
-                  <Button
-                    size="md"
-                    color="outline-black"
-                    variant="outline"
-                    className="mt-3 w-full"
-                    onClick={() => setIsPhotoUpdating(true)}
-                  >
-                    초기화하기
-                  </Button>
-                )}
-              </>
-            )}
-          </div>
+          <PhotoForBusiness
+            isUpdating={isUpdating}
+            isPhotoUpdating={isPhotoUpdating}
+            onResetPhoto={() => setIsPhotoUpdating(true)}
+          />
         )}
       </div>
     </ModalWithTitle>

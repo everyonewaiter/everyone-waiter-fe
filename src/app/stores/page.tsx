@@ -5,14 +5,18 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import cn from "@/lib/utils";
+import { buttonSize } from "@/styles/responsiveButton";
+import Image from "next/image";
 import Row, { STATUS_COLORS } from "../store/_components/Row";
+import MobileTableItem from "../store/_components/MobileTableItem";
 
-const TABLE_HEADER = {
-  "No.": "120px",
-  신청일: "482px",
-  상호명: "482.67px",
-  상태: "168px",
-  사유: "482.67px",
+export const TABLE_HEADER = {
+  "No.": "lg:w-[120px] md:w-[80px]",
+  신청일: "lg:w-[482px] md:w-[160px]",
+  상호명: "lg:w-[482.67px] md:w-[160px]",
+  상태: "lg:w-[168px] md:w-[80px]",
+  사유: "lg:w-[482.67px] md:w-[202px]",
 };
 
 const DUMMY_DATA: {
@@ -57,20 +61,29 @@ export default function StoreList() {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
-    <div className="rounded-[32px] bg-white p-8 lg:min-h-[1016px] lg:w-[1800px]">
-      <header className="flex h-[68px] flex-col justify-between border-b border-b-gray-500">
-        <h1 className="text-gray-0 text-[28px] font-bold">매장 정보</h1>
+    <div className="w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-0 lg:min-h-[1016px] lg:w-[1800px]">
+      <header className="flex justify-between border-b border-b-gray-500 md:h-10 md:flex-row md:items-center lg:h-[68px] lg:flex-col">
+        <h1 className="text-gray-0 mb-3 text-lg font-semibold md:mb-0 md:text-base md:font-bold lg:text-[28px]">
+          매장 등록 신청 현황
+        </h1>
+        <button type="button" className="hidden md:block">
+          <Image
+            src="/icons/hamburger.svg"
+            alt="사이드 메뉴"
+            width={32}
+            height={32}
+          />
+        </button>
       </header>
-      <div className="my-[24px] w-full">
-        <div
-          className="flex h-[64px] items-center justify-center bg-gray-700"
-          style={{ borderRadius: "16px" }}
-        >
+      <div className="my-[24px] hidden w-full md:block">
+        <div className="flex items-center justify-center bg-gray-700 md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
           {Object.keys(TABLE_HEADER).map((key) => (
             <div
               key={key}
-              className="text-gray-0 text-center text-base font-bold"
-              style={{ width: TABLE_HEADER[key as keyof typeof TABLE_HEADER] }}
+              className={cn(
+                "text-gray-0 text-s text-center md:font-medium lg:text-base lg:font-bold",
+                TABLE_HEADER[key as keyof typeof TABLE_HEADER]
+              )}
             >
               {key}
             </div>
@@ -83,11 +96,21 @@ export default function StoreList() {
           ))}
         </div>
       </div>
-      <div className="flex w-full justify-end">
+      <div className="mt-4 flex flex-col gap-4 md:hidden">
+        {DUMMY_DATA.map((item) => (
+          <MobileTableItem key={item.id} {...item} />
+        ))}
+      </div>
+      <div className="hidden w-full justify-end md:flex">
         <Button
           variant="outline"
           color="outline-primary"
-          className="flex h-[40px] gap-[6px]"
+          className={cn(
+            "flex lg:gap-[6px]",
+            buttonSize("lg", "md"),
+            buttonSize("md", "sm"),
+            "md:h-8 md:px-3 lg:h-10 lg:pr-5 lg:pl-4"
+          )}
           onClick={() => navigate.push("/store/create")}
         >
           <Plus className="fill-primary h-4 w-4" />
@@ -95,6 +118,7 @@ export default function StoreList() {
         </Button>
       </div>
       <Paginations
+        size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
         totalPages={10}
         currentPage={currentPage}
         onSetCurrentPage={setCurrentPage}

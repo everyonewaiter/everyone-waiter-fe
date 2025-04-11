@@ -9,8 +9,6 @@ interface IProps {
   title: string;
   topRightComponent?: ReactNode;
   buttonComponent?: ReactNode;
-  width?: number;
-  height?: number;
 }
 
 export default function ModalWithTitle({
@@ -19,8 +17,6 @@ export default function ModalWithTitle({
   title,
   topRightComponent,
   buttonComponent,
-  width,
-  height,
 }: IProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,18 +27,26 @@ export default function ModalWithTitle({
     <div className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm">
       <div
         ref={ref}
-        style={{ width, height }}
-        className="relative rounded-[30px] bg-white lg:w-[543px] lg:p-8"
+        className="relative w-[320px] rounded-[30px] bg-white p-5 md:w-[364px] md:p-5 lg:w-[543px] lg:p-8"
       >
         <div className="flex items-center justify-between">
-          <h1 className="text-gray-0 text-2xl font-semibold">{title}</h1>
+          <h1 className="text-gray-0 font-semibold md:text-base lg:text-2xl">
+            {title}
+          </h1>
           {topRightComponent || (
             <button type="button" onClick={onClose}>
-              <CloseIcon width={32} height={32} color="#222" />
+              <CloseIcon
+                width={32}
+                height={32}
+                color="#222"
+                className="h-6 w-6 lg:h-8 lg:w-8"
+              />
             </button>
           )}
         </div>
-        <div className="mt-8 h-145 overflow-y-scroll">{children}</div>
+        <div className="md:l-87 overflow-y-scroll md:mt-5 lg:mt-8 lg:h-145">
+          {children}
+        </div>
         {buttonComponent}
       </div>
     </div>

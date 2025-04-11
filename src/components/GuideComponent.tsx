@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import cn from "@/lib/utils";
+import { buttonSize } from "@/styles/responsiveButton";
 import { Button } from "./common/Button";
 
 interface IProps {
@@ -10,6 +12,7 @@ interface IProps {
     size: number;
   };
   gap?: number;
+  isFromHome: boolean;
 }
 
 export default function GuideComponent({
@@ -17,12 +20,13 @@ export default function GuideComponent({
   subtitle,
   image,
   gap,
+  isFromHome,
 }: IProps) {
   const navigate = useRouter();
 
   return (
     <div
-      className={`flex flex-col items-center md:w-[400px] lg:w-[480px] ${gap ? `gap-${gap}` : "md:gap-8 lg:gap-10"} rounded-[32px] bg-white p-8`}
+      className={`flex w-[311px] flex-col items-center md:w-[360px] lg:w-[480px] ${gap ? `gap-${gap}` : "md:gap-8 lg:gap-10"} rounded-[32px] bg-white`}
     >
       <Image
         src={image.url}
@@ -31,38 +35,42 @@ export default function GuideComponent({
         height={image.size}
         className="md:h-[100px] md:w-[100px] lg:h-[160px] lg:w-[160px]"
       />
-      <div className="flex flex-col text-center md:w-[360px] md:gap-6 lg:gap-8">
-        <div className="flex flex-col md:gap-2 lg:gap-3">
+      <div className="flex w-full flex-col gap-6 text-center lg:gap-8">
+        <div className="flex flex-col">
           <div>
             {title.split("\\n").map((line) => (
               <span
                 key={line}
-                className="text-gray-0 font-semibold md:text-base lg:text-2xl"
+                className="text-gray-0 text-lg font-semibold md:text-base lg:text-2xl"
               >
                 {line}
                 <br />
               </span>
             ))}
           </div>
-          <div>
+          <div className="mt-3 flex flex-col gap-0.5 md:mt-2 md:gap-1">
             {subtitle.split("\\n").map((line) => (
               <span
                 key={line}
-                className="font-regular md:text-s whitespace-pre-wrap text-gray-300 lg:text-lg"
+                className="font-regular text-s whitespace-pre-wrap text-[#505050] md:text-gray-300 lg:text-lg"
               >
                 {line}
-                <br />
               </span>
             ))}
           </div>
         </div>
         <Button
           color="primary"
-          size="lg"
-          onClick={() => navigate.push("/store/list")}
-          className="md:text-s md:h-[36px] md:rounded-[8px] md:font-medium"
+          onClick={() =>
+            navigate.push(isFromHome ? "/store/create" : "/stores")
+          }
+          className={cn(
+            buttonSize("lg", "lg"),
+            buttonSize(null, "sm"),
+            "h-10 md:h-9 lg:h-12"
+          )}
         >
-          내 신청 현황 보기
+          {isFromHome ? "매장 등록하기" : " 내 신청 현황 보기"}
         </Button>
       </div>
     </div>

@@ -93,7 +93,7 @@ function FormLabel({
   labelDisabled,
   ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root> & {
-  labelDisabled: boolean;
+  labelDisabled?: boolean;
 }) {
   const { error, formItemId } = useFormField();
 

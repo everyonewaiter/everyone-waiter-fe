@@ -48,7 +48,7 @@ const PaginationLink = ({
   <button
     aria-current={isActive ? "page" : undefined}
     className={cn(
-      "h-6 w-6 rounded-[4px] bg-gray-100 text-sm font-bold text-white",
+      "md:text-s rounded-[4px] bg-gray-100 text-white md:font-semibold lg:text-sm lg:font-bold",
       className
     )}
     onClick={onClick}

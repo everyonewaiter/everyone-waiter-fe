@@ -16,6 +16,7 @@ interface IProps {
   className?: string;
   onSetCurrentPage: (value: number) => void;
   currentPage: number;
+  size: string;
 }
 
 export default function Paginations({
@@ -23,6 +24,7 @@ export default function Paginations({
   className,
   onSetCurrentPage,
   currentPage,
+  size,
 }: IProps) {
   const handlePagination = (type: "prev" | "next") => {
     if (currentPage > 1 && type === "prev") {
@@ -45,28 +47,32 @@ export default function Paginations({
       <PaginationContent>
         <PaginationItem>
           <PaginationFastPrev
+            className={size}
             hasPrevPage={currentPage > 5}
             onClick={() => handleFastPagination("prev")}
           />
         </PaginationItem>
         <PaginationItem>
           <PaginationPrevious
+            className={size}
             hasPrevPage={currentPage > 1}
             onClick={() => handlePagination("prev")}
           />
         </PaginationItem>
         <PaginationItem className="mx-3">
-          <PaginationLink onClick={() => {}}>{currentPage}</PaginationLink>
+          <PaginationLink className={size}>{currentPage}</PaginationLink>
         </PaginationItem>
         <PaginationItem>
           <PaginationNext
             hasNextPage={currentPage < totalPages}
+            className={size}
             onClick={() => handlePagination("next")}
           />
         </PaginationItem>
         <PaginationItem>
           <PaginationFastNext
             hasNextPage={currentPage <= totalPages - 5}
+            className={size}
             onClick={() => handleFastPagination("next")}
           />
         </PaginationItem>

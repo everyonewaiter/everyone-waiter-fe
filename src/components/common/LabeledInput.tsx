@@ -28,6 +28,7 @@ interface IProps<T extends FieldValues>
   rightComponent?: (field: ControllerRenderProps<T, Path<T>>) => ReactNode;
   inputClassname?: string;
   labelDisabled?: boolean;
+  containerClassName?: string;
 }
 
 export default function LabeledInput<T extends FieldValues>({
@@ -40,6 +41,7 @@ export default function LabeledInput<T extends FieldValues>({
   inputClassname,
   type = "text",
   labelDisabled,
+  containerClassName,
   ...props
 }: IProps<T>) {
   return (
@@ -47,7 +49,9 @@ export default function LabeledInput<T extends FieldValues>({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex w-full flex-col gap-1">
+        <FormItem
+          className={cn("flex w-full flex-col gap-1", containerClassName)}
+        >
           <FormLabel labelDisabled={labelDisabled!}>{label}</FormLabel>
           <div className="flex gap-3">
             <FormControl>
