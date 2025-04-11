@@ -53,17 +53,25 @@ export default function CreateForm() {
   };
 
   return (
-    <div className="flex w-222 justify-between rounded-[32px] bg-white p-8">
+    <div className="flex justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
       <div className="flex flex-col">
-        <Image src="/logo.svg" alt="로고" width={90} height={90} />
-        <h1 className="text-gray-0 mt-10 text-4xl font-bold">매장 등록</h1>
-        <p className="font-regular mt-3 text-[15px] text-gray-300">
+        <Image
+          src="/logo.svg"
+          alt="로고"
+          width={90}
+          height={90}
+          className="md:h-[60px] md:w-[60px] lg:h-[90px] lg:w-[90px]"
+        />
+        <h1 className="text-gray-0 md:mt-5 md:text-xl md:font-semibold lg:mt-10 lg:text-4xl lg:font-bold">
+          매장 등록
+        </h1>
+        <p className="font-regular text-gray-300 md:mt-2 md:text-xs lg:mt-3 lg:text-[15px]">
           첫 매장을 등록해볼까요?
           <br />
           간단한 정보만 입력하면 바로 시작할 수 있어요!
         </p>
       </div>
-      <div className="flex w-100 flex-col gap-[16px]">
+      <div className="flex flex-col gap-[16px] md:w-[321px] lg:w-100">
         <FormProvider {...form}>
           <form
             onSubmit={form.handleSubmit(submitHandler)}
@@ -110,7 +118,7 @@ export default function CreateForm() {
               />
             </div>
             <UploadPhoto ref={fileRef} handleFile={handleFile} image={image!} />
-            <Button type="submit" className="mt-4" size="lg">
+            <Button type="submit" className="mt-4" size="responsive">
               신청하기
             </Button>
           </form>
