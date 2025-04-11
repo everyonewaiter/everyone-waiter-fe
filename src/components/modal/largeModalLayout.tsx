@@ -2,25 +2,25 @@ import { ReactNode, useRef } from "react";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import { X as CloseIcon } from "lucide-react";
-import { Button } from "../common/Button";
 
 interface IProps {
   children: ReactNode;
   onClose: () => void;
   title: string;
   topRightComponent?: ReactNode;
-  button: {
-    text: string;
-    onClick: () => void;
-  };
+  buttonComponent?: ReactNode;
+  width?: number;
+  height?: number;
 }
 
-export default function LargeModal({
+export default function ModalWithTitle({
   onClose,
   children,
   title,
   topRightComponent,
-  button,
+  buttonComponent,
+  width,
+  height,
 }: IProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,6 +31,7 @@ export default function LargeModal({
     <div className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm">
       <div
         ref={ref}
+        style={{ width, height }}
         className="relative rounded-[30px] bg-white lg:w-[543px] lg:p-8"
       >
         <div className="flex items-center justify-between">
@@ -41,15 +42,8 @@ export default function LargeModal({
             </button>
           )}
         </div>
-        <div className="mt-8 h-139 overflow-y-scroll">{children}</div>
-        <Button
-          className="w-full"
-          color="black"
-          size="lg"
-          onClick={button.onClick}
-        >
-          {button.text}
-        </Button>
+        <div className="mt-8 h-145 overflow-y-scroll">{children}</div>
+        {buttonComponent}
       </div>
     </div>
   );
