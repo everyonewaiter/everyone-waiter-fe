@@ -1,11 +1,11 @@
 "use client";
 
-import { Button, ButtonColors } from "@/components/common/Button";
+import { Button } from "@/components/common/Button";
 import Paginations from "@/components/common/Pagination/Paginations";
-import useOverlay from "@/hooks/use-overlay";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import StoreApplicationModal from "../_components/StoreApplicationModal";
+import { useRouter } from "next/navigation";
+import Row, { STATUS_COLORS } from "../store/_components/Row";
 
 const TABLE_HEADER = {
   "No.": "120px",
@@ -15,57 +15,46 @@ const TABLE_HEADER = {
   사유: "482.67px",
 };
 
-const STATUS_COLORS = {
-  accepted: "접수",
-  rejected: "반려",
-  succeed: "승인",
-  "re-accepted": "재접수",
-};
-
 const DUMMY_DATA: {
   id: number;
   date: number;
   store: string;
-  status: ButtonColors;
+  status: keyof typeof STATUS_COLORS;
   reason: string;
 }[] = [
   {
     id: 1,
     date: 1712810000000,
     store: "모두의 웨이터",
-    status: "rejected",
-    reason: "사업자 번호 오류",
+    status: "accepted",
+    reason: "-",
   },
   {
     id: 2,
     date: 1712810000000,
-    store: "모두의 데이터2",
+    store: "모두의 웨이터",
+    status: "rejected",
+    reason: "사업자 번호 오류",
+  },
+  {
+    id: 3,
+    date: 1712810000000,
+    store: "모두의 데이터",
+    status: "re-accepted",
+    reason: "-",
+  },
+  {
+    id: 4,
+    date: 1712810000000,
+    store: "모두의 데이터",
     status: "succeed",
     reason: "-",
   },
 ];
 
-function DataCell({
-  children,
-  width,
-}: {
-  children: React.ReactNode;
-  width: string;
-}) {
-  return (
-    <div className="text-gray-0 text-center text-base" style={{ width }}>
-      {children}
-    </div>
-  );
-}
-
 export default function StoreList() {
+  const navigate = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const { open, close } = useOverlay();
-
-  const handleOpenModal = () => {
-    open(() => <StoreApplicationModal close={close} />);
-  };
 
   return (
     <div className="rounded-[32px] bg-white p-8 lg:min-h-[1016px] lg:w-[1800px]">
@@ -89,32 +78,8 @@ export default function StoreList() {
         </div>
         <div>
           {/* 더미 데이터 */}
-          {DUMMY_DATA.map((item) => (
-            <div
-              className="flex h-[64px] w-full items-center justify-center border-b border-b-gray-600"
-              key={item.id}
-              role="button"
-              tabIndex={0}
-              onClick={handleOpenModal}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleOpenModal();
-                }
-              }}
-            >
-              <DataCell width="120px">{item.id}</DataCell>
-              <DataCell width="482px">{item.date}</DataCell>
-              <DataCell width="482.67px">{item.store}</DataCell>
-              <DataCell width="168px">
-                <Button
-                  color={item.status as ButtonColors}
-                  className="font-regular h-[37px] w-[65px] text-sm"
-                >
-                  {STATUS_COLORS[item.status as keyof typeof STATUS_COLORS]}
-                </Button>
-              </DataCell>
-              <DataCell width="482.67px">{item.reason}</DataCell>
-            </div>
+          {DUMMY_DATA.map((item, index) => (
+            <Row key={item.id} {...item} index={index} />
           ))}
         </div>
       </div>
@@ -123,13 +88,14 @@ export default function StoreList() {
           variant="outline"
           color="outline-primary"
           className="flex h-[40px] gap-[6px]"
+          onClick={() => navigate.push("/store/create")}
         >
           <Plus className="fill-primary h-4 w-4" />
           매장 추가
         </Button>
       </div>
       <Paginations
-        totalPages={6}
+        totalPages={10}
         currentPage={currentPage}
         onSetCurrentPage={setCurrentPage}
         className="mt-8"
