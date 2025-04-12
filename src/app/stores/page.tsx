@@ -61,7 +61,7 @@ export default function StoreList() {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
-    <div className="w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
+    <div className="min-h-screen w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
       <header className="flex justify-between border-b border-b-gray-500 md:h-10 md:items-center lg:h-[68px]">
         <h1 className="text-gray-0 mb-3 text-lg font-semibold md:mb-0 md:text-base md:font-bold lg:text-[28px]">
           매장 등록 신청 현황
