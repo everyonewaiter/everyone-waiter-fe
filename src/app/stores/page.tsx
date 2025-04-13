@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import cn from "@/lib/utils";
 import { buttonSize } from "@/styles/responsiveButton";
 import Image from "next/image";
-import Row, { STATUS_COLORS } from "../store/_components/Row";
-import MobileTableItem from "../store/_components/MobileTableItem";
+import useStores from "@/hooks/useStores";
+import Row from "../store/_components/Row";
 
 export const TABLE_HEADER = {
   "No.": "lg:w-[120px] md:w-[80px]",
@@ -19,46 +19,13 @@ export const TABLE_HEADER = {
   사유: "lg:w-[482.67px] md:w-[202px]",
 };
 
-const DUMMY_DATA: {
-  id: number;
-  date: number;
-  store: string;
-  status: keyof typeof STATUS_COLORS;
-  reason: string;
-}[] = [
-  {
-    id: 1,
-    date: 1712810000000,
-    store: "모두의 웨이터",
-    status: "accepted",
-    reason: "-",
-  },
-  {
-    id: 2,
-    date: 1712810000000,
-    store: "모두의 웨이터",
-    status: "rejected",
-    reason: "사업자 번호 오류",
-  },
-  {
-    id: 3,
-    date: 1712810000000,
-    store: "모두의 데이터",
-    status: "re-accepted",
-    reason: "-",
-  },
-  {
-    id: 4,
-    date: 1712810000000,
-    store: "모두의 데이터",
-    status: "succeed",
-    reason: "-",
-  },
-];
-
 export default function StoreList() {
   const navigate = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { registerations } = useStores();
+
+  const data = registerations?.pages[0]?.registrations;
 
   return (
     <div className="min-h-screen w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
@@ -75,8 +42,8 @@ export default function StoreList() {
           />
         </button>
       </header>
-      <div className="my-[24px] hidden w-full md:block">
-        <div className="flex items-center justify-center bg-gray-700 md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
+      <div className="mt-4 w-full md:my-[24px] md:block">
+        <div className="hidden items-center justify-center bg-gray-700 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
           {Object.keys(TABLE_HEADER).map((key) => (
             <div
               key={key}
@@ -89,17 +56,11 @@ export default function StoreList() {
             </div>
           ))}
         </div>
-        <div>
-          {/* 더미 데이터 */}
-          {DUMMY_DATA.map((item, index) => (
-            <Row key={item.id} {...item} index={index} />
+        <div className="flex flex-col gap-4 md:mt-4 md:gap-0">
+          {data?.map((item, index) => (
+            <Row key={item.createdAt} {...item} index={index} />
           ))}
         </div>
-      </div>
-      <div className="mt-4 flex flex-col gap-4 md:hidden">
-        {DUMMY_DATA.map((item) => (
-          <MobileTableItem key={item.id} {...item} />
-        ))}
       </div>
       <div className="hidden w-full justify-end md:flex">
         <Button
@@ -107,9 +68,9 @@ export default function StoreList() {
           color="outline-primary"
           className={cn(
             "flex lg:gap-[6px]",
-            buttonSize("lg", "lg"),
+            "lg:h-10 lg:pr-5 lg:pl-4",
             buttonSize("md", "sm"),
-            "md:h-8 md:px-3 lg:h-10 lg:pr-5 lg:pl-4"
+            buttonSize("lg", "lg")
           )}
           onClick={() => navigate.push("/store/create")}
         >

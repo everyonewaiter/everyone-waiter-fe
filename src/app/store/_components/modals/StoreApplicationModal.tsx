@@ -4,61 +4,106 @@ import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import LabeledInput from "@/components/common/LabeledInput";
-import { TypeStore } from "@/schema/store.schema";
 import { Button } from "@/components/common/Button";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import formatDate from "@/lib/formatting/formatDate";
-import Label from "@/components/common/label";
+import Label from "@/components/common/Label";
 import Input from "@/components/common/Input";
 import { buttonSize } from "@/styles/responsiveButton";
 import cn from "@/lib/utils";
+import useStores from "@/hooks/useStores";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
 
-type FormState = Pick<TypeStore, "storeName" | "businessNumber" | "address"> & {
-  applicationDate: string;
-  reasons: string;
+type FormState = Omit<StoreDetail, "updatedAt" | "accountId"> & {
+  image: string;
 };
 
 interface IProps {
   close: () => void;
+  item: FormState;
 }
 
-export default function StoreApplicationModal({ close }: IProps) {
+export default function StoreApplicationModal({ close, item }: IProps) {
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isPhotoUpdating, setIsPhotoUpdating] = useState(false);
 
-  const form = useForm<FormState>({
+  const form = useForm<
+    Omit<FormState, "image"> & { image: File | string | null }
+  >({
     mode: "onChange",
     defaultValues: {
-      storeName: "",
-      businessNumber: "",
+      name: "",
+      ceoName: "",
+      landline: "",
+      license: "",
       address: "",
-      applicationDate: "",
-      reasons: "",
+      createdAt: "",
+      reason: "",
+      image: null,
     },
   });
 
   useEffect(() => {
-    form.setValue("storeName", "모두의 웨이터");
-    form.setValue("businessNumber", "123-45-67890");
-    form.setValue("address", "서울 강남구 29-12길");
-    form.setValue("applicationDate", "2025-01-01");
-    form.setValue("reasons", "사업자 정보를 조회할 수 없습니다.");
-  }, [form]);
+    if (item) {
+      form.setValue("name", item.name);
+      form.setValue("license", item.license);
+      form.setValue("address", item.address);
+      form.setValue("createdAt", item.createdAt);
+      form.setValue("reason", item.reason);
+      form.setValue("image", item.image);
+    }
+  }, [item]);
 
   const { handleOpenAddress } = useOpenDaumPostcode(form);
+  const { reapplyRegister, reapplyRegisterWithImage } = useStores();
 
   const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
-    form.setValue("businessNumber", formatBusinessNumber(str));
+    form.setValue("license", formatBusinessNumber(str));
   };
 
   const handleDate = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
-    form.setValue("applicationDate", formatDate(str));
+    form.setValue("createdAt", formatDate(str));
+  };
+
+  const handleReapplyWithImage = () => {
+    const formData = new FormData();
+    formData.append("name", form.getValues("name"));
+    formData.append("ceoName", form.getValues("ceoName"));
+    formData.append("landline", form.getValues("landline"));
+    formData.append("license", form.getValues("license"));
+    formData.append("address", form.getValues("address"));
+    formData.append("file", form.getValues("image") as File);
+
+    reapplyRegisterWithImage({
+      registrationId: Number(item.registrationId),
+      body: formData,
+    });
+  };
+
+  const handleReapply = () => {
+    reapplyRegister({
+      registrationId: Number(item.registrationId),
+      body: {
+        name: form.getValues("name"),
+        ceoName: form.getValues("ceoName"),
+        landline: form.getValues("landline"),
+        license: form.getValues("license"),
+        address: form.getValues("address"),
+      },
+    });
+  };
+
+  const handleClick = () => {
+    if (typeof form.getValues("image") === "string") {
+      handleReapply();
+    } else {
+      handleReapplyWithImage();
+    }
   };
 
   return (
@@ -66,35 +111,19 @@ export default function StoreApplicationModal({ close }: IProps) {
       onClose={close}
       title="매장 등록 신청 현황"
       buttonComponent={
-        isUpdating ? (
-          <Button
-            className={cn(
-              buttonSize("lg", "xl"),
-              buttonSize("md", "sm"),
-              buttonSize(null, "sm"),
-              "h-10 w-full lg:h-14",
-              "lg:text-lg lg:font-semibold"
-            )}
-            color="primary"
-            onClick={() => null}
-          >
-            재신청하기
-          </Button>
-        ) : (
-          <Button
-            color="black"
-            className={cn(
-              buttonSize("lg", "xl"),
-              buttonSize("md", "sm"),
-              buttonSize(null, "sm"),
-              "h-10 w-full lg:h-14",
-              "lg:text-lg lg:font-semibold"
-            )}
-            onClick={() => setIsUpdating(true)}
-          >
-            수정하고 재신청하기
-          </Button>
-        )
+        <Button
+          className={cn(
+            buttonSize("lg", "xl"),
+            buttonSize("md", "sm"),
+            buttonSize(null, "sm"),
+            "h-10 w-full lg:h-14",
+            "lg:text-lg lg:font-semibold"
+          )}
+          color={isUpdating ? "black" : "primary"}
+          onClick={() => (isUpdating ? handleClick() : setIsUpdating(true))}
+        >
+          {isUpdating ? "재신청하기" : "수정하고 재신청하기"}
+        </Button>
       }
     >
       <div className="hidden w-full justify-center md:flex">
@@ -110,7 +139,7 @@ export default function StoreApplicationModal({ close }: IProps) {
             <form className="flex flex-col gap-4">
               <LabeledInput
                 form={form}
-                name="storeName"
+                name="name"
                 label="상호명"
                 placeholder="상호명을 입력해주세요. (20자 이내)"
                 disabled={!isUpdating}
@@ -121,7 +150,7 @@ export default function StoreApplicationModal({ close }: IProps) {
                   사업자 번호
                 </Label>
                 <Input
-                  {...form.register("businessNumber")}
+                  {...form.register("license")}
                   placeholder="사업자 번호를 입력해주세요."
                   className="placeholder:text-gray-300"
                   onChange={handleBusinessNumber}
@@ -144,7 +173,7 @@ export default function StoreApplicationModal({ close }: IProps) {
                   신청일
                 </Label>
                 <Input
-                  {...form.register("applicationDate")}
+                  {...form.register("createdAt")}
                   placeholder="신청일을 입력해주세요."
                   className="placeholder:text-gray-300"
                   onChange={handleDate}
@@ -153,7 +182,7 @@ export default function StoreApplicationModal({ close }: IProps) {
               </div>
               <LabeledInput
                 form={form}
-                name="reasons"
+                name="reason"
                 label="반려 사유"
                 disabled
                 labelDisabled
@@ -169,6 +198,7 @@ export default function StoreApplicationModal({ close }: IProps) {
                 isUpdating={isUpdating}
                 isPhotoUpdating={isPhotoUpdating}
                 onResetPhoto={() => setIsPhotoUpdating(true)}
+                imageUrl={item.image}
               />
             </div>
           </FormProvider>
@@ -177,6 +207,7 @@ export default function StoreApplicationModal({ close }: IProps) {
             isUpdating={isUpdating}
             isPhotoUpdating={isPhotoUpdating}
             onResetPhoto={() => setIsPhotoUpdating(true)}
+            imageUrl={item.image}
           />
         )}
       </div>

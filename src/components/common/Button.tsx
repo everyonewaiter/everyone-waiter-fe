@@ -18,10 +18,10 @@ const buttonVariants = cva(
         "outline-primary": "border-primary !text-primary",
         "outline-black": "border-gray-200 !text-gray-200",
         "outline-gray": "border-gray-500 !text-gray-200",
-        accepted: "bg-gray-400 !text-white",
-        rejected: "bg-[#FF5555] !text-white",
-        succeed: "bg-[#2E8CFF] !text-white",
-        "re-accepted": "bg-[#FFAB45] !text-white",
+        apply: "bg-gray-400 !text-white",
+        reject: "bg-[#FF5555] !text-white",
+        approve: "bg-[#2E8CFF] !text-white",
+        reapply: "bg-[#FFAB45] !text-white",
       },
     },
     defaultVariants: {
@@ -38,10 +38,10 @@ export type ButtonColors =
   | "outline-primary"
   | "outline-black"
   | "outline-gray"
-  | "accepted"
-  | "rejected"
-  | "succeed"
-  | "re-accepted";
+  | "apply"
+  | "reject"
+  | "approve"
+  | "reapply";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,

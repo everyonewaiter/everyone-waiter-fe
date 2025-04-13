@@ -8,37 +8,53 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import Label from "@/components/common/label";
+import Label from "@/components/common/Label";
 import Input from "@/components/common/Input";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import { buttonSize } from "@/styles/responsiveButton";
 import cn from "@/lib/utils";
+import useStores from "@/hooks/useStores";
 import UploadPhoto from "./UploadPhoto";
 
 export default function CreateForm() {
   const fileRef = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
   const form = useForm<TypeStore>({
     mode: "onChange",
     resolver: zodResolver(storeSchema),
     defaultValues: {
-      storeName: "",
-      owner: "",
+      name: "",
+      ceoName: "",
       address: "",
-      phoneNumber: "",
-      businessNumber: "",
+      landline: "",
+      license: "",
     },
   });
 
-  const submitHandler = () => {};
+  const { register } = useStores();
+
+  const handleSubmit = (data: TypeStore) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("ceoName", data.ceoName);
+    formData.append("address", data.address);
+    formData.append("landline", data.landline);
+    formData.append("license", data.license);
+    if (image) {
+      formData.append("file", image);
+    }
+
+    register(formData);
+  };
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
+      setImage(file);
+      setImageUrl(URL.createObjectURL(file));
     }
   };
 
@@ -46,12 +62,12 @@ export default function CreateForm() {
 
   const handlePhoneNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
-    form.setValue("phoneNumber", phoneNumberPattern(str));
+    form.setValue("landline", phoneNumberPattern(str));
   };
 
   const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
-    form.setValue("businessNumber", formatBusinessNumber(str));
+    form.setValue("license", formatBusinessNumber(str));
   };
 
   return (
@@ -79,21 +95,21 @@ export default function CreateForm() {
         </h1>
         <FormProvider {...form}>
           <form
-            onSubmit={form.handleSubmit(submitHandler)}
+            onSubmit={form.handleSubmit(handleSubmit)}
             className="flex flex-col gap-4"
           >
             <LabeledInput
               form={form}
-              name="storeName"
+              name="name"
               label="상호명"
               placeholder="상호명을 입력해주세요. (20자 이내)"
             />
             <LabeledInput
               form={form}
-              name="owner"
+              name="ceoName"
               label="대표자명"
               placeholder="대표자명 입력해주세요."
-              className="hidden md:block"
+              className="hidden cursor-pointer placeholder:text-gray-300 md:block"
               containerClassName="hidden md:block"
             />
             <div className="hidden md:block">
@@ -109,7 +125,7 @@ export default function CreateForm() {
             <div className="hidden md:block">
               <Label className="mb-1">매장 전화번호</Label>
               <Input
-                {...form.register("phoneNumber")}
+                {...form.register("landline")}
                 placeholder="매장 전화번호를 입력해주세요."
                 className="placeholder:text-gray-300"
                 onChange={handlePhoneNumber}
@@ -118,13 +134,18 @@ export default function CreateForm() {
             <div>
               <Label className="mb-1">사업자 번호</Label>
               <Input
-                {...form.register("businessNumber")}
+                {...form.register("license")}
                 placeholder="사업자 번호를 입력해주세요."
                 className="placeholder:text-gray-300"
                 onChange={handleBusinessNumber}
               />
             </div>
-            <UploadPhoto ref={fileRef} handleFile={handleFile} image={image!} />
+            <UploadPhoto
+              ref={fileRef}
+              handleFile={handleFile}
+              image={imageUrl!}
+              className="h-[140px] w-[320px] md:h-40 md:w-[348px] lg:w-100"
+            />
             <Button
               type="submit"
               className={cn(
