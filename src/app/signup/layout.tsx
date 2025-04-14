@@ -33,11 +33,11 @@ export default function SignupLayout({ children }: { children: ReactNode }) {
         >
           {children}
         </div>
-        <div className="relative hidden h-screen w-full items-center justify-center md:flex">
+        <div className="relative hidden h-screen w-full items-center justify-center md:block">
           <Image
             src="/images/login-cover.svg"
             alt="onboarding"
-            className="d:h-[568px] rounded-[24px] object-cover md:w-[488px] lg:h-[1032px] lg:w-[1152px]"
+            className="rounded-[24px] object-cover md:fixed md:mt-4 md:h-[568px] md:w-[488px] lg:h-[1032px] lg:w-[1152px]"
             width={488}
             height={568}
           />
