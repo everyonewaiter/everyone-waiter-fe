@@ -144,15 +144,15 @@ export default function CreateForm() {
               ref={fileRef}
               handleFile={handleFile}
               image={imageUrl!}
-              className="h-[140px] w-[320px] md:h-40 md:w-[348px] lg:w-100"
+              className="h-[140px] max-w-full md:h-40 md:w-[348px] lg:w-100"
             />
             <Button
               type="submit"
               className={cn(
-                buttonSize("lg", "lg"),
                 buttonSize("md", "sm"),
-                "h-10 rounded-[8px] text-sm font-medium text-white",
-                "mt-4"
+                buttonSize("lg", "lg"),
+                "h-9 rounded-[8px] text-sm font-medium text-white md:h-10 lg:h-12",
+                "mt-4 w-full md:mb-5"
               )}
             >
               신청하기
