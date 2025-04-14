@@ -11,11 +11,11 @@ import useStores from "@/hooks/useStores";
 import Row from "../store/_components/Row";
 
 export const TABLE_HEADER = {
-  "No.": "lg:w-[120px] md:w-[80px]",
-  신청일: "lg:w-[482px] md:w-[160px]",
-  상호명: "lg:w-[482.67px] md:w-[160px]",
-  상태: "lg:w-[168px] md:w-[80px]",
-  사유: "lg:w-[482.67px] md:w-[202px]",
+  "No.": "lg:flex-[0.69] md:flex-[0.88]",
+  신청일: "lg:flex-[2.78] md:flex-[1.88]",
+  상호명: "lg:flex-[2.78] md:flex-[1.88]",
+  상태: "lg:flex-[0.97] md:flex-[0.88]",
+  사유: "lg:flex-[2.78] md:flex-[2.48]",
 };
 
 export default function StoreList() {
@@ -26,7 +26,7 @@ export default function StoreList() {
   const { data } = registrationList(currentPage);
 
   return (
-    <div className="min-h-screen w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
+    <div className="min-h-screen overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-full md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
       <header className="flex justify-between border-b border-b-gray-500 md:h-10 md:items-center lg:h-[68px]">
         <h1 className="text-gray-0 mb-3 text-lg font-semibold md:mb-0 md:text-base md:font-bold lg:text-[28px]">
           매장 등록 신청 현황
