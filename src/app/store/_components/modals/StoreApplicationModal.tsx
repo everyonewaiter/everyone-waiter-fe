@@ -80,14 +80,14 @@ export default function StoreApplicationModal({ close, item }: IProps) {
     formData.append("file", form.getValues("image") as File);
 
     reapplyRegisterWithImage({
-      registrationId: JSON.stringify(item.registrationId),
+      registrationId: item.registrationId.toString(),
       body: formData,
     });
   };
 
   const handleReapply = () => {
     reapplyRegister({
-      registrationId: JSON.stringify(item.registrationId),
+      registrationId: item.registrationId.toString(),
       body: {
         name: form.getValues("name"),
         ceoName: form.getValues("ceoName"),
