@@ -1,15 +1,10 @@
-import instance from "../axios/instance";
+import { formInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
 export const registerStore = async (body: FormData) => {
-  const response = await instance.post(
+  const response = await formInstance.post(
     `${API_PATH.stores}/registrations`,
-    body,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
+    body
   );
   return response.data;
 };
@@ -24,7 +19,7 @@ export const getRegisters = async (
   return response.data;
 };
 
-export const registerDetails = async (registrationId: number) => {
+export const registerDetails = async (registrationId: string) => {
   const response = await instance.get(
     `${API_PATH.stores}/registrations/${registrationId}`
   );
@@ -35,7 +30,7 @@ export const reapplyRegistration = async ({
   registrationId,
   ...body
 }: {
-  registrationId: number;
+  registrationId: string;
   body: Omit<StoreForm, "file">;
 }) => {
   const response = await instance.put(
@@ -49,17 +44,12 @@ export const reapplyRegistrationWithImage = async ({
   registrationId,
   ...body
 }: {
-  registrationId: number;
+  registrationId: string;
   body: FormData;
 }) => {
-  const response = await instance.put(
+  const response = await formInstance.put(
     `${API_PATH.stores}/registrations/${registrationId}/with-image`,
-    body,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
+    body
   );
   return response.data;
 };
