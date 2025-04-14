@@ -8,7 +8,7 @@ interface IProps {
 export default function PendingAcceptModal({ close }: IProps) {
   return (
     <ModalWithTitle onClose={close} title="매장 등록 신청 현황">
-      <div className="flex h-[404px] w-full flex-col items-center justify-center md:h-[258px] lg:h-[350px]">
+      <div className="flex h-[404px] w-full flex-col items-center justify-center md:h-[258px] lg:h-full">
         <Image
           src="/gif/hourglass.gif"
           alt="매장 등록 승인 대기 중"
