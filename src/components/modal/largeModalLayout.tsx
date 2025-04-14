@@ -44,9 +44,7 @@ export default function ModalWithTitle({
             </button>
           )}
         </div>
-        <div className="md:l-87 overflow-y-scroll md:mt-5 lg:mt-8 lg:h-145">
-          {children}
-        </div>
+        <div className="md:l-87 md:mt-5 lg:mt-8 lg:h-145">{children}</div>
         {buttonComponent}
       </div>
     </div>
