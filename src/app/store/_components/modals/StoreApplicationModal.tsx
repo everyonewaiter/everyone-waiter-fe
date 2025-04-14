@@ -9,7 +9,7 @@ import { Button } from "@/components/common/Button";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import formatDate from "@/lib/formatting/formatDate";
-import Label from "@/components/common/label";
+import Label from "@/components/common/Label";
 import Input from "@/components/common/Input";
 import { buttonSize } from "@/styles/responsiveButton";
 import cn from "@/lib/utils";

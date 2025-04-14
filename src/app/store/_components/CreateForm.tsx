@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import Label from "@/components/common/label";
+import Label from "@/components/common/Label";
 import Input from "@/components/common/Input";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
