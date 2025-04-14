@@ -109,10 +109,9 @@ export default function CreateForm() {
               name="ceoName"
               label="대표자명"
               placeholder="대표자명 입력해주세요."
-              className="hidden cursor-pointer placeholder:text-gray-300 md:block"
-              containerClassName="hidden md:block"
+              className="cursor-pointer placeholder:text-gray-300"
             />
-            <div className="hidden md:block">
+            <div>
               <Label className="mb-1">소재지</Label>
               <Input
                 {...form.register("address")}
@@ -122,8 +121,8 @@ export default function CreateForm() {
                 className="cursor-pointer placeholder:text-gray-300"
               />
             </div>
-            <div className="hidden md:block">
-              <Label className="mb-1">매장 전화번호</Label>
+            <div>
+              <Label className="mb-1.5">매장 전화번호</Label>
               <Input
                 {...form.register("landline")}
                 placeholder="매장 전화번호를 입력해주세요."
@@ -132,7 +131,7 @@ export default function CreateForm() {
               />
             </div>
             <div>
-              <Label className="mb-1">사업자 번호</Label>
+              <Label className="mb-1.5">사업자 번호</Label>
               <Input
                 {...form.register("license")}
                 placeholder="사업자 번호를 입력해주세요."
