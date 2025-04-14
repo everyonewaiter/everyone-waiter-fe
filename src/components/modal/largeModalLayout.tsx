@@ -1,14 +1,16 @@
-import { ReactNode, useRef } from "react";
+import { PropsWithChildren, ReactNode, useRef } from "react";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import { X as CloseIcon } from "lucide-react";
+import { buttonSize } from "@/styles/responsiveButton";
+import cn from "@/lib/utils";
+import { Button, ButtonColors } from "../common/Button";
 
 interface IProps {
   children: ReactNode;
   onClose: () => void;
   title: string;
   topRightComponent?: ReactNode;
-  buttonComponent?: ReactNode;
 }
 
 export default function ModalWithTitle({
@@ -16,7 +18,6 @@ export default function ModalWithTitle({
   children,
   title,
   topRightComponent,
-  buttonComponent,
 }: IProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -29,7 +30,7 @@ export default function ModalWithTitle({
         ref={ref}
         className="relative w-[320px] rounded-[30px] bg-white p-5 md:w-[364px] md:p-5 lg:w-[543px] lg:p-8"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pb-6 md:pb-5 lg:pb-8">
           <h1 className="text-gray-0 font-semibold md:text-base lg:text-2xl">
             {title}
           </h1>
@@ -44,11 +45,42 @@ export default function ModalWithTitle({
             </button>
           )}
         </div>
-        <div className="md:l-87 overflow-y-scroll md:mt-5 lg:mt-8 lg:h-145">
-          {children}
-        </div>
-        {buttonComponent}
+        {children}
       </div>
     </div>
   );
 }
+
+function Layout({ children }: { children: ReactNode }) {
+  return (
+    <div className="min-h-[362px] overflow-y-scroll md:h-87 lg:h-145">
+      {children}
+    </div>
+  );
+}
+
+interface ButtonProps {
+  color?: ButtonColors;
+  onClick: () => void;
+  type?: "submit" | "button";
+}
+
+function ModalButton({ children, ...props }: PropsWithChildren<ButtonProps>) {
+  return (
+    <Button
+      className={cn(
+        buttonSize("lg", "xl"),
+        buttonSize("md", "sm"),
+        buttonSize(null, "sm"),
+        "h-10 w-full lg:h-14",
+        "lg:text-lg lg:font-semibold"
+      )}
+      {...props}
+    >
+      {children}
+    </Button>
+  );
+}
+
+ModalWithTitle.Layout = Layout;
+ModalWithTitle.Button = ModalButton;
