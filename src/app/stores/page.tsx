@@ -6,7 +6,6 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import cn from "@/lib/utils";
-import { buttonSize } from "@/styles/responsiveButton";
 import Image from "next/image";
 import useStores from "@/hooks/useStores";
 import Row from "../store/_components/Row";
@@ -23,9 +22,8 @@ export default function StoreList() {
   const navigate = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { registerations } = useStores();
-
-  const data = registerations?.pages[0]?.registrations;
+  const { registrationList } = useStores();
+  const { data } = registrationList(currentPage);
 
   return (
     <div className="min-h-screen w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
@@ -56,8 +54,8 @@ export default function StoreList() {
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-4 md:mt-4 md:gap-0">
-          {data?.map((item, index) => (
+        <div className="flex flex-col gap-4 md:gap-0">
+          {data?.registrations?.map((item, index) => (
             <Row key={item.createdAt} {...item} index={index} />
           ))}
         </div>
@@ -67,10 +65,8 @@ export default function StoreList() {
           variant="outline"
           color="outline-primary"
           className={cn(
-            "flex lg:gap-[6px]",
-            "lg:h-10 lg:pr-5 lg:pl-4",
-            buttonSize("md", "sm"),
-            buttonSize("lg", "lg")
+            "lg:h-10 lg:gap-[6px] lg:rounded-[12px] lg:pr-5 lg:pl-4 lg:text-[15px] lg:font-semibold",
+            "md:text-s flex md:h-[36px] md:rounded-[8px] md:px-[16px] md:font-medium"
           )}
           onClick={() => navigate.push("/store/create")}
         >
@@ -79,8 +75,12 @@ export default function StoreList() {
         </Button>
       </div>
       <Paginations
-        size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-        totalPages={10}
+        size="lg:w-6 lg:h-6 md:w-5 md:h-5"
+        totalPages={
+          data?.registrations?.length
+            ? Math.ceil(data.registrations.length / 20)
+            : 1
+        }
         currentPage={currentPage}
         onSetCurrentPage={setCurrentPage}
         className="mt-8"

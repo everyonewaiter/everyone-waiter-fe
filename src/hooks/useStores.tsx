@@ -8,7 +8,7 @@ import {
   registerDetails,
   registerStore,
 } from "@/lib/api/stores.api";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const useStores = () => {
@@ -19,26 +19,16 @@ const useStores = () => {
     onSuccess: () => navigate.push("/store/create?state=pending"),
   });
 
-  const { data: registerations, isLoading: isLoadingForRegistrations } =
-    useInfiniteQuery({
+  const registrationList = (page: number = 1) =>
+    useQuery({
       queryKey: ["get-stores"],
-      queryFn: ({ pageParam = 1 }) => getRegisters(pageParam),
-      getNextPageParam: (lastPage, allPages) => {
-        const total = lastPage.registrationCount;
-        const fetchedSoFar = allPages.reduce(
-          (sum, page) => sum + page.registrations.length,
-          0
-        );
-
-        return fetchedSoFar < total ? allPages.length + 1 : undefined;
-      },
-      initialPageParam: 1,
+      queryFn: () => getRegisters(page),
     });
 
-  const getDetailRegistration = (registrationId: number) =>
+  const getDetailRegistration = (registrationId: bigint) =>
     useQuery({
       queryKey: ["register-detail", registrationId],
-      queryFn: () => registerDetails(registrationId),
+      queryFn: () => registerDetails(JSON.stringify(registrationId)),
       enabled: !!registrationId,
     });
 
@@ -60,11 +50,10 @@ const useStores = () => {
 
   return {
     register,
-    registerations,
     getDetailRegistration,
     reapplyRegister,
     reapplyRegisterWithImage,
-    isLoadingForRegistrations,
+    registrationList,
   };
 };
 
