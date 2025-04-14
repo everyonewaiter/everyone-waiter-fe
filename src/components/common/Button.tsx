@@ -31,23 +31,12 @@ const buttonVariants = cva(
   }
 );
 
-export type ButtonColors =
-  | "primary"
-  | "black"
-  | "grey"
-  | "outline-primary"
-  | "outline-black"
-  | "outline-gray"
-  | "accepted"
-  | "rejected"
-  | "succeed"
-  | "re-accepted";
+export type ButtonColors = Pick<VariantProps<typeof buttonVariants>, "color">;
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  color?: ButtonColors;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
