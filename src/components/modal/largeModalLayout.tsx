@@ -1,4 +1,9 @@
-import { PropsWithChildren, ReactNode, useRef } from "react";
+import {
+  ButtonHTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  useRef,
+} from "react";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import { X as CloseIcon } from "lucide-react";
@@ -59,7 +64,7 @@ function Layout({ children }: { children: ReactNode }) {
   );
 }
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   color?: ButtonColors;
   onClick: () => void;
   type?: "submit" | "button";
