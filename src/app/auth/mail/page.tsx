@@ -61,9 +61,9 @@ export default function EmailError() {
       </div>
       <ResponsiveButton
         responsiveButtons={{
-          lg: { buttonSize: "button-lg" },
-          md: { buttonSize: "button-md" },
-          sm: { buttonSize: "button-md" },
+          lg: { buttonSize: "lg" },
+          md: { buttonSize: "md" },
+          sm: { buttonSize: "md" },
         }}
         commonClassName="mt-8 font-regular"
       >

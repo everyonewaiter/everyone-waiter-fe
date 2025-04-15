@@ -107,9 +107,9 @@ export default function StoreList() {
           color={"outline-primary" as keyof ButtonColors}
           onClick={() => navigate.push("/store/create")}
           responsiveButtons={{
-            lg: { buttonSize: "button-lg" },
-            md: { buttonSize: "button-sm" },
-            sm: { buttonSize: "button-sm" },
+            lg: { buttonSize: "lg" },
+            md: { buttonSize: "sm" },
+            sm: { buttonSize: "sm" },
           }}
         >
           <div className="flex flex-row items-center lg:gap-[6px]">

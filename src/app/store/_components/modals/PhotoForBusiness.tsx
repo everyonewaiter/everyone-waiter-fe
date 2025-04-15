@@ -52,9 +52,9 @@ export default function PhotoForBusiness({
               variant="outline"
               onClick={onResetPhoto}
               responsiveButtons={{
-                lg: { buttonSize: "button-md" },
-                md: { buttonSize: "button-sm" },
-                sm: { buttonSize: "button-sm" },
+                lg: { buttonSize: "md" },
+                md: { buttonSize: "sm" },
+                sm: { buttonSize: "sm" },
               }}
               commonClassName="mb-5 mt-3"
             >

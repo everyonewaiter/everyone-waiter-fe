@@ -63,9 +63,9 @@ export default function GuideComponent({
             navigate.push(isFromHome ? "/store/create" : "/stores")
           }
           responsiveButtons={{
-            lg: { buttonSize: "button-lg", className: "!h-12" },
-            md: { buttonSize: "button-md", className: "!h-9" },
-            sm: { buttonSize: "button-md", className: "!h-10" },
+            lg: { buttonSize: "lg", className: "!h-12" },
+            md: { buttonSize: "md", className: "!h-9" },
+            sm: { buttonSize: "md", className: "!h-10" },
           }}
         >
           {isFromHome ? "매장 등록하기" : " 내 신청 현황 보기"}

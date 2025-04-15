@@ -72,9 +72,9 @@ export default function Login() {
           </div>
           <ResponsiveButton
             responsiveButtons={{
-              sm: { buttonSize: "button-sm" },
-              md: { buttonSize: "button-sm" },
-              lg: { buttonSize: "button-lg" },
+              sm: { buttonSize: "sm" },
+              md: { buttonSize: "sm" },
+              lg: { buttonSize: "lg" },
             }}
             commonClassName="w-full mt-8"
           >

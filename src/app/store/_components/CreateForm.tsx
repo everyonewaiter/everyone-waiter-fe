@@ -126,9 +126,9 @@ export default function CreateForm() {
             <ResponsiveButton
               type="submit"
               responsiveButtons={{
-                lg: { buttonSize: "button-lg" },
-                md: { buttonSize: "button-sm" },
-                sm: { buttonSize: "button-sm", className: "!h-10" },
+                lg: { buttonSize: "lg" },
+                md: { buttonSize: "sm" },
+                sm: { buttonSize: "sm", className: "!h-10" },
               }}
               commonClassName="mt-4"
             >

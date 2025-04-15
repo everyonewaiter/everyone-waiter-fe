@@ -123,9 +123,9 @@ export default function Signup() {
                 variant="default"
                 color="black"
                 responsiveButtons={{
-                  sm: { buttonSize: "button-sm", className: "h-10 w-[120px]" },
-                  md: { buttonSize: "button-md", className: "w-[94px]" },
-                  lg: { buttonSize: "button-lg" },
+                  sm: { buttonSize: "sm", className: "h-10 w-[120px]" },
+                  md: { buttonSize: "md", className: "w-[94px]" },
+                  lg: { buttonSize: "lg" },
                 }}
                 disabled={
                   (!isAuthSubmitted && !form.watch("phone")?.length) ||
@@ -156,9 +156,9 @@ export default function Signup() {
                   disabled={!isAuthSubmitted || isPhoneAuthenticated}
                   onClick={() => handleCheckAuth(field.value!)}
                   responsiveButtons={{
-                    sm: { buttonSize: "button-sm", className: "w-[120px]" },
-                    md: { buttonSize: "button-sm", className: "w-[94px]" },
-                    lg: { buttonSize: "button-lg", className: "w-[120px]" },
+                    sm: { buttonSize: "sm", className: "w-[120px]" },
+                    md: { buttonSize: "sm", className: "w-[94px]" },
+                    lg: { buttonSize: "lg", className: "w-[120px]" },
                   }}
                 >
                   확인
@@ -203,9 +203,9 @@ export default function Signup() {
             color="primary"
             disabled={!isConsentGiven}
             responsiveButtons={{
-              lg: { buttonSize: "button-lg" },
-              md: { buttonSize: "button-md", className: "my-6" },
-              sm: { buttonSize: "button-md", className: "mb-6" },
+              lg: { buttonSize: "lg" },
+              md: { buttonSize: "md", className: "my-6" },
+              sm: { buttonSize: "md", className: "mb-6" },
             }}
             commonClassName="font-regular w-full"
           >
