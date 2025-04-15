@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/common/Button";
 import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import { useRouter } from "next/navigation";
 import cn from "@/lib/utils";
 import Image from "next/image";
 import useStores from "@/hooks/useStores";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
 import Row from "../store/_components/Row";
 
 export const TABLE_HEADER = {
@@ -26,7 +26,7 @@ export default function StoreList() {
   const { data } = registrationList(currentPage);
 
   return (
-    <div className="min-h-screen overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-full md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
+    <div className="min-h-screen w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
       <header className="flex justify-between border-b border-b-gray-500 md:h-10 md:items-center lg:h-[68px]">
         <h1 className="text-gray-0 mb-3 text-lg font-semibold md:mb-0 md:text-base md:font-bold lg:text-[28px]">
           매장 등록 신청 현황
@@ -40,8 +40,8 @@ export default function StoreList() {
           />
         </button>
       </header>
-      <div className="mt-4 w-full md:my-[24px] md:block">
-        <div className="hidden items-center justify-center bg-gray-700 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
+      <div className="my-[24px] hidden w-full md:block">
+        <div className="flex items-center justify-center bg-gray-700 md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
           {Object.keys(TABLE_HEADER).map((key) => (
             <div
               key={key}
@@ -61,26 +61,25 @@ export default function StoreList() {
         </div>
       </div>
       <div className="hidden w-full justify-end md:flex">
-        <Button
+        <ResponsiveButton
           variant="outline"
           color="outline-primary"
-          className={cn(
-            "lg:h-10 lg:gap-[6px] lg:rounded-[12px] lg:pr-5 lg:pl-4 lg:text-[15px] lg:font-semibold",
-            "md:text-s flex md:h-[36px] md:rounded-[8px] md:px-[16px] md:font-medium"
-          )}
           onClick={() => navigate.push("/store/create")}
+          responsiveButtons={{
+            lg: { buttonSize: "lg" },
+            md: { buttonSize: "sm" },
+            sm: { buttonSize: "sm" },
+          }}
         >
-          <Plus className="fill-primary h-4 w-4" />
-          매장 추가
-        </Button>
+          <div className="flex flex-row items-center lg:gap-[6px]">
+            <Plus className="fill-primary h-4 w-4" />
+            <span>매장 추가</span>
+          </div>
+        </ResponsiveButton>
       </div>
       <Paginations
-        size="lg:w-6 lg:h-6 md:w-5 md:h-5"
-        totalPages={
-          data?.registrations?.length
-            ? Math.ceil(data.registrations.length / 20)
-            : 1
-        }
+        size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
+        totalPages={10}
         currentPage={currentPage}
         onSetCurrentPage={setCurrentPage}
         className="mt-8"

@@ -1,7 +1,6 @@
 "use client";
 
 /* eslint-disable no-nested-ternary */
-import { Button } from "@/components/common/Button";
 import LabeledInput from "@/components/common/LabeledInput";
 import { storeSchema, TypeStore } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,15 +12,14 @@ import Input from "@/components/common/Input";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
-import { buttonSize } from "@/styles/responsiveButton";
-import cn from "@/lib/utils";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
 import useStores from "@/hooks/useStores";
 import UploadPhoto from "./UploadPhoto";
 
 export default function CreateForm() {
   const fileRef = useRef<HTMLInputElement>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const form = useForm<TypeStore>({
     mode: "onChange",
     resolver: zodResolver(storeSchema),
@@ -145,17 +143,17 @@ export default function CreateForm() {
               image={imageUrl!}
               className="h-[140px] max-w-full md:h-40 md:w-[348px] lg:w-100"
             />
-            <Button
+            <ResponsiveButton
               type="submit"
-              className={cn(
-                buttonSize("md", "sm"),
-                buttonSize("lg", "lg"),
-                "h-9 rounded-[8px] text-sm font-medium text-white md:h-10 lg:h-12",
-                "mt-4 w-full md:mb-5"
-              )}
+              responsiveButtons={{
+                lg: { buttonSize: "lg" },
+                md: { buttonSize: "sm" },
+                sm: { buttonSize: "sm", className: "!h-10" },
+              }}
+              commonClassName="mt-4"
             >
               신청하기
-            </Button>
+            </ResponsiveButton>
           </form>
         </FormProvider>
       </div>

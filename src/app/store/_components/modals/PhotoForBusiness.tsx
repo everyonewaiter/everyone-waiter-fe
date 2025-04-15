@@ -1,8 +1,6 @@
 import Image from "next/image";
-import { Button } from "@/components/common/Button";
 import { ChangeEvent, useRef, useState } from "react";
-import { buttonSize } from "@/styles/responsiveButton";
-import cn from "@/lib/utils";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
 import UploadPhoto from "../UploadPhoto";
 
 interface IProps {
@@ -50,19 +48,19 @@ export default function PhotoForBusiness({
             className="h-full rounded-[16px] border border-gray-600 md:h-[260px] md:w-[216px] lg:h-[457px] lg:w-[380px]"
           />
           {isUpdating && (
-            <Button
+            <ResponsiveButton
               color="outline-black"
               variant="outline"
-              className={cn(
-                "mt-3 w-full",
-                buttonSize(null, "sm"),
-                buttonSize("lg", "md"),
-                "mb-5 !h-8 lg:!h-10"
-              )}
               onClick={onResetPhoto}
+              responsiveButtons={{
+                lg: { buttonSize: "md" },
+                md: { buttonSize: "sm" },
+                sm: { buttonSize: "sm" },
+              }}
+              commonClassName="mb-5 mt-3"
             >
               초기화하기
-            </Button>
+            </ResponsiveButton>
           )}
         </div>
       )}

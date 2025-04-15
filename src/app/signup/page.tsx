@@ -2,7 +2,6 @@
 
 /* eslint-disable no-alert */
 /* eslint-disable react/no-unstable-nested-components */
-import { Button } from "@/components/common/Button";
 import Checkbox from "@/components/common/Checkbox";
 import { Form } from "@/components/common/form";
 import LabeledInput from "@/components/common/LabeledInput";
@@ -13,8 +12,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import cn from "@/lib/utils";
-import { buttonSize } from "@/styles/responsiveButton";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
 
 export default function Signup() {
   const navigate = useRouter();
@@ -120,16 +118,15 @@ export default function Signup() {
             label="휴대폰 번호"
             placeholder="휴대폰 번호를 입력해주세요. (-없이 숫자만 입력)"
             rightComponent={(field) => (
-              <Button
+              <ResponsiveButton
                 type="button"
                 variant="default"
                 color="black"
-                className={cn(
-                  "h-10 rounded-[8px] text-[15px]",
-                  buttonSize("md", "sm"),
-                  buttonSize("lg", "lg"),
-                  "font-regular w-[120px] md:w-[94px]"
-                )}
+                responsiveButtons={{
+                  sm: { buttonSize: "sm", className: "h-10 w-[120px]" },
+                  md: { buttonSize: "md", className: "w-[94px]" },
+                  lg: { buttonSize: "lg" },
+                }}
                 disabled={
                   (!isAuthSubmitted && !form.watch("phone")?.length) ||
                   isPhoneAuthenticated
@@ -137,7 +134,7 @@ export default function Signup() {
                 onClick={() => handleAuthentication(field.value!)}
               >
                 {isAuthSubmitted ? "재인증" : "인증요청"}
-              </Button>
+              </ResponsiveButton>
             )}
           />
           <LabeledInput
@@ -153,20 +150,19 @@ export default function Signup() {
                     {`${String(Math.floor(authTime / 60)).padStart(2, "0")}:${String(authTime % 60).padStart(2, "0")}`}
                   </div>
                 )}
-                <Button
+                <ResponsiveButton
                   type="button"
                   color="black"
-                  className={cn(
-                    "h-10 rounded-[8px] text-[15px]",
-                    buttonSize("md", "sm"),
-                    buttonSize("lg", "lg"),
-                    "font-regular w-[120px] md:w-[94px]"
-                  )}
                   disabled={!isAuthSubmitted || isPhoneAuthenticated}
                   onClick={() => handleCheckAuth(field.value!)}
+                  responsiveButtons={{
+                    sm: { buttonSize: "sm", className: "w-[120px]" },
+                    md: { buttonSize: "sm", className: "w-[94px]" },
+                    lg: { buttonSize: "lg", className: "w-[120px]" },
+                  }}
                 >
                   확인
-                </Button>
+                </ResponsiveButton>
               </>
             )}
           />
@@ -202,19 +198,19 @@ export default function Signup() {
               </span>
             </div>
           </div>
-          <Button
+          <ResponsiveButton
             type="submit"
             color="primary"
-            className={cn(
-              buttonSize("lg", "lg"),
-              buttonSize("md", "md"),
-              buttonSize(null, "sm"),
-              "font-regular w-full sm:mb-6 md:my-6"
-            )}
             disabled={!isConsentGiven}
+            responsiveButtons={{
+              lg: { buttonSize: "lg" },
+              md: { buttonSize: "md", className: "my-6" },
+              sm: { buttonSize: "md", className: "mb-6" },
+            }}
+            commonClassName="font-regular w-full"
           >
             가입하기
-          </Button>
+          </ResponsiveButton>
         </form>
       </Form>
     </>

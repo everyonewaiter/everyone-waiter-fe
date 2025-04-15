@@ -1,8 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import cn from "@/lib/utils";
-import { buttonSize } from "@/styles/responsiveButton";
-import { Button } from "./common/Button";
+import ResponsiveButton from "./common/ResponsiveButton";
 
 interface IProps {
   title: string;
@@ -59,19 +57,19 @@ export default function GuideComponent({
             ))}
           </div>
         </div>
-        <Button
+        <ResponsiveButton
           color="primary"
           onClick={() =>
             navigate.push(isFromHome ? "/store/create" : "/stores")
           }
-          className={cn(
-            buttonSize("lg", "lg"),
-            buttonSize(null, "sm"),
-            "h-10 md:h-9 lg:h-12"
-          )}
+          responsiveButtons={{
+            lg: { buttonSize: "lg", className: "!h-12" },
+            md: { buttonSize: "md", className: "!h-9" },
+            sm: { buttonSize: "md", className: "!h-10" },
+          }}
         >
           {isFromHome ? "매장 등록하기" : " 내 신청 현황 보기"}
-        </Button>
+        </ResponsiveButton>
       </div>
     </div>
   );

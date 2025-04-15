@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/common/Button";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -12,8 +11,7 @@ import { login } from "@/lib/api/auth.api";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/lib/cookies";
 import LabeledInput from "@/components/common/LabeledInput";
-import cn from "@/lib/utils";
-import { buttonSize } from "@/styles/responsiveButton";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SignupLayout from "../signup/layout";
 
 export default function Login() {
@@ -26,9 +24,7 @@ export default function Login() {
       password: "",
     },
   });
-  const { mutate } = useMutation({
-    mutationFn: login,
-  });
+  const { mutate } = useMutation({ mutationFn: login });
 
   const submitHandler = (formData: Pick<TAccount, "email" | "password">) => {
     mutate(formData, {
@@ -74,19 +70,17 @@ export default function Login() {
               placeholder="비밀번호를 입력해주세요."
             />
           </div>
-          <Button
+          <ResponsiveButton
             type="submit"
-            color="primary"
-            className={cn(
-              "mt-8 w-full",
-              buttonSize("lg", "lg"),
-              buttonSize("md", "sm"),
-              buttonSize(null, "sm"),
-              "font-regular"
-            )}
+            responsiveButtons={{
+              sm: { buttonSize: "sm" },
+              md: { buttonSize: "sm" },
+              lg: { buttonSize: "lg" },
+            }}
+            commonClassName="w-full mt-8"
           >
             로그인
-          </Button>
+          </ResponsiveButton>
         </form>
       </Form>
       <span className="text-regular md:text-s mt-5 text-xs text-gray-300 lg:text-sm">
