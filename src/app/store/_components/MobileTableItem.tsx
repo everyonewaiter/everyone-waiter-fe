@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { Button, ButtonColors } from "@/components/common/Button";
+import { Button } from "@/components/common/Button";
 import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
 import { STATUS_COLORS } from "./Row";
@@ -43,7 +43,7 @@ export default function MobileTableItem({ ...item }: IProps) {
           <div className="text-s text-gray-0 center w-[180px] font-medium">
             {key === "status" ? (
               <Button
-                color={item.status as ButtonColors}
+                color={item.status}
                 className={cn(
                   "lg:font-regular lg:h-[37px] lg:px-5 lg:py-2 lg:text-sm",
                   "md:h-[26px]",

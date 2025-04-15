@@ -2,13 +2,11 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-alert */
-import { Button } from "@/components/common/Button";
 import { verifyEmail } from "@/lib/api/auth.api";
-import { buttonSize } from "@/styles/responsiveButton";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import cn from "@/lib/utils";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
 
 export default function EmailError() {
   const navigate = useRouter();
@@ -61,18 +59,16 @@ export default function EmailError() {
             "회원가입을 완료한 뒤, 하루가 지났다면\n아래 재발송 버튼을 눌러, 이메일 인증을 완료해주세요."}
         </span>
       </div>
-      <Button
-        color="black"
-        className={cn(
-          "mt-8",
-          buttonSize("lg", "lg"),
-          buttonSize("md", "md"),
-          buttonSize(null, "md"),
-          "font-regular"
-        )}
+      <ResponsiveButton
+        responsiveButtons={{
+          lg: { buttonSize: "button-lg" },
+          md: { buttonSize: "button-md" },
+          sm: { buttonSize: "button-md" },
+        }}
+        commonClassName="mt-8 font-regular"
       >
         이메일 재발송하기
-      </Button>
+      </ResponsiveButton>
     </>
   );
 }

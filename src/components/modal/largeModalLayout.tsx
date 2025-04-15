@@ -7,9 +7,7 @@ import {
 import useOutsideClick from "@/hooks/useOutSideClick";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import { X as CloseIcon } from "lucide-react";
-import { buttonSize } from "@/styles/responsiveButton";
-import cn from "@/lib/utils";
-import { Button, ButtonColors } from "../common/Button";
+import ResponsiveButton from "../common/ResponsiveButton";
 
 interface IProps {
   children: ReactNode;
@@ -64,26 +62,29 @@ function Layout({ children }: { children: ReactNode }) {
   );
 }
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  color?: ButtonColors;
+interface ButtonProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color"> {
+  color?: string;
   onClick: () => void;
   type?: "submit" | "button";
 }
 
 function ModalButton({ children, ...props }: PropsWithChildren<ButtonProps>) {
   return (
-    <Button
-      className={cn(
-        buttonSize("lg", "xl"),
-        buttonSize("md", "sm"),
-        buttonSize(null, "sm"),
-        "h-10 w-full lg:h-14",
-        "lg:text-lg lg:font-semibold"
-      )}
+    <ResponsiveButton
+      responsiveButtons={{
+        lg: {
+          buttonSize: "button-xl",
+          className: "!text-lg !font-semibold !h-14",
+        },
+        md: { buttonSize: "button-sm", className: "!h-10" },
+        sm: { buttonSize: "button-sm", className: "!h-10" },
+      }}
+      color={props.color!}
       {...props}
     >
       {children}
-    </Button>
+    </ResponsiveButton>
   );
 }
 

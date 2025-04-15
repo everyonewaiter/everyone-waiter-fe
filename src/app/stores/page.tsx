@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/common/Button";
 import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import cn from "@/lib/utils";
-import { buttonSize } from "@/styles/responsiveButton";
 import Image from "next/image";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { ButtonColors } from "@/components/common/Button";
 import Row, { STATUS_COLORS } from "../store/_components/Row";
 import MobileTableItem from "../store/_components/MobileTableItem";
 
@@ -102,20 +102,21 @@ export default function StoreList() {
         ))}
       </div>
       <div className="hidden w-full justify-end md:flex">
-        <Button
+        <ResponsiveButton
           variant="outline"
-          color="outline-primary"
-          className={cn(
-            "flex lg:gap-[6px]",
-            buttonSize("lg", "lg"),
-            buttonSize("md", "sm"),
-            "md:h-8 md:px-3 lg:h-10 lg:pr-5 lg:pl-4"
-          )}
+          color={"outline-primary" as keyof ButtonColors}
           onClick={() => navigate.push("/store/create")}
+          responsiveButtons={{
+            lg: { buttonSize: "button-lg" },
+            md: { buttonSize: "button-sm" },
+            sm: { buttonSize: "button-sm" },
+          }}
         >
-          <Plus className="fill-primary h-4 w-4" />
-          매장 추가
-        </Button>
+          <div className="flex flex-row items-center lg:gap-[6px]">
+            <Plus className="fill-primary h-4 w-4" />
+            <span>매장 추가</span>
+          </div>
+        </ResponsiveButton>
       </div>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"

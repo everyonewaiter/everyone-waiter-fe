@@ -23,6 +23,7 @@ const buttonVariants = cva(
         succeed: "bg-[#2E8CFF] !text-white",
         "re-accepted": "bg-[#FFAB45] !text-white",
       },
+      size: {},
     },
     defaultVariants: {
       variant: "default",
@@ -31,7 +32,10 @@ const buttonVariants = cva(
   }
 );
 
-export type ButtonColors = Pick<VariantProps<typeof buttonVariants>, "color">;
+export type ButtonColors = Pick<
+  VariantProps<typeof buttonVariants>,
+  "color"
+> | null;
 
 export interface ButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,

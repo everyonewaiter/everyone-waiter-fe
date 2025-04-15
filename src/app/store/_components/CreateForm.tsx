@@ -1,7 +1,6 @@
 "use client";
 
 /* eslint-disable no-nested-ternary */
-import { Button } from "@/components/common/Button";
 import LabeledInput from "@/components/common/LabeledInput";
 import { storeSchema, TypeStore } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,8 +12,7 @@ import Input from "@/components/common/Input";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
-import { buttonSize } from "@/styles/responsiveButton";
-import cn from "@/lib/utils";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
 import UploadPhoto from "./UploadPhoto";
 
 export default function CreateForm() {
@@ -125,17 +123,17 @@ export default function CreateForm() {
               />
             </div>
             <UploadPhoto ref={fileRef} handleFile={handleFile} image={image!} />
-            <Button
+            <ResponsiveButton
               type="submit"
-              className={cn(
-                buttonSize("lg", "lg"),
-                buttonSize("md", "sm"),
-                "h-10 rounded-[8px] text-sm font-medium text-white",
-                "mt-4"
-              )}
+              responsiveButtons={{
+                lg: { buttonSize: "button-lg" },
+                md: { buttonSize: "button-sm" },
+                sm: { buttonSize: "button-sm", className: "!h-10" },
+              }}
+              commonClassName="mt-4"
             >
               신청하기
-            </Button>
+            </ResponsiveButton>
           </form>
         </FormProvider>
       </div>
