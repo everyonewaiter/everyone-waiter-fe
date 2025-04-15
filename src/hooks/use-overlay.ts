@@ -16,9 +16,16 @@ export default function useOverlay() {
 
   return {
     open: (OverlayElement: (props: { close: () => void }) => ReactNode) => {
+      document.body.classList.add("overflow-hidden");
+
       addOverlay(
         overlayId,
-        OverlayElement({ close: () => deleteOverlay(overlayId) })
+        OverlayElement({
+          close: () => {
+            deleteOverlay(overlayId);
+            document.body.classList.remove("overflow-hidden");
+          },
+        })
       );
     },
     close: () => {

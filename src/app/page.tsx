@@ -1,11 +1,13 @@
 "use client";
 
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { getAccount } from "@/lib/api/auth.api";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "@/hooks/store/useAccount";
 import { getToken } from "@/lib/cookies";
 import { useRouter } from "next/navigation";
+import GuideComponent from "@/components/GuideComponent";
 import Splash from "./(splash)/page";
 
 export default function Home() {
@@ -21,7 +23,6 @@ export default function Home() {
     const fetchToken = async () => {
       const accessToken = await getToken("accessToken");
       if (!accessToken) {
-        alert("로그인이 필요합니다.");
         navigate.push("/login");
       } else {
         setToken(accessToken!);
@@ -65,7 +66,14 @@ export default function Home() {
   return (
     <>
       {isLoading && <Splash fadeOut={fadeOut} duration={FADE_OUT_DURATION} />}
-      <div>hi</div>
+      <div className="center h-full w-full">
+        <GuideComponent
+          title="매장이 등록되어 있지 않아요.\n아래 버튼을 눌러 매장 등록 신청을 해주세요."
+          subtitle="매장 등록을 신청하시면 관리자가 확인 후 승인해드려요.\n1~2일 이내에 매장 승인이 완료됩니다."
+          image={{ url: "/gif/no-stores.gif", size: 160 }}
+          isFromHome
+        />
+      </div>
     </>
   );
 }

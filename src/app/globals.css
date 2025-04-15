@@ -71,13 +71,38 @@
 
   /* FontWeight */
   --font-weight-regular: 400;
+
+  
 }
 
 @layer {
   body {
     font-family: Pretendard;
   }
+  
   .font-hakgyo {
     font-family: "HakgyoansimDunggeunmisoTTF-B";
   }
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-sm {
+  @apply px-[16px] h-[36px] rounded-[8px] text-s font-medium
+}
+
+.button-md {
+  @apply px-[24px] h-[44px] rounded-[8px] text-sm font-medium
+}
+
+.button-lg {
+  @apply px-[24px] h-[48px] rounded-[12px] text-[15px] font-semibold
+}
+
+.button-xl {
+  @apply px-[32px] h-[56px] rounded-[12px] !text-base !font-semibold
 }

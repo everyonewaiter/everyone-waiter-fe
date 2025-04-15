@@ -14,42 +14,45 @@ const buttonVariants = cva(
       color: {
         primary: "bg-primary !text-white hover:bg-point",
         black: "bg-gray-0 !text-white",
-        grey: "bg-gray-700 !text-gray-300",
+        grey: "bg-gray-700 text-gray-300",
         "outline-primary": "border-primary !text-primary",
         "outline-black": "border-gray-200 !text-gray-200",
         "outline-gray": "border-gray-500 !text-gray-200",
+        accepted: "bg-gray-400 !text-white",
+        rejected: "bg-[#FF5555] !text-white",
+        succeed: "bg-[#2E8CFF] !text-white",
+        "re-accepted": "bg-[#FFAB45] !text-white",
       },
-      size: {
-        sm: "px-[16px] h-[36px] rounded-[8px] text-s font-medium",
-        md: "px-[24px] h-[44px] rounded-[8px] text-sm font-medium",
-        lg: "px-[24px] h-[48px] rounded-[12px] text-[15px] font-semibold",
-        xl: "px-[32px] h-[56px] rounded-[12px] text-base font-semibold",
-      },
+      size: {},
     },
     defaultVariants: {
       variant: "default",
       color: "primary",
-      size: "sm",
     },
   }
 );
 
+export type ButtonColors = Pick<
+  VariantProps<typeof buttonVariants>,
+  "color"
+> | null;
+
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  color:
-    | "primary"
-    | "black"
-    | "grey"
-    | "outline-primary"
-    | "outline-black"
-    | "outline-gray";
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, color, disabled, asChild = false, ...props },
+    {
+      className,
+      variant,
+      color = "primary",
+      disabled,
+      asChild = false,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
@@ -59,13 +62,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           buttonVariants({
             variant,
-            size,
             color: disabled ? "grey" : color,
             className,
           })
         )}
         ref={ref}
         disabled={disabled}
+        {...(asChild ? {} : { type: "button" })}
         {...props}
       />
     );
