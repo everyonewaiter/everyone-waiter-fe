@@ -5,7 +5,6 @@ import ResponsiveButton from "@/components/common/ResponsiveButton";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useSidebar } from "@/hooks/store/useSidebar";
 import renderIcon from "./renderIcons";
 
 interface IProps {
@@ -20,11 +19,9 @@ interface IProps {
 export default function Sidebar({ activeMenu, setActiveMenu, data }: IProps) {
   const storeName = "상호명";
   const [isStoreOpen, setIsStoreOpen] = useState(true);
-  const { openSidebar } = useSidebar();
 
   useEffect(() => {
     setActiveMenu(data[0].text);
-    openSidebar();
   }, []);
 
   return (
