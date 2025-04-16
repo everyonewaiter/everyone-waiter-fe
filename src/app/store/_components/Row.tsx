@@ -88,7 +88,7 @@ export default function Row({ index, ...item }: IProps) {
           {handleDate()}
         </DataCell>
         <DataCell className={`${TABLE_HEADER["상호명"]}`}>{item.name}</DataCell>
-        <DataCell className={`${TABLE_HEADER["상태"]}`}>
+        <DataCell className={`${TABLE_HEADER["상태"]} flex justify-center`}>
           <ResponsiveButton
             color={item.status.toLowerCase()}
             responsiveButtons={{

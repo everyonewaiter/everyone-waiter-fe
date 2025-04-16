@@ -41,13 +41,13 @@ export default function StoreList() {
         </button>
       </header>
       <div className="my-[24px] w-full">
-        <div className="flex hidden items-center justify-center bg-gray-700 md:block md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
+        <div className="hidden items-center justify-center bg-gray-700 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
           {Object.keys(TABLE_HEADER).map((key) => (
             <div
               key={key}
               className={cn(
-                "text-gray-0 text-s text-center md:font-medium lg:text-base lg:font-bold",
-                TABLE_HEADER[key as keyof typeof TABLE_HEADER]
+                TABLE_HEADER[key as keyof typeof TABLE_HEADER],
+                "text-gray-0 text-s text-center md:font-medium lg:text-base lg:font-bold"
               )}
             >
               {key}
