@@ -40,8 +40,8 @@ export default function StoreList() {
           />
         </button>
       </header>
-      <div className="my-[24px] hidden w-full md:block">
-        <div className="flex items-center justify-center bg-gray-700 md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
+      <div className="my-[24px] w-full">
+        <div className="flex hidden items-center justify-center bg-gray-700 md:block md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
           {Object.keys(TABLE_HEADER).map((key) => (
             <div
               key={key}

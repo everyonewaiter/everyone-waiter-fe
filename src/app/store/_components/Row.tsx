@@ -1,8 +1,10 @@
+/** eslint-disable jsx-a11y/no-static-element-interactions */
 import { Button, ButtonColors } from "@/components/common/Button";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
 import { TABLE_HEADER } from "@/app/stores/page";
 import { PropsWithChildren } from "react";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
 import StoreApplicationModal from "./modals/StoreApplicationModal";
 import PendingAcceptModal from "./modals/PendingAcceptModal";
 
@@ -38,10 +40,10 @@ function MobileDataCell({
 }: PropsWithChildren<{ name: string }>) {
   return (
     <div className="flex h-12 w-full">
-      <div className="text-s text-gray-0 center w-[140px] bg-gray-700 font-medium">
+      <div className="text-s text-gray-0 flex w-[140px] items-center justify-center bg-gray-700 font-medium">
         {name}
       </div>
-      <div className="text-s text-gray-0 center w-[180px] border-b border-b-gray-600 px-6 text-center font-medium">
+      <div className="text-s text-gray-0 flex w-[180px] items-center justify-center border-b border-b-gray-600 px-6 text-center font-medium">
         {children}
       </div>
     </div>
@@ -70,9 +72,9 @@ export default function Row({ index, ...item }: IProps) {
 
   return (
     <div
-      className="w-[320px] cursor-pointer md:w-full"
       role="button"
       tabIndex={0}
+      className="w-[320px] cursor-pointer md:w-full"
       onClick={handleOpenModal}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -87,16 +89,23 @@ export default function Row({ index, ...item }: IProps) {
         </DataCell>
         <DataCell className={`${TABLE_HEADER["상호명"]}`}>{item.name}</DataCell>
         <DataCell className={`${TABLE_HEADER["상태"]}`}>
-          <Button
-            color={item.status.toLowerCase() as ButtonColors}
-            className={cn(
-              "lg:font-regular lg:h-[37px] lg:px-5 lg:py-2 lg:text-sm",
-              "md:h-[26px]",
-              "h-5 rounded-[6px] px-3 py-1 text-xs font-semibold text-white"
-            )}
+          <ResponsiveButton
+            color={item.status.toLowerCase()}
+            responsiveButtons={{
+              md: {
+                buttonSize: "custom",
+                className:
+                  "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+              },
+              lg: {
+                buttonSize: "custom",
+                className:
+                  "h-[37px] px-5 py-2 rounded-[8px] text-sm text-white font-regular",
+              },
+            }}
           >
             {STATUS_COLORS[item.status]}
-          </Button>
+          </ResponsiveButton>
         </DataCell>
         <DataCell className={`${TABLE_HEADER["사유"]}`}>
           {item.reason || "-"}
@@ -108,7 +117,7 @@ export default function Row({ index, ...item }: IProps) {
         <MobileDataCell name="상호명">{item.name}</MobileDataCell>
         <MobileDataCell name="상태">
           <Button
-            color={item.status.toLowerCase() as ButtonColors}
+            color={item.status.toLowerCase() as keyof ButtonColors}
             className={cn(
               "h-5 rounded-[6px] px-3 py-1 text-xs font-semibold text-white"
             )}

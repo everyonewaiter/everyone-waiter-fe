@@ -3,8 +3,14 @@ import { ButtonHTMLAttributes, PropsWithChildren } from "react";
 import cn from "@/lib/utils";
 import { Button, ButtonColors, buttonVariants } from "./Button";
 
-type ButtonSize = "sm" | "md" | "lg" | "xl";
+type ButtonSize = "sm" | "md" | "lg" | "xl" | "custom";
 type ScreenSize = "sm" | "md" | "lg";
+
+const responsiveClass: Record<ScreenSize, string> = {
+  sm: "block md:hidden",
+  md: "hidden md:block lg:hidden",
+  lg: "hidden lg:block",
+};
 
 interface IProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color"> {
@@ -32,16 +38,18 @@ export default function ResponsiveButton({
   color,
   ...props
 }: PropsWithChildren<IProps>) {
-  const buttonStyle = (size: ButtonSize) => {
+  const buttonStyle = (size: ButtonSize, className: string) => {
     switch (size) {
       case "sm":
-        return "button-sm";
+        return `button-sm ${className}`;
       case "md":
-        return "button-md";
+        return `button-md ${className}`;
       case "lg":
-        return "button-lg";
+        return `button-lg ${className}`;
       case "xl":
-        return "button-xl";
+        return `button-xl ${className}`;
+      case "custom":
+        return className;
       default:
         throw new Error("존재하지 않는 버튼 사이즈입니다.");
     }
@@ -57,14 +65,9 @@ export default function ResponsiveButton({
             variant={variant}
             color={color as keyof ButtonColors}
             className={cn(
-              buttonStyle(buttonProps?.buttonSize!),
-              buttonProps?.className,
+              buttonStyle(buttonProps?.buttonSize!, buttonProps?.className!),
               commonClassName,
-              {
-                sm: "block md:hidden",
-                md: "hidden md:block lg:hidden",
-                lg: "hidden lg:block",
-              }[screenSize]
+              responsiveClass[screenSize as ScreenSize]
             )}
             {...props}
           >
