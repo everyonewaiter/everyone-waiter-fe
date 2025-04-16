@@ -5,9 +5,9 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import cn from "@/lib/utils";
-import Image from "next/image";
 import useStores from "@/hooks/useStores";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import SectionHeader from "@/components/SectionHeader";
 import Row from "../store/_components/Row";
 
 export const TABLE_HEADER = {
@@ -26,22 +26,10 @@ export default function StoreList() {
   const { data } = registrationList(currentPage);
 
   return (
-    <div className="min-h-screen w-full overflow-y-scroll rounded-[32px] bg-white p-5 md:h-[560px] md:w-[722px] md:p-8 md:px-8 lg:min-h-[1016px] lg:w-[1800px]">
-      <header className="flex justify-between border-b border-b-gray-500 md:h-10 md:items-center lg:h-[68px]">
-        <h1 className="text-gray-0 mb-3 text-lg font-semibold md:mb-0 md:text-base md:font-bold lg:text-[28px]">
-          매장 등록 신청 현황
-        </h1>
-        <button type="button" className="hidden md:block lg:hidden">
-          <Image
-            src="/icons/hamburger.svg"
-            alt="사이드 메뉴"
-            width={32}
-            height={32}
-          />
-        </button>
-      </header>
-      <div className="my-[24px] w-full">
-        <div className="hidden items-center justify-center bg-gray-700 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
+    <div className="h-full w-full overflow-y-scroll">
+      <SectionHeader title="매장 등록 신청 현황" />
+      <div className="w-full md:my-3 lg:my-6">
+        <div className="hidden items-center justify-center bg-gray-600 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
           {Object.keys(TABLE_HEADER).map((key) => (
             <div
               key={key}
@@ -54,7 +42,7 @@ export default function StoreList() {
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-4 md:gap-0">
+        <div className="mt-4 flex w-full flex-col items-center gap-4 md:mt-0 md:items-start md:gap-0">
           {data?.registrations?.map((item, index) => (
             <Row key={item.createdAt} {...item} index={index} />
           ))}
