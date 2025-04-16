@@ -72,7 +72,7 @@ export default function CreateForm() {
     <div className="flex w-full justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
       <div className="hidden flex-col md:flex">
         <Image
-          src="/logo.svg"
+          src="/icons/logo/logo.svg"
           alt="로고"
           width={90}
           height={90}

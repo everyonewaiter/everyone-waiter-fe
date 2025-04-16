@@ -7,7 +7,7 @@ export default function MobileHeader() {
       <SideBarButton />
       <div className="flex w-full items-center justify-center gap-3">
         <Image
-          src="/logo.svg"
+          src="/icons/logo/logo.svg"
           alt="모두의 웨이터 로고"
           width={24}
           height={24}
