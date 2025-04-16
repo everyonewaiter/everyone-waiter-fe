@@ -60,6 +60,7 @@ export default function EmailError() {
         </span>
       </div>
       <ResponsiveButton
+        type="button"
         responsiveButtons={{
           lg: { buttonSize: "lg" },
           md: { buttonSize: "md" },

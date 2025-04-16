@@ -33,7 +33,7 @@ export default function CreateStore() {
       );
     default:
       return (
-        <div className="center h-full w-full">
+        <div className="flex w-screen items-center justify-center md:items-start lg:items-center">
           <CreateForm />
         </div>
       );

@@ -7,12 +7,14 @@ interface IProps {
   isPhotoUpdating: boolean;
   onResetPhoto: () => void;
   isUpdating: boolean;
+  imageUrl: string;
 }
 
 export default function PhotoForBusiness({
   isUpdating,
   onResetPhoto,
   isPhotoUpdating,
+  imageUrl,
 }: IProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState("");
@@ -20,8 +22,7 @@ export default function PhotoForBusiness({
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
+      setImage(URL.createObjectURL(file));
     }
   };
 
@@ -38,9 +39,9 @@ export default function PhotoForBusiness({
           />
         </div>
       ) : (
-        <div className="mt-5 h-[346px] md:mt-0 lg:h-[457px]">
+        <div className="mt-5 h-[346px] w-full md:mt-0 lg:h-[457px]">
           <Image
-            src="/gif/no-stores.gif"
+            src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${imageUrl}`}
             alt="사업자 등록증"
             width={380}
             height={457}

@@ -71,6 +71,7 @@ export default function Login() {
             />
           </div>
           <ResponsiveButton
+            type="submit"
             responsiveButtons={{
               sm: { buttonSize: "sm" },
               md: { buttonSize: "sm" },
