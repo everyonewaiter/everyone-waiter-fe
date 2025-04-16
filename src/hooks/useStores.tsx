@@ -1,5 +1,6 @@
 "use client";
 
+import getQueryClient from "@/app/get-query-client";
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   getRegisters,
@@ -10,6 +11,8 @@ import {
 } from "@/lib/api/stores.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+
+const queryClient = getQueryClient();
 
 const useStores = () => {
   const navigate = useRouter();
@@ -36,7 +39,7 @@ const useStores = () => {
     mutationFn: reapplyRegistration,
     onSuccess: () => {
       navigate.push("/stores");
-      // queryClient.invalidateQueries({ queryKey: ["get-stores"] });
+      queryClient.invalidateQueries({ queryKey: ["get-stores"] });
     },
   });
 
@@ -44,7 +47,7 @@ const useStores = () => {
     mutationFn: reapplyRegistrationWithImage,
     onSuccess: () => {
       navigate.push("/stores");
-      // queryClient.invalidateQueries({ queryKey: ["get-stores"] });
+      queryClient.invalidateQueries({ queryKey: ["get-stores"] });
     },
   });
 
