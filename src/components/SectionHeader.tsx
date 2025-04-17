@@ -6,13 +6,13 @@ export default function SectionHeader({ title }: { title: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="mx-5 mt-6 flex justify-between border-b border-b-gray-500 md:mx-0 md:mt-0 md:items-center md:pb-2 lg:pb-5">
-      <h1 className="text-gray-0 mb-3 text-lg font-semibold md:mb-0 md:text-base md:font-bold lg:text-[28px]">
+    <header className="mx-5 mt-6 flex items-center justify-between border-b border-b-gray-500 pb-2 md:mx-0 md:mt-0 lg:pb-5">
+      <h1 className="text-gray-0 text-lg font-semibold md:text-base md:font-bold lg:text-[28px]">
         {title}
       </h1>
       <button
         type="button"
-        className="center relative hidden border border-gray-400 md:block md:h-8 md:w-8 md:rounded-[12px] lg:h-12 lg:w-12 lg:rounded-[16px]"
+        className="center relative h-8 w-8 rounded-[12px] border border-gray-400 lg:h-12 lg:w-12 lg:rounded-[16px]"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <Image
