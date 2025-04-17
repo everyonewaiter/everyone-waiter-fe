@@ -1,3 +1,4 @@
+import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import Image from "next/image";
 import { useRef } from "react";
@@ -21,10 +22,11 @@ export default function InfoPopup({ close }: { close: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useOutsideClick({ ref, handler: close });
+  useEscapeKey({ handler: close });
 
   return (
     <div
-      className="absolute flex flex-col gap-1 rounded-[16px] bg-white p-3 shadow-[0_2px_10px_0_rgba(0,0,0,0.08)] md:top-19 md:right-8 md:w-[170px] lg:top-38 lg:right-22 lg:w-[220px]"
+      className="absolute flex flex-col gap-1 rounded-[16px] bg-white p-3 shadow-[0_2px_10px_0_rgba(0,0,0,0.08)] md:top-9 md:right-0 md:w-[170px] lg:top-13 lg:right-0 lg:w-[220px]"
       ref={ref}
     >
       <div className="flex w-full items-center gap-2 rounded-[8px] bg-gray-700 md:h-9 md:px-2 lg:h-12 lg:px-4">

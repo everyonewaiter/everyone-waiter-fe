@@ -4,25 +4,14 @@
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSidebar } from "@/hooks/store/useSidebar";
 import renderIcon from "./renderIcons";
 
-interface IProps {
-  activeMenu: string;
-  setActiveMenu: (value: string) => void;
-  data: {
-    icon: any;
-    text: string;
-  }[];
-}
-
-export default function Sidebar({ activeMenu, setActiveMenu, data }: IProps) {
+export default function Sidebar() {
   const storeName = "상호명";
   const [isStoreOpen, setIsStoreOpen] = useState(true);
-
-  useEffect(() => {
-    setActiveMenu(data[0].text);
-  }, []);
+  const { setActiveMenu, activeMenu, menu } = useSidebar();
 
   return (
     <section className="hidden flex-col rounded-[28px] bg-white md:flex md:h-[calc(100%-40px)] md:w-[186px] md:px-3 lg:h-[calc(100%-64px)] lg:w-[318px] lg:px-5">
@@ -45,10 +34,12 @@ export default function Sidebar({ activeMenu, setActiveMenu, data }: IProps) {
       <div className="mt-7">
         <ResponsiveButton
           responsiveButtons={{
-            md: { buttonSize: "md", className: "!flex" },
+            sm: { buttonSize: "sm", className: "hidden" },
+            md: { buttonSize: "md", className: "md:!flex lg:!hidden" },
             lg: {
               buttonSize: "lg",
-              className: "h-16 rounded-[16px] text-white font-bold text-lg",
+              className:
+                "md:!hidden lg:!flex h-16 rounded-[16px] text-white font-bold text-lg",
             },
           }}
           onClick={() => setIsStoreOpen((prev) => !prev)}
@@ -69,7 +60,7 @@ export default function Sidebar({ activeMenu, setActiveMenu, data }: IProps) {
               <div className="h-[calc(100%-55px)] w-[1px] bg-gray-600" />
             </div>
             <div className="z-10">
-              {data.map((item) => (
+              {menu?.map((item) => (
                 <button
                   type="button"
                   key={item.text}

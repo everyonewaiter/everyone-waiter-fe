@@ -2,20 +2,26 @@
 
 import MobileSidebar from "@/app/(main)/_components/MobileSidebar";
 import useOverlay from "@/hooks/use-overlay";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import Sidebar from "@/app/(main)/_components/Sidebar";
 import { USER_MENU } from "@/constants/sidebarMenus";
 import { usePathname } from "next/navigation";
+import { useSidebar } from "@/hooks/store/useSidebar";
 import Header from "./Header";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const { open, close } = useOverlay();
-  const [activeMenu, setActiveMenu] = useState("");
+  const { setMenu } = useSidebar();
   const preventLayout = ["/login", "/signup"];
   const preventHeader = ["/stores"];
   const isFirstStore = false;
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 360;
+
+  useEffect(() => {
+    setMenu(USER_MENU);
+  }, []);
 
   if (preventLayout.includes(pathname)) return children;
 
@@ -25,7 +31,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen w-screen bg-white md:bg-gray-700">
-      {isFirstStore || window.innerWidth < 360 ? (
+      {isFirstStore || isMobile ? (
         <div
           className={`flex w-full flex-col ${pathname === "/" ? "h-screen" : "min-h-screen"}`}
         >
@@ -38,11 +44,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         </div>
       ) : (
         <div className="md:py:5 hidden h-screen min-w-screen flex-row items-center justify-center gap-6 md:flex lg:py-8">
-          <Sidebar
-            activeMenu={activeMenu}
-            setActiveMenu={setActiveMenu}
-            data={USER_MENU}
-          />
+          <Sidebar />
           <section className="overflow-y-auto rounded-[28px] bg-white md:h-[calc(100%-40px)] md:w-[722px] md:p-5 lg:h-[calc(100%-64px)] lg:w-[1458px] lg:p-8">
             {children}
           </section>

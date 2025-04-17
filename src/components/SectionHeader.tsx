@@ -12,7 +12,7 @@ export default function SectionHeader({ title }: { title: string }) {
       </h1>
       <button
         type="button"
-        className="center hidden border border-gray-400 md:block md:h-8 md:w-8 md:rounded-[12px] lg:h-12 lg:w-12 lg:rounded-[16px]"
+        className="center relative hidden border border-gray-400 md:block md:h-8 md:w-8 md:rounded-[12px] lg:h-12 lg:w-12 lg:rounded-[16px]"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <Image
@@ -22,8 +22,8 @@ export default function SectionHeader({ title }: { title: string }) {
           height={24}
           className="md:h-6 md:w-6 lg:h-8 lg:w-8"
         />
+        {isOpen && <InfoPopup close={() => setIsOpen(false)} />}
       </button>
-      {isOpen && <InfoPopup close={() => setIsOpen(false)} />}
     </header>
   );
 }
