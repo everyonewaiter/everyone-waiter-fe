@@ -3,21 +3,6 @@ import useOutsideClick from "@/hooks/useOutSideClick";
 import Image from "next/image";
 import { useRef } from "react";
 
-const popupList = [
-  {
-    text: "매장 등록 신청 현황",
-    event: () => {},
-  },
-  {
-    text: "구독",
-    event: () => {},
-  },
-  {
-    text: "로그아웃",
-    event: () => {},
-  },
-];
-
 export default function InfoPopup({ close }: { close: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -43,24 +28,21 @@ export default function InfoPopup({ close }: { close: () => void }) {
           asdf@gmail.com
         </span>
       </div>
-      {popupList.map((item) => (
-        <div
-          role="button"
-          tabIndex={0}
-          key={item.text}
-          className="flex h-9 w-full items-center gap-2 rounded-[8px] px-3 lg:px-5"
-          onClick={item.event}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              item.event();
-            }
-          }}
-        >
-          <span className="text-s font-regular text-gray-300 lg:text-sm">
-            {item.text}
-          </span>
-        </div>
-      ))}
+      <div
+        role="button"
+        tabIndex={0}
+        className="flex h-9 w-full items-center gap-2 rounded-[8px] px-3 lg:px-5"
+        onClick={() => {}}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            // event
+          }
+        }}
+      >
+        <span className="text-s font-regular text-gray-300 lg:text-sm">
+          로그아웃
+        </span>
+      </div>
     </div>
   );
 }
