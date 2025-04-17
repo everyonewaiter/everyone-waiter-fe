@@ -9,7 +9,7 @@ import CheckIcon from "@public/icons/check-square-broken.svg";
 import MobileIcon from "@public/icons/mobile.svg";
 import WriteIcon from "@public/icons/write.svg";
 
-const USER_MENU = [
+export const USER_MENU = [
   {
     icon: HomeIcon,
     text: "HOME",
@@ -36,7 +36,16 @@ const USER_MENU = [
   },
 ];
 
-const ADMIN_MENU = [
+export const USER_MENU_NAV = {
+  HOME: "/stores",
+  "매장 정보": "/store/info",
+  "메뉴 관리": "/menu",
+  "구독 설정": "/subscribe",
+  POS: "/pos",
+  설정: "/settings",
+};
+
+export const ADMIN_MENU = [
   {
     icon: HomeIcon,
     text: "HOME",
@@ -66,5 +75,3 @@ const ADMIN_MENU = [
     text: "설정",
   },
 ];
-
-export { USER_MENU, ADMIN_MENU };

@@ -16,7 +16,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const { open, close } = useOverlay();
   const { setMenu } = useSidebar();
   const preventLayout = ["/login", "/signup"];
-  const isFirstStore = true;
+  const isFirstStore = false;
 
   useEffect(() => {
     setMenu(USER_MENU);
