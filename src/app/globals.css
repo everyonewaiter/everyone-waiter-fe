@@ -77,7 +77,11 @@
   body {
     font-family: Pretendard;
   }
-  
+
+  button {
+    cursor: pointer;
+  }
+
   .font-hakgyo {
     font-family: "HakgyoansimDunggeunmisoTTF-B";
   }
@@ -90,17 +94,17 @@
 }
 
 .button-sm {
-  @apply px-[16px] h-[36px] rounded-[8px] text-s font-medium
+  @apply text-s h-[36px] rounded-[8px] px-[16px] font-medium;
 }
 
 .button-md {
-  @apply px-[24px] h-[44px] rounded-[8px] text-sm font-medium
+  @apply h-[44px] rounded-[8px] px-[24px] text-sm font-medium;
 }
 
 .button-lg {
-  @apply px-[24px] h-[48px] rounded-[12px] text-[15px] font-semibold
+  @apply h-[48px] rounded-[12px] px-[24px] text-[15px] font-semibold;
 }
 
 .button-xl {
-  @apply px-[32px] h-[56px] rounded-[12px] !text-base !font-semibold
+  @apply h-[56px] rounded-[12px] px-[32px] !text-base !font-semibold;
 }
