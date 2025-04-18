@@ -216,60 +216,79 @@ export default function StoreInfo() {
                     </span>
                   </div>
                 )}
+                {isEditing && (
+                  <>
+                    <ResponsiveButton
+                      type="button"
+                      variant="outline"
+                      color="outline-gray"
+                      responsiveButtons={{
+                        sm: { buttonSize: "sm", className: "!flex md:hidden" },
+                        md: {
+                          buttonSize: "sm",
+                          className: "md-4 md:!flex",
+                        },
+                        lg: { buttonSize: "lg", className: "!h-10" },
+                      }}
+                      commonClassName="border-dashed mt-3"
+                      onClick={() =>
+                        setCountryOfOrigins([...countryOfOrigins, newItem])
+                      }
+                    >
+                      <Plus className="h-5 w-5 text-gray-400" />
+                    </ResponsiveButton>
+                    <ResponsiveButton
+                      type="submit"
+                      responsiveButtons={{
+                        sm: {
+                          buttonSize: "sm",
+                          className:
+                            "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
+                        },
+                        md: {
+                          buttonSize: "sm",
+                          className:
+                            "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
+                        },
+                        lg: {
+                          buttonSize: "lg",
+                          className: "hidden lg:!flex mt-8",
+                        },
+                      }}
+                    >
+                      저장하기
+                    </ResponsiveButton>
+                  </>
+                )}
               </form>
             </Form>
-            {isEditing && (
+            {!isEditing && (
               <ResponsiveButton
                 type="button"
                 variant="outline"
-                color="outline-gray"
+                color="outline-black"
                 responsiveButtons={{
-                  sm: { buttonSize: "sm", className: "!flex md:hidden" },
+                  sm: {
+                    buttonSize: "sm",
+                    className:
+                      "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
+                  },
                   md: {
                     buttonSize: "sm",
-                    className: "md-4 md:!flex",
+                    className:
+                      "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
                   },
-                  lg: { buttonSize: "lg", className: "!h-10" },
+                  lg: {
+                    buttonSize: "lg",
+                    className: "hidden lg:!flex mt-8",
+                  },
                 }}
-                commonClassName="border-dashed mt-3"
-                onClick={() =>
-                  setCountryOfOrigins([...countryOfOrigins, newItem])
-                }
+                onClick={isEditing ? undefined : () => setIsEditing(true)}
               >
-                <Plus className="h-5 w-5 text-gray-400" />
+                <EditIcon width={20} height={20} />
+                <span>수정하기</span>
               </ResponsiveButton>
             )}
-            <ResponsiveButton
-              type={isEditing ? "submit" : "button"}
-              variant={isEditing ? "default" : "outline"}
-              color={isEditing ? "primary" : "outline-black"}
-              responsiveButtons={{
-                sm: {
-                  buttonSize: "sm",
-                  className:
-                    "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
-                },
-                md: {
-                  buttonSize: "sm",
-                  className:
-                    "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
-                },
-                lg: {
-                  buttonSize: "lg",
-                  className: "hidden lg:!flex mt-8",
-                },
-              }}
-              onClick={isEditing ? undefined : () => setIsEditing(true)}
-            >
-              {isEditing ? (
-                "저장하기"
-              ) : (
-                <>
-                  <EditIcon width={20} height={20} />
-                  <span>수정하기</span>
-                </>
-              )}
-            </ResponsiveButton>
           </div>
         </div>
       </div>
