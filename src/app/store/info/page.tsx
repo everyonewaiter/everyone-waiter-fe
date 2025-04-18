@@ -9,11 +9,12 @@ import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
 import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PropsWithChildren, useRef, useState } from "react";
+import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EditIcon from "@public/icons/edit-contained.svg";
 import DeleteIcon from "@public/icons/trash-02.svg";
 import { Plus } from "lucide-react";
+import { useSidebar } from "@/hooks/store/useSidebar";
 
 interface OriginItem {
   item: string;
@@ -55,6 +56,12 @@ export default function StoreInfo() {
     },
   });
 
+  const { setActiveMenu } = useSidebar();
+
+  useEffect(() => {
+    setActiveMenu("매장 정보");
+  }, []);
+
   function TableRow({
     children,
     className,
@@ -86,7 +93,7 @@ export default function StoreInfo() {
     setCountryOfOrigins(newOrigins);
   };
 
-  const submitHandler = (data) => {
+  const submitHandler = (data: TypeStoreInfo) => {
     console.log(data);
   };
 

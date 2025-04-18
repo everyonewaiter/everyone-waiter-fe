@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, X as CloseIcon } from "lucide-react";
 import Image from "next/image";
 import { USER_MENU_NAV } from "@/constants/sidebarMenus";
@@ -22,6 +22,8 @@ export default function MobileSidebar({ onClose }: IProps) {
 
   const { setActiveMenu, activeMenu, menu } = useSidebar();
 
+  useEffect(() => {}, [activeMenu]);
+
   useOutsideClick({ ref, handler: onClose });
   useEscapeKey({ handler: onClose });
 
@@ -32,7 +34,14 @@ export default function MobileSidebar({ onClose }: IProps) {
         className="relative flex h-screen w-[284px] flex-col overflow-auto rounded-tr-[10px] rounded-br-[10px] bg-white stroke-gray-600 px-4"
       >
         <div className="flex w-full items-center justify-between pt-5 pb-4">
-          <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="flex items-center gap-3"
+            onClick={() => {
+              navigate.push("/");
+              onClose();
+            }}
+          >
             <Image
               src="/icons/logo/logo-medium.svg"
               alt="모두의 웨이터 로고"
@@ -45,7 +54,7 @@ export default function MobileSidebar({ onClose }: IProps) {
               width={106}
               height={19}
             />
-          </div>
+          </button>
           <button type="button" onClick={onClose}>
             <CloseIcon color="#222" width={24} height={24} strokeWidth="1.5" />
           </button>

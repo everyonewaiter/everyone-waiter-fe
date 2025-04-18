@@ -21,7 +21,6 @@ export const useSidebar = create<StoreState>((set) => ({
   setMenu: (menu) =>
     set(() => ({
       menu,
-      activeMenu: menu[0]?.text ?? "",
     })),
 
   setActiveMenu: (value) => set({ activeMenu: value }),
