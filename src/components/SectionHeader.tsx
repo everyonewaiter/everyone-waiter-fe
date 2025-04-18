@@ -6,7 +6,6 @@ import InfoPopup from "./InfoPopup";
 const SectionHeader = forwardRef<
   HTMLHeadingElement,
   {
-    // Updated to use forwardRef
     title: string;
     className?: string;
   }
@@ -15,7 +14,7 @@ const SectionHeader = forwardRef<
 
   return (
     <header
-      ref={ref} // Added ref to the header
+      ref={ref}
       className={cn(
         "sticky mx-5 mt-6 flex items-center justify-between border-b border-b-gray-500 pb-2 md:mx-0 md:mt-0 lg:pb-5",
         className
@@ -42,4 +41,4 @@ const SectionHeader = forwardRef<
   );
 });
 
-export default SectionHeader; // Ensure to export the component
+export default SectionHeader;
