@@ -1,11 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import { useRef, useState } from "react";
 import { ChevronDown, ChevronUp, X as CloseIcon } from "lucide-react";
 import Image from "next/image";
-import { USER_MENU } from "@/constants/sidebarMenus";
+import { USER_MENU_NAV } from "@/constants/sidebarMenus";
+import { useSidebar } from "@/hooks/store/useSidebar";
 import renderIcon from "./renderIcons";
 
 interface IProps {
@@ -13,10 +15,12 @@ interface IProps {
 }
 
 export default function MobileSidebar({ onClose }: IProps) {
+  const navigate = useRouter();
   const ref = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(USER_MENU[0].text);
   const [isOpen, setIsOpen] = useState(true);
   const storename = "모두의웨이터";
+
+  const { setActiveMenu, activeMenu, menu } = useSidebar();
 
   useOutsideClick({ ref, handler: onClose });
   useEscapeKey({ handler: onClose });
@@ -64,19 +68,25 @@ export default function MobileSidebar({ onClose }: IProps) {
           </button>
         </div>
         <div className={isOpen ? "block" : "hidden"}>
-          {USER_MENU.map((item) => (
+          {menu?.map((item) => (
             <button
               type="button"
               key={item.text}
-              className={`flex items-center gap-[10px] py-[10px] ${active === item.text ? "pl-0" : "pl-[12px]"}`}
-              onClick={() => setActive(item.text)}
+              className={`flex items-center gap-[10px] py-[10px] ${activeMenu === item.text ? "pl-0" : "pl-[12px]"}`}
+              onClick={() => {
+                setActiveMenu(item.text);
+                const navPath =
+                  USER_MENU_NAV[item.text as keyof typeof USER_MENU_NAV];
+                navigate.push(navPath);
+                onClose();
+              }}
             >
               <div
-                className={`h-5 w-0.5 ${active === item.text ? "bg-primary" : "hidden"}`}
+                className={`h-5 w-0.5 ${activeMenu === item.text ? "bg-primary" : "hidden"}`}
               />
-              {renderIcon(item.icon, active === item.text)}
+              {renderIcon(item.icon, activeMenu === item.text)}
               <span
-                className={`text-[15px] font-medium ${active === item.text ? "text-primary" : "text-gray-300"}`}
+                className={`text-[15px] font-medium ${activeMenu === item.text ? "text-primary" : "text-gray-300"}`}
               >
                 {item.text}
               </span>
