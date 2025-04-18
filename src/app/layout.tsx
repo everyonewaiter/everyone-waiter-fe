@@ -4,14 +4,14 @@ import Head from "next/head";
 import "./globals.css";
 import Script from "next/script";
 import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
-
+import MainLayout from "@/components/layout/MainLayout";
 import QueryProviders from "./query-providers";
 
 export const metadata: Metadata = {
   title: "모두의 웨이터",
   description: "모두의 웨이터",
   icons: {
-    icon: "/logo.svg",
+    icon: "/icons/logo/logo.svg",
   },
 };
 
@@ -32,9 +32,7 @@ export default function RootLayout({
       <body className="select-none">
         <OverlayStoreProvider>
           <QueryProviders>
-            <div className="flex h-[calc(100vh-60px)] w-full md:h-[calc(100vh-76px)] lg:h-[calc(100vh-112px)]">
-              {children}
-            </div>
+            <MainLayout>{children}</MainLayout>
           </QueryProviders>
         </OverlayStoreProvider>
       </body>
