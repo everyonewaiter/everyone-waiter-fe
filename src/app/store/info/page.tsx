@@ -1,7 +1,7 @@
 "use client";
 
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable @typescript-eslint/no-shadow */
 import { Form } from "@/components/common/form";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
@@ -9,7 +9,7 @@ import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
 import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReactNode, useState } from "react";
+import { PropsWithChildren, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EditIcon from "@public/icons/edit-contained.svg";
 import DeleteIcon from "@public/icons/trash-02.svg";
@@ -18,27 +18,32 @@ import { Plus } from "lucide-react";
 interface OriginItem {
   item: string;
   origin: string;
-  name: string;
+  menu: string;
+  isAdded: boolean;
 }
 
 export default function StoreInfo() {
-  const [countryOfOrigins] = useState<OriginItem[]>([
+  const ref = useRef<HTMLDivElement>(null);
+  const [countryOfOrigins, setCountryOfOrigins] = useState<OriginItem[]>([
     {
       item: "소",
       origin: "국내산",
-      name: "등심",
+      menu: "등심",
+      isAdded: false,
     },
     {
       item: "소",
       origin: "국내산",
-      name: "안심",
+      menu: "안심",
+      isAdded: false,
     },
   ]);
-  // const [newItem, setNewItem] = useState<OriginItem>({
-  //   item: "",
-  //   origin: "",
-  //   name: "",
-  // });
+  const newItem = {
+    item: "",
+    origin: "",
+    menu: "",
+    isAdded: true,
+  };
   const [isEditing, setIsEditing] = useState(false);
   const form = useForm<TypeStoreInfo>({
     mode: "onChange",
@@ -50,22 +55,45 @@ export default function StoreInfo() {
     },
   });
 
-  function TableRow({ children }: { children: ReactNode }) {
+  function TableRow({
+    children,
+    className,
+  }: PropsWithChildren<{ className?: string }>) {
     return (
-      <div
-        className={`center h-full ${isEditing ? "grow-[0.25]" : "grow-[0.33]"}`}
-      >
+      <div className={`center h-full w-full text-center ${className}`}>
         {children}
       </div>
     );
   }
 
-  // const handleDeleteItem = (item: OriginItem) => { }
+  const handleDeleteItem = (item: OriginItem) => {
+    console.log(item);
+  };
+
+  // const handle
+
+  const handleChangeItem = (
+    index: number,
+    field: keyof OriginItem,
+    value: string
+  ) => {
+    const newOrigins = countryOfOrigins.map((origin, i) => {
+      if (i === index) {
+        return { ...origin, [field]: value };
+      }
+      return origin;
+    });
+    setCountryOfOrigins(newOrigins);
+  };
+
+  const submitHandler = (data) => {
+    console.log(data);
+  };
 
   return (
     <div className="h-full w-full">
-      <SectionHeader title="매장 정보" className="hidden md:flex" />
-      <div className="mt-10 flex w-full flex-col items-center overflow-y-scroll md:mt-6 md:h-[calc(100%-45px)] md:justify-start lg:h-[calc(100%-65px)] lg:justify-center">
+      <SectionHeader ref={ref} title="매장 정보" className="hidden md:flex" />
+      <div className="mt-10 flex w-full flex-col items-center overflow-y-scroll md:mt-6 md:h-[calc(100%-45px)] lg:mt-10 lg:h-[calc(100%-100px)]">
         <div className="w-80 md:w-[272px] lg:w-120">
           <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
             매장 정보
@@ -76,7 +104,10 @@ export default function StoreInfo() {
           </div>
           <div className="my-8 flex flex-col md:my-6 lg:my-10">
             <Form {...form}>
-              <form className="flex flex-col gap-3 lg:gap-4">
+              <form
+                className="flex flex-col gap-3 lg:gap-4"
+                onSubmit={form.handleSubmit(submitHandler)}
+              >
                 <LabeledInput
                   form={form}
                   label="상호명"
@@ -99,30 +130,71 @@ export default function StoreInfo() {
                   labelDisabled={!isEditing}
                 />
                 <Label>원산지</Label>
-                {countryOfOrigins.length > 0 ? (
+                {isEditing || countryOfOrigins.length > 0 ? (
                   <div className="text-s flex flex-col overflow-hidden rounded-[12px] border border-gray-600 font-medium">
                     <div className="flex h-10 w-full bg-gray-700">
                       <TableRow>품목</TableRow>
                       <TableRow>원산지</TableRow>
                       <TableRow>음식명</TableRow>
                       {isEditing && (
-                        <div className="center text-primary h-full grow-[0.25]">
+                        <TableRow className="text-primary w-full">
                           삭제
-                        </div>
+                        </TableRow>
                       )}
                     </div>
                     {countryOfOrigins.map((item, idx) => (
                       <div
-                        key={item.name}
-                        className={`flex h-10 w-full ${idx === countryOfOrigins.length - 1 ? "" : "border-b border-b-gray-600"}`}
+                        // TODO - 추후 API 연결 시 아이템으로 변경
+                        key={idx}
+                        className={`flex h-10 w-full ${
+                          idx !== countryOfOrigins.length - 1 &&
+                          "border-b border-b-gray-600"
+                        }`}
                       >
-                        <TableRow>{item.item}</TableRow>
-                        <TableRow>{item.origin}</TableRow>
-                        <TableRow>{item.name}</TableRow>
+                        {item.isAdded ? (
+                          <input
+                            className="w-full text-center outline-none md:px-2 lg:px-4"
+                            placeholder="품목 입력"
+                            value={item.item}
+                            onChange={(e) =>
+                              handleChangeItem(idx, "item", e.target.value)
+                            }
+                          />
+                        ) : (
+                          <TableRow>{item.item}</TableRow>
+                        )}
+                        {item.isAdded ? (
+                          <input
+                            className="w-full text-center outline-none md:px-2 lg:px-4"
+                            placeholder="원산지 입력"
+                            value={item.origin}
+                            onChange={(e) =>
+                              handleChangeItem(idx, "origin", e.target.value)
+                            }
+                          />
+                        ) : (
+                          <TableRow>{item.origin}</TableRow>
+                        )}
+                        {item.isAdded ? (
+                          <input
+                            className="mr-1 w-full text-center outline-none md:px-2 lg:px-4"
+                            placeholder="음식명 입력"
+                            value={item.menu}
+                            onChange={(e) =>
+                              handleChangeItem(idx, "menu", e.target.value)
+                            }
+                          />
+                        ) : (
+                          <TableRow className="pr-1">{item.menu}</TableRow>
+                        )}
                         {isEditing && (
                           <button
                             type="button"
-                            className="center h-full grow-[0.25]"
+                            className={
+                              item.isAdded
+                                ? "mr-1/2 flex w-full items-center justify-center md:px-2 lg:px-4"
+                                : "flex w-full items-center justify-center"
+                            }
                             onClick={() => handleDeleteItem(item)}
                           >
                             <DeleteIcon
@@ -144,57 +216,60 @@ export default function StoreInfo() {
                     </span>
                   </div>
                 )}
-                {isEditing && (
-                  <ResponsiveButton
-                    type="button"
-                    variant="outline"
-                    color="outline-gray"
-                    responsiveButtons={{
-                      md: {
-                        buttonSize: "sm",
-                        className: "md-4 md:!flex border-dashed mb-2",
-                      },
-                    }}
-                    onClick={() => {
-                      // 어떤 식으로 추가?
-                    }}
-                  >
-                    <Plus className="h-5 w-5 text-gray-400" />
-                  </ResponsiveButton>
-                )}
-                <ResponsiveButton
-                  type="button"
-                  variant={isEditing ? "default" : "outline"}
-                  color={isEditing ? "primary" : "outline-black"}
-                  responsiveButtons={{
-                    sm: {
-                      buttonSize: "sm",
-                      className:
-                        "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
-                    },
-                    md: {
-                      buttonSize: "sm",
-                      className:
-                        "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
-                    },
-                    lg: {
-                      buttonSize: "lg",
-                      className: "hidden lg:!flex mt-8",
-                    },
-                  }}
-                  onClick={isEditing ? undefined : () => setIsEditing(true)}
-                >
-                  {isEditing ? (
-                    "저장하기"
-                  ) : (
-                    <>
-                      <EditIcon width={20} height={20} />
-                      <span>수정하기</span>
-                    </>
-                  )}
-                </ResponsiveButton>
               </form>
             </Form>
+            {isEditing && (
+              <ResponsiveButton
+                type="button"
+                variant="outline"
+                color="outline-gray"
+                responsiveButtons={{
+                  sm: { buttonSize: "sm", className: "!flex md:hidden" },
+                  md: {
+                    buttonSize: "sm",
+                    className: "md-4 md:!flex",
+                  },
+                  lg: { buttonSize: "lg", className: "!h-10" },
+                }}
+                commonClassName="border-dashed mt-3"
+                onClick={() =>
+                  setCountryOfOrigins([...countryOfOrigins, newItem])
+                }
+              >
+                <Plus className="h-5 w-5 text-gray-400" />
+              </ResponsiveButton>
+            )}
+            <ResponsiveButton
+              type={isEditing ? "submit" : "button"}
+              variant={isEditing ? "default" : "outline"}
+              color={isEditing ? "primary" : "outline-black"}
+              responsiveButtons={{
+                sm: {
+                  buttonSize: "sm",
+                  className:
+                    "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
+                },
+                md: {
+                  buttonSize: "sm",
+                  className:
+                    "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
+                },
+                lg: {
+                  buttonSize: "lg",
+                  className: "hidden lg:!flex mt-8",
+                },
+              }}
+              onClick={isEditing ? undefined : () => setIsEditing(true)}
+            >
+              {isEditing ? (
+                "저장하기"
+              ) : (
+                <>
+                  <EditIcon width={20} height={20} />
+                  <span>수정하기</span>
+                </>
+              )}
+            </ResponsiveButton>
           </div>
         </div>
       </div>

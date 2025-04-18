@@ -1,19 +1,21 @@
+import React, { useState, forwardRef } from "react"; // Added forwardRef import
 import Image from "next/image";
-import { useState } from "react";
 import cn from "@/lib/utils";
 import InfoPopup from "./InfoPopup";
 
-export default function SectionHeader({
-  title,
-  className,
-}: {
-  title: string;
-  className?: string;
-}) {
+const SectionHeader = forwardRef<
+  HTMLHeadingElement,
+  {
+    // Updated to use forwardRef
+    title: string;
+    className?: string;
+  }
+>(({ title, className }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header
+      ref={ref} // Added ref to the header
       className={cn(
         "sticky mx-5 mt-6 flex items-center justify-between border-b border-b-gray-500 pb-2 md:mx-0 md:mt-0 lg:pb-5",
         className
@@ -38,4 +40,6 @@ export default function SectionHeader({
       </button>
     </header>
   );
-}
+});
+
+export default SectionHeader; // Ensure to export the component
