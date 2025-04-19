@@ -5,6 +5,7 @@ import { ComponentType, SVGProps } from "react";
 interface MENU {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   text: string;
+  url: string;
 }
 
 interface StoreState {

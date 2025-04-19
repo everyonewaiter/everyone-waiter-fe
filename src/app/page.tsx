@@ -10,7 +10,11 @@ import { useRouter } from "next/navigation";
 import GuideComponent from "@/components/GuideComponent";
 import useStores from "@/hooks/useStores";
 import { useSidebar } from "@/hooks/store/useSidebar";
-import { ADMIN_MENU, USER_MENU } from "@/constants/sidebarMenus";
+import {
+  ADMIN_MENU,
+  FIRST_ACCESS_MENU,
+  USER_MENU,
+} from "@/constants/sidebarMenus";
 import Splash from "./(splash)/page";
 
 export default function Home() {
@@ -49,7 +53,9 @@ export default function Home() {
     if (profile?.accountId!) {
       setProfile(profile);
       setIsLoggedIn(true);
-      if (profile.permission === "ADMIN") {
+      if (!isListLoading && !data?.registrations.length) {
+        setMenu(FIRST_ACCESS_MENU);
+      } else if (profile.permission === "ADMIN") {
         setMenu(ADMIN_MENU);
       } else {
         setMenu(USER_MENU);

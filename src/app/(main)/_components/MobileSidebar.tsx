@@ -6,7 +6,6 @@ import useOutsideClick from "@/hooks/useOutSideClick";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, X as CloseIcon } from "lucide-react";
 import Image from "next/image";
-import { USER_MENU_NAV } from "@/constants/sidebarMenus";
 import { useSidebar } from "@/hooks/store/useSidebar";
 import renderIcon from "./renderIcons";
 
@@ -84,9 +83,7 @@ export default function MobileSidebar({ onClose }: IProps) {
               className={`flex items-center gap-[10px] py-[10px] ${activeMenu === item.text ? "pl-0" : "pl-[12px]"}`}
               onClick={() => {
                 setActiveMenu(item.text);
-                const navPath =
-                  USER_MENU_NAV[item.text as keyof typeof USER_MENU_NAV];
-                navigate.push(navPath);
+                navigate.push(item.url);
                 onClose();
               }}
             >
