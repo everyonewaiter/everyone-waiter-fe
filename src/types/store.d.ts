@@ -18,3 +18,9 @@ interface StoreDetail extends Omit<StoreForm, "file"> {
   status: RegisterStatus;
   updatedAt: string;
 }
+
+interface Menu {
+  icon: string;
+  text: string;
+  url: string;
+}
