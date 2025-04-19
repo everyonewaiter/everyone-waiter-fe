@@ -65,6 +65,11 @@ export default function ResponsiveButton({
             variant={variant}
             color={color as keyof ButtonColors}
             className={cn(
+              screenSize === "sm" && buttonProps ? "flex md:!hidden" : "hidden",
+              screenSize === "md" && buttonProps
+                ? "hidden md:flex lg:!hidden"
+                : "hidden",
+              screenSize === "lg" && buttonProps ? "hidden lg:!flex" : "hidden",
               buttonStyle(buttonProps?.buttonSize!, buttonProps?.className!),
               commonClassName,
               responsiveClass[screenSize as ScreenSize]

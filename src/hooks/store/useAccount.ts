@@ -11,6 +11,7 @@ interface StoreState extends Item {
   isLoggedIn: boolean;
   setProfile: (value: Item) => void;
   setIsLoggedIn: (value: boolean) => void;
+  setPermission: (permission: TPermission | null) => void;
 }
 
 export const useAccount = create<StoreState>()((set) => ({
@@ -20,5 +21,6 @@ export const useAccount = create<StoreState>()((set) => ({
   isLoggedIn: false,
 
   setProfile: (value) => set({ ...value }),
-  setIsLoggedIn: (value) => set({ isLoggedIn: value }),
+  setIsLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
+  setPermission: (permission) => set({ permission }),
 }));

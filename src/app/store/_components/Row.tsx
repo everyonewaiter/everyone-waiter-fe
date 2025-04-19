@@ -82,7 +82,7 @@ export default function Row({ index, ...item }: IProps) {
         }
       }}
     >
-      <div className="text-gray-0 md:text-s hidden h-10 w-full items-center justify-center border-b border-b-gray-600 md:flex lg:h-[64px] lg:text-base lg:font-medium">
+      <div className="text-gray-0 md:text-s hidden h-10 w-full items-center justify-center border-b border-b-gray-600 py-6 md:flex lg:h-[64px] lg:text-base lg:font-medium">
         <DataCell className={`${TABLE_HEADER["No."]}`}>{index + 1}</DataCell>
         <DataCell className={`${TABLE_HEADER["신청일"]}`}>
           {handleDate()}
