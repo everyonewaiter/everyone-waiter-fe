@@ -51,7 +51,10 @@ export default function Home() {
 
   useEffect(() => {
     if (profile?.accountId!) {
-      setProfile(profile);
+      setProfile({
+        ...profile,
+        accountId: profile.accountId.toString(),
+      });
       setIsLoggedIn(true);
       if (!isListLoading && !data?.registrations.length) {
         setMenu(FIRST_ACCESS_MENU);
@@ -86,15 +89,18 @@ export default function Home() {
     <>
       {isLoading && <Splash fadeOut={fadeOut} duration={FADE_OUT_DURATION} />}
       <div className="center h-full w-full">
-        {!isListLoading && !data?.registrations.length && (
-          <GuideComponent
-            title="매장이 등록되어 있지 않아요.\n아래 버튼을 눌러 매장 등록 신청을 해주세요."
-            subtitle="매장 등록을 신청하시면 관리자가 확인 후 승인해드려요.\n1~2일 이내에 매장 승인이 완료됩니다."
-            image={{ url: "/gif/no-stores.gif", size: 160 }}
-            isFromHome
-          />
-        )}
-        {!isListLoading &&
+        {profile?.permission !== "ADMIN" &&
+          !isListLoading &&
+          !data?.registrations.length && (
+            <GuideComponent
+              title="매장이 등록되어 있지 않아요.\n아래 버튼을 눌러 매장 등록 신청을 해주세요."
+              subtitle="매장 등록을 신청하시면 관리자가 확인 후 승인해드려요.\n1~2일 이내에 매장 승인이 완료됩니다."
+              image={{ url: "/gif/no-stores.gif", size: 160 }}
+              isFromHome
+            />
+          )}
+        {profile?.permission !== "ADMIN" &&
+          !isListLoading &&
           data?.registrations.length! > 0 &&
           data?.registrations[0].status === "APPLY" && (
             <GuideComponent

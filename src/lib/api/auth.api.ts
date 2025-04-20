@@ -61,7 +61,7 @@ export const renewToken = async (body: {
   return response.data;
 };
 
-export const getAccount = async () => {
+export const getAccount = async (): Promise<TProfile> => {
   const response = await instance.get(`${API_PATH.account}/me`);
   return response.data;
 };
