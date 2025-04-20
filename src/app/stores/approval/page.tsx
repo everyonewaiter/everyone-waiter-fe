@@ -4,6 +4,7 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import SectionHeader from "@/components/SectionHeader";
 import Table from "@/components/Table";
 import useStores from "@/hooks/useStores";
+import { Search } from "lucide-react";
 import { useState } from "react";
 
 const itemWidths = {
@@ -34,10 +35,34 @@ export default function StoreApproval() {
   const { data } = registrationList(1);
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchWord, setSearchWord] = useState("");
+
+  const submitHandler = () => {};
 
   return (
     <div className="h-full w-full">
       <SectionHeader title="매장 등록 신청 현황" />
+      <div className="mt-4 flex w-full justify-end md:mt-6">
+        <div className="mx-5 flex h-9 w-full items-center justify-between gap-3 rounded-[24px] border border-gray-600 bg-gray-700 px-4 md:mx-0 md:w-70 lg:h-[46px]">
+          <input
+            className="w-full text-sm outline-none lg:text-base"
+            placeholder="검색어를 입력해주세요."
+            value={searchWord}
+            onChange={(e) => setSearchWord(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                submitHandler();
+              }
+            }}
+          />
+          <Search
+            width={24}
+            height={24}
+            className="h-5 w-5 text-gray-300 lg:h-6 lg:w-6"
+          />
+        </div>
+      </div>
       <Table>
         <Table.THeadLayout>
           {Object.keys(itemWidths).map((key) => (

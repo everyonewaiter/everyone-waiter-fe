@@ -1,9 +1,16 @@
 import Row from "@/app/store/_components/Row";
 import cn from "@/lib/utils";
-import { ReactNode } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
-export default function Table({ children }: { children: ReactNode }) {
-  return <div className="w-full md:my-3 lg:my-6">{children}</div>;
+export default function Table({
+  className,
+  children,
+}: PropsWithChildren<{ className?: string }>) {
+  return (
+    <div className={cn("!my-6 w-full md:my-3 lg:my-6", className)}>
+      {children}
+    </div>
+  );
 }
 
 function THeadLayout({ children }: { children: ReactNode }) {
