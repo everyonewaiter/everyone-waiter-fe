@@ -2,7 +2,6 @@
 import { Button, ButtonColors } from "@/components/common/Button";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
-import { TABLE_HEADER } from "@/app/stores/page";
 import { PropsWithChildren } from "react";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import StoreApplicationModal from "./modals/StoreApplicationModal";
@@ -52,9 +51,10 @@ function MobileDataCell({
 
 interface IProps extends StoreDetail {
   index: number;
+  itemWidths: Record<string, string>;
 }
 
-export default function Row({ index, ...item }: IProps) {
+export default function Row({ index, itemWidths, ...item }: IProps) {
   const { open, close } = useOverlay();
 
   const handleOpenModal = () => {
@@ -83,12 +83,12 @@ export default function Row({ index, ...item }: IProps) {
       }}
     >
       <div className="text-gray-0 md:text-s hidden h-10 w-full items-center justify-center border-b border-b-gray-600 py-6 md:flex lg:h-[64px] lg:text-base lg:font-medium">
-        <DataCell className={`${TABLE_HEADER["No."]}`}>{index + 1}</DataCell>
-        <DataCell className={`${TABLE_HEADER["신청일"]}`}>
+        <DataCell className={`${itemWidths["No."]}`}>{index + 1}</DataCell>
+        <DataCell className={`${itemWidths["신청일"]}`}>
           {handleDate()}
         </DataCell>
-        <DataCell className={`${TABLE_HEADER["상호명"]}`}>{item.name}</DataCell>
-        <DataCell className={`${TABLE_HEADER["상태"]} flex justify-center`}>
+        <DataCell className={`${itemWidths["상호명"]}`}>{item.name}</DataCell>
+        <DataCell className={`${itemWidths["상태"]} flex justify-center`}>
           <ResponsiveButton
             color={item.status.toLowerCase()}
             responsiveButtons={{
@@ -107,7 +107,7 @@ export default function Row({ index, ...item }: IProps) {
             {STATUS_COLORS[item.status]}
           </ResponsiveButton>
         </DataCell>
-        <DataCell className={`${TABLE_HEADER["사유"]}`}>
+        <DataCell className={`${itemWidths["사유"]}`}>
           {item.reason || "-"}
         </DataCell>
       </div>

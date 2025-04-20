@@ -4,11 +4,10 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import cn from "@/lib/utils";
 import useStores from "@/hooks/useStores";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
-import Row from "../store/_components/Row";
+import Table from "@/components/Table";
 
 export const TABLE_HEADER = {
   "No.": "lg:flex-[0.69] md:flex-[0.88]",
@@ -28,26 +27,7 @@ export default function StoreList() {
   return (
     <div className="h-full w-full overflow-y-scroll">
       <SectionHeader title="매장 등록 신청 현황" />
-      <div className="w-full md:my-3 lg:my-6">
-        <div className="hidden items-center justify-center bg-gray-600 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
-          {Object.keys(TABLE_HEADER).map((key) => (
-            <div
-              key={key}
-              className={cn(
-                TABLE_HEADER[key as keyof typeof TABLE_HEADER],
-                "text-gray-0 text-s text-center md:font-medium lg:text-base lg:font-bold"
-              )}
-            >
-              {key}
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 flex w-full flex-col items-center gap-4 md:mt-0 md:items-start md:gap-0">
-          {data?.registrations?.map((item, index) => (
-            <Row key={item.createdAt} {...item} index={index} />
-          ))}
-        </div>
-      </div>
+      <Table itemWidths={TABLE_HEADER} data={data!} />
       <div className="hidden w-full justify-end md:flex">
         <ResponsiveButton
           variant="outline"
