@@ -51,7 +51,7 @@ export const ADMIN_MENU: Menu[] = [
     url: "/",
   },
   {
-    icon: "peopl",
+    icon: "people",
     text: "회원 관리",
     url: "/members",
   },
