@@ -62,8 +62,8 @@ export const ADMIN_MENU: Menu[] = [
   },
   {
     icon: "check",
-    text: "메뉴 등록 승인",
-    url: "/menu/approval",
+    text: "매장 등록 승인",
+    url: "/stores/approval",
   },
   {
     icon: "mobile",
