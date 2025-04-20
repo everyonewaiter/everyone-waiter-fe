@@ -37,7 +37,7 @@ export default function StoreApproval() {
 
   return (
     <div className="h-full w-full">
-      <SectionHeader title="매장 등록 승인" />
+      <SectionHeader title="매장 등록 신청 현황" />
       <Table>
         <Table.THeadLayout>
           {Object.keys(itemWidths).map((key) => (
