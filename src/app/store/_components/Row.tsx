@@ -157,6 +157,13 @@ export default function Row({ index, itemWidths, ...item }: IProps) {
               </MobileDataCell>
             );
           }
+          if (key === "신청일") {
+            return (
+              <MobileDataCell key={key} name="신청일">
+                {handleDate()}
+              </MobileDataCell>
+            );
+          }
           return (
             <MobileDataCell key={key} name={key}>
               {item[text as keyof Omit<StoreDetail, "registrationId">] || "-"}
