@@ -6,7 +6,7 @@ import Checkbox from "@/shared/ui/common/Checkbox";
 import { Form } from "@/shared/ui/common/Form";
 import LabeledInput from "@/shared/ui/common/LabeledInput";
 import useSignup from "@/entities/user/model/useSignup";
-import { TypeSignup, signupSchema } from "@/shared/schema/signup.schema";
+import { TypeSignup, signupSchema } from "@/entities/user/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

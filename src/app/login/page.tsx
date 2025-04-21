@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { Form } from "@/shared/ui/common/Form";
-import { loginSchema, TypeLogin } from "@/shared/schema/login.schema";
+import { loginSchema, TypeLogin } from "@/entities/user/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/entities/user/api/auth.api";

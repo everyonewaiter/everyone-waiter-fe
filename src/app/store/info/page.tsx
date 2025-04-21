@@ -7,7 +7,7 @@ import Label from "@/shared/ui/common/Label";
 import LabeledInput from "@/shared/ui/common/LabeledInput";
 import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
 import SectionHeader from "@/shared/ui/SectionHeader";
-import { storeInfoSchema, TypeStoreInfo } from "@/shared/schema/store.schema";
+import { storeInfoSchema, TypeStoreInfo } from "@/entities/stores/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";

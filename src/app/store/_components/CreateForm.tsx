@@ -2,7 +2,7 @@
 
 /* eslint-disable no-nested-ternary */
 import LabeledInput from "@/shared/ui/common/LabeledInput";
-import { storeSchema, TypeStore } from "@/shared/schema/store.schema";
+import { storeSchema, TypeStore } from "@/entities/stores/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";

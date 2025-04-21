@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-import { TypeSignup } from "@/shared/schema/signup.schema";
+import { TypeSignup } from "@/entities/user/signup.schema";
 import { useMutation } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import { createAccount, sendAuthCode, verifyAuthCode } from "../api/auth.api";
