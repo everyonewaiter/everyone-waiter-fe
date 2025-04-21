@@ -14,7 +14,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "./form";
+} from "./Form";
 import Input from "./Input";
 
 interface IProps<T extends FieldValues>

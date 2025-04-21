@@ -3,7 +3,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable react/no-unstable-nested-components */
 import Checkbox from "@/components/common/Checkbox";
-import { Form } from "@/components/common/form";
+import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import useSignup from "@/hooks/useSignup";
 import { TypeSignup, signupSchema } from "@/schema/signup.schema";
