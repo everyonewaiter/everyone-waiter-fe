@@ -4,7 +4,6 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import useStores from "@/hooks/useStores";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
 import Table from "@/components/Table";
@@ -36,8 +35,7 @@ export default function StoreList() {
   const navigate = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { registrationList } = useStores();
-  const { data } = registrationList(currentPage);
+  const dunmmy: any[] = [];
 
   return (
     <div className="h-full w-full overflow-y-scroll">
@@ -53,7 +51,7 @@ export default function StoreList() {
           ))}
         </Table.THeadLayout>
         <Table.RowLayout>
-          {data?.registrations.map((item, idx) => (
+          {dunmmy?.map((item, idx) => (
             <Table.Row
               key={item.registrationId.toString()}
               {...item}
