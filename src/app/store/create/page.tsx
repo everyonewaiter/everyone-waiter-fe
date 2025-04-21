@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import GuideComponent from "@/components/GuideComponent";
+import GuideComponent from "@/shared/ui/GuideComponent";
 import CreateForm from "../_components/CreateForm";
 
 export default function CreateStore() {

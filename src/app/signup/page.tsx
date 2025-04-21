@@ -2,17 +2,17 @@
 
 /* eslint-disable no-alert */
 /* eslint-disable react/no-unstable-nested-components */
-import Checkbox from "@/components/common/Checkbox";
-import { Form } from "@/components/common/form";
-import LabeledInput from "@/components/common/LabeledInput";
-import useSignup from "@/hooks/useSignup";
-import { TypeSignup, signupSchema } from "@/schema/signup.schema";
+import Checkbox from "@/shared/ui/common/Checkbox";
+import { Form } from "@/shared/ui/common/Form";
+import LabeledInput from "@/shared/ui/common/LabeledInput";
+import useSignup from "@/entities/user/model/useSignup";
+import { TypeSignup, signupSchema } from "@/shared/schema/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
 
 export default function Signup() {
   const navigate = useRouter();

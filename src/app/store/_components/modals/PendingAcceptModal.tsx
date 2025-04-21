@@ -1,4 +1,4 @@
-import ModalWithTitle from "@/components/modal/largeModalLayout";
+import ModalWithTitle from "@/shared/ui/modal/largeModalLayout";
 import Image from "next/image";
 
 interface IProps {

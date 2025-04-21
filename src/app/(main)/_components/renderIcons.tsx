@@ -1,4 +1,4 @@
-import ICON_MAP from "@/components/icons";
+import ICON_MAP from "@/shared/ui/icons";
 
 function renderIcon(iconKey: string, isActive: boolean, size: number = 32) {
   const IconComponent = ICON_MAP[iconKey as keyof typeof ICON_MAP];

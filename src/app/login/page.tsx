@@ -3,15 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { Form } from "@/components/common/form";
-import { loginSchema, TypeLogin } from "@/schema/login.schema";
+import { Form } from "@/shared/ui/common/Form";
+import { loginSchema, TypeLogin } from "@/shared/schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { login } from "@/lib/api/auth.api";
+import { login } from "@/entities/user/api/auth.api";
 import { useRouter } from "next/navigation";
-import { setCookie } from "@/lib/cookies";
-import LabeledInput from "@/components/common/LabeledInput";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { setCookie } from "@/shared/lib/cookies";
+import LabeledInput from "@/shared/ui/common/LabeledInput";
+import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
 import SignupLayout from "../signup/layout";
 
 export default function Login() {

@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import useEscapeKey from "@/hooks/useEscapeKey";
-import useOutsideClick from "@/hooks/useOutSideClick";
+import useEscapeKey from "@/shared/hooks/useEscapeKey";
+import useOutsideClick from "@/shared/hooks/useOutSideClick";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, X as CloseIcon } from "lucide-react";
 import Image from "next/image";
-import { useSidebar } from "@/hooks/store/useSidebar";
+import { useSidebarStore } from "@/shared/stores/useSidebarStore";
 import renderIcon from "./renderIcons";
 
 interface IProps {
@@ -19,7 +19,7 @@ export default function MobileSidebar({ onClose }: IProps) {
   const [isOpen, setIsOpen] = useState(true);
   const storename = "모두의웨이터";
 
-  const { setActiveMenu, activeMenu, menu } = useSidebar();
+  const { setActiveMenu, activeMenu, menu } = useSidebarStore();
 
   useEffect(() => {}, [activeMenu]);
 

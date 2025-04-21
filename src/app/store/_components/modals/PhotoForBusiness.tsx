@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
 import UploadPhoto from "../UploadPhoto";
 
 interface IProps {

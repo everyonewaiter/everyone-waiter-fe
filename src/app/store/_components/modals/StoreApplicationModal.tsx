@@ -1,15 +1,15 @@
 "use client";
 
-import ModalWithTitle from "@/components/modal/largeModalLayout";
+import ModalWithTitle from "@/shared/ui/modal/largeModalLayout";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import LabeledInput from "@/components/common/LabeledInput";
-import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
-import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
-import formatDate from "@/lib/formatting/formatDate";
-import Label from "@/components/common/Label";
-import Input from "@/components/common/Input";
-import useStores from "@/hooks/useStores";
+import LabeledInput from "@/shared/ui/common/LabeledInput";
+import useOpenDaumPostcode from "@/shared/hooks/useOpenDaumPostcode";
+import formatBusinessNumber from "@/shared/formatter/formatBusinessNumber";
+import formatDate from "@/shared/formatter/formatDate";
+import Label from "@/shared/ui/common/Label";
+import Input from "@/shared/ui/common/Input";
+import useStores from "@/entities/stores/model/useStores";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
 

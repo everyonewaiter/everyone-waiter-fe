@@ -2,19 +2,19 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { getAccount } from "@/lib/api/auth.api";
+import { getAccount } from "@/entities/user/api/auth.api";
 import { useQuery } from "@tanstack/react-query";
-import { useAccount } from "@/hooks/store/useAccount";
-import { getToken } from "@/lib/cookies";
+import { useAuth } from "@/entities/user/model/useAuth";
+import { getToken } from "@/shared/lib/cookies";
 import { useRouter } from "next/navigation";
-import GuideComponent from "@/components/GuideComponent";
-import useStores from "@/hooks/useStores";
-import { useSidebar } from "@/hooks/store/useSidebar";
+import GuideComponent from "@/shared/ui/GuideComponent";
+import useStores from "@/entities/stores/model/useStores";
+import { useSidebarStore } from "@/shared/stores/useSidebarStore";
 import {
   ADMIN_MENU,
   FIRST_ACCESS_MENU,
   USER_MENU,
-} from "@/constants/sidebarMenus";
+} from "@/shared/constants/sidebarMenus";
 import Splash from "./(splash)/page";
 
 export default function Home() {
@@ -24,10 +24,10 @@ export default function Home() {
   const [fadeOut, setFadeOut] = useState(false);
   const [token, setToken] = useState("");
 
-  const { setProfile, setIsLoggedIn } = useAccount();
+  const { setProfile, setIsLoggedIn } = useAuth();
   const { registrationList } = useStores();
   const { data, isLoading: isListLoading } = registrationList(1);
-  const { setActiveMenu, setMenu } = useSidebar();
+  const { setActiveMenu, setMenu } = useSidebarStore();
 
   useEffect(() => {
     setActiveMenu("HOME");

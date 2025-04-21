@@ -1,13 +1,13 @@
 "use client";
 
-import Paginations from "@/components/common/Pagination/Paginations";
+import Paginations from "@/shared/ui/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import cn from "@/lib/utils";
-import useStores from "@/hooks/useStores";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
-import SectionHeader from "@/components/SectionHeader";
+import cn from "@/shared/lib/utils";
+import useStores from "@/entities/stores/model/useStores";
+import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
+import SectionHeader from "@/shared/ui/SectionHeader";
 import Row from "../store/_components/Row";
 
 export const TABLE_HEADER = {

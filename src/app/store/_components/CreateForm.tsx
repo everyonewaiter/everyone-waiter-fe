@@ -1,19 +1,19 @@
 "use client";
 
 /* eslint-disable no-nested-ternary */
-import LabeledInput from "@/components/common/LabeledInput";
-import { storeSchema, TypeStore } from "@/schema/store.schema";
+import LabeledInput from "@/shared/ui/common/LabeledInput";
+import { storeSchema, TypeStore } from "@/shared/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import Label from "@/components/common/Label";
-import Input from "@/components/common/Input";
-import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
-import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
-import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
-import useStores from "@/hooks/useStores";
+import Label from "@/shared/ui/common/Label";
+import Input from "@/shared/ui/common/Input";
+import phoneNumberPattern from "@/shared/formatter/formatPhoneNumber";
+import useOpenDaumPostcode from "@/shared/hooks/useOpenDaumPostcode";
+import formatBusinessNumber from "@/shared/formatter/formatBusinessNumber";
+import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
+import useStores from "@/entities/stores/model/useStores";
 import UploadPhoto from "./UploadPhoto";
 
 export default function CreateForm() {

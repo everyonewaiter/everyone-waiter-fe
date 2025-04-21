@@ -1,10 +1,10 @@
 /** eslint-disable jsx-a11y/no-static-element-interactions */
-import { Button, ButtonColors } from "@/components/common/Button";
-import useOverlay from "@/hooks/use-overlay";
-import cn from "@/lib/utils";
+import { Button, ButtonColors } from "@/shared/ui/common/Button";
+import useOverlay from "@/shared/hooks/useOverlay";
+import cn from "@/shared/lib/utils";
 import { TABLE_HEADER } from "@/app/stores/page";
 import { PropsWithChildren } from "react";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
 import StoreApplicationModal from "./modals/StoreApplicationModal";
 import PendingAcceptModal from "./modals/PendingAcceptModal";
 

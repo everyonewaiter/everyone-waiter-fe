@@ -2,19 +2,19 @@
 
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/no-unstable-nested-components */
-import { Form } from "@/components/common/form";
-import Label from "@/components/common/Label";
-import LabeledInput from "@/components/common/LabeledInput";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
-import SectionHeader from "@/components/SectionHeader";
-import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
+import { Form } from "@/shared/ui/common/Form";
+import Label from "@/shared/ui/common/Label";
+import LabeledInput from "@/shared/ui/common/LabeledInput";
+import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
+import SectionHeader from "@/shared/ui/SectionHeader";
+import { storeInfoSchema, TypeStoreInfo } from "@/shared/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EditIcon from "@public/icons/edit-contained.svg";
 import DeleteIcon from "@public/icons/trash-02.svg";
 import { Plus } from "lucide-react";
-import { useSidebar } from "@/hooks/store/useSidebar";
+import { useSidebarStore } from "@/shared/stores/useSidebarStore";
 
 interface OriginItem {
   item: string;
@@ -56,7 +56,7 @@ export default function StoreInfo() {
     },
   });
 
-  const { setActiveMenu } = useSidebar();
+  const { setActiveMenu } = useSidebarStore();
 
   useEffect(() => {
     setActiveMenu("매장 정보");

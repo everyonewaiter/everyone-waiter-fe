@@ -1,6 +1,6 @@
 "use client";
 
-import { createOverlayStore, OverlayStore } from "@/stores/overlayStore";
+import { createOverlayStore, OverlayStore } from "@/shared/hooks/overlayStore";
 import { Fragment, ReactNode, createContext, useContext, useRef } from "react";
 import { useStore } from "zustand";
 

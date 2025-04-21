@@ -1,7 +1,7 @@
 "use client";
 
 import MobileSidebar from "@/app/(main)/_components/MobileSidebar";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/shared/hooks/useOverlay";
 import { Menu } from "lucide-react";
 
 export default function SideBarButton() {

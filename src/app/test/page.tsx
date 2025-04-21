@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/common/Button";
-import Input from "@/components/common/Input";
+import { Button } from "@/shared/ui/common/Button";
+import Input from "@/shared/ui/common/Input";
 import {
   Form,
   FormControl,
@@ -9,12 +9,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/common/Form";
+} from "@/shared/ui/common/Form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import useOverlay from "@/hooks/use-overlay";
-import ModalLayout from "@/components/modal/modalLayout";
+import useOverlay from "@/shared/hooks/useOverlay";
+import ModalLayout from "@/shared/ui/modal/modalLayout";
 
 const formSchema = z.object({
   username: z.string().min(2, "Help text").max(50, "Help text"),
