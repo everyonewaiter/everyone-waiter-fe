@@ -4,18 +4,32 @@ import Paginations from "@/shared/ui/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import cn from "@/shared/lib/utils";
 import useStores from "@/entities/stores/model/useStores";
 import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
 import SectionHeader from "@/shared/ui/SectionHeader";
-import Row from "../store/_components/Row";
+import Table from "@/shared/ui/Table";
 
-export const TABLE_HEADER = {
-  "No.": "lg:flex-[0.69] md:flex-[0.88]",
-  신청일: "lg:flex-[2.78] md:flex-[1.88]",
-  상호명: "lg:flex-[2.78] md:flex-[1.88]",
-  상태: "lg:flex-[0.97] md:flex-[0.88]",
-  사유: "lg:flex-[2.78] md:flex-[2.48]",
+const itemWidths = {
+  "No.": {
+    className: "lg:flex-[0.69] md:flex-[0.88]",
+    text: "index",
+  },
+  신청일: {
+    className: "lg:flex-[2.78] md:flex-[1.88]",
+    text: "createdAt",
+  },
+  상호명: {
+    className: "lg:flex-[2.78] md:flex-[1.88]",
+    text: "name",
+  },
+  상태: {
+    className: "lg:flex-[0.97] md:flex-[0.88]",
+    text: "status",
+  },
+  사유: {
+    className: "lg:flex-[2.78] md:flex-[2.48]",
+    text: "reason",
+  },
 };
 
 export default function StoreList() {
@@ -28,26 +42,27 @@ export default function StoreList() {
   return (
     <div className="h-full w-full overflow-y-scroll">
       <SectionHeader title="매장 등록 신청 현황" />
-      <div className="w-full md:my-3 lg:my-6">
-        <div className="hidden items-center justify-center bg-gray-600 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]">
-          {Object.keys(TABLE_HEADER).map((key) => (
-            <div
+      <Table>
+        <Table.THeadLayout>
+          {Object.keys(itemWidths).map((key) => (
+            <Table.THead
               key={key}
-              className={cn(
-                TABLE_HEADER[key as keyof typeof TABLE_HEADER],
-                "text-gray-0 text-s text-center md:font-medium lg:text-base lg:font-bold"
-              )}
-            >
-              {key}
-            </div>
+              value={key}
+              className={itemWidths[key as keyof typeof itemWidths].className}
+            />
           ))}
-        </div>
-        <div className="mt-4 flex w-full flex-col items-center gap-4 md:mt-0 md:items-start md:gap-0">
-          {data?.registrations?.map((item, index) => (
-            <Row key={item.createdAt} {...item} index={index} />
+        </Table.THeadLayout>
+        <Table.RowLayout>
+          {data?.registrations.map((item, idx) => (
+            <Table.Row
+              key={item.registrationId.toString()}
+              {...item}
+              index={idx + 1}
+              itemWidths={itemWidths}
+            />
           ))}
-        </div>
-      </div>
+        </Table.RowLayout>
+      </Table>
       <div className="hidden w-full justify-end md:flex">
         <ResponsiveButton
           variant="outline"
