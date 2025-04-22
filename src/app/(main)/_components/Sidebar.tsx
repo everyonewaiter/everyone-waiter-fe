@@ -6,7 +6,6 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useSidebar } from "@/hooks/store/useSidebar";
-import { USER_MENU_NAV } from "@/constants/sidebarMenus";
 import { useRouter } from "next/navigation";
 import renderIcon from "./renderIcons";
 
@@ -70,9 +69,7 @@ export default function Sidebar() {
                   className="flex items-center md:py-[9px] lg:py-3"
                   onClick={() => {
                     setActiveMenu(item.text);
-                    const navPath =
-                      USER_MENU_NAV[item.text as keyof typeof USER_MENU_NAV];
-                    navigate.push(navPath);
+                    navigate.push(item.url);
                   }}
                 >
                   <div

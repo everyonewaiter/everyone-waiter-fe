@@ -123,9 +123,9 @@ export default function Signup() {
                 variant="default"
                 color="black"
                 responsiveButtons={{
-                  sm: { buttonSize: "sm", className: "h-10 w-[120px]" },
-                  md: { buttonSize: "md", className: "w-[94px]" },
-                  lg: { buttonSize: "lg" },
+                  sm: { buttonSize: "sm", className: "w-[120px]" },
+                  md: { buttonSize: "sm", className: "w-[94px]" },
+                  lg: { buttonSize: "lg", className: "w-[120px]" },
                 }}
                 disabled={
                   (!isAuthSubmitted && !form.watch("phone")?.length) ||
