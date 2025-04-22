@@ -301,4 +301,3 @@ export default function StoreInfo() {
       </div>
     </div>
   );
-}

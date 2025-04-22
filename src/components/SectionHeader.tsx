@@ -1,6 +1,6 @@
-import React, { useState, forwardRef } from "react"; // Added forwardRef import
 import Image from "next/image";
-import cn from "@/lib/utils";
+import React, { useState, forwardRef } from "react";
+      import cn from "@/lib/utils";
 import InfoPopup from "./InfoPopup";
 
 const SectionHeader = forwardRef<

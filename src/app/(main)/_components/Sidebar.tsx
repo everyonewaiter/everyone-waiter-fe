@@ -7,7 +7,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { useSidebar } from "@/hooks/store/useSidebar";
 import { useRouter } from "next/navigation";
-// import useStores from "@/hooks/useStores";
 import renderIcon from "./renderIcons";
 
 export default function Sidebar() {
@@ -15,9 +14,6 @@ export default function Sidebar() {
   const storeName = "상호명";
   const [isStoreOpen, setIsStoreOpen] = useState(true);
   const { setActiveMenu, activeMenu, menu } = useSidebar();
-  // const { registrationList } = useStores();
-  // const { data, isLoading: isListLoading } = registrationList(1);
-  // !isListLoading && !data?.registrations.length;
 
   return (
     <section className="hidden flex-col rounded-[28px] bg-white md:flex md:h-[calc(100%-40px)] md:w-[186px] md:px-3 lg:h-[calc(100%-64px)] lg:w-[318px] lg:px-5">
