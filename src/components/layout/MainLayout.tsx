@@ -40,7 +40,8 @@ export default function MainLayout({ children }: { children: ReactNode }) {
             pathname === "/" ? "h-screen" : "min-h-screen"
           )}
         >
-          {pathname !== "/stores" && (
+          {(pathname !== "/stores" ||
+            (pathname === "/stores" && window.innerWidth < 768)) && (
             <Header openMobileSidebar={handleOpenMobile} />
           )}
           <section className="flex h-full w-screen flex-row items-center justify-center rounded-[28px] md:h-[calc(100%-40px)] md:p-5 lg:h-[calc(100%-64px)] lg:min-w-[1458px] lg:p-8">
