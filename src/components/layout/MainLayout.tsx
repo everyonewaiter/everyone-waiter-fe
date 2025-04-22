@@ -15,7 +15,6 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { acceptedStoresListQuery } = useStores();
   const { setHasAcceptedStore, hasAcceptedStore } = useAccount();
-
   const { open, close } = useOverlay();
 
   const preventLayout = ["/login", "/signup"];
