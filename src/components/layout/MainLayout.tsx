@@ -28,7 +28,6 @@ export default function MainLayout({ children }: { children: ReactNode }) {
     const hasStore = acceptedStoresListQuery.data?.stores.length !== 0;
     setHasAcceptedStore(hasStore);
   }, [acceptedStoresListQuery.data?.stores.length]);
-
   return (
     <div className="min-h-screen w-screen bg-white md:bg-gray-700">
       {!acceptedStoresListQuery.isLoading && !hasAcceptedStore && (

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useAccount } from "@/hooks/store/useAccount";
 import GuideComponent from "@/components/GuideComponent";
 import useStores from "@/hooks/useStores";
+import MainLayout from "@/components/layout/MainLayout";
 import Splash from "./(splash)/page";
 
 export default function Home() {
@@ -36,7 +37,7 @@ export default function Home() {
   }, []);
 
   return (
-    <>
+    <MainLayout>
       {isLoading && <Splash fadeOut={fadeOut} duration={FADE_OUT_DURATION} />}
       <div className="center h-full w-full">
         {permission !== "ADMIN" &&
@@ -61,6 +62,6 @@ export default function Home() {
             />
           )}
       </div>
-    </>
+    </MainLayout>
   );
 }
