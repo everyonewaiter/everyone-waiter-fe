@@ -4,7 +4,6 @@ import Head from "next/head";
 import "./globals.css";
 import Script from "next/script";
 import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
-import MainLayout from "@/shared/ui/layout/MainLayout";
 import QueryProviders from "./query-providers";
 
 export const metadata: Metadata = {
@@ -31,9 +30,7 @@ export default function RootLayout({
       />
       <body className="select-none">
         <OverlayStoreProvider>
-          <QueryProviders>
-            <MainLayout>{children}</MainLayout>
-          </QueryProviders>
+          <QueryProviders>{children}</QueryProviders>
         </OverlayStoreProvider>
       </body>
     </html>

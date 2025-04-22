@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 import { setCookie } from "@/shared/lib/cookies";
 import LabeledInput from "@/shared/ui/common/LabeledInput";
 import ResponsiveButton from "@/shared/ui/common/ResponsiveButton";
-import SignupLayout from "../signup/layout";
 
 export default function Login() {
   const navigate = useRouter();
@@ -42,7 +41,7 @@ export default function Login() {
   };
 
   return (
-    <SignupLayout>
+    <>
       <Image
         src="/icons/logo/logo-with-text.svg"
         alt="logo with text"
@@ -93,6 +92,6 @@ export default function Login() {
         </Link>
         을 할 수 있어요!
       </span>
-    </SignupLayout>
+    </>
   );
 }
