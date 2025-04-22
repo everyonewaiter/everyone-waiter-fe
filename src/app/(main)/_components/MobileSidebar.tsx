@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ChevronDown, ChevronUp, X as CloseIcon } from "lucide-react";
 import Image from "next/image";
 import { useSidebar } from "@/hooks/store/useSidebar";
@@ -20,8 +20,6 @@ export default function MobileSidebar({ onClose }: IProps) {
   const storename = "모두의웨이터";
 
   const { setActiveMenu, activeMenu, menu } = useSidebar();
-
-  useEffect(() => {}, [activeMenu]);
 
   useOutsideClick({ ref, handler: onClose });
   useEscapeKey({ handler: onClose });
