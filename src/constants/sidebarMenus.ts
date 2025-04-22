@@ -1,16 +1,3 @@
-export const FIRST_ACCESS_MENU: Menu[] = [
-  {
-    icon: "shop",
-    text: "매장 등록",
-    url: "/store/create",
-  },
-  {
-    icon: "subscribe",
-    text: "구독 설정",
-    url: "/subscription",
-  },
-];
-
 export const USER_MENU: Menu[] = [
   {
     icon: "home",

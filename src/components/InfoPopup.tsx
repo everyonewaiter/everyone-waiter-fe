@@ -1,10 +1,26 @@
+import { useAccount } from "@/hooks/store/useAccount";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
+
+const popupList = [
+  {
+    text: "매장 등록 신청 현황",
+    url: "/stores",
+  },
+  {
+    text: "구독",
+    url: "/subscribe",
+  },
+];
 
 export default function InfoPopup({ close }: { close: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useRouter();
+
+  const { hasAcceptedStore } = useAccount();
 
   useOutsideClick({ ref, handler: close });
   useEscapeKey({ handler: close });
@@ -28,6 +44,25 @@ export default function InfoPopup({ close }: { close: () => void }) {
           asdf@gmail.com
         </span>
       </div>
+      {!hasAcceptedStore &&
+        popupList.map((item) => (
+          <div
+            key={item.text}
+            role="button"
+            tabIndex={0}
+            className="flex h-9 w-full items-center gap-2 rounded-[8px] px-3 lg:px-5"
+            onClick={() => navigate.push(item.url)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                navigate.push(item.url);
+              }
+            }}
+          >
+            <span className="text-s font-regular text-gray-300 lg:text-sm">
+              {item.text}
+            </span>
+          </div>
+        ))}
       <div
         role="button"
         tabIndex={0}

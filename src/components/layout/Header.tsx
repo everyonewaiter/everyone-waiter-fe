@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import InfoPopup from "../InfoPopup";
 
 interface IProps {
   openMobileSidebar: () => void;
@@ -7,6 +11,7 @@ interface IProps {
 
 export default function Header({ openMobileSidebar }: IProps) {
   const navigate = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header>
@@ -31,6 +36,20 @@ export default function Header({ openMobileSidebar }: IProps) {
               height={25}
               className="md:h-4 md:w-[94px] lg:h-[25px] lg:w-[141px]"
             />
+          </button>
+          <button
+            type="button"
+            className="center relative h-8 w-8 rounded-[12px] border border-gray-400 lg:h-12 lg:w-12 lg:rounded-[16px]"
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <Image
+              src="/icons/user.svg"
+              alt="사이드 메뉴"
+              width={24}
+              height={24}
+              className="md:h-6 md:w-6 lg:h-8 lg:w-8"
+            />
+            {isOpen && <InfoPopup close={() => setIsOpen(false)} />}
           </button>
         </div>
         <div className="h-[1px] bg-gray-500" />

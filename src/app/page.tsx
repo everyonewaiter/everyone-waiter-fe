@@ -2,69 +2,19 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { getAccount } from "@/lib/api/auth.api";
-import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "@/hooks/store/useAccount";
-import { getToken } from "@/lib/cookies";
-import { useRouter } from "next/navigation";
 import GuideComponent from "@/components/GuideComponent";
 import useStores from "@/hooks/useStores";
-import { useSidebar } from "@/hooks/store/useSidebar";
-import {
-  ADMIN_MENU,
-  FIRST_ACCESS_MENU,
-  USER_MENU,
-} from "@/constants/sidebarMenus";
 import Splash from "./(splash)/page";
 
 export default function Home() {
   const FADE_OUT_DURATION = 1000;
-  const navigate = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-  const [token, setToken] = useState("");
 
-  const { setProfile, setIsLoggedIn } = useAccount();
+  const { permission } = useAccount();
   const { registrationList } = useStores();
   const { data, isLoading: isListLoading } = registrationList(1);
-  const { setActiveMenu, setMenu } = useSidebar();
-
-  useEffect(() => {
-    setActiveMenu("HOME");
-
-    const fetchToken = async () => {
-      const accessToken = await getToken("accessToken");
-      if (!accessToken) {
-        navigate.push("/login");
-      } else {
-        setToken(accessToken!);
-      }
-    };
-    fetchToken();
-  }, []);
-
-  const { data: profile } = useQuery({
-    queryKey: ["my"],
-    queryFn: getAccount,
-    enabled: !!token,
-  });
-
-  useEffect(() => {
-    if (profile?.accountId!) {
-      setProfile({
-        ...profile,
-        accountId: profile.accountId.toString(),
-      });
-      setIsLoggedIn(true);
-      if (!isListLoading && !data?.registrations.length) {
-        setMenu(FIRST_ACCESS_MENU);
-      } else if (profile.permission === "ADMIN") {
-        setMenu(ADMIN_MENU);
-      } else {
-        setMenu(USER_MENU);
-      }
-    }
-  }, [profile]);
 
   useEffect(() => {
     const hideSplash = localStorage.getItem("hideSplash");
@@ -89,7 +39,7 @@ export default function Home() {
     <>
       {isLoading && <Splash fadeOut={fadeOut} duration={FADE_OUT_DURATION} />}
       <div className="center h-full w-full">
-        {profile?.permission !== "ADMIN" &&
+        {permission !== "ADMIN" &&
           !isListLoading &&
           !data?.registrations.length && (
             <GuideComponent
@@ -99,7 +49,7 @@ export default function Home() {
               isFromHome
             />
           )}
-        {profile?.permission !== "ADMIN" &&
+        {permission !== "ADMIN" &&
           !isListLoading &&
           data?.registrations.length! > 0 &&
           data?.registrations[0].status === "APPLY" && (
