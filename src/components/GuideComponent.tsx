@@ -24,7 +24,7 @@ export default function GuideComponent({
 
   return (
     <div
-      className={`flex w-[311px] flex-col items-center md:w-[360px] lg:w-[480px] ${gap ? `gap-${gap}` : "md:gap-8 lg:gap-10"} rounded-[32px] bg-white`}
+      className={`flex w-[311px] flex-col items-center md:w-[360px] lg:w-[480px] ${gap ? `gap-${gap}` : "md:gap-8 lg:gap-10"} rounded-[32px] bg-white md:p-5 lg:p-8`}
     >
       <Image
         src={image.url}
@@ -67,6 +67,7 @@ export default function GuideComponent({
             md: { buttonSize: "md", className: "!h-9" },
             sm: { buttonSize: "md", className: "!h-10" },
           }}
+          commonClassName="w-full md:relative"
         >
           {isFromHome ? "매장 등록하기" : " 내 신청 현황 보기"}
         </ResponsiveButton>
