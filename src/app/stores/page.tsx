@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
 import Table from "@/components/Table";
+import useStores from "@/hooks/useStores";
 
 const itemWidths = {
   "No.": {
@@ -35,7 +36,8 @@ export default function StoreList() {
   const navigate = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const dunmmy: any[] = [];
+  const { registrationList } = useStores();
+  const { data } = registrationList(currentPage);
 
   return (
     <div className="h-full w-full overflow-y-scroll">
@@ -51,7 +53,7 @@ export default function StoreList() {
           ))}
         </Table.THeadLayout>
         <Table.RowLayout>
-          {dunmmy?.map((item, idx) => (
+          {data?.registrations?.map((item, idx) => (
             <Table.Row
               key={item.registrationId.toString()}
               {...item}
