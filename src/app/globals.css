@@ -70,7 +70,7 @@
   --breakpoint-lg: 1920px;
 
   /* FontWeight */
-  --font-weight-regular: 400;
+  --font-weight-regular: 300;
 }
 
 @layer {

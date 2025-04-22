@@ -1,28 +1,29 @@
 /* eslint-disable import/prefer-default-export */
 import { create } from "zustand";
-import { ComponentType, SVGProps } from "react";
-
-interface MENU {
-  icon: ComponentType<SVGProps<SVGSVGElement>>;
-  text: string;
-}
+import { immer } from "zustand/middleware/immer";
+import { persist } from "zustand/middleware";
 
 interface StoreState {
-  menu: MENU[] | null;
+  menu: Menu[] | null;
   activeMenu: string;
-  setMenu: (value: MENU[]) => void;
+  setMenu: (value: Menu[]) => void;
   setActiveMenu: (value: string) => void;
 }
 
-export const useSidebar = create<StoreState>((set) => ({
-  menu: null,
-  activeMenu: "",
-
-  setMenu: (menu) =>
-    set(() => ({
-      menu,
-      activeMenu: menu[0]?.text ?? "",
+export const useSidebar = create<StoreState>()(
+  persist(
+    immer((set) => ({
+      menu: null,
+      activeMenu: "",
+      setMenu: (menu) => set(() => ({ menu })),
+      setActiveMenu: (activeMenu) => set(() => ({ activeMenu })),
     })),
-
-  setActiveMenu: (value) => set({ activeMenu: value }),
-}));
+    {
+      name: "@sidebar",
+      partialize: (state) => ({
+        menu: state.menu,
+        activeMenu: state.activeMenu,
+      }),
+    }
+  )
+);

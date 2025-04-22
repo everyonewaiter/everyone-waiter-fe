@@ -9,3 +9,9 @@ type USER = "USER";
 type OWNER = "OWNER";
 
 type TPermission = ADMIN | USER | OWNER;
+
+type TProfile = {
+  accountId: bigint;
+  email: string;
+  permission: TPermission;
+};

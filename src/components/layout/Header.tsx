@@ -1,10 +1,13 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface IProps {
   openMobileSidebar: () => void;
 }
 
 export default function Header({ openMobileSidebar }: IProps) {
+  const navigate = useRouter();
+
   return (
     <header>
       <div className="hidden md:block md:px-6 md:pt-4 lg:px-15 lg:pt-10">
@@ -12,6 +15,7 @@ export default function Header({ openMobileSidebar }: IProps) {
           <button
             type="button"
             className="flex items-center md:gap-[13px] lg:gap-5"
+            onClick={() => navigate.push("/")}
           >
             <Image
               src="/icons/logo/logo-medium.svg"
@@ -45,7 +49,11 @@ export default function Header({ openMobileSidebar }: IProps) {
               height={24}
             />
           </button>
-          <button type="button" className="mt-[1px] flex items-center gap-3">
+          <button
+            type="button"
+            className="mt-[1px] flex items-center gap-3"
+            onClick={() => navigate.push("/")}
+          >
             <Image
               src="/icons/logo/logo-medium.svg"
               alt="로고"

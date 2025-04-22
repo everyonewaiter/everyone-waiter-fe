@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { Form } from "@/components/common/form";
+import { Form } from "@/components/common/Form";
 import { loginSchema, TypeLogin } from "@/schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
