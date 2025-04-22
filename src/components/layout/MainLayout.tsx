@@ -2,11 +2,9 @@
 
 import MobileSidebar from "@/app/(main)/_components/MobileSidebar";
 import useOverlay from "@/hooks/use-overlay";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import Sidebar from "@/app/(main)/_components/Sidebar";
-import { USER_MENU } from "@/constants/sidebarMenus";
 import { usePathname } from "next/navigation";
-import { useSidebar } from "@/hooks/store/useSidebar";
 import cn from "@/lib/utils";
 import Header from "./Header";
 
@@ -14,15 +12,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const { open, close } = useOverlay();
-  const { setMenu } = useSidebar();
-  const preventLayout = ["/login", "/signup"];
   const isFirstStore = false;
-
-  useEffect(() => {
-    setMenu(USER_MENU);
-  }, []);
-
-  if (preventLayout.includes(pathname)) return children;
 
   const handleOpenMobile = () => {
     open(() => <MobileSidebar onClose={close} />);
