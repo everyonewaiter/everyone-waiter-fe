@@ -3,7 +3,6 @@
 import Paginations from "@/components/common/Pagination/Paginations";
 import SectionHeader from "@/components/SectionHeader";
 import Table from "@/components/Table";
-import useStores from "@/hooks/useStores";
 import { Search } from "lucide-react";
 import { useState } from "react";
 
@@ -31,8 +30,7 @@ const itemWidths = {
 };
 
 export default function StoreApproval() {
-  const { registrationList } = useStores();
-  const { data } = registrationList(1);
+  const data: any[] = [];
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchWord, setSearchWord] = useState("");
@@ -74,7 +72,7 @@ export default function StoreApproval() {
           ))}
         </Table.THeadLayout>
         <Table.RowLayout>
-          {data?.registrations.map((item, idx) => (
+          {data?.map((item, idx) => (
             <Table.Row
               key={item.registrationId.toString()}
               {...item}
@@ -86,7 +84,7 @@ export default function StoreApproval() {
       </Table>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-        totalPages={data?.registrationCount!}
+        totalPages={1}
         currentPage={currentPage}
         onSetCurrentPage={setCurrentPage}
         className="mt-8"
