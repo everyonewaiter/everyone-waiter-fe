@@ -1,44 +1,18 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
 import { useAccount } from "@/hooks/store/useAccount";
 import GuideComponent from "@/components/GuideComponent";
 import useStores from "@/hooks/useStores";
-import MainLayout from "@/components/layout/MainLayout";
-import Splash from "./(splash)/page";
+import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function Home() {
-  const FADE_OUT_DURATION = 1000;
-  const [isLoading, setIsLoading] = useState(false);
-  const [fadeOut, setFadeOut] = useState(false);
-
   const { permission } = useAccount();
   const { registrationList } = useStores();
   const { data, isLoading: isListLoading } = registrationList(1);
 
-  useEffect(() => {
-    const hideSplash = localStorage.getItem("hideSplash");
-
-    if (hideSplash === "false" || !hideSplash) {
-      setIsLoading(true);
-      const timer = setTimeout(() => {
-        setFadeOut(true);
-        setTimeout(() => {
-          localStorage.setItem("hideSplash", "true");
-          setIsLoading(false);
-        }, FADE_OUT_DURATION);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-
-    return () => {};
-  }, []);
-
   return (
-    <MainLayout>
-      {isLoading && <Splash fadeOut={fadeOut} duration={FADE_OUT_DURATION} />}
+    <ClientLayout>
       <div className="center h-full w-full">
         {permission !== "ADMIN" &&
           !isListLoading &&
@@ -62,6 +36,6 @@ export default function Home() {
             />
           )}
       </div>
-    </MainLayout>
+    </ClientLayout>
   );
 }

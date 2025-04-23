@@ -27,7 +27,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const hasStore = acceptedStoresListQuery.data?.stores.length !== 0;
     setHasAcceptedStore(hasStore);
-  }, [acceptedStoresListQuery.data?.stores.length]);
+  }, [acceptedStoresListQuery.data, setHasAcceptedStore]);
 
   return (
     <div className="min-h-screen w-screen bg-white md:bg-gray-700">
@@ -40,10 +40,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
             pathname === "/" ? "h-screen" : "min-h-screen"
           )}
         >
-          {(pathname !== "/stores" ||
-            (pathname === "/stores" && window.innerWidth < 768)) && (
+          <div className={cn("block", pathname === "/stores" && "md:hidden")}>
             <Header openMobileSidebar={handleOpenMobile} />
-          )}
+          </div>
           <section className="flex h-full w-screen flex-row items-center justify-center rounded-[28px] md:h-[calc(100%-40px)] md:p-5 lg:h-[calc(100%-64px)] lg:min-w-[1458px] lg:p-8">
             {children}
           </section>

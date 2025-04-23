@@ -37,7 +37,6 @@ export default function Login() {
   });
 
   useEffect(() => {
-    console.log(profileData);
     if (isLoggedIn && profileData) {
       setProfile({
         accountId: (profileData as TProfile)?.accountId?.toString(),
