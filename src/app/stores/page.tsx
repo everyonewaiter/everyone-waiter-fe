@@ -82,7 +82,7 @@ export default function StoreList() {
       </div>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-        totalPages={10}
+        totalPages={Math.floor((data?.registrationCount as number) / 20)}
         currentPage={currentPage}
         onSetCurrentPage={setCurrentPage}
         className="mt-8"
