@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     domains: ["everyonewaiter.com"],
+    formats: ["image/avif", "image/webp"],
   },
   webpack: (config) => {
     config.module.rules.push({
