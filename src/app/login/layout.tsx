@@ -1,5 +1,6 @@
 import { TypeChildren } from "@/types/common";
+import { Suspense } from "react";
 
 export default function Layout({ children }: TypeChildren) {
-  return children;
+  return <Suspense fallback={<div>로딩 중...</div>}>{children}</Suspense>;
 }
