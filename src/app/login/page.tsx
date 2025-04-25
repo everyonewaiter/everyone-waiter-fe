@@ -15,6 +15,8 @@ import { setCookie } from "@/lib/cookies";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import { useAccount } from "@/hooks/store/useAccount";
+import { useSidebar } from "@/hooks/store/useSidebar";
+import { ADMIN_MENU, USER_MENU } from "@/constants/sidebarMenus";
 import SignupLayout from "../signup/layout";
 
 export default function Login() {
@@ -30,6 +32,7 @@ export default function Login() {
   });
 
   const { setProfile, setIsLoggedIn, isLoggedIn } = useAccount();
+  const { setMenu } = useSidebar();
 
   const { data: profileData, refetch } = useQuery({
     queryKey: ["my"],
@@ -44,6 +47,13 @@ export default function Login() {
         email: profileData?.email!,
         permission: profileData?.permission!,
       });
+      if (profileData?.permission === "ADMIN") {
+        setMenu(ADMIN_MENU);
+      } else {
+        setMenu(USER_MENU);
+      }
+      console.log(profileData?.permission);
+
       navigate.push("/");
     }
   }, [isLoggedIn, profileData]);

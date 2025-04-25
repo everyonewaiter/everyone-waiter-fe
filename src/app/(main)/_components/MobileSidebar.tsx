@@ -7,6 +7,7 @@ import { useRef } from "react";
 import { X as CloseIcon } from "lucide-react";
 import Image from "next/image";
 import useStores from "@/hooks/useStores";
+import { useAccount } from "@/hooks/store/useAccount";
 import MobileSidebarSection from "./MobileSidebarSection";
 
 interface IProps {
@@ -17,6 +18,7 @@ export default function MobileSidebar({ onClose }: IProps) {
   const navigate = useRouter();
   const ref = useRef<HTMLDivElement>(null);
 
+  const { permission } = useAccount();
   const { acceptedStoresListQuery } = useStores();
   const { data } = acceptedStoresListQuery;
 
@@ -56,15 +58,20 @@ export default function MobileSidebar({ onClose }: IProps) {
           </button>
         </div>
         <div className="mb-4 h-[1px] bg-gray-600" />
-        <div className="flex flex-col gap-5">
-          {data?.stores.map((item) => (
-            <MobileSidebarSection
-              key={item.storeId}
-              onClose={onClose}
-              {...item}
-            />
-          ))}
-        </div>
+        {permission !== "USER" && (
+          <div className="flex flex-col gap-5">
+            {data?.stores.map((item) => (
+              <MobileSidebarSection
+                key={item.storeId}
+                onClose={onClose}
+                {...item}
+              />
+            ))}
+          </div>
+        )}
+        {permission === "ADMIN" && (
+          <MobileSidebarSection onClose={onClose} name="모두의 웨이터" />
+        )}
       </aside>
     </div>
   );
