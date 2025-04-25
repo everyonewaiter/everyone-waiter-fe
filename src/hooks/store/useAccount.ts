@@ -1,5 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { produce } from "immer";
 
 type Item = Omit<TProfile, "accountId"> & { accountId: string };
 
@@ -13,15 +15,26 @@ interface StoreState extends Item {
   setHasAcceptedStore: (value: boolean) => void;
 }
 
-export const useAccount = create<StoreState>()((set) => ({
-  accountId: "",
-  email: "",
-  permission: "USER",
-  isLoggedIn: false,
-  hasAcceptedStore: false,
+export const useAccount = create<StoreState>()(
+  persist(
+    (set) => ({
+      accountId: "",
+      email: "",
+      permission: "USER",
+      isLoggedIn: false,
+      hasAcceptedStore: false,
 
-  setProfile: (value) => set({ ...value }),
-  setIsLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
-  setPermission: (permission) => set({ permission }),
-  setHasAcceptedStore: (hasAcceptedStore) => set({ hasAcceptedStore }),
-}));
+      setProfile: (value) => set(produce((state) => ({ ...state, ...value }))),
+      setIsLoggedIn: (isLoggedIn) =>
+        set(produce((state) => ({ ...state, isLoggedIn }))),
+      setPermission: (permission) =>
+        set(produce((state) => ({ ...state, permission }))),
+      setHasAcceptedStore: (hasAcceptedStore) =>
+        set(produce((state) => ({ ...state, hasAcceptedStore }))),
+    }),
+    {
+      name: "account-storage",
+      partialize: (state) => ({ permission: state.permission }),
+    }
+  )
+);
