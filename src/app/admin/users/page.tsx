@@ -1,3 +1,3 @@
 export default function Users() {
-  return <div>users</div>;
+  return <div className="h-full w-full">users</div>;
 }
