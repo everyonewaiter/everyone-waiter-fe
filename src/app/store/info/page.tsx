@@ -2,7 +2,7 @@
 
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/no-unstable-nested-components */
-import { Form } from "@/components/common/form";
+import { Form } from "@/components/common/Form";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
@@ -301,3 +301,4 @@ export default function StoreInfo() {
       </div>
     </div>
   );
+}

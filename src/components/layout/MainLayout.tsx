@@ -11,12 +11,12 @@ import Header from "./Header";
 export default function MainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { open, close } = useOverlay();
-  
+
   const isFirstStore = false;
 
   const preventLayout = ["/login", "/signup"];
   if (preventLayout.includes(pathname)) return children;
-  
+
   const handleOpenMobile = () => {
     open(() => <MobileSidebar onClose={close} />);
   };

@@ -2,9 +2,8 @@
 import { Button, ButtonColors } from "@/components/common/Button";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
-import { TABLE_HEADER } from "@/app/stores/page";
-import { PropsWithChildren } from "react";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { PropsWithChildren } from "react";
 import StoreApplicationModal from "./modals/StoreApplicationModal";
 import PendingAcceptModal from "./modals/PendingAcceptModal";
 
@@ -52,9 +51,10 @@ function MobileDataCell({
 
 interface IProps extends StoreDetail {
   index: number;
+  itemWidths: Record<string, { className: string; text: string }>;
 }
 
-export default function Row({ index, ...item }: IProps) {
+export default function Row({ index, itemWidths, ...item }: IProps) {
   const { open, close } = useOverlay();
 
   const handleOpenModal = () => {
@@ -83,49 +83,93 @@ export default function Row({ index, ...item }: IProps) {
       }}
     >
       <div className="text-gray-0 md:text-s hidden h-10 w-full items-center justify-center border-b border-b-gray-600 py-6 md:flex lg:h-[64px] lg:text-base lg:font-medium">
-        <DataCell className={`${TABLE_HEADER["No."]}`}>{index + 1}</DataCell>
-        <DataCell className={`${TABLE_HEADER["신청일"]}`}>
-          {handleDate()}
-        </DataCell>
-        <DataCell className={`${TABLE_HEADER["상호명"]}`}>{item.name}</DataCell>
-        <DataCell className={`${TABLE_HEADER["상태"]} flex justify-center`}>
-          <ResponsiveButton
-            color={item.status.toLowerCase()}
-            responsiveButtons={{
-              md: {
-                buttonSize: "custom",
-                className:
-                  "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
-              },
-              lg: {
-                buttonSize: "custom",
-                className:
-                  "h-[37px] px-5 py-2 rounded-[8px] text-sm text-white font-regular",
-              },
-            }}
-          >
-            {STATUS_COLORS[item.status]}
-          </ResponsiveButton>
-        </DataCell>
-        <DataCell className={`${TABLE_HEADER["사유"]}`}>
-          {item.reason || "-"}
-        </DataCell>
+        {Object.keys(itemWidths).map((key, idx) => {
+          const { className, text } = itemWidths[key];
+          if (idx === 0) {
+            return (
+              <DataCell key={key} className={`${className}`}>
+                {index}
+              </DataCell>
+            );
+          }
+          if (key === "상태") {
+            return (
+              <DataCell
+                key={key}
+                className={`${className} flex justify-center`}
+              >
+                <ResponsiveButton
+                  key={key}
+                  color={item.status.toLowerCase()}
+                  responsiveButtons={{
+                    md: {
+                      buttonSize: "custom",
+                      className:
+                        "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+                    },
+                    lg: {
+                      buttonSize: "custom",
+                      className:
+                        "h-[37px] px-5 py-2 rounded-[8px] text-sm text-white font-regular",
+                    },
+                  }}
+                >
+                  {STATUS_COLORS[item.status]}
+                </ResponsiveButton>
+              </DataCell>
+            );
+          }
+          if (key === "신청일") {
+            return (
+              <DataCell key={key} className={`${className}`}>
+                {handleDate()}
+              </DataCell>
+            );
+          }
+          return (
+            <DataCell key={key} className={`${className}`}>
+              {item[text as keyof Omit<StoreDetail, "registrationId">] || "-"}
+            </DataCell>
+          );
+        })}
       </div>
       <div className="flex flex-col overflow-hidden rounded-[16px] border border-gray-600 md:hidden">
-        <MobileDataCell name="No.">{index + 1}</MobileDataCell>
-        <MobileDataCell name="신청일">{handleDate()}</MobileDataCell>
-        <MobileDataCell name="상호명">{item.name}</MobileDataCell>
-        <MobileDataCell name="상태">
-          <Button
-            color={item.status.toLowerCase() as keyof ButtonColors}
-            className={cn(
-              "h-5 rounded-[6px] px-3 py-1 text-xs font-semibold text-white"
-            )}
-          >
-            {STATUS_COLORS[item.status]}
-          </Button>
-        </MobileDataCell>
-        <MobileDataCell name="사유">{item.reason || "-"}</MobileDataCell>
+        {Object.keys(itemWidths).map((key, idx) => {
+          const { text } = itemWidths[key];
+          if (idx === 0) {
+            return (
+              <MobileDataCell key={key} name={key}>
+                {index}
+              </MobileDataCell>
+            );
+          }
+          if (key === "상태") {
+            return (
+              <MobileDataCell key={key} name="상태">
+                <Button
+                  color={item.status.toLowerCase() as keyof ButtonColors}
+                  className={cn(
+                    "h-5 rounded-[6px] px-3 py-1 text-xs font-semibold text-white"
+                  )}
+                >
+                  {STATUS_COLORS[item.status]}
+                </Button>
+              </MobileDataCell>
+            );
+          }
+          if (key === "신청일") {
+            return (
+              <MobileDataCell key={key} name="신청일">
+                {handleDate()}
+              </MobileDataCell>
+            );
+          }
+          return (
+            <MobileDataCell key={key} name={key}>
+              {item[text as keyof Omit<StoreDetail, "registrationId">] || "-"}
+            </MobileDataCell>
+          );
+        })}
       </div>
     </div>
   );

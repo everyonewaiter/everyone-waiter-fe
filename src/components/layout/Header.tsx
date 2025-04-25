@@ -7,7 +7,7 @@ interface IProps {
 
 export default function Header({ openMobileSidebar }: IProps) {
   const navigate = useRouter();
-        
+
   return (
     <header>
       <div className="hidden md:block md:px-6 md:pt-4 lg:px-15 lg:pt-10">
