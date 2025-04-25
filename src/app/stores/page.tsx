@@ -40,7 +40,7 @@ export default function StoreList() {
   const { data } = registrationList(currentPage);
 
   return (
-    <div className="h-full w-full overflow-y-scroll">
+    <div className="h-full max-h-screen w-full overflow-y-scroll">
       <SectionHeader title="매장 등록 신청 현황" />
       <Table>
         <Table.THeadLayout>
