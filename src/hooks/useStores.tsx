@@ -52,7 +52,9 @@ const useStores = () => {
     },
   });
 
-  const acceptedStoresListQuery = useQuery<{ stores: string[] }>({
+  const acceptedStoresListQuery = useQuery<{
+    stores: { storeId: bigint; name: string }[];
+  }>({
     queryKey: ["get-stores-list"],
     queryFn: getStoreList,
   });

@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
-import { useRef, useState } from "react";
-import { ChevronDown, ChevronUp, X as CloseIcon } from "lucide-react";
+import { useRef } from "react";
+import { X as CloseIcon } from "lucide-react";
 import Image from "next/image";
-import { useSidebar } from "@/hooks/store/useSidebar";
-import renderIcon from "./renderIcons";
+import useStores from "@/hooks/useStores";
+import MobileSidebarSection from "./MobileSidebarSection";
 
 interface IProps {
   onClose: () => void;
@@ -16,10 +16,9 @@ interface IProps {
 export default function MobileSidebar({ onClose }: IProps) {
   const navigate = useRouter();
   const ref = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(true);
-  const storename = "모두의웨이터";
 
-  const { setActiveMenu, activeMenu, menu } = useSidebar();
+  const { acceptedStoresListQuery } = useStores();
+  const { data } = acceptedStoresListQuery;
 
   useOutsideClick({ ref, handler: onClose });
   useEscapeKey({ handler: onClose });
@@ -56,45 +55,14 @@ export default function MobileSidebar({ onClose }: IProps) {
             <CloseIcon color="#222" width={24} height={24} strokeWidth="1.5" />
           </button>
         </div>
-        <div className="h-[1px] bg-gray-600" />
-        <div className="mt-4">
-          <button
-            type="button"
-            className="text-gray-0 flex w-full items-center justify-between py-3 text-base font-semibold"
-            onClick={() => setIsOpen((prev) => !prev)}
-          >
-            {storename}
-            <div className="center h-6 w-6">
-              {isOpen ? (
-                <ChevronUp strokeWidth="1.3" width={20} height={20} />
-              ) : (
-                <ChevronDown strokeWidth="1.3" width={20} height={20} />
-              )}
-            </div>
-          </button>
-        </div>
-        <div className={isOpen ? "block" : "hidden"}>
-          {menu?.map((item) => (
-            <button
-              type="button"
-              key={item.text}
-              className={`flex items-center gap-[10px] py-[10px] ${activeMenu === item.text ? "pl-0" : "pl-[12px]"}`}
-              onClick={() => {
-                setActiveMenu(item.text);
-                navigate.push(item.url);
-                onClose();
-              }}
-            >
-              <div
-                className={`h-5 w-0.5 ${activeMenu === item.text ? "bg-primary" : "hidden"}`}
-              />
-              {renderIcon(item.icon, activeMenu === item.text)}
-              <span
-                className={`text-[15px] font-medium ${activeMenu === item.text ? "text-primary" : "text-gray-300"}`}
-              >
-                {item.text}
-              </span>
-            </button>
+        <div className="mb-4 h-[1px] bg-gray-600" />
+        <div className="flex flex-col gap-5">
+          {data?.stores.map((item) => (
+            <MobileSidebarSection
+              key={item.storeId}
+              onClose={onClose}
+              {...item}
+            />
           ))}
         </div>
       </aside>
