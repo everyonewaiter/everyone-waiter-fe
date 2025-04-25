@@ -26,6 +26,7 @@ interface IProps {
 export default function StoreApplicationModal({ close, item }: IProps) {
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isPhotoUpdating, setIsPhotoUpdating] = useState(false);
 
   const form = useForm<
@@ -98,6 +99,8 @@ export default function StoreApplicationModal({ close, item }: IProps) {
   };
 
   const handleApply = () => {
+    setIsSubmitted(true);
+
     if (typeof form.getValues("image") === "string") {
       handleReapply();
     } else {
@@ -198,6 +201,7 @@ export default function StoreApplicationModal({ close, item }: IProps) {
         type={isUpdating ? "submit" : "button"}
         color={isUpdating ? "primary" : "black"}
         onClick={() => (isUpdating ? handleApply() : setIsUpdating(true))}
+        disabled={isUpdating ? isSubmitted : false}
       >
         {isUpdating ? "재신청하기" : "수정하고 재신청하기"}
       </ModalWithTitle.Button>

@@ -20,6 +20,9 @@ export default function Signup() {
   const [isPhoneAuthenticated, setIsPhoneAuthenticated] = useState(false);
   const [isConsentGiven, setIsConsentGiven] = useState(false);
   const [authTime, setAuthTime] = useState(300);
+  const [makeDisabled, setMakeDisabled] = useState({
+    formButton: false,
+  });
   const form = useForm<TypeSignup>({
     mode: "onChange",
     resolver: zodResolver(signupSchema),
@@ -52,6 +55,7 @@ export default function Signup() {
   }, [isAuthSubmitted]);
 
   const submitHandler = (data: TypeSignup) => {
+    setMakeDisabled((prev) => ({ ...prev, formButton: true }));
     mutateSignup(
       {
         email: data.email,
@@ -68,13 +72,20 @@ export default function Signup() {
 
   // NOTE - 인증 요청
   const handleAuthentication = (phoneNumber: string) => {
-    setAuthTime(300);
     setIsAuthSubmitted(true);
+    const phoneRegex = /^\d{10,11}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      alert("올바른 전화번호를 입력해주세요. (숫자만 10-11자리)");
+      return;
+    }
+
+    setAuthTime(300);
     mutateSendPhoneAuthCode({ phoneNumber });
   };
 
   // NOTE - 인증 확인
   const handleCheckAuth = (value: string) => {
+    setIsPhoneAuthenticated(true);
     mutateVerifyAuthCode(
       {
         phoneNumber: form.getValues("phone"),
@@ -85,7 +96,6 @@ export default function Signup() {
           alert("인증되었습니다.");
           setAuthTime(0);
           setIsAuthSubmitted(false);
-          setIsPhoneAuthenticated(true);
         },
       }
     );
@@ -201,7 +211,7 @@ export default function Signup() {
           <ResponsiveButton
             type="submit"
             color="primary"
-            disabled={!isConsentGiven}
+            disabled={!isConsentGiven || makeDisabled.formButton}
             responsiveButtons={{
               lg: { buttonSize: "lg" },
               md: { buttonSize: "md", className: "my-6" },

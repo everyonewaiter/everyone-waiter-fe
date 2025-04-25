@@ -25,6 +25,7 @@ interface OriginItem {
 
 export default function StoreInfo() {
   const ref = useRef<HTMLDivElement>(null);
+  const [makeDisabled, setMakeDisabled] = useState(false);
   const [countryOfOrigins, setCountryOfOrigins] = useState<OriginItem[]>([
     {
       item: "소",
@@ -94,6 +95,7 @@ export default function StoreInfo() {
   };
 
   const submitHandler = () => {
+    setMakeDisabled(true);
     // submit data: TypeStoreinfo
   };
 
@@ -237,6 +239,7 @@ export default function StoreInfo() {
                         },
                         lg: { buttonSize: "lg", className: "!h-10" },
                       }}
+                      disabled={makeDisabled}
                       commonClassName="border-dashed mt-3"
                       onClick={() =>
                         setCountryOfOrigins([...countryOfOrigins, newItem])

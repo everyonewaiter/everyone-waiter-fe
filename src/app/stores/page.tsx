@@ -37,7 +37,7 @@ export default function StoreList() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { registrationList } = useStores();
-  const { data } = registrationList(currentPage);
+  const { data, refetch } = registrationList(currentPage);
 
   return (
     <div className="h-full max-h-screen w-full overflow-y-scroll">
@@ -84,7 +84,10 @@ export default function StoreList() {
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
         totalPages={Math.floor((data?.registrationCount as number) / 20)}
         currentPage={currentPage}
-        onSetCurrentPage={setCurrentPage}
+        onSetCurrentPage={(page) => {
+          setCurrentPage(page);
+          refetch();
+        }}
         className="mt-8"
       />
     </div>
