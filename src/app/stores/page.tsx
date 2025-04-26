@@ -20,6 +20,9 @@ import {
   TableRow,
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
+import useOverlay from "@/hooks/use-overlay";
+import StoreApplicationModal from "../store/_components/modals/StoreApplicationModal";
+import PendingAcceptModal from "../store/_components/modals/PendingAcceptModal";
 
 export const STATUS_COLORS = {
   APPLY: "접수",
@@ -63,12 +66,22 @@ export default function StoreList() {
     return [date.slice(2), time.slice(0, 5)].join(" ");
   };
 
+  const { open, close } = useOverlay();
+
+  const handleOpenModal = (item: StoreDetail) => {
+    if (item.status === "REJECT") {
+      open(() => <StoreApplicationModal close={close} item={item} />);
+    } else if (item.status === "APPLY") {
+      open(() => <PendingAcceptModal close={close} />);
+    }
+  };
+
   return (
     <div className="h-full max-h-screen w-full overflow-y-scroll">
       <SectionHeader title="매장 등록 신청 현황" />
       <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
         <TableHeader className="w-full">
-          <TableRow item={null} isHead>
+          <TableRow isHead>
             {Object.keys(itemWidths).map((item) => (
               <TableHead
                 key={item}
@@ -83,7 +96,10 @@ export default function StoreList() {
         </TableHeader>
         <TableBody>
           {data?.registrations.map((item, idx) => (
-            <TableRow key={item.registrationId.toString()} item={item}>
+            <TableRow
+              key={item.registrationId.toString()}
+              onClick={() => handleOpenModal(item)}
+            >
               <TableCell className={itemWidths["No."].className}>
                 {idx + 1}
               </TableCell>

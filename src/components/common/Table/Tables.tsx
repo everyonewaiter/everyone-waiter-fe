@@ -1,9 +1,6 @@
 /* eslint-disable no-lone-blocks */
 import * as React from "react";
 import cn from "@/lib/utils";
-import useOverlay from "@/hooks/use-overlay";
-import StoreApplicationModal from "@/app/store/_components/modals/StoreApplicationModal";
-import PendingAcceptModal from "@/app/store/_components/modals/PendingAcceptModal";
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -67,33 +64,19 @@ TableBody.displayName = "TableBody";
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
   React.HTMLAttributes<HTMLTableRowElement> & {
-    item: StoreDetail | null;
     isHead?: boolean;
   }
->(({ className, item, isHead, ...props }, ref) => {
-  const { open, close } = useOverlay();
-
-  const handleOpenModal = () => {
-    if (item?.status === "REJECT") {
-      open(() => <StoreApplicationModal close={close} item={item} />);
-    } else if (item?.status === "APPLY") {
-      open(() => <PendingAcceptModal close={close} />);
-    }
-  };
-
-  return (
-    <tr
-      ref={ref}
-      className={cn(
-        "hidden w-full cursor-pointer items-center justify-center md:flex md:h-10 md:flex-row lg:h-16",
-        isHead ? "" : "border-b border-b-gray-600",
-        className
-      )}
-      onClick={() => (item === null ? null : handleOpenModal())}
-      {...props}
-    />
-  );
-});
+>(({ className, isHead, ...props }, ref) => (
+  <tr
+    ref={ref}
+    className={cn(
+      "hidden w-full cursor-pointer items-center justify-center md:flex md:h-10 md:flex-row lg:h-16",
+      isHead ? "" : "border-b border-b-gray-600",
+      className
+    )}
+    {...props}
+  />
+));
 TableRow.displayName = "TableRow";
 
 const TableCell = React.forwardRef<

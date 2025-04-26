@@ -20,6 +20,9 @@ import SectionHeader from "@/components/SectionHeader";
 import useStores from "@/hooks/useStores";
 import { useState } from "react";
 import cn from "@/lib/utils";
+import useOverlay from "@/hooks/use-overlay";
+import StoreApplicationModal from "@/app/store/_components/modals/StoreApplicationModal";
+import PendingAcceptModal from "@/app/store/_components/modals/PendingAcceptModal";
 
 const itemWidths = {
   "No.": {
@@ -58,6 +61,16 @@ export default function StoreApproval() {
     return [date.slice(2), time.slice(0, 5)].join(" ");
   };
 
+  const { open, close } = useOverlay();
+
+  const handleOpenModal = (item: StoreDetail) => {
+    if (item.status === "REJECT") {
+      open(() => <StoreApplicationModal close={close} item={item} />);
+    } else if (item.status === "APPLY") {
+      open(() => <PendingAcceptModal close={close} />);
+    }
+  };
+
   return (
     <div className="h-full w-full">
       <SectionHeader title="매장 등록 신청 현황" />
@@ -70,7 +83,7 @@ export default function StoreApproval() {
       </div>
       <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
         <TableHeader className="w-full">
-          <TableRow item={null} isHead>
+          <TableRow isHead>
             {Object.keys(itemWidths).map((item) => (
               <TableHead
                 key={item}
@@ -85,7 +98,10 @@ export default function StoreApproval() {
         </TableHeader>
         <TableBody>
           {data?.registrations.map((item, idx) => (
-            <TableRow key={item.registrationId.toString()} item={item}>
+            <TableRow
+              key={item.registrationId.toString()}
+              onClick={() => handleOpenModal(item)}
+            >
               <TableCell className={itemWidths["No."].className}>
                 {idx + 1}
               </TableCell>
