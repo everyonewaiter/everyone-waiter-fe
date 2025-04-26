@@ -33,12 +33,20 @@ export default function Dropdown({
         onClick={() => setIsOpen((prev) => !prev)}
         className="outline-none"
       >
-        <div className="text-s font-regular text-gray-0 flex !h-[38px] w-fit flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-4">
+        <div className="text-s font-regular text-gray-0 flex h-[32px] w-fit flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4">
           {active || defaultText}
           {isOpen ? (
-            <ChevronUp size={16} strokeWidth={1} className="mt-1" />
+            <ChevronUp
+              size={16}
+              strokeWidth={1}
+              className="mt-1 h-3 w-3 lg:h-4 lg:w-4"
+            />
           ) : (
-            <ChevronDown size={16} strokeWidth={1} className="mt-1" />
+            <ChevronDown
+              size={16}
+              strokeWidth={1}
+              className="mt-1 h-3 w-3 lg:h-4 lg:w-4"
+            />
           )}
         </div>
       </DropdownMenuTrigger>

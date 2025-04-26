@@ -78,15 +78,15 @@ export default function Users() {
   return (
     <div className="min-h-full w-full">
       <SectionHeader title="회원 관리" />
-      <div className="mt-4 flex w-full md:hidden">
+      <div className="mt-4 flex w-full px-5 md:hidden">
         <Searchbar
           searchWord={searchWord}
           setSearchWord={setSearchWord}
           onSubmit={submitHandler}
         />
       </div>
-      <div className="px-5">
-        <div className="-mx-5 mt-6 flex overflow-x-auto px-5 [-ms-overflow-style:'none'] [scrollbar-width:'none'] md:hidden [&::-webkit-scrollbar]:hidden">
+      <div className="px-5 md:px-0">
+        <div className="-mx-5 mt-6 block overflow-x-auto px-5 [-ms-overflow-style:'none'] [scrollbar-width:'none'] md:hidden [&::-webkit-scrollbar]:hidden">
           <div className="flex w-max min-w-full items-center gap-2">
             <div className="flex items-center gap-2">
               <DropdownGroup />
@@ -127,7 +127,7 @@ export default function Users() {
           </TableHeader>
           <TableBody>
             <TableRow item={null}>
-              <TableCell className="w-[64px]">
+              <TableCell className="w-[68px]">
                 <Checkbox />
               </TableCell>
               <TableCell className="flex-1">2</TableCell>
@@ -150,6 +150,11 @@ export default function Users() {
                         //   ? "bg-[#FFB70008] text-[#FFB700]"
                         //   : ""
                       ),
+                    },
+                    md: {
+                      buttonSize: "md",
+                      className:
+                        "!h-[26px] !rounded-[24px] !bg-[#3900B508] !text-[#3900B5] !text-xs !font-regular !px-3 !py-1",
                     },
                   }}
                 >
