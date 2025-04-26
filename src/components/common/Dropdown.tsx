@@ -29,8 +29,11 @@ export default function Dropdown({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger onClick={() => setIsOpen((prev) => !prev)}>
-        <div className="text-s font-regular text-gray-0 flex !h-[38px] flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-4">
+      <DropdownMenuTrigger
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="outline-none"
+      >
+        <div className="text-s font-regular text-gray-0 flex !h-[38px] w-fit flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-4">
           {active || defaultText}
           {isOpen ? (
             <ChevronUp size={16} strokeWidth={1} className="mt-1" />
@@ -41,7 +44,7 @@ export default function Dropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className={cn(
-          "mt-1 ml-3 w-[113px] rounded-[16px] bg-white px-2 py-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
+          "z-100 mt-1 ml-3 w-[113px] rounded-[16px] bg-white px-2 py-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
           className
         )}
       >
