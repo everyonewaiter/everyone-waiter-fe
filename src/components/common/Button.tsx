@@ -4,7 +4,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none cursor-pointer",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none cursor-pointer border",
   {
     variants: {
       variant: {
@@ -12,16 +12,16 @@ const buttonVariants = cva(
         default: "",
       },
       color: {
-        primary: "bg-primary !text-white hover:bg-point",
-        black: "bg-gray-0 !text-white",
-        grey: "bg-gray-700 text-gray-300",
+        primary: "border-white bg-primary !text-white hover:bg-point",
+        black: "border-gray-0 bg-gray-0 !text-white",
+        grey: "border-gray-700 bg-gray-700 text-gray-300",
         "outline-primary": "border-primary !text-primary",
         "outline-black": "border-gray-200 !text-gray-200",
         "outline-gray": "border-gray-500 !text-gray-200",
-        apply: "bg-gray-400 !text-white",
-        reject: "bg-[#FF5555] !text-white",
-        approve: "bg-[#2E8CFF] !text-white",
-        reapply: "bg-[#FFAB45] !text-white",
+        apply: "border-gray-400 bg-gray-400 !text-white",
+        reject: "border-[#FF5555] bg-[#FF5555] !text-white",
+        approve: "border-[#2E8CFF] bg-[#2E8CFF] !text-white",
+        reapply: "border-[#FFAB45] bg-[#FFAB45] !text-white",
       },
     },
     defaultVariants: {
