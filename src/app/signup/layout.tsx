@@ -22,6 +22,7 @@ export default function SignupLayout({ children }: { children: ReactNode }) {
             className="rounded-[24px] object-cover md:fixed md:mt-4 md:h-[568px] md:w-[488px] lg:h-[1032px] lg:w-[1152px]"
             width={488}
             height={568}
+            priority
           />
         </div>
       </div>
