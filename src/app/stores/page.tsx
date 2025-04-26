@@ -68,7 +68,7 @@ export default function StoreList() {
       <SectionHeader title="매장 등록 신청 현황" />
       <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
         <TableHeader className="w-full">
-          <TableRow item={null}>
+          <TableRow item={null} isHead>
             {Object.keys(itemWidths).map((item) => (
               <TableHead
                 key={item}

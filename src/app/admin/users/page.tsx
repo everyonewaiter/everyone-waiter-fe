@@ -107,7 +107,7 @@ export default function Users() {
         </div>
         <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
           <TableHeader className="w-full">
-            <TableRow item={null}>
+            <TableRow item={null} isHead>
               <TableHead className="w-[68px]">
                 <Checkbox />
               </TableHead>
@@ -132,13 +132,14 @@ export default function Users() {
               </TableCell>
               <TableCell className="flex-1">2</TableCell>
               <TableCell className="flex-1">3</TableCell>
-              <TableCell className="flex-1">
+              <TableCell className="flex flex-1 justify-center">
                 <ResponsiveButton
                   responsiveButtons={{
                     lg: {
                       buttonSize: "md",
                       className: cn(
-                        "!h-[37px] !px-5 !py-2 !rounded-[24px]"
+                        "!h-[37px] !px-5 !py-2 !rounded-[24px]",
+                        "!bg-[#3900B508] !text-[#3900B5]"
                         // permission === "OWNER"
                         //   ? "bg-[#3900B508] text-[#3900B5]"
                         //   : "",
@@ -151,7 +152,9 @@ export default function Users() {
                       ),
                     },
                   }}
-                />
+                >
+                  사장님
+                </ResponsiveButton>
               </TableCell>
               <TableCell className="flex-1">구독중</TableCell>
               <TableCell className="flex-1">Y/N</TableCell>

@@ -66,8 +66,11 @@ TableBody.displayName = "TableBody";
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement> & { item: StoreDetail | null }
->(({ className, item, ...props }, ref) => {
+  React.HTMLAttributes<HTMLTableRowElement> & {
+    item: StoreDetail | null;
+    isHead?: boolean;
+  }
+>(({ className, item, isHead, ...props }, ref) => {
   const { open, close } = useOverlay();
 
   const handleOpenModal = () => {
@@ -83,6 +86,7 @@ const TableRow = React.forwardRef<
       ref={ref}
       className={cn(
         "hidden w-full cursor-pointer items-center justify-center md:flex md:h-10 md:flex-row lg:h-16",
+        isHead ? "" : "border-b border-b-gray-600",
         className
       )}
       onClick={() => (item === null ? null : handleOpenModal())}
@@ -99,7 +103,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "text-gray-0 text-s font-regular border-b border-b-gray-600 py-4 text-center lg:text-base",
+      "text-gray-0 text-s font-regular py-4 text-center lg:text-base",
       className
     )}
     {...props}
