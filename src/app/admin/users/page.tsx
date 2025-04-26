@@ -20,6 +20,8 @@ import Searchbar from "@/components/Searchbar";
 import SectionHeader from "@/components/SectionHeader";
 import { useState } from "react";
 import cn from "@/lib/utils";
+import useOverlay from "@/hooks/use-overlay";
+import UserInfoModal from "../_components/UserInfoModal";
 
 function DropdownGroup() {
   const [active, setActive] = useState({
@@ -75,6 +77,12 @@ export default function Users() {
 
   const submitHandler = () => {};
 
+  const { open, close } = useOverlay();
+
+  const handleOpenModal = () => {
+    open(() => <UserInfoModal close={close} />);
+  };
+
   return (
     <div className="min-h-full w-full">
       <SectionHeader title="회원 관리" />
@@ -107,7 +115,7 @@ export default function Users() {
         </div>
         <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
           <TableHeader className="w-full">
-            <TableRow item={null} isHead>
+            <TableRow isHead>
               <TableHead className="w-[68px]">
                 <Checkbox />
               </TableHead>
@@ -126,7 +134,7 @@ export default function Users() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow item={null}>
+            <TableRow onClick={handleOpenModal}>
               <TableCell className="w-[68px]">
                 <Checkbox />
               </TableCell>
