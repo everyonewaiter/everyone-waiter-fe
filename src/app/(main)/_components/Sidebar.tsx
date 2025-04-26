@@ -4,17 +4,29 @@
 import Image from "next/image";
 import useStores from "@/hooks/useStores";
 import { useAccount } from "@/hooks/store/useAccount";
+import { useRouter } from "next/navigation";
+import { useSidebar } from "@/hooks/store/useSidebar";
 import StoreSection from "./StoreSection";
 
 export default function Sidebar() {
+  const navigate = useRouter();
   const { acceptedStoresListQuery } = useStores();
   const { data } = acceptedStoresListQuery;
+
+  const { setActiveMenu } = useSidebar();
 
   const { permission } = useAccount();
 
   return (
     <section className="hidden flex-col rounded-[28px] bg-white md:flex md:h-[calc(100%-40px)] md:w-[186px] md:px-3 lg:h-[calc(100%-64px)] lg:w-[318px] lg:px-5">
-      <div className="flex items-center md:gap-[10px] md:pt-4 lg:gap-5 lg:pt-8">
+      <button
+        type="button"
+        className="flex items-center md:gap-[10px] md:pt-4 lg:gap-5 lg:pt-8"
+        onClick={() => {
+          setActiveMenu("모두의 웨이터-HOME");
+          navigate.push("/");
+        }}
+      >
         <Image
           src="/icons/logo/logo-medium.svg"
           alt="모두의 웨이터 로고"
@@ -27,9 +39,9 @@ export default function Sidebar() {
           alt="모두의 웨이터 텍스트"
           width={141}
           height={25}
-          className="lg:h[25px] md:h-[16.67px] md:w-[94px] lg:w-[141px]"
+          className="md:h-[16.67px] md:w-[94px] lg:h-[25px] lg:w-[141px]"
         />
-      </div>
+      </button>
       {permission !== "ADMIN" && (
         <div className="flex flex-col gap-5">
           {data?.stores?.map((item) => (
