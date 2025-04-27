@@ -50,14 +50,7 @@ const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tbody
-    ref={ref}
-    className={cn(
-      "flex w-full flex-col items-center justify-center",
-      className
-    )}
-    {...props}
-  />
+  <tbody ref={ref} className={cn(className)} {...props} />
 ));
 TableBody.displayName = "TableBody";
 
