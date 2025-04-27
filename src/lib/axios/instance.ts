@@ -74,10 +74,18 @@ const setupInterceptors = (axiosInstance: AxiosInstance) => {
             return await instance(originalRequest);
           }
         } catch (refreshError) {
-          console.error("토큰 갱신 실패:", refreshError);
-          await deleteCookie("accessToken");
-          await deleteCookie("refreshToken");
-          return Promise.reject(refreshError);
+          if (
+            ["FORBIDDEN", "UNAUTHORIZED"].includes(
+              (refreshError as any).response.data.code
+            )
+          ) {
+            alert((refreshError as any).response.data.message);
+            window.location.href = "/login";
+          } else {
+            await deleteCookie("accessToken");
+            await deleteCookie("refreshToken");
+            return Promise.reject(refreshError);
+          }
         }
       }
       if (error.response.status === 403) {
