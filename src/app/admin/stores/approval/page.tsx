@@ -1,6 +1,5 @@
 "use client";
 
-import { STATUS_COLORS } from "@/app/stores/page";
 import Paginations from "@/components/common/Pagination/Paginations";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import {
@@ -23,6 +22,7 @@ import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
 import StoreApplicationModal from "@/app/store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "@/app/store/_components/modals/PendingAcceptModal";
+import { STATUS_COLORS } from "@/constants/statusColor";
 
 const itemWidths = {
   "No.": {

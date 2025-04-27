@@ -3,16 +3,10 @@ import { Button, ButtonColors } from "@/components/common/Button";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { STATUS_COLORS } from "@/constants/statusColor";
 import { PropsWithChildren } from "react";
 import StoreApplicationModal from "./modals/StoreApplicationModal";
 import PendingAcceptModal from "./modals/PendingAcceptModal";
-
-export const STATUS_COLORS = {
-  APPLY: "접수",
-  REJECT: "반려",
-  APPROVE: "승인",
-  REAPPLY: "재접수",
-};
 
 function DataCell({
   children,

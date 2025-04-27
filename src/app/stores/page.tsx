@@ -21,15 +21,9 @@ import {
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
+import { STATUS_COLORS } from "@/constants/statusColor";
 import StoreApplicationModal from "../store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "../store/_components/modals/PendingAcceptModal";
-
-export const STATUS_COLORS = {
-  APPLY: "접수",
-  REJECT: "반려",
-  APPROVE: "승인",
-  REAPPLY: "재접수",
-};
 
 const itemWidths = {
   "No.": {
