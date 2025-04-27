@@ -14,7 +14,7 @@ interface StoreDetail extends Omit<StoreForm, "file"> {
   createdAt: string;
   image: string;
   reason: string;
-  registrationId: BigInt;
+  registrationId: bigint;
   status: RegisterStatus;
   updatedAt: string;
 }
