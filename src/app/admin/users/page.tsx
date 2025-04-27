@@ -40,10 +40,10 @@ export default function Users() {
     status: "",
   });
 
-  const { debouncedValue } = useDebounce({ searchWord, delay: 1000 });
+  const { debouncedValue } = useDebounce({ searchWord, delay: 300 });
   const { accountList } = useAdmin();
   const { data, refetch } = accountList(
-    searchWord,
+    debouncedValue,
     permissionObj[
       active.permission as keyof typeof permissionObj
     ] as TPermission,
