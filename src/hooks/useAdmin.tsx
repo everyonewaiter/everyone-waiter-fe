@@ -9,8 +9,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 const useAdmin = () => {
   const accountList = (
     searchEmail: string,
-    searchPermission: TPermission,
-    searchState: TStatus,
+    searchPermission: TPermission | "",
+    searchState: TStatus | "",
     page: number = 1
   ) =>
     useQuery<{ accountCount: number; accounts: AdminAccount[] }>({

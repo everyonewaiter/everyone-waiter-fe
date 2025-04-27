@@ -18,6 +18,7 @@ interface IProps {
   active: string;
   className?: string;
   triggerClassName?: string;
+  disabled?: boolean;
 }
 
 export default function Dropdown({
@@ -27,6 +28,7 @@ export default function Dropdown({
   setActive,
   className,
   triggerClassName,
+  disabled,
 }: PropsWithChildren<IProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,6 +43,7 @@ export default function Dropdown({
       }}
     >
       <DropdownMenuTrigger
+        disabled={disabled}
         className="outline-none"
         onClick={(e) => {
           e.stopPropagation();

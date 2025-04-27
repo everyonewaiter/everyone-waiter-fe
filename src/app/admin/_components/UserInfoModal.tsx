@@ -10,7 +10,7 @@ import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { PermissionObj, stateObj } from "@/constants/permissionObj";
 import useAdmin from "@/hooks/useAdmin";
 import EditIcon from "@public/icons/edit-contained.svg";
-import { QueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -44,8 +44,9 @@ export default function UserInfoModal({ close, accountId }: IProps) {
     status: "",
   });
 
+  const queryClient = useQueryClient();
   const { detailAccount, mutateUpdateDetail } = useAdmin();
-  const { data } = detailAccount(accountId);
+  const { data: accountData, refetch } = detailAccount(accountId);
 
   const form = useForm<TypeForm | TypeEditForm>({
     mode: "onChange",
@@ -57,31 +58,38 @@ export default function UserInfoModal({ close, accountId }: IProps) {
   };
 
   useEffect(() => {
-    if (data?.accountId) {
-      form.setValue("email", data.email);
-      form.setValue("date", handleDate(data.createdAt));
+    if (accountData?.accountId) {
+      form.setValue("email", accountData.email);
+      form.setValue("date", handleDate(accountData.createdAt));
       setActive({
         permission: PermissionObj[
-          data.permission as keyof typeof PermissionObj
+          accountData.permission as keyof typeof PermissionObj
         ] as TPermission,
-        status: stateObj[data.state as keyof typeof stateObj] as TStatus,
+        status: stateObj[accountData.state as keyof typeof stateObj] as TStatus,
       });
     }
-  }, [data]);
+  }, [accountData]);
+
+  const findKeyByValue = (obj: Record<string, string>, value: string) =>
+    Object.keys(obj).find((key) => obj[key] === value);
 
   const submitHandler = () => {
     setIsDisabled(true);
     mutateUpdateDetail(
       {
         accountId,
-        permission: active.permission as TPermission,
-        state: active.status as TStatus,
+        permission: findKeyByValue(
+          PermissionObj,
+          active.permission
+        ) as TPermission,
+        state: findKeyByValue(stateObj, active.status) as TStatus,
       },
       {
         onSuccess: () => {
-          const queryClient = new QueryClient();
           queryClient.invalidateQueries({ queryKey: ["get-account"] });
+          setIsEditing(false);
           close();
+          refetch();
         },
       }
     );
@@ -100,6 +108,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
             responsiveButtons={{
               lg: { buttonSize: "sm" },
             }}
+            onClick={submitHandler}
           >
             편집 완료
           </ResponsiveButton>
@@ -144,8 +153,13 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                   <div className="flex w-full flex-col gap-2">
                     <Label>권한</Label>
                     <Dropdown
+                      disabled={isDisabled}
                       data={["사용자", "사장님", "관리자"]}
-                      defaultText={data?.permission}
+                      defaultText={
+                        PermissionObj[
+                          accountData?.permission as keyof typeof PermissionObj
+                        ]
+                      }
                       setActive={(value) =>
                         setActive((prev) => ({
                           ...prev,
@@ -164,15 +178,18 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                   <div className="flex w-full flex-col gap-2">
                     <Label>상태</Label>
                     <Dropdown
+                      disabled={isDisabled}
                       data={["활성화", "비활성화"]}
-                      defaultText={data?.state}
+                      defaultText={
+                        stateObj[accountData?.state as keyof typeof stateObj]
+                      }
                       setActive={(value) =>
                         setActive((prev: TypeActive) => ({
                           ...prev,
                           status: value as TStatus,
                         }))
                       }
-                      active={active.status}
+                      active={active?.status}
                       triggerClassName="!w-full !flex justify-between !pl-4 !pr-3 !h-12 rounded-[12px] !text-sm"
                       className="!mr-3 !w-[477px]"
                     />
@@ -184,7 +201,8 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                     <Label disabled>권한</Label>
                     <Input
                       value={
-                        PermissionObj[data?.permission as TPermission] || ""
+                        PermissionObj[accountData?.permission as TPermission] ||
+                        ""
                       }
                       disabled
                     />
@@ -195,7 +213,12 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                   </div>
                   <div className="flex w-full flex-col gap-2">
                     <Label disabled>상태</Label>
-                    <Input value={stateObj[data?.state as TStatus]} disabled />
+                    <Input
+                      value={
+                        stateObj[accountData?.state as keyof typeof stateObj]
+                      }
+                      disabled
+                    />
                   </div>
                 </div>
               )}

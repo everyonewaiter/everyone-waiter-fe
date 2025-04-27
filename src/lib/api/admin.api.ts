@@ -45,15 +45,10 @@ export const updateDetailAccount = async ({
   state: TStatus;
 }) => {
   const response = await instance.put(
-    `${API_PATH.admin}/accounts`,
+    `${API_PATH.admin}/accounts/${accountId}`,
     {
       permission,
       state,
-    },
-    {
-      params: {
-        accountId,
-      },
     }
   );
 
