@@ -4,6 +4,6 @@ type AdminAccount = {
   email: string;
   hasStore: "Y" | "N";
   permission: TPermission;
-  stats: TStatus;
+  state: TStatus;
   updatedAt: string;
 };
