@@ -9,6 +9,7 @@ import ResponsiveButton from "@/components/common/ResponsiveButton";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { PermissionObj, stateObj } from "@/constants/permissionObj";
 import useAdmin from "@/hooks/useAdmin";
+import transformDate from "@/lib/formatting/transformDate";
 import EditIcon from "@public/icons/edit-contained.svg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -52,15 +53,10 @@ export default function UserInfoModal({ close, accountId }: IProps) {
     mode: "onChange",
   });
 
-  const handleDate = (value: string) => {
-    const [date, time] = value.split(" ");
-    return [date.slice(2), time.slice(0, 5)].join(" ");
-  };
-
   useEffect(() => {
     if (accountData?.accountId) {
       form.setValue("email", accountData.email);
-      form.setValue("date", handleDate(accountData.createdAt));
+      form.setValue("date", transformDate(accountData.createdAt));
       setActive({
         permission: PermissionObj[
           accountData.permission as keyof typeof PermissionObj

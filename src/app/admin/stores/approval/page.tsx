@@ -23,6 +23,7 @@ import useOverlay from "@/hooks/use-overlay";
 import StoreApplicationModal from "@/app/store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "@/app/store/_components/modals/PendingAcceptModal";
 import { STATUS_COLORS } from "@/constants/statusColor";
+import transformDate from "@/lib/formatting/transformDate";
 
 const itemWidths = {
   "No.": {
@@ -55,11 +56,6 @@ export default function StoreApproval() {
   const [searchWord, setSearchWord] = useState("");
 
   const submitHandler = () => {};
-
-  const handleDate = (value: string) => {
-    const [date, time] = value.split(" ");
-    return [date.slice(2), time.slice(0, 5)].join(" ");
-  };
 
   const { open, close } = useOverlay();
 
@@ -106,7 +102,7 @@ export default function StoreApproval() {
                 {idx + 1}
               </TableCell>
               <TableCell className={itemWidths.신청일.className}>
-                {handleDate(item.createdAt)}
+                {transformDate(item.createdAt)}
               </TableCell>
               <TableCell className={itemWidths.신청자.className}>
                 {item.ceoName}
