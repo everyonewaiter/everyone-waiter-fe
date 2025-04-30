@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import cn from "@/lib/utils";
 import useStores from "@/hooks/useStores";
 import { useAccount } from "@/hooks/store/useAccount";
+import QueryProviders from "@/app/query-providers";
 import Header from "./Header";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
@@ -21,7 +22,11 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   if (preventLayout.includes(pathname)) return children;
 
   const handleOpenMobile = () => {
-    open(() => <MobileSidebar onClose={close} />);
+    open(() => (
+      <QueryProviders>
+        <MobileSidebar onClose={close} />
+      </QueryProviders>
+    ));
   };
 
   useEffect(() => {
@@ -30,7 +35,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   }, [acceptedStoresListQuery.data, setHasAcceptedStore]);
 
   return (
-    <div className="h-screen w-screen bg-white md:bg-gray-700">
+    <div className="w-screen bg-white md:bg-gray-700">
       <div
         className={cn(
           "flex w-full flex-col md:hidden",
@@ -40,7 +45,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         <div className={cn("block", pathname === "/stores" && "md:hidden")}>
           <Header openMobileSidebar={handleOpenMobile} />
         </div>
-        <section className="flex h-full w-screen flex-row items-center justify-center rounded-[28px] md:h-[calc(100%-40px)] md:p-5 lg:h-[calc(100%-64px)] lg:min-w-[1458px] lg:p-8">
+        <section className="flex min-h-full w-screen flex-row items-center justify-center rounded-[28px] md:h-[calc(100%-40px)] md:p-5 lg:h-[calc(100%-64px)] lg:min-w-[1458px] lg:p-8">
           {children}
         </section>
       </div>
