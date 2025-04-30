@@ -10,7 +10,6 @@ import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { PermissionObj, stateObj } from "@/constants/permissionObj";
 import useAdmin from "@/hooks/useAdmin";
 import transformDate from "@/lib/formatting/transformDate";
-import EditIcon from "@public/icons/edit-contained.svg";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -92,35 +91,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
   };
 
   return (
-    <ModalWithTitle
-      onClose={close}
-      title="회원 정보"
-      topRightComponent={
-        isEditing ? (
-          <ResponsiveButton
-            type="submit"
-            variant="outline"
-            color="outline-primary"
-            responsiveButtons={{
-              lg: { buttonSize: "sm" },
-            }}
-            onClick={submitHandler}
-          >
-            편집 완료
-          </ResponsiveButton>
-        ) : (
-          <button
-            type="button"
-            className="flex items-center gap-1"
-            onClick={() => setIsEditing(true)}
-          >
-            <EditIcon width="20" height="20" className="text-gray-300" />
-            <span className="text-sm font-medium text-gray-300">편집</span>
-          </button>
-        )
-      }
-      preventOutsideClose
-    >
+    <ModalWithTitle onClose={close} title="회원 정보" preventOutsideClose>
       <ModalWithTitle.Layout className="mt-6 !h-[300px] md:!h-[360px] lg:!h-[450px]">
         <FormProvider {...form}>
           <form
@@ -222,20 +193,34 @@ export default function UserInfoModal({ close, accountId }: IProps) {
           </form>
         </FormProvider>
       </ModalWithTitle.Layout>
-      <ResponsiveButton
-        type="button"
-        color="black"
-        responsiveButtons={{
-          sm: { buttonSize: "sm" },
-          md: { buttonSize: "sm" },
-          lg: { buttonSize: "lg" },
-        }}
-        disabled={isDisabled}
-        commonClassName="w-full mt-8"
-        onClick={close}
-      >
-        확인
-      </ResponsiveButton>
+      <div className="mt-8 flex w-full flex-row items-center justify-between gap-3">
+        <ResponsiveButton
+          type="button"
+          color="grey"
+          responsiveButtons={{
+            sm: { buttonSize: "sm" },
+            md: { buttonSize: "sm" },
+            lg: { buttonSize: "lg" },
+          }}
+          commonClassName="w-[90px] md:w-[105px] lg:w-30"
+          onClick={close}
+        >
+          취소
+        </ResponsiveButton>
+        <ResponsiveButton
+          type="submit"
+          color="black"
+          responsiveButtons={{
+            sm: { buttonSize: "sm" },
+            md: { buttonSize: "sm" },
+            lg: { buttonSize: "lg" },
+          }}
+          disabled={isDisabled}
+          commonClassName="w-full"
+        >
+          변경 내용 저장하기
+        </ResponsiveButton>
+      </div>
     </ModalWithTitle>
   );
 }
