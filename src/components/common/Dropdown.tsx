@@ -51,7 +51,7 @@ export default function Dropdown({
       >
         <div
           className={cn(
-            "text-s font-regular text-gray-0 flex h-[32px] w-fit flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4",
+            "lg:text-s font-regular text-gray-0 text-s flex h-[32px] w-fit flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4",
             triggerClassName
           )}
           onClick={() => setIsOpen((prev) => !prev)}

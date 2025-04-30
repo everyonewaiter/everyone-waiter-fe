@@ -58,7 +58,7 @@ export default function Users() {
   const submitHandler = () => {};
 
   return (
-    <div className="min-h-full w-full">
+    <div className="h-full min-h-screen w-full overflow-y-scroll">
       <SectionHeader title="회원 관리" />
       <div className="mt-4 flex w-full px-5 md:hidden">
         <Searchbar
