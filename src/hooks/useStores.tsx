@@ -4,6 +4,7 @@ import getQueryClient from "@/app/get-query-client";
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   getRegisters,
+  getStoreList,
   reapplyRegistration,
   reapplyRegistrationWithImage,
   registerDetails,
@@ -51,12 +52,20 @@ const useStores = () => {
     },
   });
 
+  const acceptedStoresListQuery = useQuery<{
+    stores: { storeId: bigint; name: string }[];
+  }>({
+    queryKey: ["get-stores-list"],
+    queryFn: getStoreList,
+  });
+
   return {
     register,
     getDetailRegistration,
     reapplyRegister,
     reapplyRegisterWithImage,
     registrationList,
+    acceptedStoresListQuery,
   };
 };
 

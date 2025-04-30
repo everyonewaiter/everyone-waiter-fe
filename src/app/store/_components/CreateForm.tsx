@@ -14,12 +14,17 @@ import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import useStores from "@/hooks/useStores";
-import UploadPhoto from "./UploadPhoto";
+import dynamic from "next/dynamic";
+
+const UploadPhoto = dynamic(() => import("./UploadPhoto"), {
+  ssr: false,
+});
 
 export default function CreateForm() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const form = useForm<TypeStore>({
     mode: "onChange",
     resolver: zodResolver(storeSchema),
@@ -35,6 +40,8 @@ export default function CreateForm() {
   const { register } = useStores();
 
   const handleSubmit = (data: TypeStore) => {
+    setIsSubmitted(true);
+
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("ceoName", data.ceoName);
@@ -150,6 +157,7 @@ export default function CreateForm() {
                 md: { buttonSize: "sm" },
                 sm: { buttonSize: "sm", className: "!h-10" },
               }}
+              disabled={isSubmitted}
               commonClassName="mt-4"
             >
               신청하기

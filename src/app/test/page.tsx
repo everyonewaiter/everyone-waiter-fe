@@ -30,8 +30,8 @@ export default function Page() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = () => {
+    // data: z.infer<typeof formSchema>
   };
 
   const { open, close } = useOverlay();

@@ -1,16 +1,3 @@
-export const FIRST_ACCESS_MENU: Menu[] = [
-  {
-    icon: "shop",
-    text: "매장 등록",
-    url: "/store/create",
-  },
-  {
-    icon: "subscribe",
-    text: "구독 설정",
-    url: "/subscription",
-  },
-];
-
 export const USER_MENU: Menu[] = [
   {
     icon: "home",
@@ -53,31 +40,31 @@ export const ADMIN_MENU: Menu[] = [
   {
     icon: "people",
     text: "회원 관리",
-    url: "/members",
+    url: "/admin/users",
   },
   {
     icon: "shop",
     text: "매장 관리",
-    url: "/store/manage",
+    url: "/admin/stores",
   },
   {
     icon: "check",
     text: "매장 등록 승인",
-    url: "/stores/approval",
+    url: "/admin/stores/approval",
   },
   {
     icon: "mobile",
     text: "구독 관리",
-    url: "/subscription/manage",
+    url: "/admin/subscription",
   },
   {
     icon: "write",
     text: "게시글 관리",
-    url: "/posts",
+    url: "/admin/posts",
   },
   {
     icon: "setting",
     text: "설정",
-    url: "/settings",
+    url: "/admin/settings",
   },
 ];

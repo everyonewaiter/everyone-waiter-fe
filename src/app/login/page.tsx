@@ -1,21 +1,27 @@
 "use client";
 
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/common/Form";
 import { loginSchema, TypeLogin } from "@/schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "@/lib/api/auth.api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getAccount, login } from "@/lib/api/auth.api";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/lib/cookies";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { useAccount } from "@/hooks/store/useAccount";
+import { useSidebar } from "@/hooks/store/useSidebar";
+import { ADMIN_MENU, USER_MENU } from "@/constants/sidebarMenus";
 import SignupLayout from "../signup/layout";
 
 export default function Login() {
   const navigate = useRouter();
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const form = useForm<TypeLogin>({
     mode: "onChange",
     resolver: zodResolver(loginSchema),
@@ -24,14 +30,44 @@ export default function Login() {
       password: "",
     },
   });
+
+  const { setProfile, setIsLoggedIn, isLoggedIn } = useAccount();
+  const { setMenu } = useSidebar();
+
+  const { data: profileData, refetch } = useQuery({
+    queryKey: ["my"],
+    queryFn: getAccount,
+    enabled: !!isLoggedIn,
+  });
+
+  useEffect(() => {
+    if (isLoggedIn && profileData) {
+      setProfile({
+        accountId: (profileData as TProfile)?.accountId?.toString(),
+        email: profileData?.email!,
+        permission: profileData?.permission!,
+      });
+      if (profileData?.permission === "ADMIN") {
+        setMenu(ADMIN_MENU);
+      } else {
+        setMenu(USER_MENU);
+      }
+      console.log(profileData?.permission);
+
+      navigate.push("/");
+    }
+  }, [isLoggedIn, profileData]);
+
   const { mutate } = useMutation({ mutationFn: login });
 
   const submitHandler = (formData: Pick<TAccount, "email" | "password">) => {
+    setIsSubmitDisabled(true);
     mutate(formData, {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         setCookie("accessToken", data.accessToken);
         setCookie("refreshToken", data.refreshToken);
-        navigate.push("/");
+        setIsLoggedIn(true);
+        refetch();
       },
       onError: (error) => {
         const { message } = (error as any).response.data;
@@ -78,6 +114,7 @@ export default function Login() {
               lg: { buttonSize: "lg" },
             }}
             commonClassName="w-full mt-8"
+            disabled={isSubmitDisabled}
           >
             로그인
           </ResponsiveButton>

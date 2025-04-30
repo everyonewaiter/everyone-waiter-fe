@@ -59,11 +59,6 @@ const setupInterceptors = (axiosInstance: AxiosInstance) => {
       if (error.response.status === 401 && !originalRequest.isRetry) {
         originalRequest.isRetry = true;
 
-        if (error.response.data.code === "UNAUTHORIZED") {
-          alert(error.response.data.message);
-          window.location.href = "/login";
-        }
-
         try {
           const refreshToken = await getToken("refreshToken");
           if (!refreshToken) {

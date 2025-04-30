@@ -25,6 +25,7 @@ interface OriginItem {
 
 export default function StoreInfo() {
   const ref = useRef<HTMLDivElement>(null);
+  const [makeDisabled, setMakeDisabled] = useState(false);
   const [countryOfOrigins, setCountryOfOrigins] = useState<OriginItem[]>([
     {
       item: "소",
@@ -60,7 +61,7 @@ export default function StoreInfo() {
 
   useEffect(() => {
     setActiveMenu("매장 정보");
-  }, []);
+  }, [setActiveMenu]);
 
   function TableRow({
     children,
@@ -73,8 +74,8 @@ export default function StoreInfo() {
     );
   }
 
-  const handleDeleteItem = (item: OriginItem) => {
-    console.log(item);
+  const handleDeleteItem = () => {
+    // delete item: OriginItem
   };
 
   // const handle
@@ -93,8 +94,9 @@ export default function StoreInfo() {
     setCountryOfOrigins(newOrigins);
   };
 
-  const submitHandler = (data: TypeStoreInfo) => {
-    console.log(data);
+  const submitHandler = () => {
+    setMakeDisabled(true);
+    // submit data: TypeStoreinfo
   };
 
   return (
@@ -202,7 +204,7 @@ export default function StoreInfo() {
                                 ? "mr-1/2 flex w-full items-center justify-center md:px-2 lg:px-4"
                                 : "flex w-full items-center justify-center"
                             }
-                            onClick={() => handleDeleteItem(item)}
+                            onClick={handleDeleteItem}
                           >
                             <DeleteIcon
                               color="#F22020"
@@ -237,6 +239,7 @@ export default function StoreInfo() {
                         },
                         lg: { buttonSize: "lg", className: "!h-10" },
                       }}
+                      disabled={makeDisabled}
                       commonClassName="border-dashed mt-3"
                       onClick={() =>
                         setCountryOfOrigins([...countryOfOrigins, newItem])

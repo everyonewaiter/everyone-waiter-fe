@@ -53,3 +53,8 @@ export const reapplyRegistrationWithImage = async ({
   );
   return response.data;
 };
+
+export const getStoreList = async () => {
+  const response = await instance.get(`${API_PATH.stores}`);
+  return response.data;
+};

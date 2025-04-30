@@ -1,19 +1,16 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import ResponsiveButton from "@/components/common/ResponsiveButton";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { useSidebar } from "@/hooks/store/useSidebar";
-import { useRouter } from "next/navigation";
-import renderIcon from "./renderIcons";
+import useStores from "@/hooks/useStores";
+import { useAccount } from "@/hooks/store/useAccount";
+import StoreSection from "./StoreSection";
 
 export default function Sidebar() {
-  const navigate = useRouter();
-  const storeName = "상호명";
-  const [isStoreOpen, setIsStoreOpen] = useState(true);
-  const { setActiveMenu, activeMenu, menu } = useSidebar();
+  const { acceptedStoresListQuery } = useStores();
+  const { data } = acceptedStoresListQuery;
+
+  const { permission } = useAccount();
 
   return (
     <section className="hidden flex-col rounded-[28px] bg-white md:flex md:h-[calc(100%-40px)] md:w-[186px] md:px-3 lg:h-[calc(100%-64px)] lg:w-[318px] lg:px-5">
@@ -33,65 +30,14 @@ export default function Sidebar() {
           className="lg:h[25px] md:h-[16.67px] md:w-[94px] lg:w-[141px]"
         />
       </div>
-      <div className="mt-7">
-        <ResponsiveButton
-          responsiveButtons={{
-            sm: { buttonSize: "sm", className: "hidden" },
-            md: { buttonSize: "md", className: "md:!flex lg:!hidden" },
-            lg: {
-              buttonSize: "lg",
-              className:
-                "md:!hidden lg:!flex h-16 rounded-[16px] text-white font-bold text-lg",
-            },
-          }}
-          onClick={() => setIsStoreOpen((prev) => !prev)}
-          commonClassName="w-full flex flex-row items-center justify-between"
-        >
-          {storeName}
-          <div className="center h-6 w-6">
-            {isStoreOpen ? (
-              <ChevronUp strokeWidth="1.3" width={20} height={20} />
-            ) : (
-              <ChevronDown strokeWidth="1.3" width={20} height={20} />
-            )}
-          </div>
-        </ResponsiveButton>
-        {isStoreOpen && (
-          <div className="relative mt-2 flex flex-row">
-            <div className="absolute top-0 left-0 z-0 my-7 flex h-full w-[6px] justify-center">
-              <div className="h-[calc(100%-55px)] w-[1px] bg-gray-600" />
-            </div>
-            <div className="z-10">
-              {menu?.map((item) => (
-                <button
-                  type="button"
-                  key={item.text}
-                  className="flex items-center md:py-[9px] lg:py-3"
-                  onClick={() => {
-                    setActiveMenu(item.text);
-                    navigate.push(item.url);
-                  }}
-                >
-                  <div
-                    className={`mr-3 h-[6px] w-[6px] rounded-full ${activeMenu === item.text ? "bg-primary" : "bg-gray-600"}`}
-                  />
-                  <div className="hidden lg:block">
-                    {renderIcon(item.icon, activeMenu === item.text)}
-                  </div>
-                  <div className="md:block lg:hidden">
-                    {renderIcon(item.icon, activeMenu === item.text, 24)}
-                  </div>
-                  <span
-                    className={`md:text-s ml-[6px] md:font-medium lg:text-base lg:font-medium ${activeMenu === item.text ? "text-primary" : "text-gray-300"}`}
-                  >
-                    {item.text}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      {permission !== "ADMIN" && (
+        <div className="flex flex-col gap-5">
+          {data?.stores?.map((item) => (
+            <StoreSection key={item.storeId} {...item} />
+          ))}
+        </div>
+      )}
+      {permission === "ADMIN" && <StoreSection name="모두의 웨이터" />}
     </section>
   );
 }

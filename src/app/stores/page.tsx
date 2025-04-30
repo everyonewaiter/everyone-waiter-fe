@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
 import Table from "@/components/Table";
+import useStores from "@/hooks/useStores";
 
 const itemWidths = {
   "No.": {
@@ -35,10 +36,11 @@ export default function StoreList() {
   const navigate = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const dunmmy: any[] = [];
+  const { registrationList } = useStores();
+  const { data, refetch } = registrationList(currentPage);
 
   return (
-    <div className="h-full w-full overflow-y-scroll">
+    <div className="h-full max-h-screen w-full overflow-y-scroll">
       <SectionHeader title="매장 등록 신청 현황" />
       <Table>
         <Table.THeadLayout>
@@ -51,7 +53,7 @@ export default function StoreList() {
           ))}
         </Table.THeadLayout>
         <Table.RowLayout>
-          {dunmmy?.map((item, idx) => (
+          {data?.registrations?.map((item, idx) => (
             <Table.Row
               key={item.registrationId.toString()}
               {...item}
@@ -80,9 +82,12 @@ export default function StoreList() {
       </div>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-        totalPages={10}
+        totalPages={Math.floor((data?.registrationCount as number) / 20)}
         currentPage={currentPage}
-        onSetCurrentPage={setCurrentPage}
+        onSetCurrentPage={(page) => {
+          setCurrentPage(page);
+          refetch();
+        }}
         className="mt-8"
       />
     </div>
