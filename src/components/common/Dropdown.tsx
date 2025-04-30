@@ -79,7 +79,7 @@ export default function Dropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className={cn(
-          "z-100 mt-1 ml-3 rounded-[16px] bg-white px-2 py-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
+          "z-100 mt-1 rounded-[16px] bg-white px-2 py-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
           className
         )}
         onClick={(e) => {
@@ -90,7 +90,7 @@ export default function Dropdown({
           <DropdownMenuItem
             key={item}
             className={cn(
-              "font-regular text-gray-0 w-full cursor-pointer rounded-[12px] px-3 py-2 text-sm",
+              "font-regular text-gray-0 !w-full cursor-pointer rounded-[12px] px-3 py-2 text-sm",
               active === item ? "bg-gray-700" : ""
             )}
             onClick={(e) => {

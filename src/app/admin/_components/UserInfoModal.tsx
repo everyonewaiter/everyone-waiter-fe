@@ -146,7 +146,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
               />
               {isEditing ? (
                 <div className="flex flex-col gap-4">
-                  <div className="flex w-full flex-col gap-2">
+                  <div className="relative flex w-full flex-col gap-2">
                     <Label>권한</Label>
                     <Dropdown
                       disabled={isDisabled}
@@ -163,8 +163,8 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                         }))
                       }
                       active={active.permission}
-                      triggerClassName="!w-full !flex justify-between !pl-4 !pr-3 !h-12 rounded-[12px] !text-sm"
-                      className="!mr-3 !w-[477px]"
+                      triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
+                      className="w-[280px] md:w-[324px] lg:w-[480px]"
                     />
                   </div>
                   <div className="flex w-full flex-col gap-2">
@@ -186,8 +186,8 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                         }))
                       }
                       active={active?.status}
-                      triggerClassName="!w-full !flex justify-between !pl-4 !pr-3 !h-12 rounded-[12px] !text-sm"
-                      className="!mr-3 !w-[477px]"
+                      triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
+                      className="w-[280px] md:w-[324px] lg:w-[480px]"
                     />
                   </div>
                 </div>
