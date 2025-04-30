@@ -121,7 +121,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
       }
       preventOutsideClose
     >
-      <ModalWithTitle.Layout className="mt-6 !h-[450px]">
+      <ModalWithTitle.Layout className="mt-6 !h-[300px] md:!h-[360px] lg:!h-[450px]">
         <FormProvider {...form}>
           <form
             className="flex flex-col"
