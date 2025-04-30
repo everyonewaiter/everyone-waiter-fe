@@ -31,7 +31,7 @@ function DropdownGroup({
         active={active.subscription}
       />
       <Dropdown
-        data={["전체", "등록 매장", "미등록 매장"]}
+        data={["전체", "Y", "N"]}
         defaultText="매장 여부"
         setActive={(value) =>
           setActive((prev: TypeActive) => ({ ...prev, storeAccepted: value }))
