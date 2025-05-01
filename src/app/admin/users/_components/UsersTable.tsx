@@ -13,7 +13,6 @@ import {
 } from "@/components/common/Table/Tables";
 import Checkbox from "@/components/common/Checkbox";
 import { PermissionObj, stateObj } from "@/constants/permissionObj";
-import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/use-overlay";
 import UserInfoModal from "../../_components/UserInfoModal";
 import UsersTableRow from "./UsersTableRow";
@@ -26,11 +25,7 @@ export default function UsersTable({ data }: IProps) {
   const { open, close } = useOverlay();
 
   const handleOpenModal = (accountId: bigint) => {
-    open(() => (
-      <QueryProviders>
-        <UserInfoModal close={close} accountId={accountId} />
-      </QueryProviders>
-    ));
+    open(() => <UserInfoModal close={close} accountId={accountId} />);
   };
 
   return (
