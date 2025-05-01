@@ -45,8 +45,8 @@ export default function UserInfoModal({ close, accountId }: IProps) {
   });
 
   const queryClient = useQueryClient();
-  const { detailAccount, mutateUpdateDetail } = useAdmin();
-  const { data: accountData, refetch } = detailAccount(accountId);
+  const { detailAccountQuery, mutateUpdateDetail } = useAdmin();
+  const { data: accountData, refetch } = detailAccountQuery(accountId);
 
   const form = useForm<TypeForm | TypeEditForm>({
     mode: "onChange",

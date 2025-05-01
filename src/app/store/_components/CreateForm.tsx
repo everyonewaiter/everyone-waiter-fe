@@ -37,7 +37,7 @@ export default function CreateForm() {
     },
   });
 
-  const { register } = useStores();
+  const { mutateRegisterStore } = useStores();
 
   const handleSubmit = (data: TypeStore) => {
     setIsSubmitted(true);
@@ -52,7 +52,7 @@ export default function CreateForm() {
       formData.append("file", image);
     }
 
-    register(formData);
+    mutateRegisterStore(formData);
   };
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {

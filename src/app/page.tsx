@@ -8,8 +8,8 @@ import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function Home() {
   const { permission } = useAccount();
-  const { registrationList } = useStores();
-  const { data, isLoading: isListLoading } = registrationList(1);
+  const { registrationListQuery } = useStores();
+  const { data, isLoading: isListLoading } = registrationListQuery(1);
 
   return (
     <ClientLayout>

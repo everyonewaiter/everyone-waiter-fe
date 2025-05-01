@@ -18,25 +18,25 @@ const queryClient = getQueryClient();
 const useStores = () => {
   const navigate = useRouter();
 
-  const { mutate: register } = useMutation({
+  const { mutate: mutateRegisterStore } = useMutation({
     mutationFn: registerStore,
     onSuccess: () => navigate.push("/store/create?state=pending"),
   });
 
-  const registrationList = (page: number = 1) =>
+  const registrationListQuery = (page: number = 1) =>
     useQuery({
       queryKey: ["get-stores"],
       queryFn: () => getRegisters(page),
     });
 
-  const getDetailRegistration = (registrationId: bigint) =>
+  const getDetailRegistrationQuery = (registrationId: bigint) =>
     useQuery({
       queryKey: ["register-detail", registrationId],
       queryFn: () => registerDetails(JSON.stringify(registrationId)),
       enabled: !!registrationId,
     });
 
-  const { mutate: reapplyRegister } = useMutation({
+  const { mutate: mutateReapply } = useMutation({
     mutationFn: reapplyRegistration,
     onSuccess: () => {
       navigate.push("/stores");
@@ -44,7 +44,7 @@ const useStores = () => {
     },
   });
 
-  const { mutate: reapplyRegisterWithImage } = useMutation({
+  const { mutate: mutateReapplyWithImage } = useMutation({
     mutationFn: reapplyRegistrationWithImage,
     onSuccess: () => {
       navigate.push("/stores");
@@ -60,11 +60,11 @@ const useStores = () => {
   });
 
   return {
-    register,
-    getDetailRegistration,
-    reapplyRegister,
-    reapplyRegisterWithImage,
-    registrationList,
+    mutateRegisterStore,
+    mutateReapply,
+    mutateReapplyWithImage,
+    getDetailRegistrationQuery,
+    registrationListQuery,
     acceptedStoresListQuery,
   };
 };

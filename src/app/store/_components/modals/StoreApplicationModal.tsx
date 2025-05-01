@@ -57,7 +57,7 @@ export default function StoreApplicationModal({ close, item }: IProps) {
   }, [item]);
 
   const { handleOpenAddress } = useOpenDaumPostcode(form);
-  const { reapplyRegister, reapplyRegisterWithImage } = useStores();
+  const { mutateReapply, mutateReapplyWithImage } = useStores();
 
   const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
@@ -79,14 +79,14 @@ export default function StoreApplicationModal({ close, item }: IProps) {
     formData.append("address", form.getValues("address"));
     formData.append("file", form.getValues("image") as File);
 
-    reapplyRegisterWithImage({
+    mutateReapplyWithImage({
       registrationId: item.registrationId.toString(),
       body: formData,
     });
   };
 
   const handleReapply = () => {
-    reapplyRegister({
+    mutateReapply({
       registrationId: item.registrationId.toString(),
       body: {
         name: form.getValues("name"),

@@ -53,8 +53,8 @@ export default function StoreList() {
   const navigate = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { registrationList } = useStores();
-  const { data, refetch } = registrationList(currentPage);
+  const { registrationListQuery } = useStores();
+  const { data, refetch } = registrationListQuery(currentPage);
 
   const { open, close } = useOverlay();
 
