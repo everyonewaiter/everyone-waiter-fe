@@ -61,10 +61,14 @@ export default function StoreList() {
   const { open, close } = useOverlay();
 
   const handleOpenModal = (item: StoreDetail) => {
-    if (item.status === "REJECT") {
+    if (["REJECT", "APPROVE"].includes(item.status)) {
       open(() => (
         <QueryProviders>
-          <StoreApplicationModal close={close} item={item} />
+          <StoreApplicationModal
+            close={close}
+            item={item}
+            isAccepted={item.status === "APPROVE"}
+          />
         </QueryProviders>
       ));
     } else if (item.status === "APPLY") {

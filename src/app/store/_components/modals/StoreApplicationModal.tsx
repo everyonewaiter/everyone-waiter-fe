@@ -22,11 +22,16 @@ type FormState = Omit<StoreDetail, "updatedAt" | "accountId"> & {
 interface IProps {
   close: () => void;
   item: FormState;
+  isAccepted: boolean;
 }
 
 const queryClient = getQueryClient();
 
-export default function StoreApplicationModal({ close, item }: IProps) {
+export default function StoreApplicationModal({
+  close,
+  item,
+  isAccepted,
+}: IProps) {
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -125,19 +130,19 @@ export default function StoreApplicationModal({ close, item }: IProps) {
                   name="name"
                   label="상호명"
                   placeholder="상호명을 입력해주세요. (20자 이내)"
-                  disabled={!isUpdating}
-                  labelDisabled={!isUpdating}
+                  disabled={!isUpdating || isAccepted}
+                  labelDisabled={!isUpdating || isAccepted}
                 />
                 <LabeledInput
                   form={form}
                   name="ceoName"
                   label="대표지"
                   placeholder="대표자명을 입력해주세요."
-                  disabled={!isUpdating}
-                  labelDisabled={!isUpdating}
+                  disabled={!isUpdating || isAccepted}
+                  labelDisabled={!isUpdating || isAccepted}
                 />
                 <div>
-                  <Label className="mb-2" disabled={!isUpdating}>
+                  <Label className="mb-2" disabled={!isUpdating || isAccepted}>
                     사업자 번호
                   </Label>
                   <Input
@@ -146,7 +151,7 @@ export default function StoreApplicationModal({ close, item }: IProps) {
                     className="placeholder:text-gray-300"
                     value={form.watch("license")}
                     onChange={handleBusinessNumber}
-                    disabled={!isUpdating}
+                    disabled={!isUpdating || isAccepted}
                   />
                 </div>
                 <LabeledInput
@@ -154,14 +159,16 @@ export default function StoreApplicationModal({ close, item }: IProps) {
                   name="address"
                   label="소재지"
                   placeholder="소재지를 입력해주세요."
-                  disabled={!isUpdating}
-                  labelDisabled={!isUpdating}
-                  onClick={() => (isUpdating ? handleOpenAddress() : null)}
+                  disabled={!isUpdating || isAccepted}
+                  labelDisabled={!isUpdating || isAccepted}
+                  onClick={() =>
+                    isUpdating && !isAccepted ? handleOpenAddress() : null
+                  }
                   className="cursor-pointer"
                   readOnly={isUpdating}
                 />
                 <div>
-                  <Label className="mb-2" disabled={!isUpdating}>
+                  <Label className="mb-2" disabled={!isUpdating || isAccepted}>
                     신청일
                   </Label>
                   <Input
@@ -170,21 +177,23 @@ export default function StoreApplicationModal({ close, item }: IProps) {
                     placeholder="신청일을 입력해주세요."
                     className="placeholder:text-gray-300"
                     onChange={handleDate}
-                    disabled={!isUpdating}
+                    disabled={!isUpdating || isAccepted}
                   />
                 </div>
-                <LabeledInput
-                  form={form}
-                  name="reason"
-                  label="반려 사유"
-                  disabled
-                  labelDisabled
-                  className={
-                    isUpdating
-                      ? ""
-                      : "!text-primary border-primary border !bg-[#F2202008] text-center"
-                  }
-                />
+                {!isAccepted && (
+                  <LabeledInput
+                    form={form}
+                    name="reason"
+                    label="반려 사유"
+                    disabled
+                    labelDisabled
+                    className={
+                      isUpdating
+                        ? ""
+                        : "!text-primary border-primary border !bg-[#F2202008] text-center"
+                    }
+                  />
+                )}
               </form>
               <div className="flex w-full md:hidden">
                 <PhotoForBusiness
@@ -206,14 +215,16 @@ export default function StoreApplicationModal({ close, item }: IProps) {
         </div>
       </ModalWithTitle.Layout>
       <div className="w-full bg-red-50">
-        <ModalWithTitle.Button
-          type={isUpdating ? "submit" : "button"}
-          color={isUpdating ? "primary" : "black"}
-          onClick={() => (isUpdating ? handleApply() : setIsUpdating(true))}
-          disabled={isUpdating ? isSubmitted : false}
-        >
-          {isUpdating ? "재신청하기" : "수정하고 재신청하기"}
-        </ModalWithTitle.Button>
+        {!isAccepted && (
+          <ModalWithTitle.Button
+            type={isUpdating ? "submit" : "button"}
+            color={isUpdating ? "primary" : "black"}
+            onClick={() => (isUpdating ? handleApply() : setIsUpdating(true))}
+            disabled={isUpdating ? isSubmitted : false}
+          >
+            {isUpdating ? "재신청하기" : "수정하고 재신청하기"}
+          </ModalWithTitle.Button>
+        )}
       </div>
     </ModalWithTitle>
   );
