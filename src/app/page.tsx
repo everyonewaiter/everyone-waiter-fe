@@ -11,6 +11,11 @@ export default function Home() {
   const { registrationListQuery } = useStores();
   const { data, isLoading: isListLoading } = registrationListQuery(1);
 
+  const storeStatus =
+    data?.content && data.content.length > 0
+      ? data.content[data.content.length - 1].status
+      : undefined;
+
   return (
     <ClientLayout>
       <div className="center h-full w-full">
@@ -24,12 +29,21 @@ export default function Home() {
         )}
         {permission !== "ADMIN" &&
           !isListLoading &&
-          data?.content?.length! > 0 &&
-          data?.content?.[0].status === "APPLY" && (
+          storeStatus === "APPLY" && (
             <GuideComponent
               title="매장 등록 승인을 기다리고 있습니다."
               subtitle="관리자의 승인이 완료될 때까지 1~2일 소요될\n예정이니 양해 부탁드립니다."
               image={{ url: "/gif/hourglass.gif", size: 160 }}
+              gap={5}
+            />
+          )}
+        {permission !== "ADMIN" &&
+          !isListLoading &&
+          storeStatus === "REJECT" && (
+            <GuideComponent
+              title="매장 등록 신청이 반려되었습니다."
+              subtitle="반려 사유 관련 메일을 발송했습니다.\n메일함을 확인해주세요."
+              image={{ url: "/gif/rejected.gif", size: 160 }}
               gap={5}
             />
           )}
