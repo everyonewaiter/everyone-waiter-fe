@@ -18,7 +18,7 @@ const queryClient = getQueryClient();
 const useStores = () => {
   const navigate = useRouter();
 
-  const { mutate: mutateRegisterStore } = useMutation({
+  const mutateRegisterStore = useMutation({
     mutationFn: registerStore,
     onSuccess: () => navigate.push("/store/create?state=pending"),
   });

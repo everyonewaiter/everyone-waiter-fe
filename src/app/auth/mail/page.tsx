@@ -11,7 +11,7 @@ import ResponsiveButton from "@/components/common/ResponsiveButton";
 export default function EmailError() {
   const navigate = useRouter();
   const searchParams = useSearchParams();
-  const accessToken = searchParams.get("accessToken");
+  const accessToken = searchParams.get("token");
   const [errorCode, setErrorCode] = useState<number | null>(null);
 
   const { mutate } = useMutation({

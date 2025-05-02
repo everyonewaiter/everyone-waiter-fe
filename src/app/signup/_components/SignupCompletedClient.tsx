@@ -37,9 +37,6 @@ export default function SignupCompleted() {
           인증을 완료하셔야 서비스 이용이 가능합니다.
         </span>
       </div>
-      <div className="mt-8 hidden items-center justify-center rounded-[12px] bg-gray-700 text-gray-300 md:flex md:h-[51px] md:w-[292px] md:text-lg md:font-medium lg:h-[60px] lg:w-[432px] lg:text-xl">
-        asdfasdf@gmail.com
-      </div>
     </div>
   );
 }

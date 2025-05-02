@@ -52,8 +52,6 @@ export default function Login() {
       } else {
         setMenu(USER_MENU);
       }
-      console.log(profileData?.permission);
-
       navigate.push("/");
     }
   }, [isLoggedIn, profileData]);
