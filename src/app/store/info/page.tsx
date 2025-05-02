@@ -9,12 +9,12 @@ import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
 import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import { PropsWithChildren, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EditIcon from "@public/icons/edit-contained.svg";
 import DeleteIcon from "@public/icons/trash-02.svg";
 import { Plus } from "lucide-react";
-import { useSidebar } from "@/hooks/store/useSidebar";
+// import useStoreId from "@/hooks/store/useStoreId";
 
 interface OriginItem {
   item: string;
@@ -26,27 +26,10 @@ interface OriginItem {
 export default function StoreInfo() {
   const ref = useRef<HTMLDivElement>(null);
   const [makeDisabled, setMakeDisabled] = useState(false);
-  const [countryOfOrigins, setCountryOfOrigins] = useState<OriginItem[]>([
-    {
-      item: "소",
-      origin: "국내산",
-      menu: "등심",
-      isAdded: false,
-    },
-    {
-      item: "소",
-      origin: "국내산",
-      menu: "안심",
-      isAdded: false,
-    },
-  ]);
-  const newItem = {
-    item: "",
-    origin: "",
-    menu: "",
-    isAdded: true,
-  };
   const [isEditing, setIsEditing] = useState(false);
+
+  // const { storeId } = useStoreId();
+
   const form = useForm<TypeStoreInfo>({
     mode: "onChange",
     resolver: zodResolver(storeInfoSchema),
@@ -57,11 +40,13 @@ export default function StoreInfo() {
     },
   });
 
-  const { setActiveMenu } = useSidebar();
-
-  useEffect(() => {
-    setActiveMenu("매장 정보");
-  }, [setActiveMenu]);
+  const [countryOfOrigins, setCountryOfOrigins] = useState<OriginItem[]>([]);
+  const newItem = {
+    item: "",
+    origin: "",
+    menu: "",
+    isAdded: true,
+  };
 
   function TableRow({
     children,
