@@ -12,40 +12,36 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PropsWithChildren, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EditIcon from "@public/icons/edit-contained.svg";
-import DeleteIcon from "@public/icons/trash-02.svg";
 import { Plus } from "lucide-react";
-// import useStoreId from "@/hooks/store/useStoreId";
-
-interface OriginItem {
-  item: string;
-  origin: string;
-  menu: string;
-  isAdded: boolean;
-}
+import useStoreId from "@/hooks/store/useStoreId";
+import useStores from "@/hooks/useStores";
 
 export default function StoreInfo() {
   const ref = useRef<HTMLDivElement>(null);
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // const { storeId } = useStoreId();
+  const { storeId } = useStoreId();
+  const { detailStoreInfoQuery } = useStores();
+  const { data } = detailStoreInfoQuery(storeId);
 
   const form = useForm<TypeStoreInfo>({
     mode: "onChange",
     resolver: zodResolver(storeInfoSchema),
     defaultValues: {
-      name: "모두의 웨이터",
-      license: "NNN-NN-NNNNN",
-      address: "주소",
+      name: data?.name,
+      license: data?.license,
+      address: data?.address,
     },
   });
 
-  const [countryOfOrigins, setCountryOfOrigins] = useState<OriginItem[]>([]);
+  const [countryOfOrigins, setCountryOfOrigins] = useState<
+    ICountryOfOriginItem[]
+  >(data?.setting.countryOfOrigin!);
   const newItem = {
     item: "",
     origin: "",
     menu: "",
-    isAdded: true,
   };
 
   function TableRow({
@@ -59,25 +55,25 @@ export default function StoreInfo() {
     );
   }
 
-  const handleDeleteItem = () => {
-    // delete item: OriginItem
-  };
+  // const handleDeleteItem = () => {
+  //   // delete item: OriginItem
+  // };
 
-  // const handle
+  // // const handle
 
-  const handleChangeItem = (
-    index: number,
-    field: keyof OriginItem,
-    value: string
-  ) => {
-    const newOrigins = countryOfOrigins.map((origin, i) => {
-      if (i === index) {
-        return { ...origin, [field]: value };
-      }
-      return origin;
-    });
-    setCountryOfOrigins(newOrigins);
-  };
+  // const handleChangeItem = (
+  //   index: number,
+  //   field: keyof OriginItem,
+  //   value: string
+  // ) => {
+  //   const newOrigins = countryOfOrigins.map((origin, i) => {
+  //     if (i === index) {
+  //       return { ...origin, [field]: value };
+  //     }
+  //     return origin;
+  //   });
+  //   setCountryOfOrigins(newOrigins);
+  // };
 
   const submitHandler = () => {
     setMakeDisabled(true);
@@ -124,7 +120,7 @@ export default function StoreInfo() {
                   labelDisabled={!isEditing}
                 />
                 <Label>원산지</Label>
-                {isEditing || countryOfOrigins.length > 0 ? (
+                {isEditing || countryOfOrigins?.length > 0 ? (
                   <div className="text-s flex flex-col overflow-hidden rounded-[12px] border border-gray-600 font-medium">
                     <div className="flex h-10 w-full bg-gray-700">
                       <TableRow>품목</TableRow>
@@ -145,7 +141,7 @@ export default function StoreInfo() {
                           "border-b border-b-gray-600"
                         }`}
                       >
-                        {item.isAdded ? (
+                        {/* {item.isAdded ? (
                           <input
                             className="w-full text-center outline-none md:px-2 lg:px-4"
                             placeholder="품목 입력"
@@ -196,7 +192,7 @@ export default function StoreInfo() {
                               className="h-[18px] w-[16px]"
                             />
                           </button>
-                        )}
+                        )} */}
                       </div>
                     ))}
                   </div>

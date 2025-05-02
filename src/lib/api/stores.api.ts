@@ -56,3 +56,10 @@ export const getStoreList = async () => {
   const response = await instance.get(`${API_PATH.stores}`);
   return response.data;
 };
+
+export const getStoreInfoDetail = async (
+  storeId: bigint
+): Promise<IStoreInfoDetail> => {
+  const response = await instance.get(`${API_PATH.stores}/${storeId}`);
+  return response.data;
+};

@@ -24,3 +24,29 @@ interface Menu {
   text: string;
   url: string;
 }
+
+type TStoreStatus = "OPEN" | "CLOSE";
+
+interface ICountryOfOriginItem {
+  item: string;
+  origin: string;
+}
+
+interface IStoreInfoDetail extends Omit<StoreForm, "file"> {
+  accountId: bigint;
+  storeId: bigint;
+  image: string;
+  status: TStoreStatus;
+  lastOpenedAt: string;
+  lastClosedAt: string;
+  setting: {
+    extraTableCount: number;
+    printerLocation: string;
+    showMenuPopup: boolean;
+    showOrderTotalPrice: boolean;
+    countryOfOrigin: ICountryOfOriginItem[];
+    staffCallOptions: string[];
+  };
+  createdAt: string;
+  updatedAt: string;
+}
