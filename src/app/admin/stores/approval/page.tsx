@@ -185,7 +185,7 @@ export default function StoreApproval() {
                   {idx + 1}
                 </TableCell>
                 <TableCell className={itemWidths.신청일.className}>
-                  {item.createdAt}
+                  {transformDate(item.createdAt)}
                 </TableCell>
                 <TableCell className={itemWidths.신청자.className}>
                   {item.email}
