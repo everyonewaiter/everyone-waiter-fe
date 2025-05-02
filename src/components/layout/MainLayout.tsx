@@ -30,22 +30,42 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   }, [acceptedStoresListQuery.data, setHasAcceptedStore]);
 
   return (
-    <div className="min-h-screen w-screen bg-white md:bg-gray-700">
+    <div className="h-screen w-screen bg-white md:bg-gray-700">
+      <div
+        className={cn(
+          "flex w-full flex-col md:hidden",
+          pathname === "/" ? "h-screen" : "min-h-screen"
+        )}
+      >
+        <div className={cn("block", pathname === "/stores" && "md:hidden")}>
+          <Header openMobileSidebar={handleOpenMobile} />
+        </div>
+        <section className="flex h-full w-screen flex-row items-center justify-center rounded-[28px] md:h-[calc(100%-40px)] md:p-5 lg:h-[calc(100%-64px)] lg:min-w-[1458px] lg:p-8">
+          {children}
+        </section>
+      </div>
       {!acceptedStoresListQuery.isLoading &&
         !hasAcceptedStore &&
         permission !== "ADMIN" && (
           <div
             className={cn(
-              "w-full flex-col",
-              "sm:flex",
-              "md:flex",
-              pathname === "/" ? "h-screen" : "min-h-screen"
+              "w-full flex-col md:flex",
+              "sm:hidden",
+              pathname === "/" ? "h-screen" : "min-h-screen",
+              pathname === "/stores" ? "items-center justify-center" : ""
             )}
           >
             <div className={cn("block", pathname === "/stores" && "md:hidden")}>
               <Header openMobileSidebar={handleOpenMobile} />
             </div>
-            <section className="flex h-full w-screen flex-row items-center justify-center rounded-[28px] md:h-[calc(100%-40px)] md:p-5 lg:h-[calc(100%-64px)] lg:min-w-[1458px] lg:p-8">
+            <section
+              className={cn(
+                "flex w-screen flex-row items-center justify-center rounded-[28px] md:h-[calc(100%-40px)] md:p-5 lg:h-[calc(100%-64px)] lg:min-w-[1458px] lg:p-8",
+                pathname === "/stores"
+                  ? "!h-[calc(100vh-30px)] rounded-[32px] bg-white lg:w-[1800px]"
+                  : ""
+              )}
+            >
               {children}
             </section>
           </div>

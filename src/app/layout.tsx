@@ -28,7 +28,7 @@ export default function RootLayout({
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
       />
-      <body className="select-none">
+      <body className="min-h-screen min-w-screen select-none">
         <OverlayStoreProvider>
           <QueryProviders>{children}</QueryProviders>
         </OverlayStoreProvider>

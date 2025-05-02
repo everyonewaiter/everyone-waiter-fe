@@ -32,6 +32,7 @@ export default function GuideComponent({
         width={image.size}
         height={image.size}
         className="md:h-[100px] md:w-[100px] lg:h-[160px] lg:w-[160px]"
+        priority
       />
       <div className="flex w-full flex-col gap-6 text-center lg:gap-8">
         <div className="flex flex-col">

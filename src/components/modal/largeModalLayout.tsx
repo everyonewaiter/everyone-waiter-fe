@@ -7,13 +7,14 @@ import {
 import useOutsideClick from "@/hooks/useOutSideClick";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import { X as CloseIcon } from "lucide-react";
+import cn from "@/lib/utils";
 import ResponsiveButton from "../common/ResponsiveButton";
 
 interface IProps {
-  children: ReactNode;
   onClose: () => void;
   title: string;
   topRightComponent?: ReactNode;
+  className?: string;
 }
 
 export default function ModalWithTitle({
@@ -21,7 +22,8 @@ export default function ModalWithTitle({
   children,
   title,
   topRightComponent,
-}: IProps) {
+  className,
+}: PropsWithChildren<IProps>) {
   const ref = useRef<HTMLDivElement>(null);
 
   useOutsideClick({ ref, handler: onClose });
@@ -31,7 +33,10 @@ export default function ModalWithTitle({
     <div className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm">
       <div
         ref={ref}
-        className="relative w-[320px] rounded-[30px] bg-white p-5 md:w-[364px] md:p-5 lg:w-[543px] lg:p-8"
+        className={cn(
+          "relative h-fit w-[320px] rounded-[30px] bg-white p-5 md:w-[364px] md:p-5 lg:w-[543px] lg:p-8",
+          className
+        )}
       >
         <div className="flex items-center justify-between pb-6 md:pb-5 lg:pb-8">
           <h1 className="text-gray-0 font-semibold md:text-base lg:text-2xl">
@@ -54,9 +59,17 @@ export default function ModalWithTitle({
   );
 }
 
-function Layout({ children }: { children: ReactNode }) {
+function Layout({
+  children,
+  className,
+}: PropsWithChildren<{ className: string }>) {
   return (
-    <div className="min-h-[362px] overflow-y-scroll md:h-87 lg:h-145">
+    <div
+      className={cn(
+        "min-h-[362px] overflow-y-scroll md:h-87 lg:h-145",
+        className
+      )}
+    >
       {children}
     </div>
   );

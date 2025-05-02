@@ -1,11 +1,28 @@
 "use client";
 
+import { STATUS_COLORS } from "@/app/stores/page";
 import Paginations from "@/components/common/Pagination/Paginations";
+import ResponsiveButton from "@/components/common/ResponsiveButton";
+import {
+  MobileTable,
+  MobileTableCell,
+  MobileTableHead,
+  MobileTableRow,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Table,
+} from "@/components/common/Table/Tables";
+import Searchbar from "@/components/Searchbar";
 import SectionHeader from "@/components/SectionHeader";
-import Table from "@/components/Table";
 import useStores from "@/hooks/useStores";
-import { Search } from "lucide-react";
 import { useState } from "react";
+import cn from "@/lib/utils";
+import useOverlay from "@/hooks/use-overlay";
+import StoreApplicationModal from "@/app/store/_components/modals/StoreApplicationModal";
+import PendingAcceptModal from "@/app/store/_components/modals/PendingAcceptModal";
 
 const itemWidths = {
   "No.": {
@@ -39,51 +56,105 @@ export default function StoreApproval() {
 
   const submitHandler = () => {};
 
+  const handleDate = (value: string) => {
+    const [date, time] = value.split(" ");
+    return [date.slice(2), time.slice(0, 5)].join(" ");
+  };
+
+  const { open, close } = useOverlay();
+
+  const handleOpenModal = (item: StoreDetail) => {
+    if (item.status === "REJECT") {
+      open(() => <StoreApplicationModal close={close} item={item} />);
+    } else if (item.status === "APPLY") {
+      open(() => <PendingAcceptModal close={close} />);
+    }
+  };
+
   return (
     <div className="h-full w-full">
       <SectionHeader title="매장 등록 신청 현황" />
       <div className="mt-4 flex w-full justify-end md:mt-6">
-        <div className="mx-5 flex h-9 w-full items-center justify-between gap-3 rounded-[24px] border border-gray-600 bg-gray-700 px-4 md:mx-0 md:w-70 lg:h-[46px]">
-          <input
-            className="w-full text-sm outline-none lg:text-base"
-            placeholder="검색어를 입력해주세요."
-            value={searchWord}
-            onChange={(e) => setSearchWord(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                submitHandler();
-              }
-            }}
-          />
-          <Search
-            width={24}
-            height={24}
-            className="h-5 w-5 text-gray-300 lg:h-6 lg:w-6"
-          />
-        </div>
+        <Searchbar
+          searchWord={searchWord}
+          setSearchWord={setSearchWord}
+          onSubmit={submitHandler}
+        />
       </div>
-      <Table>
-        <Table.THeadLayout>
-          {Object.keys(itemWidths).map((key) => (
-            <Table.THead
-              key={key}
-              value={key}
-              className={itemWidths[key as keyof typeof itemWidths].className}
-            />
-          ))}
-        </Table.THeadLayout>
-        <Table.RowLayout>
+      <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
+        <TableHeader className="w-full">
+          <TableRow isHead>
+            {Object.keys(itemWidths).map((item) => (
+              <TableHead
+                key={item}
+                className={
+                  itemWidths[item as keyof typeof itemWidths].className
+                }
+              >
+                {item}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data?.registrations.map((item, idx) => (
-            <Table.Row
+            <TableRow
               key={item.registrationId.toString()}
-              {...item}
-              index={idx + 1}
-              itemWidths={itemWidths}
-            />
+              onClick={() => handleOpenModal(item)}
+            >
+              <TableCell className={itemWidths["No."].className}>
+                {idx + 1}
+              </TableCell>
+              <TableCell className={itemWidths.신청일.className}>
+                {handleDate(item.createdAt)}
+              </TableCell>
+              <TableCell className={itemWidths.신청자.className}>
+                {item.ceoName}
+              </TableCell>
+              <TableCell className={cn(itemWidths.상호명.className)}>
+                {item.name}
+              </TableCell>
+              <TableCell
+                className={cn(itemWidths.상태.className, "flex justify-center")}
+              >
+                <ResponsiveButton
+                  color={item.status.toLowerCase()}
+                  responsiveButtons={{
+                    md: {
+                      buttonSize: "custom",
+                      className:
+                        "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+                    },
+                    lg: {
+                      buttonSize: "custom",
+                      className:
+                        "h-[37px] px-5 py-2 rounded-[8px] text-sm text-white font-regular",
+                    },
+                  }}
+                >
+                  {STATUS_COLORS[item.status]}
+                </ResponsiveButton>
+              </TableCell>
+            </TableRow>
           ))}
-        </Table.RowLayout>
+        </TableBody>
       </Table>
+      <MobileTable className="z-10">
+        <TableBody className="flex flex-col">
+          <MobileTableRow>
+            <MobileTableHead>No.</MobileTableHead>
+            <MobileTableCell>1</MobileTableCell>
+          </MobileTableRow>
+          {["이메일", "가입일시", "권한", "구독설정", "매장여부", "상태"].map(
+            (item) => (
+              <MobileTableRow key={item}>
+                <MobileTableHead>{item}</MobileTableHead>
+                <MobileTableCell>example@email.com</MobileTableCell>
+              </MobileTableRow>
+            )
+          )}
+        </TableBody>
+      </MobileTable>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
         totalPages={data?.registrationCount!}

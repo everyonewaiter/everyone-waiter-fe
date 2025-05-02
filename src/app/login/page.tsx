@@ -85,6 +85,7 @@ export default function Login() {
         className="h-[97px] w-[160px] md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
         width={200}
         height={124}
+        priority
       />
       <Form {...form}>
         <form
