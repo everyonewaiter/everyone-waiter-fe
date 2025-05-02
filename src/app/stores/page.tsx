@@ -2,7 +2,7 @@
 
 import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
@@ -66,6 +66,10 @@ export default function StoreList() {
     }
   };
 
+  useEffect(() => {
+    refetch();
+  }, [currentPage]);
+
   return (
     <div className="h-full max-h-screen w-full overflow-y-scroll">
       <SectionHeader title="매장 등록 신청 현황" />
@@ -85,7 +89,7 @@ export default function StoreList() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.registrations.map((item, idx) => (
+          {data?.content?.map((item, idx) => (
             <TableRow
               key={item.registrationId.toString()}
               onClick={() => handleOpenModal(item)}
@@ -162,11 +166,23 @@ export default function StoreList() {
       </div>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-        totalPages={Math.floor((data?.registrationCount as number) / 20)}
         currentPage={currentPage}
-        onSetCurrentPage={(page) => {
-          setCurrentPage(page);
-          refetch();
+        setCurrentPage={setCurrentPage}
+        move={{
+          fastforward: {
+            hasMore: data?.hasNext!,
+            target: data?.fastForwardPage!,
+          },
+          forward: {
+            hasMore: data?.hasNext!,
+          },
+          backward: {
+            hasMore: data?.hasPrevious!,
+          },
+          fastbackward: {
+            hasMore: data?.hasPrevious!,
+            target: data?.fastBackwardPage!,
+          },
         }}
         className="mt-8"
       />

@@ -87,13 +87,24 @@ export default function Users() {
             />
           </div>
         </div>
-        <UsersTable data={data?.accounts!} />
+        <UsersTable data={data?.content!} />
         <Paginations
           size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-          totalPages={1}
           currentPage={currentPage}
-          onSetCurrentPage={setCurrentPage}
+          setCurrentPage={setCurrentPage}
           className="mt-8"
+          move={{
+            fastbackward: {
+              hasMore: data?.hasPrevious!,
+              target: data?.fastBackwardPage,
+            },
+            backward: { hasMore: data?.hasPrevious! },
+            forward: { hasMore: data?.hasNext! },
+            fastforward: {
+              hasMore: data?.hasNext!,
+              target: data?.fastForwardPage,
+            },
+          }}
         />
       </div>
     </div>

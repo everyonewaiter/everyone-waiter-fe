@@ -11,52 +11,43 @@ import {
   PaginationFastPrev,
 } from "./Component";
 
+interface Move {
+  target?: number;
+  hasMore: boolean;
+}
+
 interface IProps {
-  totalPages: number;
   className?: string;
-  onSetCurrentPage: (value: number) => void;
   currentPage: number;
+  setCurrentPage: (value: number) => void;
   size: string;
+  move: Record<"fastforward" | "forward" | "backward" | "fastbackward", Move>;
 }
 
 export default function Paginations({
-  totalPages,
   className,
-  onSetCurrentPage,
   currentPage,
+  setCurrentPage,
   size,
+  move,
 }: IProps) {
-  const handlePagination = (type: "prev" | "next") => {
-    if (currentPage > 1 && type === "prev") {
-      onSetCurrentPage(currentPage - 1);
-    } else if (currentPage < totalPages && type === "next") {
-      onSetCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handleFastPagination = (type: "prev" | "next") => {
-    if (currentPage > 5 && type === "prev") {
-      onSetCurrentPage(currentPage - 5);
-    } else if (currentPage <= totalPages - 5 && type === "next") {
-      onSetCurrentPage(currentPage + 5);
-    }
-  };
-
   return (
     <Pagination className={className}>
       <PaginationContent>
         <PaginationItem>
           <PaginationFastPrev
             className={size}
-            hasPrevPage={currentPage > 5}
-            onClick={() => handleFastPagination("prev")}
+            hasPrevPage={move?.fastbackward.hasMore}
+            onClick={() => setCurrentPage(move.fastbackward.target!)}
           />
         </PaginationItem>
         <PaginationItem>
           <PaginationPrevious
             className={size}
-            hasPrevPage={currentPage > 1}
-            onClick={() => handlePagination("prev")}
+            hasPrevPage={move?.backward.hasMore}
+            onClick={() =>
+              move.backward.hasMore ? setCurrentPage(currentPage - 1) : null
+            }
           />
         </PaginationItem>
         <PaginationItem className="mx-3">
@@ -64,16 +55,18 @@ export default function Paginations({
         </PaginationItem>
         <PaginationItem>
           <PaginationNext
-            hasNextPage={currentPage < totalPages}
+            hasNextPage={move?.forward.hasMore}
             className={size}
-            onClick={() => handlePagination("next")}
+            onClick={() =>
+              move.forward.hasMore ? setCurrentPage(currentPage + 1) : null
+            }
           />
         </PaginationItem>
         <PaginationItem>
           <PaginationFastNext
-            hasNextPage={currentPage <= totalPages - 5}
+            hasNextPage={move?.fastforward.hasMore}
             className={size}
-            onClick={() => handleFastPagination("next")}
+            onClick={() => setCurrentPage(move.fastbackward.target!)}
           />
         </PaginationItem>
       </PaginationContent>
