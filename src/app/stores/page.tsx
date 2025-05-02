@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable react-hooks/exhaustive-deps */
 import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ import { STATUS_COLORS } from "@/constants/statusColor";
 import transformDate from "@/lib/formatting/transformDate";
 import StoreApplicationModal from "../store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "../store/_components/modals/PendingAcceptModal";
+import QueryProviders from "../query-providers";
 
 const itemWidths = {
   "No.": {
@@ -60,9 +62,17 @@ export default function StoreList() {
 
   const handleOpenModal = (item: StoreDetail) => {
     if (item.status === "REJECT") {
-      open(() => <StoreApplicationModal close={close} item={item} />);
+      open(() => (
+        <QueryProviders>
+          <StoreApplicationModal close={close} item={item} />
+        </QueryProviders>
+      ));
     } else if (item.status === "APPLY") {
-      open(() => <PendingAcceptModal close={close} />);
+      open(() => (
+        <QueryProviders>
+          <PendingAcceptModal close={close} />
+        </QueryProviders>
+      ));
     }
   };
 
