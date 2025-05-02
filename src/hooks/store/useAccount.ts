@@ -12,7 +12,6 @@ interface StoreState extends Item {
   setProfile: (value: Item) => void;
   setIsLoggedIn: (value: boolean) => void;
   setPermission: (permission: TPermission) => void;
-  setHasAcceptedStore: (value: boolean) => void;
 }
 
 export const useAccount = create<StoreState>()(
@@ -29,8 +28,6 @@ export const useAccount = create<StoreState>()(
         set(produce((state) => ({ ...state, isLoggedIn }))),
       setPermission: (permission) =>
         set(produce((state) => ({ ...state, permission }))),
-      setHasAcceptedStore: (hasAcceptedStore) =>
-        set(produce((state) => ({ ...state, hasAcceptedStore }))),
     }),
     {
       name: "account-storage",

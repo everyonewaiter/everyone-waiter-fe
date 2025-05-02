@@ -38,10 +38,6 @@ const useStores = () => {
 
   const { mutate: mutateReapply } = useMutation({
     mutationFn: reapplyRegistration,
-    onSuccess: () => {
-      navigate.push("/stores");
-      queryClient.invalidateQueries({ queryKey: ["get-stores"] });
-    },
   });
 
   const { mutate: mutateReapplyWithImage } = useMutation({

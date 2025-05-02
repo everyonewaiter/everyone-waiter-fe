@@ -100,10 +100,10 @@ function ModalButton({ children, ...props }: PropsWithChildren<ButtonProps>) {
       responsiveButtons={{
         lg: {
           buttonSize: "xl",
-          className: "!text-lg !font-semibold !h-14",
+          className: "!text-lg !font-semibold !h-14 !w-full",
         },
-        md: { buttonSize: "sm", className: "!h-10" },
-        sm: { buttonSize: "sm", className: "!h-10" },
+        md: { buttonSize: "sm", className: "!h-10 !w-full" },
+        sm: { buttonSize: "sm", className: "!h-10 !w-full" },
       }}
       color={props.color!}
       {...props}

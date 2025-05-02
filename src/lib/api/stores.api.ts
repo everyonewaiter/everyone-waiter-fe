@@ -30,10 +30,7 @@ export const registerDetails = async (registrationId: string) => {
 export const reapplyRegistration = async ({
   registrationId,
   ...body
-}: {
-  registrationId: string;
-  body: Omit<StoreForm, "file">;
-}) => {
+}: Omit<StoreForm, "file"> & { registrationId: string }) => {
   const response = await instance.put(
     `${API_PATH.stores}/registrations/${registrationId}`,
     body
