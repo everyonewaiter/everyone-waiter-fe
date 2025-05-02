@@ -41,7 +41,7 @@ export default function PhotoForBusiness({
       ) : (
         <div className="mt-5 h-[346px] w-full md:mt-0 lg:h-[457px]">
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${imageUrl}`}
+            src={`${process.env.NEXT_PUBLIC_PROD_CDN}/${imageUrl}`}
             alt="사업자 등록증"
             width={380}
             height={457}
@@ -57,7 +57,7 @@ export default function PhotoForBusiness({
                 md: { buttonSize: "sm" },
                 sm: { buttonSize: "sm" },
               }}
-              commonClassName="mb-5 mt-3"
+              commonClassName="mb-5 mt-3 w-full"
             >
               초기화하기
             </ResponsiveButton>
