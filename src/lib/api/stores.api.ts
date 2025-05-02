@@ -1,3 +1,4 @@
+import { IResWithPagination } from "@/types/common";
 import { formInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
@@ -12,7 +13,7 @@ export const registerStore = async (body: FormData) => {
 export const getRegisters = async (
   page: number = 1,
   size: number = 20
-): Promise<{ registrationCount: number; registrations: StoreDetail[] }> => {
+): Promise<IResWithPagination<StoreDetail[]>> => {
   const response = await instance.get(
     `${API_PATH.stores}/registrations?page=${page}&size=${size}`
   );
