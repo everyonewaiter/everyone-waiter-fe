@@ -22,8 +22,8 @@ import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
 import StoreApplicationModal from "@/app/store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "@/app/store/_components/modals/PendingAcceptModal";
-import { STATUS_COLORS } from "@/constants/statusColor";
 import transformDate from "@/lib/formatting/transformDate";
+import { STATUS_COLORS } from "@/constants/statusColor";
 
 const itemWidths = {
   "No.": {
