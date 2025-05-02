@@ -178,6 +178,7 @@ export default function Signup() {
           />
           <LabeledInput
             form={form}
+            type="password"
             name="password"
             label="비밀번호"
             placeholder="비밀번호를 입력해주세요."
@@ -185,6 +186,7 @@ export default function Signup() {
           />
           <LabeledInput
             form={form}
+            type="password"
             name="confirm"
             label="비밀번호 확인"
             placeholder="비밀번호를 다시 입력해주세요."
