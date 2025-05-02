@@ -1,3 +1,4 @@
+import { IResWithPagination } from "@/types/common";
 import { instance } from "../axios/instance";
 import API_PATH from "./paths";
 
@@ -15,7 +16,7 @@ export const getAccounts = async ({
   searchState = "",
   page = 1,
   size = 20,
-}: GetAccountParams) => {
+}: GetAccountParams): Promise<IResWithPagination<AdminAccount[]>> => {
   const response = await instance.get(`${API_PATH.admin}/accounts`, {
     params: {
       email: encodeURIComponent(searchEmail),
@@ -52,5 +53,65 @@ export const updateDetailAccount = async ({
     }
   );
 
+  return response.data;
+};
+
+interface TypeAdminRegistrations {
+  email?: string;
+  name?: string;
+  status?: RegisterStatus | null;
+  page?: number;
+  size?: number;
+}
+
+export const getAdminRegistrations = async ({
+  email,
+  name,
+  status,
+  page = 1,
+  size = 20,
+}: TypeAdminRegistrations): Promise<IResWithPagination<TypeAdminStores[]>> => {
+  const response = await instance.get(
+    `${API_PATH.admin}/stores/registrations`,
+    {
+      params: {
+        email,
+        name,
+        status: status ?? "",
+        page,
+        size,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const getDetailAdminRegistrations = async (
+  id: bigint
+): Promise<StoreDetail> => {
+  const response = await instance.get(
+    `${API_PATH.admin}/stores/registrations/${id}`
+  );
+  return response.data;
+};
+
+export const rejectResigtration = async ({
+  id,
+  reason,
+}: {
+  id: bigint;
+  reason: string;
+}) => {
+  const response = await instance.post(
+    `${API_PATH.admin}/stores/registrations/${id}/reject`,
+    { reason }
+  );
+  return response.data;
+};
+
+export const approveRegistration = async (id: bigint) => {
+  const response = await instance.post(
+    `${API_PATH.admin}/stores/registrations/${id}/approve`
+  );
   return response.data;
 };

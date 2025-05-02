@@ -1,19 +1,23 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
+  approveRegistration,
   getAccounts,
+  getAdminRegistrations,
   getDetailAccount,
+  getDetailAdminRegistrations,
+  rejectResigtration,
   updateDetailAccount,
 } from "@/lib/api/admin.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const useAdmin = () => {
-  const accountList = (
+  const accountListQuery = (
     searchEmail: string,
     searchPermission: TPermission | "",
     searchState: TStatus | "",
     page: number = 1
   ) =>
-    useQuery<{ accountCount: number; accounts: AdminAccount[] }>({
+    useQuery({
       queryKey: [
         "get-account",
         page,
@@ -25,7 +29,7 @@ const useAdmin = () => {
         getAccounts({ page, searchEmail, searchPermission, searchState }),
     });
 
-  const detailAccount = (accountId: bigint) =>
+  const detailAccountQuery = (accountId: bigint) =>
     useQuery({
       queryKey: ["detail-account", accountId],
       queryFn: () => getDetailAccount(accountId),
@@ -35,10 +39,40 @@ const useAdmin = () => {
     mutationFn: updateDetailAccount,
   });
 
+  const adminStoresListQuery = (
+    email: string,
+    name: string,
+    status?: RegisterStatus | null,
+    page?: number
+  ) =>
+    useQuery({
+      queryKey: ["stores-to-approve"],
+      queryFn: () =>
+        getAdminRegistrations({ email, name, status, page, size: 20 }),
+    });
+
+  const detailStoreQuery = (registrationId: bigint) =>
+    useQuery({
+      queryKey: ["admin-stores-detail", registrationId],
+      queryFn: () => getDetailAdminRegistrations(registrationId),
+    });
+
+  const { mutate: mutateRejectStore } = useMutation({
+    mutationFn: rejectResigtration,
+  });
+
+  const { mutate: mutateApproveStore } = useMutation({
+    mutationFn: approveRegistration,
+  });
+
   return {
-    accountList,
-    detailAccount,
+    accountListQuery,
+    detailAccountQuery,
     mutateUpdateDetail,
+    adminStoresListQuery,
+    detailStoreQuery,
+    mutateRejectStore,
+    mutateApproveStore,
   };
 };
 

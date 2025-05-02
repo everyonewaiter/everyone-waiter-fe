@@ -113,5 +113,57 @@ function ModalButton({ children, ...props }: PropsWithChildren<ButtonProps>) {
   );
 }
 
+interface ButtonGroupProps {
+  cancelBtn: {
+    text: string;
+    onClick: () => void;
+    disabled: boolean;
+  };
+  saveBtn: {
+    text: string;
+    onClick: () => void;
+    disabled: boolean;
+  };
+}
+
+function ModalButtonGroups({ cancelBtn, saveBtn }: ButtonGroupProps) {
+  return (
+    <div className="flex flex-row items-center justify-between gap-2 lg:gap-3">
+      <ResponsiveButton
+        color="grey"
+        responsiveButtons={{
+          lg: {
+            buttonSize: "xl",
+            className: "!text-lg !font-semibold !h-14 !w-[140px]",
+          },
+          md: { buttonSize: "sm", className: "!h-9 !w-[90px]" },
+          sm: { buttonSize: "sm", className: "!h-10 !w-[100px]" },
+        }}
+        onClick={cancelBtn.onClick}
+        disabled={cancelBtn.disabled}
+      >
+        {cancelBtn.text}
+      </ResponsiveButton>
+      <ResponsiveButton
+        color="primary"
+        responsiveButtons={{
+          lg: {
+            buttonSize: "xl",
+            className: "!text-lg !font-semibold !h-14",
+          },
+          md: { buttonSize: "sm", className: "!h-10" },
+          sm: { buttonSize: "sm", className: "!h-10" },
+        }}
+        commonClassName="!w-full"
+        onClick={saveBtn.onClick}
+        disabled={saveBtn.disabled}
+      >
+        {saveBtn.text}
+      </ResponsiveButton>
+    </div>
+  );
+}
+
 ModalWithTitle.Layout = Layout;
 ModalWithTitle.Button = ModalButton;
+ModalWithTitle.ButtonGroup = ModalButtonGroups;
