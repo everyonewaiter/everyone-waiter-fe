@@ -2,7 +2,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import LabeledInput from "@/components/common/LabeledInput";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
@@ -11,6 +11,7 @@ import formatDate from "@/lib/formatting/formatDate";
 import Label from "@/components/common/Label";
 import Input from "@/components/common/Input";
 import useStores from "@/hooks/useStores";
+import getQueryClient from "@/app/get-query-client";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
 
@@ -23,6 +24,8 @@ interface IProps {
   item: FormState;
 }
 
+const queryClient = getQueryClient();
+
 export default function StoreApplicationModal({ close, item }: IProps) {
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -34,27 +37,16 @@ export default function StoreApplicationModal({ close, item }: IProps) {
   >({
     mode: "onChange",
     defaultValues: {
-      name: "",
-      ceoName: "",
-      landline: "",
-      license: "",
-      address: "",
-      createdAt: "",
-      reason: "",
-      image: null,
+      name: item.name,
+      ceoName: item.ceoName,
+      landline: item.landline,
+      license: String(item.license),
+      address: item.address,
+      createdAt: item.createdAt.split(" ")[0],
+      reason: item.reason,
+      image: item.image,
     },
   });
-
-  useEffect(() => {
-    if (item) {
-      form.setValue("name", item.name);
-      form.setValue("license", item.license);
-      form.setValue("address", item.address);
-      form.setValue("createdAt", item.createdAt);
-      form.setValue("reason", item.reason);
-      form.setValue("image", item.image);
-    }
-  }, [item]);
 
   const { handleOpenAddress } = useOpenDaumPostcode(form);
   const { mutateReapply, mutateReapplyWithImage } = useStores();
@@ -86,16 +78,22 @@ export default function StoreApplicationModal({ close, item }: IProps) {
   };
 
   const handleReapply = () => {
-    mutateReapply({
-      registrationId: item.registrationId.toString(),
-      body: {
+    mutateReapply(
+      {
+        registrationId: item.registrationId.toString(),
         name: form.getValues("name"),
         ceoName: form.getValues("ceoName"),
         landline: form.getValues("landline"),
         license: form.getValues("license"),
         address: form.getValues("address"),
       },
-    });
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["get-stores"] });
+          close();
+        },
+      }
+    );
   };
 
   const handleApply = () => {
@@ -118,7 +116,7 @@ export default function StoreApplicationModal({ close, item }: IProps) {
             isActive={active}
           />
         </div>
-        <div className="mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] md:overflow-y-scroll lg:mt-5 lg:mb-[33px] lg:h-[424px]">
+        <div className="mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] md:overflow-y-scroll lg:mt-5 lg:h-[454px]">
           {active === 0 ? (
             <FormProvider {...form}>
               <form className="flex flex-col gap-4">
@@ -130,6 +128,14 @@ export default function StoreApplicationModal({ close, item }: IProps) {
                   disabled={!isUpdating}
                   labelDisabled={!isUpdating}
                 />
+                <LabeledInput
+                  form={form}
+                  name="ceoName"
+                  label="대표지"
+                  placeholder="대표자명을 입력해주세요."
+                  disabled={!isUpdating}
+                  labelDisabled={!isUpdating}
+                />
                 <div>
                   <Label className="mb-2" disabled={!isUpdating}>
                     사업자 번호
@@ -138,6 +144,7 @@ export default function StoreApplicationModal({ close, item }: IProps) {
                     {...form.register("license")}
                     placeholder="사업자 번호를 입력해주세요."
                     className="placeholder:text-gray-300"
+                    value={form.watch("license")}
                     onChange={handleBusinessNumber}
                     disabled={!isUpdating}
                   />
@@ -159,6 +166,7 @@ export default function StoreApplicationModal({ close, item }: IProps) {
                   </Label>
                   <Input
                     {...form.register("createdAt")}
+                    value={form.watch("createdAt")}
                     placeholder="신청일을 입력해주세요."
                     className="placeholder:text-gray-300"
                     onChange={handleDate}
@@ -197,14 +205,16 @@ export default function StoreApplicationModal({ close, item }: IProps) {
           )}
         </div>
       </ModalWithTitle.Layout>
-      <ModalWithTitle.Button
-        type={isUpdating ? "submit" : "button"}
-        color={isUpdating ? "primary" : "black"}
-        onClick={() => (isUpdating ? handleApply() : setIsUpdating(true))}
-        disabled={isUpdating ? isSubmitted : false}
-      >
-        {isUpdating ? "재신청하기" : "수정하고 재신청하기"}
-      </ModalWithTitle.Button>
+      <div className="w-full bg-red-50">
+        <ModalWithTitle.Button
+          type={isUpdating ? "submit" : "button"}
+          color={isUpdating ? "primary" : "black"}
+          onClick={() => (isUpdating ? handleApply() : setIsUpdating(true))}
+          disabled={isUpdating ? isSubmitted : false}
+        >
+          {isUpdating ? "재신청하기" : "수정하고 재신청하기"}
+        </ModalWithTitle.Button>
+      </div>
     </ModalWithTitle>
   );
 }
