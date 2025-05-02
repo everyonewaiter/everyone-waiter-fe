@@ -15,3 +15,5 @@ type TProfile = {
   email: string;
   permission: TPermission;
 };
+
+type TStatus = "INACTIVE" | "ACTIVE" | "DELETE";

@@ -3,16 +3,11 @@ import { Button, ButtonColors } from "@/components/common/Button";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { STATUS_COLORS } from "@/constants/statusColor";
 import { PropsWithChildren } from "react";
+import transformDate from "@/lib/formatting/transformDate";
 import StoreApplicationModal from "./modals/StoreApplicationModal";
 import PendingAcceptModal from "./modals/PendingAcceptModal";
-
-export const STATUS_COLORS = {
-  APPLY: "접수",
-  REJECT: "반려",
-  APPROVE: "승인",
-  REAPPLY: "재접수",
-};
 
 function DataCell({
   children,
@@ -63,11 +58,6 @@ export default function Row({ index, itemWidths, ...item }: IProps) {
     } else if (item.status === "APPLY") {
       open(() => <PendingAcceptModal close={close} />);
     }
-  };
-
-  const handleDate = () => {
-    const [date, time] = item.createdAt.split(" ");
-    return [date.slice(2), time.slice(0, 5)].join(" ");
   };
 
   return (
@@ -122,7 +112,7 @@ export default function Row({ index, itemWidths, ...item }: IProps) {
           if (key === "신청일") {
             return (
               <DataCell key={key} className={`${className}`}>
-                {handleDate()}
+                {transformDate(item.createdAt)}
               </DataCell>
             );
           }
@@ -160,7 +150,7 @@ export default function Row({ index, itemWidths, ...item }: IProps) {
           if (key === "신청일") {
             return (
               <MobileDataCell key={key} name="신청일">
-                {handleDate()}
+                {transformDate(item.createdAt)}
               </MobileDataCell>
             );
           }

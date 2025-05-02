@@ -50,14 +50,7 @@ const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tbody
-    ref={ref}
-    className={cn(
-      "flex w-full flex-col items-center justify-center",
-      className
-    )}
-    {...props}
-  />
+  <tbody ref={ref} className={cn(className)} {...props} />
 ));
 TableBody.displayName = "TableBody";
 
@@ -86,7 +79,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "text-gray-0 text-s font-regular py-4 text-center lg:text-base",
+      "text-gray-0 font-regular py-4 text-center text-xs lg:text-base",
       className
     )}
     {...props}
@@ -147,7 +140,7 @@ const MobileTableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "!text-s text-gray-0 flex w-[180px] items-center justify-center border-b border-b-gray-600 px-6 text-center font-medium",
+      "!text-s text-gray-0 font-regular flex w-[180px] items-center justify-center border-b border-b-gray-600 px-6 text-center",
       className
     )}
     {...props}

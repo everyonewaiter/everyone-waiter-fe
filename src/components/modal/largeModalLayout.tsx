@@ -15,6 +15,7 @@ interface IProps {
   title: string;
   topRightComponent?: ReactNode;
   className?: string;
+  preventOutsideClose?: boolean;
 }
 
 export default function ModalWithTitle({
@@ -23,10 +24,18 @@ export default function ModalWithTitle({
   title,
   topRightComponent,
   className,
+  preventOutsideClose,
 }: PropsWithChildren<IProps>) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useOutsideClick({ ref, handler: onClose });
+  useOutsideClick({
+    ref,
+    handler: () => {
+      if (!preventOutsideClose) {
+        onClose();
+      }
+    },
+  });
   useEscapeKey({ handler: onClose });
 
   return (

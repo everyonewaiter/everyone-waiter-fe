@@ -21,15 +21,10 @@ import {
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
+import { STATUS_COLORS } from "@/constants/statusColor";
+import transformDate from "@/lib/formatting/transformDate";
 import StoreApplicationModal from "../store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "../store/_components/modals/PendingAcceptModal";
-
-export const STATUS_COLORS = {
-  APPLY: "접수",
-  REJECT: "반려",
-  APPROVE: "승인",
-  REAPPLY: "재접수",
-};
 
 const itemWidths = {
   "No.": {
@@ -60,11 +55,6 @@ export default function StoreList() {
 
   const { registrationList } = useStores();
   const { data, refetch } = registrationList(currentPage);
-
-  const handleDate = (value: string) => {
-    const [date, time] = value.split(" ");
-    return [date.slice(2), time.slice(0, 5)].join(" ");
-  };
 
   const { open, close } = useOverlay();
 
@@ -104,7 +94,7 @@ export default function StoreList() {
                 {idx + 1}
               </TableCell>
               <TableCell className={itemWidths.신청일.className}>
-                {handleDate(item.createdAt)}
+                {transformDate(item.createdAt)}
               </TableCell>
               <TableCell className={itemWidths.상호명.className}>
                 {item.name}

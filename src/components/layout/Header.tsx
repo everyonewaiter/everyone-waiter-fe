@@ -54,11 +54,11 @@ export default function Header({ openMobileSidebar }: IProps) {
         </div>
         <div className="h-[1px] bg-gray-500" />
       </div>
-      <div className="flex h-[60px] items-center justify-center border-b border-b-gray-600 px-5 md:hidden">
+      <div className="fixed z-100 flex h-[60px] w-full items-center justify-center border-b border-b-gray-600 bg-white px-5 md:hidden">
         <div className="relative flex w-full items-center justify-center">
           <button
             type="button"
-            className="absolute top-[50%] left-0 hidden -translate-y-1/2 transform md:flex"
+            className="absolute top-[50%] left-0 flex -translate-y-1/2 transform"
             onClick={openMobileSidebar}
           >
             <Image

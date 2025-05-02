@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,8 @@ interface IProps {
   setActive: (value: string) => void;
   active: string;
   className?: string;
+  triggerClassName?: string;
+  disabled?: boolean;
 }
 
 export default function Dropdown({
@@ -24,16 +27,40 @@ export default function Dropdown({
   active,
   setActive,
   className,
+  triggerClassName,
+  disabled,
 }: PropsWithChildren<IProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <DropdownMenu>
+    <DropdownMenu
+      onOpenChange={(open) => {
+        if (open) {
+          document.body.classList.add("disable-modal-close");
+        } else {
+          document.body.classList.remove("disable-modal-close");
+        }
+      }}
+    >
       <DropdownMenuTrigger
-        onClick={() => setIsOpen((prev) => !prev)}
+        disabled={disabled}
         className="outline-none"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
-        <div className="text-s font-regular text-gray-0 flex h-[32px] w-fit flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4">
+        <div
+          className={cn(
+            "lg:text-s font-regular text-gray-0 text-s flex h-[32px] w-fit flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4",
+            triggerClassName
+          )}
+          onClick={() => setIsOpen((prev) => !prev)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setIsOpen((prev) => !prev);
+            }
+          }}
+        >
           {active || defaultText}
           {isOpen ? (
             <ChevronUp
@@ -52,18 +79,24 @@ export default function Dropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className={cn(
-          "z-100 mt-1 ml-3 w-[113px] rounded-[16px] bg-white px-2 py-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
+          "z-100 mt-1 rounded-[16px] bg-white px-2 py-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
           className
         )}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         {data.map((item) => (
           <DropdownMenuItem
             key={item}
             className={cn(
-              "font-regular text-gray-0 rounded-[12px] px-3 py-2 text-sm",
+              "font-regular text-gray-0 !w-full cursor-pointer rounded-[12px] px-3 py-2 text-sm",
               active === item ? "bg-gray-700" : ""
             )}
-            onClick={() => setActive(item)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setActive(item);
+            }}
           >
             {item}
           </DropdownMenuItem>
