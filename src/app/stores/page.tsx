@@ -1,8 +1,9 @@
 "use client";
 
+/* eslint-disable react-hooks/exhaustive-deps */
 import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
@@ -25,6 +26,7 @@ import { STATUS_COLORS } from "@/constants/statusColor";
 import transformDate from "@/lib/formatting/transformDate";
 import StoreApplicationModal from "../store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "../store/_components/modals/PendingAcceptModal";
+import QueryProviders from "../query-providers";
 
 const itemWidths = {
   "No.": {
@@ -53,18 +55,34 @@ export default function StoreList() {
   const navigate = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { registrationList } = useStores();
-  const { data, refetch } = registrationList(currentPage);
+  const { registrationListQuery } = useStores();
+  const { data, refetch } = registrationListQuery(currentPage);
 
   const { open, close } = useOverlay();
 
   const handleOpenModal = (item: StoreDetail) => {
-    if (item.status === "REJECT") {
-      open(() => <StoreApplicationModal close={close} item={item} />);
+    if (["REJECT", "APPROVE"].includes(item.status)) {
+      open(() => (
+        <QueryProviders>
+          <StoreApplicationModal
+            close={close}
+            item={item}
+            isAccepted={item.status === "APPROVE"}
+          />
+        </QueryProviders>
+      ));
     } else if (item.status === "APPLY") {
-      open(() => <PendingAcceptModal close={close} />);
+      open(() => (
+        <QueryProviders>
+          <PendingAcceptModal close={close} />
+        </QueryProviders>
+      ));
     }
   };
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage]);
 
   return (
     <div className="h-full max-h-screen w-full overflow-y-scroll">
@@ -85,7 +103,7 @@ export default function StoreList() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.registrations.map((item, idx) => (
+          {data?.content?.map((item, idx) => (
             <TableRow
               key={item.registrationId.toString()}
               onClick={() => handleOpenModal(item)}
@@ -162,11 +180,23 @@ export default function StoreList() {
       </div>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-        totalPages={Math.floor((data?.registrationCount as number) / 20)}
         currentPage={currentPage}
-        onSetCurrentPage={(page) => {
-          setCurrentPage(page);
-          refetch();
+        setCurrentPage={setCurrentPage}
+        move={{
+          fastforward: {
+            hasMore: data?.hasNext!,
+            target: data?.fastForwardPage!,
+          },
+          forward: {
+            hasMore: data?.hasNext!,
+          },
+          backward: {
+            hasMore: data?.hasPrevious!,
+          },
+          fastbackward: {
+            hasMore: data?.hasPrevious!,
+            target: data?.fastBackwardPage!,
+          },
         }}
         className="mt-8"
       />

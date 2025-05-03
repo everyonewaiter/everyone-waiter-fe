@@ -7,3 +7,13 @@ type AdminAccount = {
   state: TStatus;
   updatedAt: string;
 };
+
+type TypeAdminStores = {
+  accountid: bigint;
+  createdAt: string;
+  email: string;
+  name: string;
+  registrationId: bigint;
+  status: RegisterStatus;
+  updatedAt: string;
+};

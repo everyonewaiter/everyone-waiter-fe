@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import MobileSidebar from "@/app/(main)/_components/MobileSidebar";
 import useOverlay from "@/hooks/use-overlay";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import Sidebar from "@/app/(main)/_components/Sidebar";
 import { usePathname } from "next/navigation";
 import cn from "@/lib/utils";
@@ -14,9 +14,11 @@ import Header from "./Header";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { acceptedStoresListQuery } = useStores();
-  const { setHasAcceptedStore, hasAcceptedStore, permission } = useAccount();
+
+  const { permission } = useAccount();
   const { open, close } = useOverlay();
+  const { acceptedStoresListQuery } = useStores();
+  const hasAcceptedStore = acceptedStoresListQuery.data?.stores.length !== 0;
 
   const preventLayout = ["/login", "/signup"];
   if (preventLayout.includes(pathname)) return children;
@@ -28,11 +30,6 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       </QueryProviders>
     ));
   };
-
-  useEffect(() => {
-    const hasStore = acceptedStoresListQuery.data?.stores.length !== 0;
-    setHasAcceptedStore(hasStore);
-  }, [acceptedStoresListQuery.data, setHasAcceptedStore]);
 
   return (
     <div className="w-screen bg-white md:bg-gray-700">
@@ -75,15 +72,14 @@ export default function MainLayout({ children }: { children: ReactNode }) {
             </section>
           </div>
         )}
-      {(hasAcceptedStore && !acceptedStoresListQuery.isLoading) ||
-        (permission === "ADMIN" && (
-          <div className="md:py:5 hidden h-screen min-w-screen flex-row items-center justify-center gap-6 md:flex lg:py-8">
-            <Sidebar />
-            <section className="overflow-y-auto rounded-[28px] bg-white md:h-[calc(100%-40px)] md:w-[722px] md:p-5 lg:h-[calc(100%-64px)] lg:w-[1458px] lg:p-8">
-              {children}
-            </section>
-          </div>
-        ))}
+      {(permission === "ADMIN" || hasAcceptedStore) && (
+        <div className="md:py:5 hidden h-screen min-w-screen flex-row items-center justify-center gap-6 md:flex lg:py-8">
+          <Sidebar />
+          <section className="overflow-y-auto rounded-[28px] bg-white md:h-[calc(100%-40px)] md:w-[722px] md:p-5 lg:h-[calc(100%-64px)] lg:w-[1458px] lg:p-8">
+            {children}
+          </section>
+        </div>
+      )}
     </div>
   );
 }

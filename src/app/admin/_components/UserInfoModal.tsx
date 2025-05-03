@@ -37,7 +37,6 @@ interface IProps {
 }
 
 export default function UserInfoModal({ close, accountId }: IProps) {
-  const [isEditing, setIsEditing] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [active, setActive] = useState<TypeActive>({
     permission: "",
@@ -45,8 +44,8 @@ export default function UserInfoModal({ close, accountId }: IProps) {
   });
 
   const queryClient = useQueryClient();
-  const { detailAccount, mutateUpdateDetail } = useAdmin();
-  const { data: accountData, refetch } = detailAccount(accountId);
+  const { detailAccountQuery, mutateUpdateDetail } = useAdmin();
+  const { data: accountData, refetch } = detailAccountQuery(accountId);
 
   const form = useForm<TypeForm | TypeEditForm>({
     mode: "onChange",
@@ -70,6 +69,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
 
   const submitHandler = () => {
     setIsDisabled(true);
+
     mutateUpdateDetail(
       {
         accountId,
@@ -82,10 +82,10 @@ export default function UserInfoModal({ close, accountId }: IProps) {
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["get-account"] });
-          setIsEditing(false);
           close();
           refetch();
         },
+        onError: () => setIsDisabled(false),
       }
     );
   };
@@ -115,80 +115,52 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                 disabled
                 labelDisabled
               />
-              {isEditing ? (
-                <div className="flex flex-col gap-4">
-                  <div className="relative flex w-full flex-col gap-2">
-                    <Label>권한</Label>
-                    <Dropdown
-                      disabled={isDisabled}
-                      data={["사용자", "사장님", "관리자"]}
-                      defaultText={
-                        PermissionObj[
-                          accountData?.permission as keyof typeof PermissionObj
-                        ]
-                      }
-                      setActive={(value) =>
-                        setActive((prev) => ({
-                          ...prev,
-                          permission: value as TPermission,
-                        }))
-                      }
-                      active={active.permission}
-                      triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
-                      className="w-[280px] md:w-[324px] lg:w-[480px]"
-                    />
-                  </div>
-                  <div className="flex w-full flex-col gap-2">
-                    <Label disabled>구독 상태</Label>
-                    <Input value="스타터" disabled />
-                  </div>
-                  <div className="flex w-full flex-col gap-2">
-                    <Label>상태</Label>
-                    <Dropdown
-                      disabled={isDisabled}
-                      data={["활성화", "비활성화"]}
-                      defaultText={
-                        stateObj[accountData?.state as keyof typeof stateObj]
-                      }
-                      setActive={(value) =>
-                        setActive((prev: TypeActive) => ({
-                          ...prev,
-                          status: value as TStatus,
-                        }))
-                      }
-                      active={active?.status}
-                      triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
-                      className="w-[280px] md:w-[324px] lg:w-[480px]"
-                    />
-                  </div>
+              <div className="flex flex-col gap-4">
+                <div className="relative flex w-full flex-col gap-2">
+                  <Label>권한</Label>
+                  <Dropdown
+                    disabled={isDisabled}
+                    data={["사용자", "사장님", "관리자"]}
+                    defaultText={
+                      PermissionObj[
+                        accountData?.permission as keyof typeof PermissionObj
+                      ]
+                    }
+                    setActive={(value) =>
+                      setActive((prev) => ({
+                        ...prev,
+                        permission: value as TPermission,
+                      }))
+                    }
+                    active={active.permission}
+                    triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
+                    className="w-[280px] md:w-[324px] lg:w-[480px]"
+                  />
                 </div>
-              ) : (
-                <div className="flex flex-col gap-4">
-                  <div className="flex w-full flex-col gap-2">
-                    <Label disabled>권한</Label>
-                    <Input
-                      value={
-                        PermissionObj[accountData?.permission as TPermission] ||
-                        ""
-                      }
-                      disabled
-                    />
-                  </div>
-                  <div className="flex w-full flex-col gap-2">
-                    <Label disabled>구독 상태</Label>
-                    <Input value="스타터" disabled />
-                  </div>
-                  <div className="flex w-full flex-col gap-2">
-                    <Label disabled>상태</Label>
-                    <Input
-                      value={
-                        stateObj[accountData?.state as keyof typeof stateObj]
-                      }
-                      disabled
-                    />
-                  </div>
+                <div className="flex w-full flex-col gap-2">
+                  <Label disabled>구독 상태</Label>
+                  <Input value="스타터" disabled />
                 </div>
-              )}
+                <div className="flex w-full flex-col gap-2">
+                  <Label>상태</Label>
+                  <Dropdown
+                    disabled={isDisabled}
+                    data={["활성화", "비활성화"]}
+                    defaultText={
+                      stateObj[accountData?.state as keyof typeof stateObj]
+                    }
+                    setActive={(value) =>
+                      setActive((prev: TypeActive) => ({
+                        ...prev,
+                        status: value as TStatus,
+                      }))
+                    }
+                    active={active?.status}
+                    triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
+                    className="w-[280px] md:w-[324px] lg:w-[480px]"
+                  />
+                </div>
+              </div>
             </div>
           </form>
         </FormProvider>

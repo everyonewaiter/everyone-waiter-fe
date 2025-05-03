@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ["everyonewaiter.com"],
+    domains: ["cdn.everyonewaiter.com"],
     formats: ["image/avif", "image/webp"],
   },
   webpack: (config) => {

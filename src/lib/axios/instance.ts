@@ -5,7 +5,7 @@ import axios, { AxiosInstance } from "axios";
 import { deleteCookie, getToken, setCookie } from "../cookies";
 import { renewToken } from "../api/auth.api";
 
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1`;
 
 // NOTE - 로그인/회원가입 등 토큰이 필요 없는 instance
 const authInstance = axios.create({

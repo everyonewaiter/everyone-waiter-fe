@@ -5,7 +5,7 @@ import LabeledInput from "@/components/common/LabeledInput";
 import { storeSchema, TypeStore } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import Label from "@/components/common/Label";
 import Input from "@/components/common/Input";
@@ -37,7 +37,14 @@ export default function CreateForm() {
     },
   });
 
-  const { register } = useStores();
+  const { mutateRegisterStore } = useStores();
+  const { mutate, error } = mutateRegisterStore;
+
+  useEffect(() => {
+    if (error?.message) {
+      setIsSubmitted(false);
+    }
+  }, [error]);
 
   const handleSubmit = (data: TypeStore) => {
     setIsSubmitted(true);
@@ -52,7 +59,9 @@ export default function CreateForm() {
       formData.append("file", image);
     }
 
-    register(formData);
+    mutate(formData, {
+      onError: () => setIsSubmitted(false),
+    });
   };
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,16 +73,6 @@ export default function CreateForm() {
   };
 
   const { handleOpenAddress } = useOpenDaumPostcode(form);
-
-  const handlePhoneNumber = (e: ChangeEvent<HTMLInputElement>) => {
-    const str = e.target.value.replace(/[^0-9]/g, "");
-    form.setValue("landline", phoneNumberPattern(str));
-  };
-
-  const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
-    const str = e.target.value.replace(/[^0-9]/g, "");
-    form.setValue("license", formatBusinessNumber(str));
-  };
 
   return (
     <div className="flex w-full justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
@@ -116,32 +115,41 @@ export default function CreateForm() {
               placeholder="대표자명 입력해주세요."
               className="cursor-pointer placeholder:text-gray-300"
             />
-            <div>
-              <Label className="mb-1">소재지</Label>
+            <LabeledInput
+              form={form}
+              name="address"
+              label="소재지"
+              placeholder="소재지를 입력해주세요."
+              className="cursor-pointer placeholder:text-gray-300"
+              readOnly
+              onClick={handleOpenAddress}
+            />
+            <div className="flex flex-col gap-2">
+              <Label>매장 전화번호</Label>
               <Input
-                {...form.register("address")}
-                placeholder="소재지를 입력해주세요."
-                readOnly
-                onClick={handleOpenAddress}
+                {...form.register("landline")}
+                onChange={(e) => {
+                  const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                  const formatted = phoneNumberPattern(onlyNums);
+                  form.setValue("landline", formatted);
+                }}
+                value={form.watch("landline")}
+                placeholder="매장 전화번호를 입력해주세요"
                 className="cursor-pointer placeholder:text-gray-300"
               />
             </div>
-            <div>
-              <Label className="mb-1.5">매장 전화번호</Label>
-              <Input
-                {...form.register("landline")}
-                placeholder="매장 전화번호를 입력해주세요."
-                className="placeholder:text-gray-300"
-                onChange={handlePhoneNumber}
-              />
-            </div>
-            <div>
-              <Label className="mb-1.5">사업자 번호</Label>
+            <div className="flex flex-col gap-2">
+              <Label>사업자 번호</Label>
               <Input
                 {...form.register("license")}
-                placeholder="사업자 번호를 입력해주세요."
-                className="placeholder:text-gray-300"
-                onChange={handleBusinessNumber}
+                onChange={(e) => {
+                  const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                  const formatted = formatBusinessNumber(onlyNums);
+                  form.setValue("license", formatted);
+                }}
+                value={form.watch("license")}
+                placeholder="사업자 번호를 입력해주세요"
+                className="cursor-pointer placeholder:text-gray-300"
               />
             </div>
             <UploadPhoto

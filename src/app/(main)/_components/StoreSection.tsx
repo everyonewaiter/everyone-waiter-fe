@@ -5,16 +5,20 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSidebar } from "@/hooks/store/useSidebar";
+import useStoreId from "@/hooks/store/useStoreId";
 import renderIcon from "./renderIcons";
 
 interface IProps {
   name: string;
+  storeId?: bigint;
 }
 
-export default function StoreSection({ name }: IProps) {
+export default function StoreSection({ name, storeId }: IProps) {
   const navigate = useRouter();
   const [isStoreOpen, setIsStoreOpen] = useState(true);
+
   const { setActiveMenu, activeMenu, menu } = useSidebar();
+  const { setStoreId } = useStoreId();
 
   const checkActive = (text: string) => activeMenu === `${name}-${text}`;
 
@@ -55,6 +59,7 @@ export default function StoreSection({ name }: IProps) {
                 className="flex items-center md:py-[9px] lg:py-3"
                 onClick={() => {
                   setActiveMenu(`${name}-${item.text}`);
+                  setStoreId(storeId!);
                   navigate.push(item.url);
                 }}
               >

@@ -51,7 +51,7 @@ export default function Dropdown({
       >
         <div
           className={cn(
-            "lg:text-s font-regular text-gray-0 text-s flex h-[32px] w-fit flex-row items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4",
+            "font-regular text-gray-0 text-s flex h-[32px] w-fit flex-row items-center justify-between gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4 lg:text-sm",
             triggerClassName
           )}
           onClick={() => setIsOpen((prev) => !prev)}
@@ -90,7 +90,7 @@ export default function Dropdown({
           <DropdownMenuItem
             key={item}
             className={cn(
-              "font-regular text-gray-0 !w-full cursor-pointer rounded-[12px] px-3 py-2 text-sm",
+              "font-regular text-gray-0 !w-full cursor-pointer rounded-[12px] px-3 py-2 text-sm lg:text-base",
               active === item ? "bg-gray-700" : ""
             )}
             onClick={(e) => {
