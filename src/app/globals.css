@@ -1,13 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@font-face {
-  font-family: "Pretendard-Regular";
-  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
-    format("woff");
-  font-weight: 400;
-  font-style: normal;
-}
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/dynamic-subset-variable.css");
 
 @font-face {
   font-family: "HakgyoansimDunggeunmisoTTF-B";
@@ -68,9 +62,6 @@
   --breakpoint-sm: 360px;
   --breakpoint-md: 960px;
   --breakpoint-lg: 1920px;
-
-  /* FontWeight */
-  --font-weight-regular: 300;
 }
 
 @layer {
