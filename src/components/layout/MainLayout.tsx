@@ -72,7 +72,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
             </section>
           </div>
         )}
-      {hasAcceptedStore && (
+      {(permission === "ADMIN" || hasAcceptedStore) && (
         <div className="md:py:5 hidden h-screen min-w-screen flex-row items-center justify-center gap-6 md:flex lg:py-8">
           <Sidebar />
           <section className="overflow-y-auto rounded-[28px] bg-white md:h-[calc(100%-40px)] md:w-[722px] md:p-5 lg:h-[calc(100%-64px)] lg:w-[1458px] lg:p-8">

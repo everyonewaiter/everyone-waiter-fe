@@ -37,11 +37,12 @@ export default function UsersTableRow({ openModal, ...item }: IProps) {
             },
           }}
           commonClassName={cn(
+            "!font-medium",
             item.permission === "OWNER"
-              ? "!bg-[#3900B508] !text-[#3900B5]"
+              ? "!bg-[#3900B518] !text-[#3900B5]"
               : "",
             item.permission === "USER" ? "!bg-[#00C03010] !text-[#00C030]" : "",
-            item.permission === "ADMIN" ? "!bg-[#FFB70008] !text-[#FFB700]" : ""
+            item.permission === "ADMIN" ? "!bg-[#FFB70018] !text-[#FFB700]" : ""
           )}
         >
           {PermissionObj[item.permission as TPermission]}
