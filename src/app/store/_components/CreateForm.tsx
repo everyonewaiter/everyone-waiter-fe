@@ -59,7 +59,9 @@ export default function CreateForm() {
       formData.append("file", image);
     }
 
-    mutate(formData);
+    mutate(formData, {
+      onError: () => setIsSubmitted(false),
+    });
   };
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {

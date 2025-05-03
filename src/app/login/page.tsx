@@ -60,6 +60,7 @@ export default function Login() {
 
   const submitHandler = (formData: Pick<TAccount, "email" | "password">) => {
     setIsSubmitDisabled(true);
+
     mutate(formData, {
       onSuccess: async (data) => {
         setCookie("accessToken", data.accessToken);
@@ -68,6 +69,7 @@ export default function Login() {
         refetch();
       },
       onError: (error) => {
+        setIsSubmitDisabled(false);
         const { message } = (error as any).response.data;
         form.setError("email", { message });
         form.setError("password", { message });

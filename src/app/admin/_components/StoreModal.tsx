@@ -48,7 +48,6 @@ export default function StoreModal({ close, registrationId, email }: IProps) {
     setIsSubmitted(true);
 
     if (type === "reject") {
-      console.log(data?.registrationId!, active);
       mutateRejectStore(
         { id: data?.registrationId!, reason: active },
         {
@@ -56,6 +55,7 @@ export default function StoreModal({ close, registrationId, email }: IProps) {
             queryClient.invalidateQueries({ queryKey: ["stores-to-approve"] });
             close();
           },
+          onError: () => setIsSubmitted(false),
         }
       );
     } else if (type === "approve") {
@@ -64,6 +64,7 @@ export default function StoreModal({ close, registrationId, email }: IProps) {
           queryClient.invalidateQueries({ queryKey: ["stores-to-approve"] });
           close();
         },
+        onError: () => setIsSubmitted(false),
       });
     }
   };

@@ -56,6 +56,7 @@ export default function Signup() {
 
   const submitHandler = (data: TypeSignup) => {
     setMakeDisabled((prev) => ({ ...prev, formButton: true }));
+
     mutateSignup(
       {
         email: data.email,
@@ -66,6 +67,8 @@ export default function Signup() {
         onSuccess: () => {
           navigate.push(`/signup/completed?email=${data.email}`);
         },
+        onError: () =>
+          setMakeDisabled((prev) => ({ ...prev, formButton: false })),
       }
     );
   };
@@ -86,6 +89,7 @@ export default function Signup() {
   // NOTE - 인증 확인
   const handleCheckAuth = (value: string) => {
     setIsPhoneAuthenticated(true);
+
     mutateVerifyAuthCode(
       {
         phoneNumber: form.getValues("phone"),
