@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import InfoPopup from "../InfoPopup";
 
 interface IProps {
@@ -11,6 +11,7 @@ interface IProps {
 
 export default function Header({ openMobileSidebar }: IProps) {
   const navigate = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -20,7 +21,9 @@ export default function Header({ openMobileSidebar }: IProps) {
           <button
             type="button"
             className="flex items-center md:gap-[13px] lg:gap-5"
-            onClick={() => navigate.push("/")}
+            onClick={() =>
+              pathname.startsWith("/control") ? null : navigate.push("/")
+            }
           >
             <Image
               src="/icons/logo/logo-medium.svg"
