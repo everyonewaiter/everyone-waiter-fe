@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+// Alert.tsx
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -7,35 +8,49 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "./Components";
 
 interface IProps {
   title: string;
-  onDelete: () => void;
+  onAction: () => void;
   onClose: () => void;
-  triggerChildren: ReactNode;
+  hasNoCancel?: boolean;
+  buttonText: string;
 }
 
 export default function Alert({
   title,
-  onDelete,
+  onAction,
   onClose,
-  triggerChildren,
+  hasNoCancel,
+  buttonText,
 }: IProps) {
+  const [open, setOpen] = useState(true);
+
+  const handleClose = () => {
+    setOpen(false);
+    onClose();
+  };
+
+  const handleAction = () => {
+    setOpen(false);
+    onAction();
+  };
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>{triggerChildren}</AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose} className="w-full">
-            닫기
-          </AlertDialogCancel>
-          <AlertDialogAction onClick={onDelete} className="w-full">
-            삭제
+          {!hasNoCancel && (
+            <AlertDialogCancel onClick={handleClose} className="w-full">
+              닫기
+            </AlertDialogCancel>
+          )}
+          <AlertDialogAction onClick={handleAction} className="w-full">
+            {buttonText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

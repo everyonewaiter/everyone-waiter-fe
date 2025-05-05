@@ -5,6 +5,7 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
 import cn from "@/lib/utils";
 import { buttonVariants } from "../Button";
+import ResponsiveButton from "../ResponsiveButton";
 
 const AlertDialog = AlertDialogPrimitive.Root;
 
@@ -75,9 +76,19 @@ const AlertDialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={cn("text-lg font-semibold", className)}
+    className={cn(
+      "text-center text-lg font-semibold break-words whitespace-pre-wrap",
+      className
+    )}
     {...props}
-  />
+  >
+    {(props.children as string).split("\\n").map((item) => (
+      <React.Fragment key={item}>
+        {item}
+        <br />
+      </React.Fragment>
+    ))}
+  </AlertDialogPrimitive.Title>
 ));
 AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName;
 
@@ -85,14 +96,13 @@ const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Action
-    ref={ref}
-    className={cn(
-      buttonVariants({ variant: "default", color: "primary" }),
-      className
-    )}
-    {...props}
-  />
+  <AlertDialogPrimitive.Action ref={ref} className="w-full">
+    <ResponsiveButton
+      type="button"
+      responsiveButtons={{ lg: { buttonSize: "lg", className: "!w-full" } }}
+      {...props}
+    />
+  </AlertDialogPrimitive.Action>
 ));
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
 
