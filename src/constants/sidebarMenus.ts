@@ -15,6 +15,11 @@ export const USER_MENU: Menu[] = [
     url: "/menu",
   },
   {
+    icon: "mobile",
+    text: "기기 관리",
+    url: "/device",
+  },
+  {
     icon: "subscribe",
     text: "구독 설정",
     url: "/subscription",
