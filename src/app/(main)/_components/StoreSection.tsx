@@ -67,10 +67,17 @@ export default function StoreSection({ name, storeId }: IProps) {
                   className={`mr-3 h-[6px] w-[6px] rounded-full ${checkActive(item.text) ? "bg-primary" : "bg-gray-600"}`}
                 />
                 <div className="hidden lg:block">
-                  {renderIcon(item.icon, checkActive(item.text))}
+                  {renderIcon({
+                    iconKey: item.icon,
+                    isActive: checkActive(item.text),
+                  })}
                 </div>
                 <div className="md:block lg:hidden">
-                  {renderIcon(item.icon, checkActive(item.text), 24)}
+                  {renderIcon({
+                    iconKey: item.icon,
+                    isActive: checkActive(item.text),
+                    size: 24,
+                  })}
                 </div>
                 <span
                   className={`md:text-s ml-[6px] md:font-medium lg:text-base lg:font-medium ${checkActive(item.text) ? "text-primary" : "text-gray-300"}`}

@@ -8,6 +8,7 @@ import PeopleIcon from "@public/icons/people.svg";
 import CheckIcon from "@public/icons/check-square-broken.svg";
 import MobileIcon from "@public/icons/mobile.svg";
 import WriteIcon from "@public/icons/write.svg";
+import TrashIcon from "@public/icons/trash-02.svg";
 
 const ICON_MAP = {
   home: HomeIcon,
@@ -20,6 +21,7 @@ const ICON_MAP = {
   check: CheckIcon,
   mobile: MobileIcon,
   write: WriteIcon,
+  trash: TrashIcon,
 } as const;
 
 export default ICON_MAP;
