@@ -16,7 +16,9 @@ import transformDate from "@/lib/formatting/transformDate";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import Paginations from "@/components/common/Pagination/Paginations";
 import { useState } from "react";
+import useOverlay from "@/hooks/use-overlay";
 import renderIcon from "../(main)/_components/renderIcons";
+import DeviceInfoModal from "./_components/DeviceInfoModal";
 
 const dummy = [
   {
@@ -39,6 +41,35 @@ const dummy = [
 
 export default function Device() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const allChecked =
+    dummy.length > 0 && dummy.every((item) => checkedItems[item.deviceId]);
+
+  const handleCheckAll = (checked: boolean) => {
+    const newChecked = dummy.reduce(
+      (acc, item) => {
+        acc[item.deviceId] = checked;
+        return acc;
+      },
+      {} as { [key: string]: boolean }
+    );
+    setCheckedItems(newChecked);
+  };
+
+  const handleCheckItem = (id: string, checked: boolean) => {
+    setCheckedItems((prev) => ({
+      ...prev,
+      [id]: checked,
+    }));
+  };
+
+  const { open, close } = useOverlay();
+
+  const handleModalOpen = (deviceId: string) => {
+    open(() => <DeviceInfoModal close={close} deviceId={deviceId} />);
+  };
 
   return (
     <div className="h-full w-full">
@@ -55,7 +86,10 @@ export default function Device() {
           <TableHeader>
             <TableRow isHead>
               <TableHead className="!w-[66px]">
-                <Checkbox />
+                <Checkbox
+                  checked={allChecked}
+                  onCheckedChange={(checked) => handleCheckAll(!!checked)}
+                />
               </TableHead>
               {["이름", "권한", "결제 방식", "상태", "등록 일시"].map(
                 (item, index) => (
@@ -74,9 +108,17 @@ export default function Device() {
           </TableHeader>
           <TableBody>
             {dummy?.map((item) => (
-              <TableRow key={item.deviceId}>
+              <TableRow
+                key={item.deviceId}
+                onClick={() => handleModalOpen(item.deviceId)}
+              >
                 <TableCell className="lg:w-[66px]">
-                  <Checkbox />
+                  <Checkbox
+                    checked={checkedItems[item.deviceId]}
+                    onCheckedChange={(checked) =>
+                      handleCheckItem(item.deviceId, !!checked)
+                    }
+                  />
                 </TableCell>
                 <TableCell className="flex flex-1">{item.name}</TableCell>
                 <TableCell className="flex flex-[0.5]">
