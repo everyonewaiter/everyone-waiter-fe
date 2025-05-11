@@ -60,7 +60,7 @@ export default function DeviceInfoModal({ close }: IProps) {
 
   return (
     <ModalWithTitle onClose={close} title="기기 정보">
-      <ModalWithTitle.Layout className="mb-6">
+      <ModalWithTitle.Layout className="mb-6 !h-[333px] lg:!h-auto">
         <Form {...form}>
           <form className="flex flex-col gap-4">
             <LabeledInput form={form} name="deviceName" label="기기 이름" />
@@ -96,7 +96,7 @@ export default function DeviceInfoModal({ close }: IProps) {
       <ModalWithTitle.ButtonGroup
         cancelBtn={{
           text: "닫기",
-          onClick: () => {},
+          onClick: close,
           disabled: false,
         }}
         saveBtn={{ text: "저장", onClick: () => {}, disabled: false }}
