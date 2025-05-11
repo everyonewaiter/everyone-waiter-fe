@@ -1,5 +1,5 @@
 // Alert.tsx
-import { useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,20 +11,21 @@ import {
 } from "./Components";
 
 interface IProps {
-  title: string;
   onAction: () => void;
   onClose: () => void;
   hasNoCancel?: boolean;
+  hasNoAction?: boolean;
   buttonText: string;
 }
 
 export default function Alert({
-  title,
+  children,
   onAction,
   onClose,
   hasNoCancel,
+  hasNoAction,
   buttonText,
-}: IProps) {
+}: PropsWithChildren<IProps>) {
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
@@ -41,17 +42,25 @@ export default function Alert({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogTitle>
+            <div>{children}</div>
+          </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
           {!hasNoCancel && (
-            <AlertDialogCancel onClick={handleClose} className="w-full">
-              닫기
+            <AlertDialogCancel
+              onClick={handleClose}
+              className="flex-[0.6]"
+              hasNoAction={hasNoAction}
+            >
+              <span>닫기</span>
             </AlertDialogCancel>
           )}
-          <AlertDialogAction onClick={handleAction} className="w-full">
-            {buttonText}
-          </AlertDialogAction>
+          {!hasNoAction && (
+            <AlertDialogAction onClick={handleAction} className="flex-1">
+              <span>{buttonText}</span>
+            </AlertDialogAction>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
