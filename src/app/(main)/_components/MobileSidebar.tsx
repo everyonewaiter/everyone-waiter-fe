@@ -20,7 +20,7 @@ export default function MobileSidebar({ onClose }: IProps) {
 
   const { permission } = useAccount();
   const { acceptedStoresListQuery } = useStores();
-  const { data } = acceptedStoresListQuery;
+  const { data } = acceptedStoresListQuery(true);
 
   useOutsideClick({ ref, handler: onClose });
   useEscapeKey({ handler: onClose });
