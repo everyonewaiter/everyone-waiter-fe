@@ -25,7 +25,7 @@ import Alert from "@/components/common/Alert/Alert";
 import { Button } from "@/components/common/Button";
 import renderIcon from "../(main)/_components/renderIcons";
 import DeviceInfoModal from "./_components/DeviceInfoModal";
-import { useTableCheck } from "./_hooks/useTableCheck";
+import useTableCheck from "./_hooks/useTableCheck";
 
 const itemWidth = {
   이름: "flex flex-1",
