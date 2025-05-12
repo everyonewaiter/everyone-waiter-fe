@@ -42,16 +42,16 @@ export default function Login() {
 
   useEffect(() => {
     if (isLoggedIn && profileData) {
-      setProfile({
-        accountId: (profileData as TProfile)?.accountId?.toString(),
-        email: profileData?.email!,
-        permission: profileData?.permission!,
-      });
       if (profileData?.permission === "ADMIN") {
         setMenu(ADMIN_MENU);
       } else {
         setMenu(USER_MENU);
       }
+      setProfile({
+        accountId: (profileData as TProfile)?.accountId?.toString(),
+        email: profileData?.email!,
+        permission: profileData?.permission!,
+      });
       navigate.push("/");
     }
   }, [isLoggedIn, profileData]);

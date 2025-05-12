@@ -55,9 +55,13 @@ const setupInterceptors = (axiosInstance: AxiosInstance) => {
     (response) => response,
     // 2xx 외의 범위 상태 코드(실패)
     async (error) => {
-      console.log(error);
       const originalRequest = error.config;
-      if (error.response.status === 401 && !originalRequest.isRetry) {
+
+      if (
+        error.response.status === 401 &&
+        !originalRequest.isRetry &&
+        !window.location.href.includes("/control")
+      ) {
         originalRequest.isRetry = true;
 
         try {

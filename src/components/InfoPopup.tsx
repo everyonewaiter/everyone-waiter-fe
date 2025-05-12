@@ -12,7 +12,7 @@ const popupList = [
   },
   {
     text: "구독",
-    url: "/subscribe",
+    url: "/subscription",
   },
 ];
 

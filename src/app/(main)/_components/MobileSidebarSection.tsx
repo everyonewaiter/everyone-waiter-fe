@@ -52,7 +52,10 @@ export default function MobileSidebarSection({ onClose, name }: IProps) {
             <div
               className={`h-5 w-0.5 ${checkActive(item.text) ? "bg-primary" : "hidden"}`}
             />
-            {renderIcon(item.icon, checkActive(item.text))}
+            {renderIcon({
+              iconKey: item.icon,
+              isActive: checkActive(item.text),
+            })}
             <span
               className={`text-[15px] font-medium ${checkActive(item.text) ? "text-primary" : "text-gray-300"}`}
             >

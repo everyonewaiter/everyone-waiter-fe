@@ -49,12 +49,14 @@ const useStores = () => {
     },
   });
 
-  const acceptedStoresListQuery = useQuery<{
-    stores: { storeId: bigint; name: string }[];
-  }>({
-    queryKey: ["get-stores-list"],
-    queryFn: getStoreList,
-  });
+  const acceptedStoresListQuery = (enabled: boolean) =>
+    useQuery<{
+      stores: { storeId: bigint; name: string }[];
+    }>({
+      queryKey: ["get-stores-list"],
+      queryFn: getStoreList,
+      enabled,
+    });
 
   const detailStoreInfoQuery = (storeId: bigint) =>
     useQuery({

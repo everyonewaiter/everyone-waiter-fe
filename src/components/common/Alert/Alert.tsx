@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+// Alert.tsx
+import { PropsWithChildren, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -7,36 +8,59 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "./Components";
 
 interface IProps {
-  title: string;
-  onDelete: () => void;
+  onAction: () => void;
   onClose: () => void;
-  triggerChildren: ReactNode;
+  hasNoCancel?: boolean;
+  hasNoAction?: boolean;
+  buttonText: string;
 }
 
 export default function Alert({
-  title,
-  onDelete,
+  children,
+  onAction,
   onClose,
-  triggerChildren,
-}: IProps) {
+  hasNoCancel,
+  hasNoAction,
+  buttonText,
+}: PropsWithChildren<IProps>) {
+  const [open, setOpen] = useState(true);
+
+  const handleClose = () => {
+    setOpen(false);
+    onClose();
+  };
+
+  const handleAction = () => {
+    setOpen(false);
+    onAction();
+  };
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>{triggerChildren}</AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogTitle>
+            <div>{children}</div>
+          </AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose} className="w-full">
-            닫기
-          </AlertDialogCancel>
-          <AlertDialogAction onClick={onDelete} className="w-full">
-            삭제
-          </AlertDialogAction>
+          {!hasNoCancel && (
+            <AlertDialogCancel
+              onClick={handleClose}
+              className="flex-[0.6]"
+              hasNoAction={hasNoAction}
+            >
+              <span>닫기</span>
+            </AlertDialogCancel>
+          )}
+          {!hasNoAction && (
+            <AlertDialogAction onClick={handleAction} className="flex-1">
+              <span>{buttonText}</span>
+            </AlertDialogAction>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -4,6 +4,8 @@ interface TypeChildren {
   children: ReactNode;
 }
 
+type TValueOf<T> = T[keyof T];
+
 interface IResWithPagination<T> {
   content: T;
   count: number;

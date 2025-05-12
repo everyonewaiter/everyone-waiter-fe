@@ -11,7 +11,7 @@ import StoreSection from "./StoreSection";
 export default function Sidebar() {
   const navigate = useRouter();
   const { acceptedStoresListQuery } = useStores();
-  const { data } = acceptedStoresListQuery;
+  const { data } = acceptedStoresListQuery(true);
 
   const { setActiveMenu } = useSidebar();
 

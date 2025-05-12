@@ -145,22 +145,58 @@ export default function StoreList() {
           ))}
         </TableBody>
       </Table>
-      <MobileTable className="z-10">
-        <TableBody className="flex flex-col">
-          <MobileTableRow>
-            <MobileTableHead>No.</MobileTableHead>
-            <MobileTableCell>1</MobileTableCell>
-          </MobileTableRow>
-          {["이메일", "가입일시", "권한", "구독설정", "매장여부", "상태"].map(
-            (item) => (
-              <MobileTableRow key={item}>
-                <MobileTableHead>{item}</MobileTableHead>
-                <MobileTableCell>example@email.com</MobileTableCell>
-              </MobileTableRow>
-            )
-          )}
-        </TableBody>
-      </MobileTable>
+      {data?.content.map((item, index) => (
+        <MobileTable
+          className="z-10 mx-5"
+          key={item.registrationId}
+          onClick={() => handleOpenModal(item)}
+        >
+          <TableBody className="flex flex-col">
+            <MobileTableRow>
+              <MobileTableHead>No.</MobileTableHead>
+              <MobileTableCell>{index + 1}</MobileTableCell>
+            </MobileTableRow>
+            {Object.keys(itemWidths)
+              .slice(1)
+              .map((key) => (
+                <MobileTableRow key={key}>
+                  <MobileTableHead>{key}</MobileTableHead>
+                  {key === "신청일" && (
+                    <MobileTableCell>
+                      {transformDate(item.createdAt)}
+                    </MobileTableCell>
+                  )}
+                  {key === "상태" && (
+                    <MobileTableCell>
+                      <ResponsiveButton
+                        color={item.status.toLowerCase()}
+                        responsiveButtons={{
+                          sm: {
+                            buttonSize: "custom",
+                            className:
+                              "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+                          },
+                        }}
+                      >
+                        {STATUS_COLORS[item.status]}
+                      </ResponsiveButton>
+                    </MobileTableCell>
+                  )}
+                  {key !== "신청일" && key !== "상태" && (
+                    <MobileTableCell>
+                      {
+                        item[
+                          itemWidths[key as keyof typeof itemWidths]
+                            .text as keyof StoreDetail
+                        ]
+                      }
+                    </MobileTableCell>
+                  )}
+                </MobileTableRow>
+              ))}
+          </TableBody>
+        </MobileTable>
+      ))}
       <div className="z-10 hidden w-full justify-end md:flex">
         <ResponsiveButton
           variant="outline"

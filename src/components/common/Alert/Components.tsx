@@ -4,7 +4,7 @@ import * as React from "react";
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
 import cn from "@/lib/utils";
-import { buttonVariants } from "../Button";
+import ResponsiveButton from "../ResponsiveButton";
 
 const AlertDialog = AlertDialogPrimitive.Root;
 
@@ -36,7 +36,7 @@ const AlertDialogContent = React.forwardRef<
     <AlertDialogPrimitive.Content
       ref={ref}
       className={cn(
-        "top-1/2 left-1/2 z-100 hidden h-[244px] w-[544px] -translate-x-1/2 -translate-y-1/2 transform flex-col gap-8 rounded-[30px] bg-white p-8 md:fixed md:flex",
+        "fixed top-1/2 left-1/2 z-100 flex w-80 -translate-x-1/2 -translate-y-1/2 transform flex-col gap-6 rounded-[20px] bg-white p-5 md:w-85 md:gap-8 lg:w-136 lg:rounded-[30px] lg:p-8",
         className
       )}
       {...props}
@@ -52,7 +52,7 @@ function AlertDialogHeader({
   return (
     <div
       className={cn(
-        "flex h-[100px] w-full items-center justify-center",
+        "flex w-full items-center justify-center py-4 lg:py-6",
         className
       )}
       {...props}
@@ -65,7 +65,9 @@ function AlertDialogFooter({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex flex-row gap-3", className)} {...props} />;
+  return (
+    <div className={cn("flex flex-row gap-2 md:gap-3", className)} {...props} />
+  );
 }
 AlertDialogFooter.displayName = "AlertDialogFooter";
 
@@ -75,7 +77,10 @@ const AlertDialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={cn("text-lg font-semibold", className)}
+    className={cn(
+      "text-center text-base font-semibold break-words whitespace-pre-wrap md:text-lg",
+      className
+    )}
     {...props}
   />
 ));
@@ -85,29 +90,55 @@ const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Action
-    ref={ref}
-    className={cn(
-      buttonVariants({ variant: "default", color: "primary" }),
-      className
-    )}
-    {...props}
-  />
+  <AlertDialogPrimitive.Action ref={ref} className="flex-1">
+    <ResponsiveButton
+      asChild
+      type="button"
+      responsiveButtons={{
+        lg: { buttonSize: "lg" },
+        md: {
+          buttonSize: "sm",
+          className: "justify-center items-center !flex hidden lg:hidden",
+        },
+        sm: {
+          buttonSize: "sm",
+          className: "justify-center items-center !flex md:hidden",
+        },
+      }}
+      {...props}
+    />
+  </AlertDialogPrimitive.Action>
 ));
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
 
 const AlertDialogCancel = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
-  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel> & {
+    hasNoAction?: boolean;
+  }
+>(({ className, hasNoAction, ...props }, ref) => (
   <AlertDialogPrimitive.Cancel
     ref={ref}
-    className={cn(
-      buttonVariants({ variant: "default", color: "grey" }),
-      className
-    )}
-    {...props}
-  />
+    className={hasNoAction ? "flex-1" : "flex-[0.6]"}
+  >
+    <ResponsiveButton
+      asChild
+      color="grey"
+      type="button"
+      responsiveButtons={{
+        lg: { buttonSize: "lg" },
+        md: {
+          buttonSize: "sm",
+          className: "justify-center items-center !flex hidden lg:hidden",
+        },
+        sm: {
+          buttonSize: "sm",
+          className: "justify-center items-center !flex md:hidden",
+        },
+      }}
+      {...props}
+    />
+  </AlertDialogPrimitive.Cancel>
 ));
 AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
 
