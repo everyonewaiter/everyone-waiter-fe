@@ -127,6 +127,7 @@ function ModalButtonGroups({ cancelBtn, saveBtn }: ButtonGroupProps) {
   return (
     <div className="flex flex-row items-center justify-between gap-2 lg:gap-3">
       <ResponsiveButton
+        type="button"
         color="grey"
         responsiveButtons={{
           lg: {
@@ -142,6 +143,7 @@ function ModalButtonGroups({ cancelBtn, saveBtn }: ButtonGroupProps) {
         {cancelBtn.text}
       </ResponsiveButton>
       <ResponsiveButton
+        type="submit"
         color="primary"
         responsiveButtons={{
           lg: {
