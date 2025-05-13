@@ -2,19 +2,19 @@ import { IResWithPagination } from "@/types/common";
 import { authInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
+interface Ids {
+  storeId: bigint;
+  deviceId: bigint;
+}
+
 export const getDevices = async ({
   storeId,
-}: {
-  storeId: bigint;
-}): Promise<IResWithPagination<IDevice[]>> => {
+}: Pick<Ids, "storeId">): Promise<IResWithPagination<IDevice[]>> => {
   const response = await instance.get(`${API_PATH.stores}/${storeId}/devices`);
   return response.data;
 };
 
-export const getDetailDevice = async ({
-  storeId,
-  deviceId,
-}: Record<string, bigint>) => {
+export const getDetailDevice = async ({ storeId, deviceId }: Ids) => {
   const response = await instance.get(
     `${API_PATH.stores}/${storeId}/devices/${deviceId}`
   );
@@ -24,13 +24,11 @@ export const getDetailDevice = async ({
 export const updateDevice = async ({
   storeId,
   deviceId,
-  body,
-}: Record<string, bigint> & {
-  body: Pick<IDevice, "name" | "purpose" | "paymentType"> & {
-    tableNo: number;
-    ksnetDeviceNo: string;
-  };
-}) => {
+  ...body
+}: Pick<IDevice, "name" | "purpose" | "paymentType"> & {
+  tableNo: number;
+  ksnetDeviceNo: string;
+} & Ids) => {
   const response = await instance.put(
     `${API_PATH.stores}/${storeId}/devices/${deviceId}`,
     body
@@ -38,10 +36,7 @@ export const updateDevice = async ({
   return response.data;
 };
 
-export const deleteDevice = async ({
-  storeId,
-  deviceId,
-}: Record<string, bigint>) => {
+export const deleteDevice = async ({ storeId, deviceId }: Ids) => {
   const response = await instance.delete(
     `${API_PATH.stores}/${storeId}/devices/${deviceId}`
   );
@@ -51,11 +46,11 @@ export const deleteDevice = async ({
 export const addDevice = async ({
   storeId,
   ...body
-}: Omit<IDevice, "deviceId" | "state" | "updatedAt"> & {
+}: Omit<IDevice, "state" | "updatedAt"> & {
   tableNo: number;
   ksnetDeviceNo: string;
   phoneNumber: string;
-} & {}): Promise<{ deviceId: bigint; secretKey: string }> => {
+} & Ids): Promise<{ deviceId: bigint; secretKey: string }> => {
   const response = await authInstance.post(
     `${API_PATH.stores}/${storeId}/devices`,
     body

@@ -23,11 +23,13 @@ import { useState } from "react";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
 import { Button } from "@/components/common/Button";
+import useStoreId from "@/hooks/store/useStoreId";
 import renderIcon from "../(main)/_components/renderIcons";
 import DeviceInfoModal from "./_components/DeviceInfoModal";
 import useTableCheck from "./_hooks/useTableCheck";
 import useDevice from "./_hooks/useDevice";
 import QueryProviders from "../query-providers";
+import getQueryClient from "../get-query-client";
 
 const itemWidth = {
   이름: "flex flex-1",
@@ -38,15 +40,17 @@ const itemWidth = {
 };
 
 export default function Device() {
+  const queryClient = getQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
     getDevicesQuery: { data },
-    // mutateDeleteDevice,
+    mutateDeleteDevice,
   } = useDevice();
+  const { storeId } = useStoreId();
 
   const { checkedItems, allChecked, handleCheckAll, handleCheckItem } =
-    useTableCheck(data?.content, "deviceId");
+    useTableCheck(data?.content!, "deviceId");
 
   const modalOverlay = useOverlay();
   const alertOverlay = useOverlay();
@@ -67,7 +71,19 @@ export default function Device() {
     alertOverlay.open(() => (
       <Alert
         onClose={alertOverlay.close}
-        onAction={() => {}}
+        onAction={() => {
+          Object.keys(checkedItems).forEach((deviceId) =>
+            mutateDeleteDevice.mutate(
+              { deviceId: BigInt(deviceId), storeId },
+              {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({ queryKey: ["get-devices"] });
+                },
+              }
+            )
+          );
+          alertOverlay.close();
+        }}
         buttonText="삭제"
         hasNoAction={!length}
       >
