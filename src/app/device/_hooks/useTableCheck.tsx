@@ -1,9 +1,6 @@
 import { useState } from "react";
 
-export default function useTableCheck<T extends { deviceId: string }>(
-  list: T[],
-  keyField: keyof T
-) {
+export default function useTableCheck<T>(list: T[], keyField: keyof T) {
   const [checkedItems, setCheckedItems] = useState<Record<string, T>>({});
 
   const allChecked =
