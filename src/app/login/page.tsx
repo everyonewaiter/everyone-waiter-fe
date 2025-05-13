@@ -58,7 +58,7 @@ export default function Login() {
 
   const { mutate } = useMutation({ mutationFn: login });
 
-  const submitHandler = (formData: Pick<TAccount, "email" | "password">) => {
+  const submitHandler = (formData: TypeLogin) => {
     setIsSubmitDisabled(true);
 
     mutate(formData, {

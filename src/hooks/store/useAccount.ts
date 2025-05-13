@@ -3,15 +3,14 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { produce } from "immer";
 
-type Item = Omit<TProfile, "accountId"> & { accountId: string };
+type Item = Omit<UserProfile, "accountId"> & { accountId: string };
 
 interface StoreState extends Item {
   isLoggedIn: boolean;
   hasAcceptedStore: boolean;
-
   setProfile: (value: Item) => void;
   setIsLoggedIn: (value: boolean) => void;
-  setPermission: (permission: TPermission) => void;
+  setPermission: (permission: Permission) => void;
 }
 
 export const useAccount = create<StoreState>()(

@@ -1,4 +1,4 @@
-import { TypeChildren } from "@/types/common";
+import { TypeChildren } from "@/types";
 import { Suspense } from "react";
 
 export default function Layout({ children }: TypeChildren) {

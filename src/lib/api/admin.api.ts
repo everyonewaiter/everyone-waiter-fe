@@ -1,10 +1,10 @@
-import { IResWithPagination } from "@/types/common";
+import { IResWithPagination } from "@/types";
 import { instance } from "../axios/instance";
 import API_PATH from "./paths";
 
 interface GetAccountParams {
   searchEmail?: string;
-  searchPermission?: TPermission | "";
+  searchPermission?: Permission | "";
   searchState?: TStatus | "";
   page?: number;
   size?: number;
@@ -42,7 +42,7 @@ export const updateDetailAccount = async ({
   state,
 }: {
   accountId: bigint;
-  permission: TPermission;
+  permission: Permission;
   state: TStatus;
 }) => {
   const response = await instance.put(
