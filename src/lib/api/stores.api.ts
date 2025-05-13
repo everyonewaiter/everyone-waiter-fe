@@ -1,4 +1,4 @@
-import { IResWithPagination } from "@/types/common";
+import { IResWithPagination } from "@/types";
 import { formInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 

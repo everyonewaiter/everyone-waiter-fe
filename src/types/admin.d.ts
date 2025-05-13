@@ -3,7 +3,7 @@ type AdminAccount = {
   createdAt: string;
   email: string;
   hasStore: "Y" | "N";
-  permission: TPermission;
+  permission: Permission;
   state: TStatus;
   updatedAt: string;
 };

@@ -45,7 +45,7 @@ export default function UsersTableRow({ openModal, ...item }: IProps) {
             item.permission === "ADMIN" ? "!bg-[#FFB70018] !text-[#FFB700]" : ""
           )}
         >
-          {PermissionObj[item.permission as TPermission]}
+          {PermissionObj[item.permission as Permission]}
         </ResponsiveButton>
       </TableCell>
       <TableCell className="flex-1">-</TableCell>

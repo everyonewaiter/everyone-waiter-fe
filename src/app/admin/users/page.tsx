@@ -46,7 +46,7 @@ export default function Users() {
     debouncedValue,
     permissionObj[
       active.permission as keyof typeof permissionObj
-    ] as TPermission,
+    ] as Permission,
     stateObj[active.status as keyof typeof stateObj] as TStatus,
     currentPage
   );

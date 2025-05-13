@@ -1,4 +1,4 @@
-export const PermissionObj: Record<TPermission, string> = {
+export const PermissionObj: Record<Permission, string> = {
   ADMIN: "관리자",
   USER: "사용자",
   OWNER: "사장님",

@@ -43,9 +43,9 @@ export default function Login() {
   useEffect(() => {
     if (isLoggedIn && profileData) {
       setProfile({
-        accountId: (profileData as TProfile)?.accountId?.toString(),
-        email: profileData?.email!,
-        permission: profileData?.permission!,
+        accountId: profileData.accountId,
+        email: profileData.email,
+        permission: profileData.permission,
       });
       if (profileData?.permission === "ADMIN") {
         setMenu(ADMIN_MENU);
@@ -58,7 +58,7 @@ export default function Login() {
 
   const { mutate } = useMutation({ mutationFn: login });
 
-  const submitHandler = (formData: Pick<TAccount, "email" | "password">) => {
+  const submitHandler = (formData: TypeLogin) => {
     setIsSubmitDisabled(true);
 
     mutate(formData, {

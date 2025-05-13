@@ -1,4 +1,4 @@
-import { TypeChildren } from "@/types/common";
+import { TypeChildren } from "@/types";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
