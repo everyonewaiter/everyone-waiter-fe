@@ -5,6 +5,9 @@ import { stateObj } from "@/constants/permissionObj";
 import transformDate from "@/lib/formatting/transformDate";
 import { TValueOf } from "@/types/common";
 import { useForm } from "react-hook-form";
+import Label from "@/components/common/Label";
+import Dropdown from "@/components/common/Dropdown";
+import useDevice from "../_hooks/useDevice";
 
 const paymentObj = {
   BEFORE: "선결제",
@@ -12,8 +15,8 @@ const paymentObj = {
 };
 
 const devicePermissionObj = {
-  TABLE: "테이블",
   HALL: "홀",
+  POS: "포스",
   WAITING: "웨이팅",
 } as const;
 
@@ -27,39 +30,29 @@ interface FormType {
   deviceNumber: string;
 }
 
-const dummy = {
-  deviceName: "테이블",
-  createdAt: "2025-05-05 09:00:00",
-  status: "ACTIVE",
-  permission: "TABLE",
-  tableNo: 1,
-  payment: "BEFORE",
-  deviceNumber: "12345a",
-};
-
 interface IProps {
-  deviceId: string;
+  deviceId: bigint;
   close: () => void;
 }
 
-export default function DeviceInfoModal({ close }: IProps) {
+export default function DeviceInfoModal({ close, deviceId }: IProps) {
+  const { useGetDeviceDetailQuery } = useDevice();
+  const { data } = useGetDeviceDetailQuery(deviceId);
+
   const form = useForm<FormType>({
     defaultValues: {
-      deviceName: dummy.deviceName,
-      createdAt: transformDate(dummy.createdAt),
-      status: stateObj[dummy.status as TStatus],
-      permission:
-        devicePermissionObj[
-          dummy.permission as keyof typeof devicePermissionObj
-        ],
-      tableNo: dummy.tableNo,
-      payment: paymentObj[dummy.payment as keyof typeof paymentObj],
-      deviceNumber: dummy.deviceNumber,
+      deviceName: data.name,
+      createdAt: transformDate(data.createdAt),
+      status: stateObj[data.state as TStatus],
+      permission: data.purpose,
+      tableNo: data.tableNo,
+      payment: paymentObj[data.payment as keyof typeof paymentObj],
+      deviceNumber: data.deviceNumber,
     },
   });
 
   return (
-    <ModalWithTitle onClose={close} title="기기 정보">
+    <ModalWithTitle onClose={close} title="기기 정보" preventOutsideClose>
       <ModalWithTitle.Layout className="mb-6 !h-[333px] lg:!h-auto">
         <Form {...form}>
           <form className="flex flex-col gap-4">
@@ -78,8 +71,29 @@ export default function DeviceInfoModal({ close }: IProps) {
               disabled
               labelDisabled
             />
-            <LabeledInput form={form} name="permission" label="권한" />
-            {dummy.permission === "TABLE" && (
+            <div className="flex flex-col gap-2">
+              <Label>권한</Label>
+              <Dropdown
+                data={Object.keys(devicePermissionObj)}
+                active={form.watch("permission")}
+                setActive={(value) => {
+                  const eng =
+                    devicePermissionObj[
+                      value as keyof typeof devicePermissionObj
+                    ];
+
+                  form.setValue("permission", eng);
+                }}
+                defaultText={
+                  devicePermissionObj[
+                    data.purpose as keyof typeof devicePermissionObj
+                  ]
+                }
+                triggerClassName="w-full h-10 lg:h-12 rounded-[8px] lg:rounded-[12px] text-sm lg:text-[15px] md:font-regular"
+                className="md:!w-[348px] lg:!w-[476px]"
+              />
+            </div>
+            {data.permission === "HALL" && (
               <>
                 <LabeledInput form={form} name="tableNo" label="테이블 번호" />
                 <LabeledInput form={form} name="payment" label="결제 방식" />

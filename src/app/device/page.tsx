@@ -26,6 +26,8 @@ import { Button } from "@/components/common/Button";
 import renderIcon from "../(main)/_components/renderIcons";
 import DeviceInfoModal from "./_components/DeviceInfoModal";
 import useTableCheck from "./_hooks/useTableCheck";
+import useDevice from "./_hooks/useDevice";
+import QueryProviders from "../query-providers";
 
 const itemWidth = {
   이름: "flex flex-1",
@@ -35,37 +37,25 @@ const itemWidth = {
   "등록 일시": "flex flex-1",
 };
 
-const dummy = [
-  {
-    deviceId: "POS-1234",
-    name: "테스트1",
-    permission: "웨이팅",
-    payment: null,
-    status: "ACTIVE",
-    createdAt: "2024-05-22 09:00:00",
-  },
-  {
-    deviceId: "POS-1235",
-    name: "테스트2",
-    permission: "홀",
-    payment: "선결제",
-    status: "INACTIVE",
-    createdAt: "2024-05-22 08:00:00",
-  },
-];
-
 export default function Device() {
   const [currentPage, setCurrentPage] = useState(1);
 
+  const {
+    getDevicesQuery: { data },
+    // mutateDeleteDevice,
+  } = useDevice();
+
   const { checkedItems, allChecked, handleCheckAll, handleCheckItem } =
-    useTableCheck(dummy, "deviceId");
+    useTableCheck(data?.content, "deviceId");
 
   const modalOverlay = useOverlay();
   const alertOverlay = useOverlay();
 
-  const handleModalOpen = (deviceId: string) => {
+  const handleModalOpen = (deviceId: bigint) => {
     modalOverlay.open(() => (
-      <DeviceInfoModal close={modalOverlay.close} deviceId={deviceId} />
+      <QueryProviders>
+        <DeviceInfoModal close={modalOverlay.close} deviceId={deviceId} />
+      </QueryProviders>
     ));
   };
 
@@ -134,9 +124,9 @@ export default function Device() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {dummy?.map((item) => (
+            {data?.content?.map((item) => (
               <TableRow
-                key={item.deviceId}
+                key={item.deviceId.toString()}
                 onClick={() => handleModalOpen(item.deviceId)}
               >
                 <TableCell
@@ -144,7 +134,7 @@ export default function Device() {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Checkbox
-                    checked={!!checkedItems[item.deviceId]}
+                    checked={!!checkedItems[item.deviceId.toString()]}
                     onCheckedChange={(checked) =>
                       handleCheckItem(item, !!checked)
                     }
@@ -168,18 +158,18 @@ export default function Device() {
                         },
                       }}
                     >
-                      {item.permission}
+                      {item.purpose}
                     </ResponsiveButton>
                   </div>
                 </TableCell>
                 <TableCell className={itemWidth["결제 방식"]}>
-                  {item.payment || "-"}
+                  {item.paymentType || "-"}
                 </TableCell>
                 <TableCell className={itemWidth["상태"]}>
-                  {stateObj[item.status as keyof typeof stateObj]}
+                  {stateObj[item.state as keyof typeof stateObj]}
                 </TableCell>
                 <TableCell className={itemWidth["등록 일시"]}>
-                  {transformDate(item.createdAt)}
+                  {transformDate(item.updatedAt)}
                 </TableCell>
               </TableRow>
             ))}
@@ -187,11 +177,11 @@ export default function Device() {
         </Table>
       </div>
       <div className="flex flex-col gap-5 md:hidden">
-        {dummy.map((item, index) => (
+        {data?.content.map((item, index) => (
           <div className="flex flex-col gap-2" key={item.deviceId}>
             <div className="text-gray-0 flex flex-row items-center gap-[10px] pl-5 text-lg font-semibold">
               <Checkbox
-                checked={!!checkedItems[item.deviceId]}
+                checked={!!checkedItems[item.deviceId.toString()]}
                 onCheckedChange={(checked) => handleCheckItem(item, !!checked)}
               />
               <span>{index + 1}</span>
@@ -214,22 +204,22 @@ export default function Device() {
                       color="outline-primary"
                       className="font-regular rounded-[24px] px-3 py-1 text-xs"
                     >
-                      {item.permission}
+                      {stateObj[item.state as keyof typeof stateObj]}
                     </Button>
                   </MobileTableCell>
                 </MobileTableRow>
                 <MobileTableRow>
                   <MobileTableHead>권한</MobileTableHead>
-                  <MobileTableCell>{item.permission}</MobileTableCell>
+                  <MobileTableCell>{item.purpose}</MobileTableCell>
                 </MobileTableRow>
                 <MobileTableRow>
                   <MobileTableHead>결제 방식</MobileTableHead>
-                  <MobileTableCell>{item.payment}</MobileTableCell>
+                  <MobileTableCell>{item.paymentType}</MobileTableCell>
                 </MobileTableRow>
                 <MobileTableRow>
                   <MobileTableHead>등록 일시</MobileTableHead>
                   <MobileTableCell>
-                    {transformDate(item.createdAt)}
+                    {transformDate(item.updatedAt)}
                   </MobileTableCell>
                 </MobileTableRow>
               </TableBody>
