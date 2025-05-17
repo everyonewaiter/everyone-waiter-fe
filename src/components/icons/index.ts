@@ -1,6 +1,6 @@
 import HomeIcon from "@public/icons/home-04.svg";
 import ShopIcon from "@public/icons/shop.svg";
-import CategoryIcon from "@public/icons/category-2.svg";
+import MenuIcon from "@public/icons/category-2.svg";
 import Subscribeicon from "@public/icons/subscribe.svg";
 import SettingIcon from "@public/icons/settings.svg";
 import PosIcon from "@public/icons/pos.svg";
@@ -13,7 +13,7 @@ import TrashIcon from "@public/icons/trash-02.svg";
 const ICON_MAP = {
   home: HomeIcon,
   shop: ShopIcon,
-  category: CategoryIcon,
+  menu: MenuIcon,
   subscribe: Subscribeicon,
   setting: SettingIcon,
   pos: PosIcon,

@@ -1,11 +1,13 @@
-import { useAccount } from "@/hooks/store/useAccount";
 import { getAccount, login } from "@/lib/api/auth.api";
 import { setCookie } from "@/lib/cookies";
+import useAuthStore from "@/stores/useAuthStore";
+import { ErrorResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
 export default function useLogin() {
-  const { setProfile } = useAccount();
+  const { saveUser } = useAuthStore();
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -22,14 +24,12 @@ export default function useLogin() {
         queryFn: getAccount,
       });
       // 3. 유저 정보 저장
-      const { accountId, email, permission } = profileData;
-      setProfile({
-        accountId,
-        email,
-        permission,
-      });
+      saveUser(profileData);
       // 4. 리다이렉트
       router.push("/");
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      console.log(error);
     },
   });
 }
