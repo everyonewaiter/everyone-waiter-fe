@@ -13,7 +13,7 @@ import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
-import useStores from "@/hooks/useStores";
+import useStores from "@/app/stores/_hooks/useStores";
 import dynamic from "next/dynamic";
 
 const UploadPhoto = dynamic(() => import("./UploadPhoto"), {

@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 import Sidebar from "@/app/(main)/_components/Sidebar";
 import { usePathname } from "next/navigation";
 import cn from "@/lib/utils";
-import useStores from "@/hooks/useStores";
+import useStores from "@/app/stores/_hooks/useStores";
 import QueryProviders from "@/app/query-providers";
 import Header from "./Header";
 import LayoutWithHeader from "./LayoutWithHeader";

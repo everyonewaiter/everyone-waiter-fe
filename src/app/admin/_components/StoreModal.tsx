@@ -6,7 +6,7 @@ import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import useAdmin from "@/hooks/useAdmin";
+import useAdmin from "@/app/admin/_hooks/useAdmin";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

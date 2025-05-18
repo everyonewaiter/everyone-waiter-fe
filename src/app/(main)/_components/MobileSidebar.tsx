@@ -6,7 +6,7 @@ import useOutsideClick from "@/hooks/useOutSideClick";
 import { useRef } from "react";
 import { X as CloseIcon } from "lucide-react";
 import Image from "next/image";
-import useStores from "@/hooks/useStores";
+import useStores from "@/app/stores/_hooks/useStores";
 import { useAccount } from "@/hooks/store/useAccount";
 import MobileSidebarSection from "./MobileSidebarSection";
 

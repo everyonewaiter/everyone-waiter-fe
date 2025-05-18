@@ -8,7 +8,7 @@ import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { PermissionObj, stateObj } from "@/constants/permissionObj";
-import useAdmin from "@/hooks/useAdmin";
+import useAdmin from "@/app/admin/_hooks/useAdmin";
 import transformDate from "@/lib/formatting/transformDate";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";

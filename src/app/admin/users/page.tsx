@@ -5,7 +5,7 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import Searchbar from "@/components/Searchbar";
 import SectionHeader from "@/components/SectionHeader";
 import { useEffect, useState } from "react";
-import useAdmin from "@/hooks/useAdmin";
+import useAdmin from "@/app/admin/_hooks/useAdmin";
 import useDebounce from "@/hooks/useDebounce";
 import DropdownGroup from "./_components/DropdownGroup";
 import UsersTable from "./_components/UsersTable";
