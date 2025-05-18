@@ -1,6 +1,6 @@
 export const USER_MENU: Menu[] = [
   {
-    icon: "home",
+    icon: "home-04",
     text: "HOME",
     url: "/stores",
   },
@@ -10,7 +10,7 @@ export const USER_MENU: Menu[] = [
     url: "/store/info",
   },
   {
-    icon: "category",
+    icon: "category-02",
     text: "메뉴 관리",
     url: "/menu",
   },
@@ -30,7 +30,7 @@ export const USER_MENU: Menu[] = [
     url: "/pos",
   },
   {
-    icon: "setting",
+    icon: "settings",
     text: "설정",
     url: "/settings",
   },
@@ -38,7 +38,7 @@ export const USER_MENU: Menu[] = [
 
 export const ADMIN_MENU: Menu[] = [
   {
-    icon: "home",
+    icon: "home-04",
     text: "HOME",
     url: "/",
   },
@@ -68,7 +68,7 @@ export const ADMIN_MENU: Menu[] = [
     url: "/admin/posts",
   },
   {
-    icon: "setting",
+    icon: "settings",
     text: "설정",
     url: "/admin/settings",
   },
