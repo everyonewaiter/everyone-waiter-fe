@@ -63,6 +63,20 @@ export default function Device() {
     ));
   };
 
+  const handleDeleteDevice = () => {
+    const deletePromises = Object.keys(checkedItems).map((deviceId) =>
+      mutateDeleteDevice.mutateAsync({
+        deviceId: BigInt(deviceId),
+        storeId,
+      })
+    );
+
+    Promise.all(deletePromises).then(() => {
+      queryClient.invalidateQueries({ queryKey: ["get-devices"] });
+    });
+    alertOverlay.close();
+  };
+
   const handleAlertOpen = () => {
     const checkedKeys = Object.keys(checkedItems);
     const { length } = checkedKeys;
@@ -71,19 +85,7 @@ export default function Device() {
     alertOverlay.open(() => (
       <Alert
         onClose={alertOverlay.close}
-        onAction={() => {
-          Object.keys(checkedItems).forEach((deviceId) =>
-            mutateDeleteDevice.mutate(
-              { deviceId: BigInt(deviceId), storeId },
-              {
-                onSuccess: () => {
-                  queryClient.invalidateQueries({ queryKey: ["get-devices"] });
-                },
-              }
-            )
-          );
-          alertOverlay.close();
-        }}
+        onAction={handleDeleteDevice}
         buttonText="삭제"
         hasNoAction={!length}
       >
