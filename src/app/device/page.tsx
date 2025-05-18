@@ -23,9 +23,9 @@ import { useState } from "react";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
 import { Button } from "@/components/common/Button";
-import renderIcon from "../(main)/_components/renderIcons";
 import DeviceInfoModal from "./_components/DeviceInfoModal";
 import useTableCheck from "./_hooks/useTableCheck";
+import Icon from "../../components/common/Icon";
 
 const itemWidth = {
   이름: "flex flex-1",
@@ -102,12 +102,12 @@ export default function Device() {
         className="mt-4 mb-4 flex w-full flex-row items-center justify-end gap-1 pr-5 md:mb-0 md:pr-0 lg:mt-6 lg:mb-[-10px]"
         onClick={handleAlertOpen}
       >
-        {renderIcon({
-          iconKey: "trash",
-          isActive: true,
-          size: 20,
-          className: "lg:w-5 lg:h-5 w-[15px] h-[15gpx]",
-        })}
+        <Icon
+          iconKey="trash-02"
+          isActive
+          size={20}
+          className="h-[15gpx] w-[15px] lg:h-5 lg:w-5"
+        />
         <span className="text-status-error text-sm lg:text-lg">삭제</span>
       </button>
       <div className="hidden min-h-[calc(100dvh-420px)] w-full overflow-y-scroll md:block">
