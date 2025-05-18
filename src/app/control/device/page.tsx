@@ -1,13 +1,16 @@
-"use client";
-
 import Image from "next/image";
-import { useState } from "react";
 import cn from "@/lib/utils";
-import AddDeviceStep1 from "../_components/AddDeviceStep1";
-import AddDeviceStep2 from "../_components/AddDeviceStep2";
+import AddDeviceStep1 from "./_components/AddDeviceStep1";
+import AddDeviceStep2 from "./_components/AddDeviceStep2";
+import useDeviceUI from "./_hooks/useDeviceUi";
 
 export default function Device() {
-  const [step, setStep] = useState(0);
+  const { step, setStep, storeId, setStoreId, phoneNumber, setPhoneNumber } =
+    useDeviceUI();
+
+  // const { mutate: submitDevice } = useMutation({
+  //   mutationFn: addDevice,
+  // });
 
   return (
     <div
@@ -33,8 +36,18 @@ export default function Device() {
         </div>
       </div>
       <div className="mt-8 md:mt-6 lg:mt-12">
-        {step === 0 && <AddDeviceStep1 onNextStep={() => setStep(step + 1)} />}
-        {step === 1 && <AddDeviceStep2 />}
+        {step === 0 && (
+          <AddDeviceStep1
+            onNextStep={(_storeId: bigint, _phoneNumber: string) => {
+              setStoreId(_storeId);
+              setPhoneNumber(_phoneNumber);
+              setStep(step + 1);
+            }}
+          />
+        )}
+        {step === 1 && (
+          <AddDeviceStep2 storeId={storeId} phoneNumber={phoneNumber} />
+        )}
       </div>
     </div>
   );
