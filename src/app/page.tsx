@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAccount } from "@/hooks/store/useAccount";
 import GuideComponent from "@/components/GuideComponent";
-import useStores from "@/hooks/useStores";
+import useStores from "@/app/stores/_hooks/useStores";
 import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function Home() {

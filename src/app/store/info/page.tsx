@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import EditIcon from "@public/icons/edit-contained.svg";
 import { Plus } from "lucide-react";
 import useStoreId from "@/hooks/store/useStoreId";
-import useStores from "@/hooks/useStores";
+import useStores from "@/app/stores/_hooks/useStores";
 
 export default function StoreInfo() {
   const ref = useRef<HTMLDivElement>(null);

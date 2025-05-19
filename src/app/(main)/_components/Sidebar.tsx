@@ -2,7 +2,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import Image from "next/image";
-import useStores from "@/hooks/useStores";
+import useStores from "@/app/stores/_hooks/useStores";
 import { useAccount } from "@/hooks/store/useAccount";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "@/hooks/store/useSidebar";
