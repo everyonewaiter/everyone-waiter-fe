@@ -6,11 +6,17 @@ import { useStore } from "zustand";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ICON_MAP from "@/components/icons";
-import { useState } from "react";
-import { Button } from "@/components/common/NewButton";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { getStoreList } from "@/lib/api/stores.api";
 import { useQuery } from "@tanstack/react-query";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/common/select";
 
 type IconKey = keyof typeof ICON_MAP;
 
@@ -51,7 +57,7 @@ export default function NewSidebar() {
   const { user } = useStore(useAuthStore, (state) => state);
   const permission = user?.permission || "USER";
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(true);
+  const [selectedStoreId, setSelectedStoreId] = useState<string>("");
 
   // OWNER인 경우에만 매장 목록 조회
   const { data: storeList } = useQuery({
@@ -59,6 +65,13 @@ export default function NewSidebar() {
     queryFn: getStoreList,
     enabled: permission === "OWNER",
   });
+
+  // storeList가 있을 때 첫 번째 매장 ID를 기본값으로 설정
+  useEffect(() => {
+    if (storeList?.stores.length) {
+      setSelectedStoreId(storeList.stores[0].storeId);
+    }
+  }, [storeList]);
 
   const menuItems =
     permission === "OWNER" && storeList?.stores.length === 0
@@ -81,19 +94,22 @@ export default function NewSidebar() {
         </div>
         <nav>
           {permission === "OWNER" ? (
-            <Button
-              variant="primary"
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              className="flex w-full items-center justify-between rounded-xl py-[12.5px] text-[15px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
-            >
-              모두의 웨이터
-              {isOpen ? (
-                <ChevronDown className="size-6" />
-              ) : (
-                <ChevronUp className="size-6" />
-              )}
-            </Button>
+            <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
+              <SelectTrigger className="bg-primary flex w-full items-center justify-between rounded-xl text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]">
+                <SelectValue placeholder="매장 선택">
+                  {storeList?.stores.find(
+                    (store) => store.storeId === selectedStoreId
+                  )?.name || "매장 선택"}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {storeList?.stores.map((store) => (
+                  <SelectItem key={store.storeId} value={store.storeId}>
+                    {store.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           ) : (
             <div className="bg-primary flex w-full items-center justify-between rounded-xl py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5">
               <h1 className="text-[15px] font-bold text-white lg:text-[18px]">
@@ -101,38 +117,41 @@ export default function NewSidebar() {
               </h1>
             </div>
           )}
-          {isOpen && (
-            <ul className="relative mt-2">
-              {menuItems.length > 1 && (
-                <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
-              )}
-              {menuItems.map((item) => {
-                const isActive = pathname === item.href;
-                const IconComponent = ICON_MAP[item.icon];
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={permission === "OWNER" ? item.href : item.href}
-                      className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors ${
-                        isActive ? "text-primary" : "text-gray-300"
+
+          <ul className="relative mt-2">
+            {menuItems.length > 1 && (
+              <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
+            )}
+            {menuItems.map((item) => {
+              const isActive = pathname === item.href;
+              const IconComponent = ICON_MAP[item.icon];
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={
+                      permission === "OWNER" && item.href !== "/"
+                        ? `/${selectedStoreId}${item.href}`
+                        : item.href
+                    }
+                    className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors ${
+                      isActive ? "text-primary" : "text-gray-300"
+                    }`}
+                  >
+                    {/* 빨간 점 (활성 메뉴만) */}
+                    <div
+                      className={`z-1 size-2 rounded-full ${
+                        isActive ? "bg-primary" : "bg-gray-600"
                       }`}
-                    >
-                      {/* 빨간 점 (활성 메뉴만) */}
-                      <div
-                        className={`z-1 size-2 rounded-full ${
-                          isActive ? "bg-primary" : "bg-gray-600"
-                        }`}
-                      />
-                      <IconComponent
-                        className={`size-6 ${isActive ? "text-primary" : "text-gray-300"}`}
-                      />
-                      <span className="font-medium">{item.label}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                    />
+                    <IconComponent
+                      className={`size-6 ${isActive ? "text-primary" : "text-gray-300"}`}
+                    />
+                    <span className="font-medium">{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
       </aside>
     </div>
