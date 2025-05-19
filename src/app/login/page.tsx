@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 
-import useLogin from "@/lib/mutation/auth/useLogin";
 import SignupLayout from "../signup/layout";
+import useLogin from "./_hooks/useLogin";
 
 export default function Login() {
   const { mutate: login } = useLogin();

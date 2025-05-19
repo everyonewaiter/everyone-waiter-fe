@@ -9,6 +9,8 @@ import ICON_MAP from "@/components/icons";
 import { useState } from "react";
 import { Button } from "@/components/common/NewButton";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { getStoreList } from "@/lib/api/stores.api";
+import { useQuery } from "@tanstack/react-query";
 
 type IconKey = keyof typeof ICON_MAP;
 
@@ -30,14 +32,20 @@ const MENU_ITEMS: Record<Permission, MenuItem[]> = {
   ],
   OWNER: [
     { icon: "home", label: "홈", href: "/" },
-    { icon: "shop", label: "매장 정보", href: "/owner/store" },
-    { icon: "menu", label: "메뉴 관리", href: "/owner/menu" },
-    { icon: "subscribe", label: "구독 설정", href: "/owner/subscription" },
-    { icon: "pos", label: "POS", href: "/owner/pos" },
-    { icon: "setting", label: "설정", href: "/owner/settings" },
+    { icon: "shop", label: "매장 정보", href: "/store" },
+    { icon: "menu", label: "메뉴 관리", href: "/menu" },
+    { icon: "subscribe", label: "구독 설정", href: "/subscription" },
+    { icon: "pos", label: "POS", href: "/pos" },
+    { icon: "setting", label: "설정", href: "/settings" },
   ],
   USER: [{ icon: "home", label: "홈", href: "/" }],
 };
+
+// 매장이 없는 OWNER 메뉴
+const OWNER_WITHOUT_STORE_MENU: MenuItem[] = [
+  { icon: "shop", label: "매장 정보", href: "/store" },
+  { icon: "subscribe", label: "구독 설정", href: "/subscription" },
+];
 
 export default function NewSidebar() {
   const { user } = useStore(useAuthStore, (state) => state);
@@ -45,11 +53,21 @@ export default function NewSidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(true);
 
-  const menuItems = MENU_ITEMS[permission];
+  // OWNER인 경우에만 매장 목록 조회
+  const { data: storeList } = useQuery({
+    queryKey: ["store-list"],
+    queryFn: getStoreList,
+    enabled: permission === "OWNER",
+  });
+
+  const menuItems =
+    permission === "OWNER" && storeList?.stores.length === 0
+      ? OWNER_WITHOUT_STORE_MENU
+      : MENU_ITEMS[permission];
 
   return (
     <div className="hidden py-8 pl-[60px] md:block">
-      <aside className="flex h-full flex-col rounded-[28px] bg-white pt-8 md:w-[186px] md:px-3 lg:w-[318px] lg:px-5">
+      <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-8 md:w-[186px] lg:w-[318px] lg:px-5">
         <div className="mb-6 flex items-center justify-center gap-[18px]">
           <Image
             src="/icons/logo/logo.svg"
@@ -57,24 +75,32 @@ export default function NewSidebar() {
             width={40}
             height={40}
           />
-          <h1 className="font-hakgyo text-primary md:text-[16px] lg:text-2xl">
+          <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
             모두의 웨이터
           </h1>
         </div>
         <nav>
-          <Button
-            variant="primary"
-            type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex w-full items-center justify-between rounded-xl"
-          >
-            모두의 웨이터
-            {isOpen ? (
-              <ChevronDown className="size-6" />
-            ) : (
-              <ChevronUp className="size-6" />
-            )}
-          </Button>
+          {permission === "OWNER" ? (
+            <Button
+              variant="primary"
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="flex w-full items-center justify-between rounded-xl py-[12.5px] text-[15px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
+            >
+              모두의 웨이터
+              {isOpen ? (
+                <ChevronDown className="size-6" />
+              ) : (
+                <ChevronUp className="size-6" />
+              )}
+            </Button>
+          ) : (
+            <div className="bg-primary flex w-full items-center justify-between rounded-xl py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5">
+              <h1 className="text-[15px] font-bold text-white lg:text-[18px]">
+                관리자
+              </h1>
+            </div>
+          )}
           {isOpen && (
             <ul className="relative mt-2">
               {menuItems.length > 1 && (
@@ -86,7 +112,7 @@ export default function NewSidebar() {
                 return (
                   <li key={item.href}>
                     <Link
-                      href={item.href}
+                      href={permission === "OWNER" ? item.href : item.href}
                       className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors ${
                         isActive ? "text-primary" : "text-gray-300"
                       }`}
