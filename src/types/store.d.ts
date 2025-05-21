@@ -50,3 +50,14 @@ interface IStoreInfoDetail extends Omit<StoreForm, "file"> {
   createdAt: string;
   updatedAt: string;
 }
+
+// 매장 목록
+
+interface Store {
+  storeId: string;
+  name: string;
+}
+
+interface StoreList {
+  stores: Store[];
+}

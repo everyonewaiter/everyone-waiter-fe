@@ -1,4 +1,4 @@
-import { IResWithPagination } from "@/types/common";
+import { IResWithPagination } from "@/types";
 import { formInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
@@ -52,11 +52,13 @@ export const reapplyRegistrationWithImage = async ({
   return response.data;
 };
 
-export const getStoreList = async () => {
+// 매장 목록
+export const getStoreList = async (): Promise<StoreList> => {
   const response = await instance.get(`${API_PATH.stores}`);
   return response.data;
 };
 
+// 매장 상세 정보
 export const getStoreInfoDetail = async (
   storeId: bigint
 ): Promise<IStoreInfoDetail> => {

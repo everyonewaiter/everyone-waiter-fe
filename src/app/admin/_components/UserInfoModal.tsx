@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 interface TypeActive {
-  permission: TPermission | "";
+  permission: Permission | "";
   status: TStatus | "";
 }
 
@@ -58,7 +58,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
       setActive({
         permission: PermissionObj[
           accountData.permission as keyof typeof PermissionObj
-        ] as TPermission,
+        ] as Permission,
         status: stateObj[accountData.state as keyof typeof stateObj] as TStatus,
       });
     }
@@ -76,7 +76,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
         permission: findKeyByValue(
           PermissionObj,
           active.permission
-        ) as TPermission,
+        ) as Permission,
         state: findKeyByValue(stateObj, active.status) as TStatus,
       },
       {
@@ -129,7 +129,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                     setActive={(value) =>
                       setActive((prev) => ({
                         ...prev,
-                        permission: value as TPermission,
+                        permission: value as Permission,
                       }))
                     }
                     active={active.permission}

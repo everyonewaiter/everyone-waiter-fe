@@ -19,3 +19,9 @@ interface IResWithPagination<T> {
   pageSkipSize: number;
   size: number;
 }
+
+interface ErrorResponse {
+  message: string;
+  code: string;
+  timestamp: string;
+}
