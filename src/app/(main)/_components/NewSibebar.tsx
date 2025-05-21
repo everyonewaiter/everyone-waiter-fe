@@ -47,12 +47,6 @@ const MENU_ITEMS: Record<Permission, MenuItem[]> = {
   USER: [{ icon: "home", label: "홈", href: "/" }],
 };
 
-// 매장이 없는 OWNER 메뉴
-const OWNER_WITHOUT_STORE_MENU: MenuItem[] = [
-  { icon: "shop", label: "매장 정보", href: "/store" },
-  { icon: "subscribe", label: "구독 설정", href: "/subscription" },
-];
-
 export default function NewSidebar() {
   const { user } = useStore(useAuthStore, (state) => state);
   const permission = user?.permission || "USER";
@@ -73,13 +67,13 @@ export default function NewSidebar() {
     }
   }, [storeList]);
 
-  const menuItems =
-    permission === "OWNER" && storeList?.stores.length === 0
-      ? OWNER_WITHOUT_STORE_MENU
-      : MENU_ITEMS[permission];
+  const isOwnerWithoutStore =
+    permission === "OWNER" && storeList?.stores.length === 0;
 
   return (
-    <div className="hidden py-8 pl-[60px] md:block">
+    <div
+      className={`hidden py-8 pl-[60px] ${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}
+    >
       <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-8 md:w-[186px] lg:w-[318px] lg:px-5">
         <div className="mb-6 flex items-center justify-center gap-[18px]">
           <Image
@@ -119,10 +113,10 @@ export default function NewSidebar() {
           )}
 
           <ul className="relative mt-2">
-            {menuItems.length > 1 && (
+            {MENU_ITEMS[permission].length > 1 && (
               <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
             )}
-            {menuItems.map((item) => {
+            {MENU_ITEMS[permission].map((item) => {
               const isActive = pathname === item.href;
               const IconComponent = ICON_MAP[item.icon];
               return (
