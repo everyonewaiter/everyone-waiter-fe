@@ -74,3 +74,14 @@ export const getStoreCategoryList = async (
   );
   return response.data;
 };
+
+// 카테고리별 메뉴 조회
+export const getStoreMenuList = async (
+  storeId: string,
+  categoryId: string
+): Promise<MenuList> => {
+  const response = await instance.get(
+    `${API_PATH.stores}/${storeId}/categories/${categoryId}/menus`
+  );
+  return response.data;
+};

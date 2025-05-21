@@ -70,3 +70,21 @@ interface Category {
 interface CategoryList {
   categories: Category[];
 }
+
+type MenuState = "DEFAULT" | "HIDE" | "SOLD_OUT";
+
+interface Menu {
+  menuId: string;
+  categoryId: string;
+  name: string;
+  description: string;
+  price: number;
+  spicy: number;
+  state: MenuState;
+  label: string;
+  image: string;
+}
+
+interface MenuList {
+  menus: Menu[];
+}
