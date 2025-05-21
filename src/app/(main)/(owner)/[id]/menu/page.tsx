@@ -1,3 +1,3 @@
 export default function page() {
-  return <div>메뉴페이지</div>;
+  return <div>메뉴 페이지</div>;
 }

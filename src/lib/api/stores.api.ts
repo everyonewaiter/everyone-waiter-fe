@@ -64,3 +64,13 @@ export const getStoreInfoDetail = async (
   const response = await instance.get(`${API_PATH.stores}/${storeId}`);
   return response.data;
 };
+
+// 카테고리 목록
+export const getStoreCategoryList = async (
+  storeId: string
+): Promise<CategoryList> => {
+  const response = await instance.get(
+    `${API_PATH.stores}/${storeId}/categories`
+  );
+  return response.data;
+};

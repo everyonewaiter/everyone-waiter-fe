@@ -61,3 +61,12 @@ interface Store {
 interface StoreList {
   stores: Store[];
 }
+
+interface Category {
+  categoryId: string;
+  name: string;
+}
+
+interface CategoryList {
+  categories: Category[];
+}
