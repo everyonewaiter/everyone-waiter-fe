@@ -54,7 +54,13 @@ const useStores = () => {
       stores: { storeId: bigint; name: string }[];
     }>({
       queryKey: ["get-stores-list"],
-      queryFn: getStoreList,
+      queryFn: () =>
+        getStoreList().then((list) => ({
+          stores: list.stores.map((store) => ({
+            storeId: BigInt(store.storeId),
+            name: store.name,
+          })),
+        })),
       enabled,
     });
 

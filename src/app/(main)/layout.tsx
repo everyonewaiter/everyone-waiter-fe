@@ -1,5 +1,5 @@
 import MobileHeader from "@/app/(main)/_components/MobileHeader";
-import NewSidebar from "./_components/NewSibebar";
+import NewSidebar from "./_components/NewSidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

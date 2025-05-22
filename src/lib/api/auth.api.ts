@@ -57,7 +57,10 @@ export const sendAuthMail = async (body: Pick<TAccount, "email">) => {
 export const renewToken = async (body: {
   refreshToken: string;
 }): Promise<{ accessToken: string; refreshToken: string }> => {
-  const response = await instance.post(`${API_PATH.account}/renew-token`, body);
+  const response = await authInstance.post(
+    `${API_PATH.account}/renew-token`,
+    body
+  );
   return response.data;
 };
 

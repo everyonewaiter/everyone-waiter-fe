@@ -38,7 +38,7 @@ const MENU_ITEMS: Record<Permission, MenuItem[]> = {
   ],
   OWNER: [
     { icon: "home", label: "홈", href: "/" },
-    { icon: "shop", label: "매장 정보", href: "/store" },
+    { icon: "shop", label: "매장 정보", href: "/stores" },
     { icon: "menu", label: "메뉴 관리", href: "/menu" },
     { icon: "subscribe", label: "구독 설정", href: "/subscription" },
     { icon: "pos", label: "POS", href: "/pos" },

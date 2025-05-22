@@ -1,13 +1,13 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useAccount } from "@/hooks/store/useAccount";
+import useAuthStore from "@/stores/useAuthStore";
 import GuideComponent from "@/components/GuideComponent";
 import useStores from "@/hooks/useStores";
 import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function Home() {
-  const { permission } = useAccount();
+  const { user } = useAuthStore();
   const { registrationListQuery } = useStores();
   const { data, isLoading: isListLoading } = registrationListQuery(1);
 
@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <ClientLayout>
-      {permission !== "ADMIN" && (
+      {user?.permission !== "ADMIN" && (
         <div className="center h-full w-full">
           {!isListLoading && !data?.content?.length && (
             <GuideComponent

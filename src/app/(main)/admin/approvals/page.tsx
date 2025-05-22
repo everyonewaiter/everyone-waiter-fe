@@ -27,7 +27,7 @@ import useDebounce from "@/hooks/useDebounce";
 import { registerStatusObj } from "@/constants/permissionObj";
 import { Button } from "@/components/common/Button";
 import QueryProviders from "@/app/query-providers";
-import StoreModal from "../../_components/StoreModal";
+import StoreModal from "../_components/StoreModal";
 
 const itemWidths = {
   "No.": {

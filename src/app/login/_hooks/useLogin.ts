@@ -29,7 +29,7 @@ export default function useLogin() {
       router.push("/");
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.log(error);
+      throw new Error(error.message);
     },
   });
 }
