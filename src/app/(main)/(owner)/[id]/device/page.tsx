@@ -23,7 +23,7 @@ import { useState } from "react";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
 import { Button } from "@/components/common/Button";
-import renderIcon from "../(main)/_components/renderIcons";
+import renderIcon from "@/app/(main)/_components/renderIcons";
 import DeviceInfoModal from "./_components/DeviceInfoModal";
 import useTableCheck from "./_hooks/useTableCheck";
 

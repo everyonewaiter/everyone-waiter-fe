@@ -1,7 +1,6 @@
 import { getAccount, login } from "@/lib/api/auth.api";
 import { setCookie } from "@/lib/cookies";
 import useAuthStore from "@/stores/useAuthStore";
-import { ErrorResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";

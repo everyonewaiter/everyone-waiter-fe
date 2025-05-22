@@ -10,10 +10,10 @@ import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import formatDate from "@/lib/formatting/formatDate";
 import Label from "@/components/common/Label";
 import Input from "@/components/common/Input";
-import useStores from "@/hooks/useStores";
 import getQueryClient from "@/app/get-query-client";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
+import useStores from "../../_hooks/useStores";
 
 type FormState = Omit<StoreDetail, "updatedAt" | "accountId"> & {
   image: string;

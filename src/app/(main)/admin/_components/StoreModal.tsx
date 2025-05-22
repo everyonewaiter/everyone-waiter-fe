@@ -6,10 +6,10 @@ import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import useAdmin from "@/hooks/useAdmin";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import useAdmin from "../_hooks/useAdmin";
 
 const dataObj = {
   상호명: "name",

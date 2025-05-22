@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import SectionHeader from "@/components/SectionHeader";
-import useStores from "@/hooks/useStores";
 import {
   MobileTable,
   MobileTableCell,
@@ -24,9 +23,10 @@ import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
 import { STATUS_COLORS } from "@/constants/statusColor";
 import transformDate from "@/lib/formatting/transformDate";
+import QueryProviders from "@/app/query-providers";
 import StoreApplicationModal from "../store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "../store/_components/modals/PendingAcceptModal";
-import QueryProviders from "../query-providers";
+import useStores from "../store/_hooks/useStores";
 
 const itemWidths = {
   "No.": {

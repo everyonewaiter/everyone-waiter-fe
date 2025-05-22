@@ -5,10 +5,10 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import Searchbar from "@/components/Searchbar";
 import SectionHeader from "@/components/SectionHeader";
 import { useEffect, useState } from "react";
-import useAdmin from "@/hooks/useAdmin";
 import useDebounce from "@/hooks/useDebounce";
 import DropdownGroup from "./_components/DropdownGroup";
 import UsersTable from "./_components/UsersTable";
+import useAdmin from "../_hooks/useAdmin";
 
 const permissionObj = {
   전체: "",
@@ -47,7 +47,7 @@ export default function Users() {
     permissionObj[
       active.permission as keyof typeof permissionObj
     ] as Permission,
-    stateObj[active.status as keyof typeof stateObj] as TStatus,
+    stateObj[active.status as keyof typeof stateObj] as Status,
     currentPage
   );
 

@@ -6,9 +6,9 @@ import useOutsideClick from "@/hooks/useOutSideClick";
 import { useRef } from "react";
 import { X as CloseIcon } from "lucide-react";
 import Image from "next/image";
-import useStores from "@/hooks/useStores";
 import useAuthStore from "@/stores/useAuthStore";
 import MobileSidebarSection from "./MobileSidebarSection";
+import useStores from "../(owner)/[id]/store/_hooks/useStores";
 
 interface IProps {
   onClose: () => void;

@@ -1,12 +1,13 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
+
 import Image from "next/image";
-import useStores from "@/hooks/useStores";
 import useAuthStore from "@/stores/useAuthStore";
+import { useSidebar } from "@/stores/useSidebar";
 import { useRouter } from "next/navigation";
-import { useSidebar } from "@/hooks/store/useSidebar";
 import StoreSection from "./StoreSection";
+import useStores from "../(owner)/[id]/store/_hooks/useStores";
 
 export default function Sidebar() {
   const navigate = useRouter();

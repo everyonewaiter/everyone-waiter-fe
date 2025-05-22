@@ -4,7 +4,7 @@ export const PermissionObj: Record<Permission, string> = {
   OWNER: "사장님",
 };
 
-export const stateObj: Record<TStatus, string> = {
+export const stateObj: Record<Status, string> = {
   ACTIVE: "활성화",
   INACTIVE: "비활성화",
   DELETE: "탈퇴함",

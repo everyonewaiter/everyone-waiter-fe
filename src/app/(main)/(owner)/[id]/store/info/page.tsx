@@ -13,17 +13,20 @@ import { PropsWithChildren, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import EditIcon from "@public/icons/edit-contained.svg";
 import { Plus } from "lucide-react";
-import useStoreId from "@/hooks/store/useStoreId";
-import useStores from "@/hooks/useStores";
+import { useParams } from "next/navigation";
+import useStores from "../_hooks/useStores";
 
 export default function StoreInfo() {
   const ref = useRef<HTMLDivElement>(null);
+  const params = useParams();
+
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { storeId } = useStoreId();
+  const storeId = params?.id;
+
   const { detailStoreInfoQuery } = useStores();
-  const { data } = detailStoreInfoQuery(storeId);
+  const { data } = detailStoreInfoQuery(storeId as string);
 
   const form = useForm<TypeStoreInfo>({
     mode: "onChange",
@@ -36,7 +39,7 @@ export default function StoreInfo() {
   });
 
   const [countryOfOrigins, setCountryOfOrigins] = useState<
-    ICountryOfOriginItem[]
+    CountryOfOriginItem[]
   >(data?.setting.countryOfOrigin!);
   const newItem = {
     item: "",

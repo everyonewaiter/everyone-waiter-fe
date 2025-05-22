@@ -8,15 +8,15 @@ import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { PermissionObj, stateObj } from "@/constants/permissionObj";
-import useAdmin from "@/hooks/useAdmin";
 import transformDate from "@/lib/formatting/transformDate";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import useAdmin from "../_hooks/useAdmin";
 
 interface TypeActive {
   permission: Permission | "";
-  status: TStatus | "";
+  status: Status | "";
 }
 
 interface TypeForm {
@@ -59,7 +59,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
         permission: PermissionObj[
           accountData.permission as keyof typeof PermissionObj
         ] as Permission,
-        status: stateObj[accountData.state as keyof typeof stateObj] as TStatus,
+        status: stateObj[accountData.state as keyof typeof stateObj] as Status,
       });
     }
   }, [accountData]);
@@ -77,7 +77,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
           PermissionObj,
           active.permission
         ) as Permission,
-        state: findKeyByValue(stateObj, active.status) as TStatus,
+        state: findKeyByValue(stateObj, active.status) as Status,
       },
       {
         onSuccess: () => {
@@ -152,7 +152,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                     setActive={(value) =>
                       setActive((prev: TypeActive) => ({
                         ...prev,
-                        status: value as TStatus,
+                        status: value as Status,
                       }))
                     }
                     active={active?.status}

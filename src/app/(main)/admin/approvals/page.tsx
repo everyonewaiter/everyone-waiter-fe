@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
 import transformDate from "@/lib/formatting/transformDate";
-import useAdmin from "@/hooks/useAdmin";
 import Dropdown from "@/components/common/Dropdown";
 import Checkbox from "@/components/common/Checkbox";
 import useDebounce from "@/hooks/useDebounce";
@@ -28,6 +27,7 @@ import { registerStatusObj } from "@/constants/permissionObj";
 import { Button } from "@/components/common/Button";
 import QueryProviders from "@/app/query-providers";
 import StoreModal from "../_components/StoreModal";
+import useAdmin from "../_hooks/useAdmin";
 
 const itemWidths = {
   "No.": {

@@ -3,7 +3,6 @@ import LabeledInput from "@/components/common/LabeledInput";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { stateObj } from "@/constants/permissionObj";
 import transformDate from "@/lib/formatting/transformDate";
-import { TValueOf } from "@/types/common";
 import { useForm } from "react-hook-form";
 
 const paymentObj = {
@@ -20,10 +19,10 @@ const devicePermissionObj = {
 interface FormType {
   deviceName: string;
   createdAt: string;
-  status: TValueOf<typeof stateObj>;
-  permission: TValueOf<typeof devicePermissionObj>;
+  status: ValueOf<typeof stateObj>;
+  permission: ValueOf<typeof devicePermissionObj>;
   tableNo: number | null;
-  payment: TValueOf<typeof paymentObj>;
+  payment: ValueOf<typeof paymentObj>;
   deviceNumber: string;
 }
 
@@ -47,7 +46,7 @@ export default function DeviceInfoModal({ close }: IProps) {
     defaultValues: {
       deviceName: dummy.deviceName,
       createdAt: transformDate(dummy.createdAt),
-      status: stateObj[dummy.status as TStatus],
+      status: stateObj[dummy.status as Status],
       permission:
         devicePermissionObj[
           dummy.permission as keyof typeof devicePermissionObj

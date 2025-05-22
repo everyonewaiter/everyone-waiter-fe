@@ -14,7 +14,7 @@ const useAdmin = () => {
   const accountListQuery = (
     searchEmail: string,
     searchPermission: Permission | "",
-    searchState: TStatus | "",
+    searchState: Status | "",
     page: number = 1
   ) =>
     useQuery({
