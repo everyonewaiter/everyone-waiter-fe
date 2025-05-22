@@ -1,12 +1,13 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
+
 import Image from "next/image";
-import useStores from "@/hooks/useStores";
-import { useAccount } from "@/hooks/store/useAccount";
+import useAuthStore from "@/stores/useAuthStore";
+import { useSidebar } from "@/stores/useSidebar";
 import { useRouter } from "next/navigation";
-import { useSidebar } from "@/hooks/store/useSidebar";
 import StoreSection from "./StoreSection";
+import useStores from "../(owner)/[id]/store/_hooks/useStores";
 
 export default function Sidebar() {
   const navigate = useRouter();
@@ -15,7 +16,7 @@ export default function Sidebar() {
 
   const { setActiveMenu } = useSidebar();
 
-  const { permission } = useAccount();
+  const { user } = useAuthStore();
 
   return (
     <section className="hidden flex-col rounded-[28px] bg-white md:flex md:h-[calc(100%-40px)] md:w-[186px] md:px-3 lg:h-[calc(100%-64px)] lg:w-[318px] lg:px-5">
@@ -42,14 +43,14 @@ export default function Sidebar() {
           className="md:h-[16.67px] md:w-[94px] lg:h-[25px] lg:w-[141px]"
         />
       </button>
-      {permission !== "ADMIN" && (
+      {user?.permission !== "ADMIN" && (
         <div className="flex flex-col gap-5">
           {data?.stores?.map((item) => (
             <StoreSection key={item.storeId} {...item} />
           ))}
         </div>
       )}
-      {permission === "ADMIN" && <StoreSection name="모두의 웨이터" />}
+      {user?.permission === "ADMIN" && <StoreSection name="모두의 웨이터" />}
     </section>
   );
 }

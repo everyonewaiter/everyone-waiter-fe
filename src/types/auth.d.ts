@@ -1,4 +1,4 @@
-type TAccount = {
+type Account = {
   email: string;
   password: string;
   phoneNumber: string;
@@ -16,4 +16,4 @@ type UserProfile = {
   permission: Permission;
 };
 
-type TStatus = "INACTIVE" | "ACTIVE" | "DELETE";
+type Status = "INACTIVE" | "ACTIVE" | "DELETE";

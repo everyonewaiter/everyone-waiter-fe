@@ -67,6 +67,7 @@ const setupInterceptors = (axiosInstance: AxiosInstance) => {
         try {
           const refreshToken = await getToken("refreshToken");
           if (!refreshToken) {
+            window.location.href = "/login";
             return await Promise.reject(error);
           }
 

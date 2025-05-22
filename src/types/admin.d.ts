@@ -4,11 +4,11 @@ type AdminAccount = {
   email: string;
   hasStore: "Y" | "N";
   permission: Permission;
-  state: TStatus;
+  state: Status;
   updatedAt: string;
 };
 
-type TypeAdminStores = {
+type AdminStores = {
   accountid: bigint;
   createdAt: string;
   email: string;

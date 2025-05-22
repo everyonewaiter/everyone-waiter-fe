@@ -1,9 +1,11 @@
-import { useAccount } from "@/hooks/store/useAccount";
+import useAuthStore from "@/stores/useAuthStore";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getStoreList } from "@/lib/api/stores.api";
 
 const popupList = [
   {
@@ -20,7 +22,12 @@ export default function InfoPopup({ close }: { close: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
 
-  const { hasAcceptedStore } = useAccount();
+  const { user } = useAuthStore();
+  const { data: storeList } = useQuery({
+    queryKey: ["store-list"],
+    queryFn: getStoreList,
+    enabled: user?.permission === "OWNER",
+  });
 
   useOutsideClick({ ref, handler: close });
   useEscapeKey({ handler: close });
@@ -44,7 +51,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
           asdf@gmail.com
         </span>
       </div>
-      {!hasAcceptedStore &&
+      {storeList?.stores?.length === 0 &&
         popupList.map((item) => (
           <div
             key={item.text}
