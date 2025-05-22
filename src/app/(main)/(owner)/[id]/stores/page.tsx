@@ -21,7 +21,7 @@ import {
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
-import { STATUS_COLORS } from "@/constants/statusColor";
+import { registerStateTranslate } from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
 import QueryProviders from "@/app/query-providers";
 import StoreApplicationModal from "../store/_components/modals/StoreApplicationModal";
@@ -135,7 +135,7 @@ export default function StoreList() {
                     },
                   }}
                 >
-                  {STATUS_COLORS[item.status]}
+                  {registerStateTranslate[item.status]}
                 </ResponsiveButton>
               </TableCell>
               <TableCell className={itemWidths.사유.className}>
@@ -178,7 +178,7 @@ export default function StoreList() {
                           },
                         }}
                       >
-                        {STATUS_COLORS[item.status]}
+                        {registerStateTranslate[item.status]}
                       </ResponsiveButton>
                     </MobileTableCell>
                   )}

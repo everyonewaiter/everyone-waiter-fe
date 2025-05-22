@@ -12,7 +12,7 @@ import {
   Table,
 } from "@/components/common/Table/Tables";
 import Checkbox from "@/components/common/Checkbox";
-import { PermissionObj, stateObj } from "@/constants/permissionObj";
+import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/use-overlay";
 import UserInfoModal from "../../_components/UserInfoModal";
@@ -90,7 +90,7 @@ export default function UsersTable({ data }: IProps) {
               <MobileTableRow>
                 <MobileTableHead>권한</MobileTableHead>
                 <MobileTableCell>
-                  {PermissionObj[item.permission]}
+                  {permissionTranslate[item.permission]}
                 </MobileTableCell>
               </MobileTableRow>
               <MobileTableRow>
@@ -99,7 +99,7 @@ export default function UsersTable({ data }: IProps) {
               </MobileTableRow>
               <MobileTableRow>
                 <MobileTableHead>상태</MobileTableHead>
-                <MobileTableCell>{stateObj[item.state]}</MobileTableCell>
+                <MobileTableCell>{stateTranslate[item.state]}</MobileTableCell>
               </MobileTableRow>
             </TableBody>
           </MobileTable>

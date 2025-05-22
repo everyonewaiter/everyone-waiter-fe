@@ -1,7 +1,7 @@
 import Checkbox from "@/components/common/Checkbox";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import { TableCell, TableRow } from "@/components/common/Table/Tables";
-import { PermissionObj, stateObj } from "@/constants/permissionObj";
+import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
 
 interface IProps extends AdminAccount {
@@ -45,12 +45,14 @@ export default function UsersTableRow({ openModal, ...item }: IProps) {
             item.permission === "ADMIN" ? "!bg-[#FFB70018] !text-[#FFB700]" : ""
           )}
         >
-          {PermissionObj[item.permission as Permission]}
+          {permissionTranslate[item.permission as Permission]}
         </ResponsiveButton>
       </TableCell>
       <TableCell className="flex-1">-</TableCell>
       <TableCell className="flex-1">{item.hasStore}</TableCell>
-      <TableCell className="flex-1">{stateObj[item.state] || "-"}</TableCell>
+      <TableCell className="flex-1">
+        {stateTranslate[item.state] || "-"}
+      </TableCell>
     </TableRow>
   );
 }

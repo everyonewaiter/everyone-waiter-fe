@@ -1,28 +1,21 @@
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import { stateObj } from "@/constants/permissionObj";
+import {
+  deviceTranslate,
+  paymentTimeTranslate,
+  stateTranslate,
+} from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
 import { useForm } from "react-hook-form";
-
-const paymentObj = {
-  BEFORE: "선결제",
-  AFTER: "후결제",
-};
-
-const devicePermissionObj = {
-  TABLE: "테이블",
-  HALL: "홀",
-  WAITING: "웨이팅",
-} as const;
 
 interface FormType {
   deviceName: string;
   createdAt: string;
-  status: ValueOf<typeof stateObj>;
-  permission: ValueOf<typeof devicePermissionObj>;
+  status: ValueOf<typeof stateTranslate>;
+  permission: ValueOf<typeof deviceTranslate>;
   tableNo: number | null;
-  payment: ValueOf<typeof paymentObj>;
+  payment: ValueOf<typeof paymentTimeTranslate>;
   deviceNumber: string;
 }
 
@@ -46,13 +39,14 @@ export default function DeviceInfoModal({ close }: IProps) {
     defaultValues: {
       deviceName: dummy.deviceName,
       createdAt: transformDate(dummy.createdAt),
-      status: stateObj[dummy.status as Status],
+      status: stateTranslate[dummy.status as Status],
       permission:
-        devicePermissionObj[
-          dummy.permission as keyof typeof devicePermissionObj
-        ],
+        deviceTranslate[dummy.permission as keyof typeof deviceTranslate],
       tableNo: dummy.tableNo,
-      payment: paymentObj[dummy.payment as keyof typeof paymentObj],
+      payment:
+        paymentTimeTranslate[
+          dummy.payment as keyof typeof paymentTimeTranslate
+        ],
       deviceNumber: dummy.deviceNumber,
     },
   });

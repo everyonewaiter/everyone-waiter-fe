@@ -23,7 +23,7 @@ import transformDate from "@/lib/formatting/transformDate";
 import Dropdown from "@/components/common/Dropdown";
 import Checkbox from "@/components/common/Checkbox";
 import useDebounce from "@/hooks/useDebounce";
-import { registerStatusObj } from "@/constants/permissionObj";
+import { registerStateTranslate } from "@/constants/translates";
 import { Button } from "@/components/common/Button";
 import QueryProviders from "@/app/query-providers";
 import StoreModal from "../_components/StoreModal";
@@ -67,8 +67,9 @@ export default function StoreApproval() {
     isChecked ? debouncedValue : "",
     active.status === "전체"
       ? null
-      : (Object.keys(registerStatusObj).find(
-          (key) => registerStatusObj[key as RegisterStatus] === active.status
+      : (Object.keys(registerStateTranslate).find(
+          (key) =>
+            registerStateTranslate[key as RegisterStatus] === active.status
         ) as RegisterStatus),
     currentPage
   );
@@ -214,7 +215,7 @@ export default function StoreApproval() {
                       },
                     }}
                   >
-                    {registerStatusObj[item.status]}
+                    {registerStateTranslate[item.status]}
                   </ResponsiveButton>
                 </TableCell>
               </TableRow>
@@ -262,7 +263,7 @@ export default function StoreApproval() {
                             }
                             className="h-5 rounded-[6px] px-3 py-1 font-medium"
                           >
-                            {registerStatusObj[item.status]}
+                            {registerStateTranslate[item.status]}
                           </Button>
                         </MobileTableCell>
                       )}

@@ -20,7 +20,7 @@ const permissionObj = {
 const stateObj = {
   전체: "",
   활성화: "ACTIVE",
-  비활성화: "INActive",
+  비활성화: "INACTIVE",
 };
 
 export interface TypeActive {

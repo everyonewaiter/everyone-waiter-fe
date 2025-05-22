@@ -7,7 +7,7 @@ import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import { PermissionObj, stateObj } from "@/constants/permissionObj";
+import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -56,10 +56,12 @@ export default function UserInfoModal({ close, accountId }: IProps) {
       form.setValue("email", accountData.email);
       form.setValue("date", transformDate(accountData.createdAt));
       setActive({
-        permission: PermissionObj[
-          accountData.permission as keyof typeof PermissionObj
+        permission: permissionTranslate[
+          accountData.permission as keyof typeof permissionTranslate
         ] as Permission,
-        status: stateObj[accountData.state as keyof typeof stateObj] as Status,
+        status: stateTranslate[
+          accountData.state as keyof typeof stateTranslate
+        ] as Status,
       });
     }
   }, [accountData]);
@@ -74,10 +76,10 @@ export default function UserInfoModal({ close, accountId }: IProps) {
       {
         accountId,
         permission: findKeyByValue(
-          PermissionObj,
+          permissionTranslate,
           active.permission
         ) as Permission,
-        state: findKeyByValue(stateObj, active.status) as Status,
+        state: findKeyByValue(stateTranslate, active.status) as Status,
       },
       {
         onSuccess: () => {
@@ -122,8 +124,8 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                     disabled={isDisabled}
                     data={["사용자", "사장님", "관리자"]}
                     defaultText={
-                      PermissionObj[
-                        accountData?.permission as keyof typeof PermissionObj
+                      permissionTranslate[
+                        accountData?.permission as keyof typeof permissionTranslate
                       ]
                     }
                     setActive={(value) =>
@@ -147,7 +149,9 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                     disabled={isDisabled}
                     data={["활성화", "비활성화"]}
                     defaultText={
-                      stateObj[accountData?.state as keyof typeof stateObj]
+                      stateTranslate[
+                        accountData?.state as keyof typeof stateTranslate
+                      ]
                     }
                     setActive={(value) =>
                       setActive((prev: TypeActive) => ({

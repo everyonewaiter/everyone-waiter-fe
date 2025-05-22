@@ -15,7 +15,7 @@ import {
 } from "@/components/common/Table/Tables";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
-import { stateObj } from "@/constants/permissionObj";
+import { stateTranslate } from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import Paginations from "@/components/common/Pagination/Paginations";
@@ -176,7 +176,7 @@ export default function Device() {
                   {item.payment || "-"}
                 </TableCell>
                 <TableCell className={itemWidth["상태"]}>
-                  {stateObj[item.status as keyof typeof stateObj]}
+                  {stateTranslate[item.status as keyof typeof stateTranslate]}
                 </TableCell>
                 <TableCell className={itemWidth["등록 일시"]}>
                   {transformDate(item.createdAt)}
