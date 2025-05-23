@@ -2,6 +2,7 @@
 
 import { getStoreCategoryList } from "@/lib/api/stores.api";
 import { useQuery } from "@tanstack/react-query";
+import NoneCategory from "./NoneCategory";
 
 interface CategoryListProps {
   storeId: string;
@@ -15,18 +16,17 @@ export default function CategoryList({ storeId }: CategoryListProps) {
 
   console.log(data);
 
+  if (!data || data.categories.length === 0) {
+    return <NoneCategory storeId={storeId} />;
+  }
+
   return (
     <div>
-      <h1>카테고리 목록</h1>
-      {data?.categories.length === 0 ? (
-        <div>카테고리 등록 필요</div>
-      ) : (
-        data?.categories.map((category) => (
-          <div key={category.categoryId}>
-            <h2>{category.name}</h2>
-          </div>
-        ))
-      )}
+      {data?.categories.map((category) => (
+        <div key={category.categoryId}>
+          <h2>{category.name}</h2>
+        </div>
+      ))}
     </div>
   );
 }
