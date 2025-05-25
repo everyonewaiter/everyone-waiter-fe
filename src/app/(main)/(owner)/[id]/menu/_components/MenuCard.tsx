@@ -3,7 +3,7 @@ import formatPrice from "@/utils/format/price";
 import Image from "next/image";
 
 interface MenuCardProps {
-  menu: MenuWithOption;
+  menu: MenuWithOption | Menu;
   isSelected?: boolean;
   onSelect?: (menuId: string, categoryId: string, isChecked: boolean) => void;
 }

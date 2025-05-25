@@ -19,7 +19,6 @@ export default function CategoryList({ storeId }: CategoryListProps) {
   });
   const pathname = usePathname();
   const isActive = pathname === `/${storeId}/menu`;
-  console.log("카테고리 목록 : ", data?.categories);
 
   // 카테고리 존재하지 않는 경우
   if (!data || data.categories.length === 0) {
