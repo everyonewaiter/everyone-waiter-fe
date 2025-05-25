@@ -3,7 +3,7 @@
 import { getMenusWithCategory } from "@/lib/api/stores.api";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeftRightIcon, Trash2Icon } from "lucide-react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import MenuCard from "./MenuCard";
 import AddMenu from "./AddMenu";
 
@@ -11,15 +11,39 @@ interface AllMenuProps {
   storeId: string;
 }
 
+interface SelectedMenu {
+  menuId: string;
+  categoryId: string;
+}
+
 export default function AllMenu({ storeId }: AllMenuProps) {
+  const [selectedMenus, setSelectedMenus] = useState<SelectedMenu[]>([]);
+
+  const handleMenuSelect = (
+    menuId: string,
+    categoryId: string,
+    isChecked: boolean
+  ) => {
+    if (isChecked) {
+      setSelectedMenus((prev) => [...prev, { menuId, categoryId }]);
+    } else {
+      setSelectedMenus((prev) => prev.filter((item) => item.menuId !== menuId));
+    }
+  };
+
+  const handleDelete = () => {
+    console.log("선택된 메뉴들:", selectedMenus);
+    // TODO - 삭제 로직 구현
+  };
+  const isMenuSelected = (menuId: string) =>
+    selectedMenus.some((menu) => menu.menuId === menuId);
+
   const { data } = useQuery({
     queryKey: ["menus-with-category", storeId],
     queryFn: () => getMenusWithCategory(storeId),
   });
   // 메뉴만 뽑아내기
   const allMenus = data?.categories.flatMap((category) => category.menus);
-
-  console.log("메뉴 목록 : ", allMenus);
 
   return (
     <>
@@ -37,7 +61,7 @@ export default function AllMenu({ storeId }: AllMenuProps) {
         </button>
         <button
           type="button"
-          onClick={() => console.log("삭제")}
+          onClick={handleDelete}
           className="flex items-center gap-1"
         >
           <Trash2Icon
@@ -51,7 +75,11 @@ export default function AllMenu({ storeId }: AllMenuProps) {
         <AddMenu />
         {allMenus?.map((menu) => (
           <Fragment key={menu.menuId}>
-            <MenuCard menu={menu} />
+            <MenuCard
+              menu={menu}
+              isSelected={isMenuSelected(menu.menuId)}
+              onSelect={handleMenuSelect}
+            />
           </Fragment>
         ))}
       </div>
