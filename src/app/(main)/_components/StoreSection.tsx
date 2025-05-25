@@ -1,23 +1,20 @@
 "use client";
 
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { useSidebar } from "@/stores/useSidebar";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import { useSidebar } from "@/hooks/store/useSidebar";
-import useStoreId from "@/hooks/store/useStoreId";
 import Link from "next/link";
 import renderIcon from "./renderIcons";
 
 interface IProps {
   name: string;
-  storeId?: bigint;
 }
 
-export default function StoreSection({ name, storeId }: IProps) {
+export default function StoreSection({ name }: IProps) {
   const [isStoreOpen, setIsStoreOpen] = useState(true);
 
   const { setActiveMenu, activeMenu, menu } = useSidebar();
-  const { setStoreId } = useStoreId();
 
   const checkActive = (text: string) => activeMenu === `${name}-${text}`;
 
@@ -58,7 +55,6 @@ export default function StoreSection({ name, storeId }: IProps) {
                 className="flex items-center md:py-[9px] lg:py-3"
                 onClick={() => {
                   setActiveMenu(`${name}-${item.text}`);
-                  setStoreId(storeId!);
                 }}
               >
                 <div

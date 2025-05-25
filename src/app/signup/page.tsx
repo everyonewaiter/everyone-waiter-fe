@@ -5,7 +5,6 @@
 import Checkbox from "@/components/common/Checkbox";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
-import useSignup from "@/hooks/useSignup";
 import { TypeSignup, signupSchema } from "@/schema/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -13,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import useSignup from "./_hooks/useSignup";
 
 export default function Signup() {
   const navigate = useRouter();
