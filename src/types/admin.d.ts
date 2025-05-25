@@ -3,12 +3,12 @@ type AdminAccount = {
   createdAt: string;
   email: string;
   hasStore: "Y" | "N";
-  permission: TPermission;
-  state: TStatus;
+  permission: Permission;
+  state: Status;
   updatedAt: string;
 };
 
-type TypeAdminStores = {
+type AdminStores = {
   accountid: bigint;
   createdAt: string;
   email: string;

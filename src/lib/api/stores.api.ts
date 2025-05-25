@@ -1,4 +1,3 @@
-import { IResWithPagination } from "@/types/common";
 import { formInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
@@ -13,7 +12,7 @@ export const registerStore = async (body: FormData) => {
 export const getRegisters = async (
   page: number = 1,
   size: number = 20
-): Promise<IResWithPagination<StoreDetail[]>> => {
+): Promise<ResWithPagination<StoreDetail[]>> => {
   const response = await instance.get(
     `${API_PATH.stores}/registrations?page=${page}&size=${size}`
   );
@@ -52,14 +51,16 @@ export const reapplyRegistrationWithImage = async ({
   return response.data;
 };
 
-export const getStoreList = async () => {
+// 매장 목록
+export const getStoreList = async (): Promise<StoreList> => {
   const response = await instance.get(`${API_PATH.stores}`);
   return response.data;
 };
 
+// 매장 상세 정보
 export const getStoreInfoDetail = async (
-  storeId: bigint
-): Promise<IStoreInfoDetail> => {
+  storeId: string
+): Promise<StoreInfoDetail> => {
   const response = await instance.get(`${API_PATH.stores}/${storeId}`);
   return response.data;
 };

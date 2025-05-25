@@ -1,6 +1,6 @@
 "use client";
 
-import { useSidebar } from "@/hooks/store/useSidebar";
+import { useSidebar } from "@/stores/useSidebar";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

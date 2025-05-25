@@ -25,18 +25,18 @@ interface Menu {
   url: string;
 }
 
-type TStoreStatus = "OPEN" | "CLOSE";
+type StoreStatus = "OPEN" | "CLOSE";
 
-interface ICountryOfOriginItem {
+interface CountryOfOriginItem {
   item: string;
   origin: string;
 }
 
-interface IStoreInfoDetail extends Omit<StoreForm, "file"> {
+interface StoreInfoDetail extends Omit<StoreForm, "file"> {
   accountId: bigint;
   storeId: bigint;
   image: string;
-  status: TStoreStatus;
+  status: StoreStatus;
   lastOpenedAt: string;
   lastClosedAt: string;
   setting: {
@@ -44,9 +44,20 @@ interface IStoreInfoDetail extends Omit<StoreForm, "file"> {
     printerLocation: string;
     showMenuPopup: boolean;
     showOrderTotalPrice: boolean;
-    countryOfOrigin: ICountryOfOriginItem[];
+    countryOfOrigin: CountryOfOriginItem[];
     staffCallOptions: string[];
   };
   createdAt: string;
   updatedAt: string;
+}
+
+// 매장 목록
+
+interface Store {
+  storeId: string;
+  name: string;
+}
+
+interface StoreList {
+  stores: Store[];
 }

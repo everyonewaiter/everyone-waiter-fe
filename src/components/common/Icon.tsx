@@ -23,10 +23,7 @@ export default function Icon({
   useEffect(() => {
     fetch(iconSrc)
       .then((res) => res.text())
-      .then(setSvg)
-      .catch((err) => {
-        console.error(`Failed to load icon: ${iconKey}`, err);
-      });
+      .then(setSvg);
   }, [iconKey]);
 
   if (!svg) return null;

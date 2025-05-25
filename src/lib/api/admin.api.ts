@@ -1,11 +1,10 @@
-import { IResWithPagination } from "@/types/common";
 import { instance } from "../axios/instance";
 import API_PATH from "./paths";
 
 interface GetAccountParams {
   searchEmail?: string;
-  searchPermission?: TPermission | "";
-  searchState?: TStatus | "";
+  searchPermission?: Permission | "";
+  searchState?: Status | "";
   page?: number;
   size?: number;
 }
@@ -16,7 +15,7 @@ export const getAccounts = async ({
   searchState = "",
   page = 1,
   size = 20,
-}: GetAccountParams): Promise<IResWithPagination<AdminAccount[]>> => {
+}: GetAccountParams): Promise<ResWithPagination<AdminAccount[]>> => {
   const response = await instance.get(`${API_PATH.admin}/accounts`, {
     params: {
       email: encodeURIComponent(searchEmail),
@@ -42,8 +41,8 @@ export const updateDetailAccount = async ({
   state,
 }: {
   accountId: bigint;
-  permission: TPermission;
-  state: TStatus;
+  permission: Permission;
+  state: Status;
 }) => {
   const response = await instance.put(
     `${API_PATH.admin}/accounts/${accountId}`,
@@ -70,7 +69,7 @@ export const getAdminRegistrations = async ({
   status,
   page = 1,
   size = 20,
-}: TypeAdminRegistrations): Promise<IResWithPagination<TypeAdminStores[]>> => {
+}: TypeAdminRegistrations): Promise<ResWithPagination<AdminStores[]>> => {
   const response = await instance.get(
     `${API_PATH.admin}/stores/registrations`,
     {
