@@ -88,3 +88,28 @@ interface Menu {
 interface MenuList {
   menus: Menu[];
 }
+
+interface MenuOption {
+  name: string;
+  price: number;
+}
+
+interface MenuOptionGroup {
+  menuOptionGroupId: string;
+  name: string;
+  type: "MANDATORY" | "OPTIONAL";
+  printEnabled: boolean;
+  menuOptions: MenuOption[];
+}
+interface MenuWithOption extends Menu {
+  printEnabled: boolean;
+  menuOptions: MenuOptionGroup[];
+}
+
+interface MenuListWithCategory {
+  categories: {
+    categoryId: string;
+    name: string;
+    menus: MenuWithOption[];
+  }[];
+}

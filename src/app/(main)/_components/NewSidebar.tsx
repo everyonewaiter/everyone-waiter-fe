@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/common/select";
 import { MENU_ITEMS } from "@/constants/sidebarMenus";
-import { getComparePath } from "@/utils/get-pathname";
+import { getComparePath } from "@/utils/getPathname";
 
 export default function NewSidebar() {
   const { user } = useStore(useAuthStore, (state) => state);
@@ -100,7 +100,7 @@ export default function NewSidebar() {
                         ? `/${selectedStoreId}${item.href}`
                         : item.href
                     }
-                    className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors ${
+                    className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
                       isActive ? "text-primary" : "text-gray-300"
                     }`}
                   >

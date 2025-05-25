@@ -19,8 +19,6 @@ export default async function Layout({
     queryFn: () => getStoreCategoryList(id),
   });
 
-  console.log("메뉴 레이아웃 렌더링");
-
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <PageTitle title="메뉴 관리" />
