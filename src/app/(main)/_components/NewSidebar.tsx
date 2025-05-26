@@ -37,10 +37,10 @@ const MENU_ITEMS: Record<Permission, MenuItem[]> = {
   OWNER: [
     { icon: "home", label: "홈", href: "/" },
     { icon: "shop", label: "매장 정보", href: "/stores" },
-    { icon: "menu", label: "메뉴 관리", href: "/menu" },
+    { icon: "category", label: "메뉴 관리", href: "/menu" },
     { icon: "subscribe", label: "구독 설정", href: "/subscription" },
     { icon: "pos", label: "POS", href: "/pos" },
-    { icon: "setting", label: "설정", href: "/settings" },
+    { icon: "settings", label: "설정", href: "/settings" },
   ],
   USER: [{ icon: "home", label: "홈", href: "/" }],
 };
@@ -115,12 +115,13 @@ export default function NewSidebar() {
               <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
             )}
             {MENU_ITEMS[permission].map((item) => {
-              const isActive = pathname === item.href;
+              const isActive =
+                `/${pathname.split("/").slice(2).join("")}` === item.href;
               return (
                 <li key={item.href}>
                   <Link
                     href={
-                      permission === "OWNER" && item.href !== "/"
+                      permission === "OWNER"
                         ? `/${selectedStoreId}${item.href}`
                         : item.href
                     }
