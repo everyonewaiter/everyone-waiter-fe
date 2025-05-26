@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="flex h-screen w-screen flex-col bg-white md:flex-row md:bg-[#F5F5F5]">
         <NewSidebar />
         <MobileHeader />
-        <main className="flex-1 rounded-[20px] md:mx-8 md:my-8 md:bg-white">
+        <main className="flex-1 rounded-[20px] md:mx-8 md:my-8 md:bg-white md:p-5 lg:p-8">
           {children}
         </main>
       </div>
