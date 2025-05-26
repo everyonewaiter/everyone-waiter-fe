@@ -1,7 +1,8 @@
+import PageTitle from "@/app/(main)/_components/PageTitle";
 import getQueryClient from "@/app/get-query-client";
-import { getMenusWithCategory } from "@/lib/api/stores.api";
+import { getStoreCategoryList } from "@/lib/api/stores.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import AllMenu from "./_components/AllMenu";
+import EditCategoryForm from "./_components/EditCategoryForm";
 
 export default async function Page({
   params,
@@ -12,13 +13,13 @@ export default async function Page({
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["menus-with-category", id],
-    queryFn: () => getMenusWithCategory(id),
+    queryKey: ["category-list", id],
+    queryFn: () => getStoreCategoryList(id),
   });
-
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <AllMenu storeId={id} />
+      <PageTitle title="메뉴 관리" />
+      <EditCategoryForm storeId={id} />
     </HydrationBoundary>
   );
 }
