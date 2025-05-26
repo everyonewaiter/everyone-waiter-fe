@@ -27,7 +27,7 @@ export default function CategoryList({ storeId }: CategoryListProps) {
   }
 
   return (
-    <div className="mt-5 flex items-center gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+    <div className="mt-5 flex flex-shrink-0 items-center gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden">
       <button
         type="button"
         onClick={() => {
