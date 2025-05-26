@@ -18,7 +18,7 @@ export default function NoneCategory({ storeId }: NoneCategoryProps) {
         </p>
       </div>
       <Button asChild className="w-full" size="xs">
-        <Link href={`/${storeId}/menu/add-category`}>카테고리 등록하기</Link>
+        <Link href={`/${storeId}/add-category`}>카테고리 등록하기</Link>
       </Button>
     </div>
   );

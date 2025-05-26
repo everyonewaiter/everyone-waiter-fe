@@ -1,3 +1,4 @@
+import { TypeCategory } from "@/schema/store.schema";
 import { formInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
@@ -71,6 +72,28 @@ export const getStoreCategoryList = async (
 ): Promise<CategoryList> => {
   const response = await instance.get(
     `${API_PATH.stores}/${storeId}/categories`
+  );
+  return response.data;
+};
+
+// 카테고리 생성
+export const postCategory = async (storeId: string, data: TypeCategory) => {
+  const response = await instance.post(
+    `${API_PATH.stores}/${storeId}/categories`,
+    data
+  );
+  return response.data;
+};
+
+// 카테고리 수정
+export const putCategory = async (
+  storeId: string,
+  categoryId: string,
+  data: TypeCategory
+) => {
+  const response = await instance.put(
+    `${API_PATH.stores}/${storeId}/categories/${categoryId}`,
+    data
   );
   return response.data;
 };
