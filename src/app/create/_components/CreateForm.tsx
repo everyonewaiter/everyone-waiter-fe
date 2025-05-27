@@ -14,11 +14,14 @@ import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
 import dynamic from "next/dynamic";
-import useStores from "../_hooks/useStores";
+import useStores from "@/app/(main)/(owner)/[id]/store/_hooks/useStores";
 
-const UploadPhoto = dynamic(() => import("./UploadPhoto"), {
-  ssr: false,
-});
+const UploadPhoto = dynamic(
+  () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),
+  {
+    ssr: false,
+  }
+);
 
 export default function CreateForm() {
   const fileRef = useRef<HTMLInputElement>(null);

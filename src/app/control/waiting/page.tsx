@@ -36,13 +36,10 @@ export default function Waiting() {
   const navigate = useRouter();
   const { open, close } = useOverlay();
 
-  const handleOpenModal = (
-    type: "call" | "enter" | "cancel",
-    waitingId: bigint
-  ) => {
+  const handleOpenModal = (type: "call" | "enter" | "cancel") => {
     open(() => (
       <QueryProviders>
-        <WaitingModal close={close} type={type} waitingId={waitingId} />
+        <WaitingModal close={close} type={type} />
       </QueryProviders>
     ));
   };
@@ -103,9 +100,9 @@ export default function Waiting() {
                 </div>
                 <WaitingSection
                   {...item}
-                  onCall={() => handleOpenModal("call", item.waitingId)}
-                  onCancel={() => handleOpenModal("cancel", item.waitingId)}
-                  onEnterance={() => handleOpenModal("enter", item.waitingId)}
+                  onCall={() => handleOpenModal("call")}
+                  onCancel={() => handleOpenModal("cancel")}
+                  onEnterance={() => handleOpenModal("enter")}
                 />
               </div>
             ))}

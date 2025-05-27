@@ -17,10 +17,11 @@ const MENU_ITEMS: Record<Permission, MenuItem[]> = {
   OWNER: [
     { icon: "home", label: "HOME", href: "/" },
     { icon: "shop", label: "매장 정보", href: "/store" },
-    { icon: "menu", label: "메뉴 관리", href: "/menu" },
+    { icon: "category", label: "메뉴 관리", href: "/menu" },
+    { icon: "mobile", label: "기기 관리", href: "/device" },
     { icon: "subscribe", label: "구독 설정", href: "/subscription" },
     { icon: "pos", label: "POS", href: "/pos" },
-    { icon: "setting", label: "설정", href: "/settings" },
+    { icon: "settings", label: "설정", href: "/settings" },
   ],
   USER: [{ icon: "home", label: "HOME", href: "/" }],
 };

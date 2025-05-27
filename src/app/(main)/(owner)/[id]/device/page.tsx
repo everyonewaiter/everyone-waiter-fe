@@ -1,6 +1,5 @@
 "use client";
 
-import SectionHeader from "@/components/SectionHeader";
 import {
   MobileTable,
   MobileTableCell,
@@ -96,7 +95,6 @@ export default function Device() {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <SectionHeader title="기기 관리" />
       <button
         type="button"
         className="mt-4 mb-4 flex w-full flex-row items-center justify-end gap-1 pr-5 md:mb-0 md:pr-0 lg:mt-6 lg:mb-[-10px]"

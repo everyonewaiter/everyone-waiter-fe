@@ -4,6 +4,7 @@
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { ChangeEvent, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useParams } from "next/navigation";
 import LabeledInput from "@/components/common/LabeledInput";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
@@ -32,6 +33,8 @@ export default function StoreApplicationModal({
   item,
   isAccepted,
 }: IProps) {
+  const { id } = useParams();
+
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -55,6 +58,7 @@ export default function StoreApplicationModal({
 
   const { handleOpenAddress } = useOpenDaumPostcode(form);
   const { mutateReapply, mutateReapplyWithImage } = useStores();
+  const { mutate } = mutateReapplyWithImage(id as string);
 
   const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
@@ -76,7 +80,7 @@ export default function StoreApplicationModal({
     formData.append("address", form.getValues("address"));
     formData.append("file", form.getValues("image") as File);
 
-    mutateReapplyWithImage({
+    mutate({
       registrationId: item.registrationId.toString(),
       body: formData,
     });

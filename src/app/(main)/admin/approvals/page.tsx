@@ -15,7 +15,6 @@ import {
   Table,
 } from "@/components/common/Table/Tables";
 import Searchbar from "@/components/Searchbar";
-import SectionHeader from "@/components/SectionHeader";
 import { useEffect, useState } from "react";
 import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
@@ -96,7 +95,6 @@ export default function StoreApproval() {
 
   return (
     <div className="h-full w-full">
-      <SectionHeader title="매장 등록 신청 현황" />
       <div className="px-5 md:px-0">
         <div className="mt-4 flex items-center gap-2 md:hidden">
           <Searchbar

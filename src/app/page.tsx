@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
 import GuideComponent from "@/components/GuideComponent";
@@ -14,9 +15,13 @@ export default function Home() {
   const { data: registerData } = registrationListQuery();
   const firstStoreId = data?.stores?.[0].storeId;
 
-  if (firstStoreId) {
-    router.push(`/${firstStoreId}`);
-  }
+  useEffect(() => {
+    if (!isLoading && firstStoreId) {
+      router.push(`/${firstStoreId}`);
+    }
+  }, [isLoading, firstStoreId, router]);
+
+  if (isLoading) return null;
 
   return (
     <div>
