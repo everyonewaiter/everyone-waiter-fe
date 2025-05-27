@@ -1,22 +1,39 @@
+"use client";
+
 import { useState } from "react";
 import cn from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { useMutation } from "@tanstack/react-query";
+import { addDevice } from "@/lib/api/device.api";
+import { useRouter } from "next/navigation";
+import { setCookie } from "@/lib/cookies";
+
+type FormValues = {
+  deviceName: string;
+  deviceNumber: string;
+};
 
 const tabs = [
   { id: "HALL", label: "홀 관리" },
   { id: "POS", label: "POS" },
 ];
 
-export default function AddDeviceStep2() {
+interface IProps {
+  storeId: string;
+  phoneNumber: string;
+}
+
+export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
+  const navigate = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const now = new Date();
   const dn = `POS-${now.getFullYear().toString().slice(-2)}${(now.getMonth() + 1).toString().padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}${now.getHours().toString().padStart(2, "0")}${now.getMinutes().toString().padStart(2, "0")}${now.getSeconds().toString().padStart(2, "0")}${now.getMilliseconds().toString().padStart(3, "0")}`;
 
-  const form = useForm<{ deviceName: string; deviceNumber: string }>({
+  const form = useForm<FormValues>({
     mode: "onChange",
     defaultValues: {
       deviceName: dn,
@@ -24,23 +41,29 @@ export default function AddDeviceStep2() {
     },
   });
 
-  const submitHandler = () => {
-    // activeIndex === 0 -> navigtae.push(홀 관리)
-    // activeIndex === 1 -> navigate.push(POS)
-  };
+  const { mutate } = useMutation({
+    mutationFn: addDevice,
+  });
 
-  // const handleOpenAlert = () => {
-  //   // NOTE - 등록된 매장이 없을 때 사용
-  //   open(() => (
-  //     <Alert
-  //       title="등록된 매장이 없습니다.\n매장을 먼저 등록해주세요!"
-  //       onAction={close}
-  //       onClose={close}
-  //       buttonText="확인"
-  //       hasNoCancel
-  //     />
-  //   ));
-  // };
+  const submitHandler = (data: FormValues) => {
+    const submitData = {
+      phoneNumber: phoneNumber.replaceAll("-", ""),
+      storeId,
+      name: data.deviceName,
+      purpose: activeIndex === 0 ? "HALL" : ("POS" as DevicePurpose),
+      tableNo: 0,
+      ksnetDeviceNo: activeIndex === 1 ? data.deviceNumber : "",
+      paymentType: "POSTPAID" as DevicePayment,
+    };
+
+    mutate(submitData, {
+      onSuccess: (returnData) => {
+        const { secretKey } = returnData;
+        setCookie("secretKey", secretKey);
+        navigate.push(activeIndex === 0 ? "/control/hall" : "/control/pos");
+      },
+    });
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -79,6 +102,7 @@ export default function AddDeviceStep2() {
             placeholder="단말기 번호를 입력해주세요."
           />
           <ResponsiveButton
+            type="submit"
             responsiveButtons={{
               sm: { buttonSize: "md", className: "w-full !h-10 mt-3" },
               md: { buttonSize: "sm", className: "w-full mt-3" },

@@ -89,7 +89,7 @@ AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName;
 const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
->(({ className, ...props }, ref) => (
+>(({ className, onClick, ...props }, ref) => (
   <AlertDialogPrimitive.Action ref={ref} className="flex-1">
     <ResponsiveButton
       asChild
@@ -105,6 +105,7 @@ const AlertDialogAction = React.forwardRef<
           className: "justify-center items-center !flex md:hidden",
         },
       }}
+      onClick={onClick}
       {...props}
     />
   </AlertDialogPrimitive.Action>

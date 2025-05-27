@@ -34,8 +34,8 @@ export default function Alert({
   };
 
   const handleAction = () => {
-    setOpen(false);
     onAction();
+    setOpen(false);
   };
 
   return (

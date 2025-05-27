@@ -1,32 +1,56 @@
+"use client";
+
 /* eslint-disable react-hooks/exhaustive-deps */
 
-// import Dropdown from "@/components/common/Dropdown";
+import Alert from "@/components/common/Alert/Alert";
+import Dropdown from "@/components/common/Dropdown";
 import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import useOverlay from "@/hooks/use-overlay";
+import {
+  sendAuthCodeInDevice,
+  verifyPhoneInDevice,
+} from "@/lib/api/device.api";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+interface FormValues {
+  phone: string;
+  authNumber: string;
+}
+
 interface IProps {
-  onNextStep: () => void;
+  onNextStep: (storeId: bigint, phoneNumber: string) => void;
 }
 
 export default function AddDeviceStep1({ onNextStep }: IProps) {
-  const INIT_TIME = 10;
+  const INIT_TIME = 300;
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     mode: "onChange",
   });
+
   const [authTime, setAuthTime] = useState(INIT_TIME);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [disables, setDisables] = useState({
     requestAuthentication: true,
     requestNumCheck: true,
-    goToNextStep: true,
+    goToNextStep: false,
   });
-  // const [active, setActive] = useState("");
+  const [stores, setStores] = useState<{ storeId: bigint; name: string }[]>();
+  const [active, setActive] = useState("매장을 선택해주세요.");
+
+  const { mutate: verifyPhone } = useMutation({
+    mutationFn: verifyPhoneInDevice,
+  });
+
+  const { mutate: sendAuth } = useMutation({
+    mutationFn: sendAuthCodeInDevice,
+  });
 
   useEffect(() => {
     if (!disables.requestNumCheck) {
@@ -50,36 +74,90 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
     return () => {};
   }, [disables.requestNumCheck]);
 
+  const { open, close } = useOverlay();
+
+  const handleOpenAlert = () => {
+    open(() => (
+      <Alert onAction={close} onClose={close} buttonText="확인" hasNoCancel>
+        <span>등록된 매장이 없습니다.</span>
+        <br />
+        <span>매장을 먼저 등록해주세요!</span>
+      </Alert>
+    ));
+  };
+
   // NOTE - 인증 요청
   const handleAuthentication = () => {
     setIsSubmitted(true);
     setDisables((prev) => ({ ...prev, requestNumCheck: false }));
-
-    // const phoneNumber = form.watch("phone");
-
     setAuthTime(INIT_TIME);
+
+    const phoneNumber = form.watch("phone").replaceAll("-", "");
+
+    sendAuth(
+      { phoneNumber },
+      {
+        onError: (e) => {
+          form.setError("phone", e);
+        },
+      }
+    );
   };
 
   // NOTE - 인증 확인
   const handleCheckAuth = () => {
-    // 성공 시
     setDisables({
+      ...disables,
       requestAuthentication: true,
       requestNumCheck: true,
-      goToNextStep: false,
     });
-    setIsSubmitted(false);
 
-    // 실패 시
-    // setDisables({ ...disables, requestNumCheck: false, goToNextStep: true });
-    // setIsSubmitted(true);
+    const phoneNumber = form.watch("phone").replaceAll("-", "");
+    const code = Number(form.watch("authNumber"));
+
+    verifyPhone(
+      { phoneNumber, code },
+      {
+        onSuccess: (data) => {
+          if (!data || data.stores.length === 0) {
+            handleOpenAlert();
+            form.reset();
+            setIsSubmitted(false);
+            setDisables((prev) => ({ ...prev, requestNumCheck: true }));
+          } else {
+            setStores(data.stores);
+            if (data.stores.length === 1) setActive(data.stores[0].name);
+            setDisables({
+              requestAuthentication: true,
+              requestNumCheck: true,
+              goToNextStep: true,
+            });
+            setIsSubmitted(false);
+            setAuthTime(0);
+          }
+        },
+        onError: () => {
+          setDisables({
+            ...disables,
+            requestNumCheck: false,
+            goToNextStep: true,
+          });
+          setIsSubmitted(true);
+        },
+      }
+    );
   };
 
   const handleNext = () => {
-    onNextStep();
-  };
+    const matchedStore = stores?.find((el) => el.name === active)!;
 
-  // const hasStore = 2;
+    if (!matchedStore) {
+      handleOpenAlert();
+    } else {
+      const phoneNumber = form.watch("phone");
+      onNextStep(matchedStore.storeId, phoneNumber);
+    }
+  };
 
   return (
     <>
@@ -160,19 +238,19 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
           </form>
         </Form>
       </div>
-      {disables.goToNextStep && (
+      {stores?.length! > 0 && (
         <div className="mt-4">
-          {/* API 연결 시 복구 */}
-          {/* {hasStore === 1 ? (
+          {stores?.length === 1 && (
             <div className="flex flex-col gap-2">
               <Label disabled>매장 선택</Label>
-              <Input value={"모두의 웨이터"} disabled />
+              <Input value={stores[0].name} disabled />
             </div>
-          ) : (
+          )}
+          {stores?.length! > 1 && (
             <div className="flex w-full flex-col gap-2">
               <Label disabled>매장 선택</Label>
               <Dropdown
-                data={["스토어1", "스토어2"]}
+                data={stores?.map((el) => el.name)!}
                 defaultText="매장을 선택해주세요."
                 active={active}
                 setActive={setActive}
@@ -180,7 +258,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
                 className="w-70 md:!w-[324px] lg:!w-120"
               />
             </div>
-          )} */}
+          )}
         </div>
       )}
       <ResponsiveButton
@@ -191,6 +269,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
         }}
         commonClassName="mt-5 lg:mt-8 w-full"
         onClick={handleNext}
+        disabled={!disables.goToNextStep}
       >
         다음
       </ResponsiveButton>

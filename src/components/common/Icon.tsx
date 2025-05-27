@@ -24,7 +24,7 @@ export default function Icon({
     fetch(iconSrc)
       .then((res) => res.text())
       .then(setSvg);
-  }, [iconKey]);
+  }, [iconKey, iconSrc]);
 
   if (!svg) return null;
 
