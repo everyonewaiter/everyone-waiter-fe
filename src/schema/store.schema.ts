@@ -19,4 +19,9 @@ export const storeInfoSchema = z.object({
   license: z.string().min(1, "잘못된 형식입니다."),
 });
 
+export const CategorySchema = z.object({
+  name: z.string().min(1, "잘못된 형식입니다.").max(20, "잘못된 형식입니다."),
+});
+
+export type TypeCategory = z.infer<typeof CategorySchema>;
 export type TypeStoreInfo = z.infer<typeof storeInfoSchema>;

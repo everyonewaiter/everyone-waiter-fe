@@ -16,40 +16,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/common/select";
+import MENU_ITEMS from "@/constants/sidebarMenus";
+import { getComparePath } from "@/utils/getPathname";
 import Icon from "@/components/common/Icon";
-
-interface MenuItem {
-  icon: string;
-  label: string;
-  href: string;
-}
-
-// 권한별 메뉴 구성
-const MENU_ITEMS: Record<Permission, MenuItem[]> = {
-  ADMIN: [
-    { icon: "home", label: "홈", href: "/" },
-    { icon: "people", label: "회원 관리", href: "/admin/users" },
-    { icon: "shop", label: "매장 관리", href: "/admin/stores" },
-    { icon: "check", label: "매장 등록 승인", href: "/admin/approvals" },
-    { icon: "subscribe", label: "구독 관리", href: "/admin/subscriptions" },
-    { icon: "write", label: "게시글 관리", href: "/admin/posts" },
-  ],
-  OWNER: [
-    { icon: "home", label: "홈", href: "/" },
-    { icon: "shop", label: "매장 정보", href: "/stores" },
-    { icon: "category", label: "메뉴 관리", href: "/menu" },
-    { icon: "subscribe", label: "구독 설정", href: "/subscription" },
-    { icon: "pos", label: "POS", href: "/pos" },
-    { icon: "settings", label: "설정", href: "/settings" },
-  ],
-  USER: [{ icon: "home", label: "홈", href: "/" }],
-};
 
 export default function NewSidebar() {
   const { user } = useStore(useAuthStore, (state) => state);
   const permission = user?.permission || "USER";
   const pathname = usePathname();
   const [selectedStoreId, setSelectedStoreId] = useState<string>("");
+  const comparePath = getComparePath(pathname, permission);
 
   // OWNER인 경우에만 매장 목록 조회
   const { data: storeList } = useQuery({
@@ -72,8 +48,8 @@ export default function NewSidebar() {
     <div
       className={`hidden py-8 pl-[60px] ${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}
     >
-      <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-8 md:w-[186px] lg:w-[318px] lg:px-5">
-        <div className="mb-6 flex items-center justify-center gap-[18px]">
+      <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-4 md:w-[186px] lg:w-[318px] lg:px-5 lg:pt-8">
+        <div className="mb-6 flex items-center gap-[18px] lg:mb-9">
           <Image
             src="/icons/logo/logo.svg"
             alt="모두의 웨이터 로고"
@@ -109,14 +85,12 @@ export default function NewSidebar() {
               </h1>
             </div>
           )}
-
           <ul className="relative mt-2">
             {MENU_ITEMS[permission].length > 1 && (
               <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
             )}
             {MENU_ITEMS[permission].map((item) => {
-              const isActive =
-                `/${pathname.split("/").slice(2).join("")}` === item.href;
+              const isActive = comparePath === item.href;
               return (
                 <li key={item.href}>
                   <Link
@@ -125,7 +99,7 @@ export default function NewSidebar() {
                         ? `/${selectedStoreId}${item.href}`
                         : item.href
                     }
-                    className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors ${
+                    className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
                       isActive ? "text-primary" : "text-gray-300"
                     }`}
                   >
@@ -136,7 +110,7 @@ export default function NewSidebar() {
                       }`}
                     />
                     <Icon
-                      iconKey={item.icon}
+                      iconKey={item.icon as string}
                       className={`size-6 ${isActive ? "text-primary" : "text-gray-300"}`}
                     />
                     <span className="font-medium">{item.label}</span>
