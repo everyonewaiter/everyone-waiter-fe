@@ -2,28 +2,12 @@ import { useParams } from "next/navigation";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import {
-  deviceTranslate,
-  paymentTimeTranslate,
-  stateTranslate,
-} from "@/constants/translates";
-import transformDate from "@/lib/formatting/transformDate";
+import { deviceTranslate, paymentTimeTranslate } from "@/constants/translates";
 import { useForm } from "react-hook-form";
 import Label from "@/components/common/Label";
 import Dropdown from "@/components/common/Dropdown";
-import { useEffect } from "react";
 import getQueryClient from "@/app/get-query-client";
 import useDevice from "../_hooks/useDevice";
-
-interface FormType {
-  name: string;
-  createdAt: string;
-  state: ValueOf<typeof stateTranslate>;
-  purpose: ValueOf<typeof deviceTranslate>;
-  tableNo: number | null;
-  paymentType: ValueOf<typeof paymentTimeTranslate>;
-  deviceNumber: string;
-}
 
 interface IProps {
   deviceId: string;
@@ -39,17 +23,20 @@ export default function DeviceInfoModal({ close, deviceId }: IProps) {
 
   const queryClient = getQueryClient();
 
-  const form = useForm<FormType>();
-
-  useEffect(() => {
-    if (data?.name) {
-      form.reset({
-        ...data,
-        createdAt: transformDate(data.createdAt),
-        deviceNumber: data.ksnetDeviceNo,
-      });
+  const form = useForm<
+    Omit<Device, "updatedAt" | "storeId" | "deviceId"> & {
+      deviceNumber: string;
+      tableNo: number;
+      createdAt: string;
     }
-  }, [data, form]);
+  >({
+    defaultValues: {
+      ...data,
+      deviceNumber: data?.ksnetDeviceNo,
+      tableNo: data?.tableNo,
+      createdAt: data?.createdAt,
+    },
+  });
 
   const submitHandler = () => {
     mutateUpdateDevice.mutate(
@@ -108,18 +95,15 @@ export default function DeviceInfoModal({ close, deviceId }: IProps) {
               <Dropdown
                 data={Object.values(deviceTranslate)}
                 active={
-                  deviceTranslate[
-                    form.watch("purpose") as keyof typeof deviceTranslate
-                  ]
+                  deviceTranslate[data?.purpose as keyof typeof deviceTranslate]
                 }
                 setActive={(value) => {
-                  const selected = Object.entries(deviceTranslate).filter(
+                  const selected = Object.entries(deviceTranslate).find(
                     (el) => el[1] === value
                   );
-                  form.setValue(
-                    "purpose",
-                    selected[0][0] as ValueOf<typeof deviceTranslate>
-                  );
+                  if (selected) {
+                    form.setValue("purpose", selected[0] as DevicePurpose);
+                  }
                 }}
                 defaultText={
                   deviceTranslate[data?.purpose as keyof typeof deviceTranslate]
@@ -143,11 +127,13 @@ export default function DeviceInfoModal({ close, deviceId }: IProps) {
                     setActive={(value) => {
                       const selected = Object.entries(
                         paymentTimeTranslate
-                      ).filter((el) => el[1] === value);
-                      form.setValue(
-                        "paymentType",
-                        selected[0][0] as ValueOf<typeof paymentTimeTranslate>
-                      );
+                      ).find((el) => el[1] === value);
+                      if (selected) {
+                        form.setValue(
+                          "paymentType",
+                          selected[0] as DevicePayment
+                        );
+                      }
                     }}
                     defaultText={
                       paymentTimeTranslate[data?.paymentType as DevicePayment]

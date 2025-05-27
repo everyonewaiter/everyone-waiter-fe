@@ -13,7 +13,12 @@ export const getDevices = async ({
   return response.data;
 };
 
-export const getDetailDevice = async ({ storeId, deviceId }: Ids) => {
+export const getDetailDevice = async ({
+  storeId,
+  deviceId,
+}: Ids): Promise<
+  Device & { tableNo: number; ksnetDeviceNo: string; createdAt: string }
+> => {
   const response = await instance.get(
     `${API_PATH.stores}/${storeId}/devices/${deviceId}`
   );
