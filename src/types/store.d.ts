@@ -25,18 +25,18 @@ interface Menu {
   url: string;
 }
 
-type TStoreStatus = "OPEN" | "CLOSE";
+type StoreStatus = "OPEN" | "CLOSE";
 
-interface ICountryOfOriginItem {
+interface CountryOfOriginItem {
   item: string;
   origin: string;
 }
 
-interface IStoreInfoDetail extends Omit<StoreForm, "file"> {
+interface StoreInfoDetail extends Omit<StoreForm, "file"> {
   accountId: bigint;
   storeId: bigint;
   image: string;
-  status: TStoreStatus;
+  status: StoreStatus;
   lastOpenedAt: string;
   lastClosedAt: string;
   setting: {
@@ -44,9 +44,72 @@ interface IStoreInfoDetail extends Omit<StoreForm, "file"> {
     printerLocation: string;
     showMenuPopup: boolean;
     showOrderTotalPrice: boolean;
-    countryOfOrigin: ICountryOfOriginItem[];
+    countryOfOrigin: CountryOfOriginItem[];
     staffCallOptions: string[];
   };
   createdAt: string;
   updatedAt: string;
+}
+
+// 매장 목록
+
+interface Store {
+  storeId: string;
+  name: string;
+}
+
+interface StoreList {
+  stores: Store[];
+}
+
+interface Category {
+  categoryId: string;
+  name: string;
+}
+
+interface CategoryList {
+  categories: Category[];
+}
+
+type MenuState = "DEFAULT" | "HIDE" | "SOLD_OUT";
+
+interface Menu {
+  menuId: string;
+  categoryId: string;
+  name: string;
+  description: string;
+  price: number;
+  spicy: number;
+  state: MenuState;
+  label: string;
+  image: string;
+}
+
+interface MenuList {
+  menus: Menu[];
+}
+
+interface MenuOption {
+  name: string;
+  price: number;
+}
+
+interface MenuOptionGroup {
+  menuOptionGroupId: string;
+  name: string;
+  type: "MANDATORY" | "OPTIONAL";
+  printEnabled: boolean;
+  menuOptions: MenuOption[];
+}
+interface MenuWithOption extends Menu {
+  printEnabled: boolean;
+  menuOptions: MenuOptionGroup[];
+}
+
+interface MenuListWithCategory {
+  categories: {
+    categoryId: string;
+    name: string;
+    menus: MenuWithOption[];
+  }[];
 }

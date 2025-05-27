@@ -1,15 +1,12 @@
-import { TypeChildren } from "@/types/common";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import PageTitle from "@/app/(main)/_components/PageTitle";
 
-const ClientLayout = dynamic(() => import("@/components/layout/ClientLayout"));
-
-export default function Layout({ children }: TypeChildren) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <ClientLayout>
-      <Suspense fallback={<div>페이지를 불러오는 중입니다</div>}>
+    <div className="h-screen w-screen bg-gray-700 lg:px-[60px] lg:py-[32px]">
+      <div className="h-full w-full rounded-[32px] bg-white lg:px-8">
+        <PageTitle title="매장 등록 신청 현황" />
         {children}
-      </Suspense>
-    </ClientLayout>
+      </div>
+    </div>
   );
 }

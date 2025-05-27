@@ -1,12 +1,12 @@
-type TDevicePurpose = "POS" | "HALL" | "WAITING";
-type TDevicePayment = "POSTPAID" | "PREPAID";
+type DevicePurpose = "POS" | "HALL" | "WAITING";
+type DevicePayment = "POSTPAID" | "PREPAID";
 
-interface IDevice {
-  deviceId: bigint;
-  storeId: bigint;
+interface Device {
+  deviceId: string;
+  storeId: string;
   name: string;
-  purpose: TDevicePurpose;
-  state: Omit<TStatus, "DELETE">;
-  paymentType: TDevicePayment;
+  purpose: DevicePurpose;
+  state: Omit<Status, "DELETE">;
+  paymentType: DevicePayment;
   updatedAt: string;
 }

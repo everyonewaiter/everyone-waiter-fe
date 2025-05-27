@@ -6,8 +6,6 @@ import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ResponsiveButton from "@/components/common/ResponsiveButton";
-import SectionHeader from "@/components/SectionHeader";
-import useStores from "@/hooks/useStores";
 import {
   MobileTable,
   MobileTableCell,
@@ -22,11 +20,12 @@ import {
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
-import { STATUS_COLORS } from "@/constants/statusColor";
+import { registerStateTranslate } from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
-import StoreApplicationModal from "../store/_components/modals/StoreApplicationModal";
-import PendingAcceptModal from "../store/_components/modals/PendingAcceptModal";
-import QueryProviders from "../query-providers";
+import QueryProviders from "@/app/query-providers";
+import useStores from "../(main)/(owner)/[id]/store/_hooks/useStores";
+import StoreApplicationModal from "../(main)/(owner)/[id]/store/_components/modals/StoreApplicationModal";
+import PendingAcceptModal from "../(main)/(owner)/[id]/store/_components/modals/PendingAcceptModal";
 
 const itemWidths = {
   "No.": {
@@ -53,6 +52,7 @@ const itemWidths = {
 
 export default function StoreList() {
   const navigate = useRouter();
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const { registrationListQuery } = useStores();
@@ -85,8 +85,7 @@ export default function StoreList() {
   }, [currentPage]);
 
   return (
-    <div className="h-full max-h-screen w-full overflow-y-scroll">
-      <SectionHeader title="매장 등록 신청 현황" />
+    <div className="w-full">
       <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
         <TableHeader className="w-full">
           <TableRow isHead>
@@ -135,7 +134,7 @@ export default function StoreList() {
                     },
                   }}
                 >
-                  {STATUS_COLORS[item.status]}
+                  {registerStateTranslate[item.status]}
                 </ResponsiveButton>
               </TableCell>
               <TableCell className={itemWidths.사유.className}>
@@ -178,7 +177,7 @@ export default function StoreList() {
                           },
                         }}
                       >
-                        {STATUS_COLORS[item.status]}
+                        {registerStateTranslate[item.status]}
                       </ResponsiveButton>
                     </MobileTableCell>
                   )}
@@ -201,7 +200,7 @@ export default function StoreList() {
         <ResponsiveButton
           variant="outline"
           color="outline-primary"
-          onClick={() => navigate.push("/store/create")}
+          onClick={() => navigate.push("/create")}
           responsiveButtons={{
             lg: { buttonSize: "lg" },
             md: { buttonSize: "sm" },

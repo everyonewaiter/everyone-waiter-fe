@@ -1,4 +1,4 @@
-import { IResWithPagination } from "@/types/common";
+import { TypeCategory } from "@/schema/store.schema";
 import { formInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
@@ -13,7 +13,7 @@ export const registerStore = async (body: FormData) => {
 export const getRegisters = async (
   page: number = 1,
   size: number = 20
-): Promise<IResWithPagination<StoreDetail[]>> => {
+): Promise<ResWithPagination<StoreDetail[]>> => {
   const response = await instance.get(
     `${API_PATH.stores}/registrations?page=${page}&size=${size}`
   );
@@ -52,14 +52,67 @@ export const reapplyRegistrationWithImage = async ({
   return response.data;
 };
 
-export const getStoreList = async () => {
+// 매장 목록
+export const getStoreList = async (): Promise<StoreList> => {
   const response = await instance.get(`${API_PATH.stores}`);
   return response.data;
 };
 
+// 매장 상세 정보
 export const getStoreInfoDetail = async (
-  storeId: bigint
-): Promise<IStoreInfoDetail> => {
+  storeId: string
+): Promise<StoreInfoDetail> => {
   const response = await instance.get(`${API_PATH.stores}/${storeId}`);
+  return response.data;
+};
+
+// 카테고리 목록
+export const getStoreCategoryList = async (
+  storeId: string
+): Promise<CategoryList> => {
+  const response = await instance.get(
+    `${API_PATH.stores}/${storeId}/categories`
+  );
+  return response.data;
+};
+
+// 카테고리 생성
+export const postCategory = async (storeId: string, data: TypeCategory) => {
+  const response = await instance.post(
+    `${API_PATH.stores}/${storeId}/categories`,
+    data
+  );
+  return response.data;
+};
+
+// 카테고리 수정
+export const putCategory = async (
+  storeId: string,
+  categoryId: string,
+  data: TypeCategory
+) => {
+  const response = await instance.put(
+    `${API_PATH.stores}/${storeId}/categories/${categoryId}`,
+    data
+  );
+  return response.data;
+};
+
+// 카테고리별 메뉴 조회
+export const getMenusByCategory = async (
+  storeId: string,
+  categoryId: string
+): Promise<MenuList> => {
+  const response = await instance.get(
+    `${API_PATH.stores}/${storeId}/categories/${categoryId}/menus`
+  );
+  return response.data;
+};
+
+// 메뉴 전체 조회
+export const getMenusWithCategory = async (
+  storeId: string
+): Promise<MenuListWithCategory> => {
+  const response = await instance.get(`${API_PATH.stores}/${storeId}/menus`);
   return response.data;
 };

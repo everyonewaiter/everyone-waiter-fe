@@ -1,10 +1,10 @@
 "use client";
 
-import { useSidebar } from "@/hooks/store/useSidebar";
+import { useSidebar } from "@/stores/useSidebar";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import renderIcon from "./renderIcons";
+import Icon from "../../../components/common/Icon";
 
 interface IProps {
   onClose: () => void;
@@ -52,10 +52,7 @@ export default function MobileSidebarSection({ onClose, name }: IProps) {
             <div
               className={`h-5 w-0.5 ${checkActive(item.text) ? "bg-primary" : "hidden"}`}
             />
-            {renderIcon({
-              iconKey: item.icon,
-              isActive: checkActive(item.text),
-            })}
+            <Icon iconKey={item.icon} isActive={checkActive(item.text)} />
             <span
               className={`text-[15px] font-medium ${checkActive(item.text) ? "text-primary" : "text-gray-300"}`}
             >

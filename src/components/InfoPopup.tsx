@@ -1,8 +1,9 @@
-import { useAccount } from "@/hooks/store/useAccount";
+"use client";
+
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useRef } from "react";
 
 const popupList = [
@@ -19,15 +20,15 @@ const popupList = [
 export default function InfoPopup({ close }: { close: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
-
-  const { hasAcceptedStore } = useAccount();
+  const params = useParams();
+  const { id } = params;
 
   useOutsideClick({ ref, handler: close });
   useEscapeKey({ handler: close });
 
   return (
     <div
-      className="absolute top-9 right-0 z-[9999] flex w-[160px] flex-col gap-1 rounded-[16px] bg-white p-3 shadow-[0_2px_10px_0_rgba(0,0,0,0.08)] md:top-9 md:right-0 md:w-[170px] lg:top-13 lg:right-0 lg:w-[220px]"
+      className="absolute top-9 right-0 z-[9999] flex w-[160px] flex-col gap-1 rounded-[16px] bg-white p-3 shadow-[0_2px_10px_0_rgba(0,0,0,0.08)] md:top-9 md:right-0 md:w-[170px] lg:top-30 lg:right-16 lg:w-[220px]"
       ref={ref}
     >
       <div className="flex h-9 w-full items-center gap-1 rounded-[8px] bg-gray-700 px-2 md:gap-2 lg:h-12 lg:px-4">
@@ -44,7 +45,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
           asdf@gmail.com
         </span>
       </div>
-      {!hasAcceptedStore &&
+      {id &&
         popupList.map((item) => (
           <div
             key={item.text}

@@ -1,24 +1,20 @@
 "use client";
 
 import ResponsiveButton from "@/components/common/ResponsiveButton";
+import { useSidebar } from "@/stores/useSidebar";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSidebar } from "@/hooks/store/useSidebar";
-import useStoreId from "@/hooks/store/useStoreId";
-import renderIcon from "./renderIcons";
+import Link from "next/link";
+import Icon from "@/components/common/Icon";
 
 interface IProps {
   name: string;
-  storeId?: bigint;
 }
 
-export default function StoreSection({ name, storeId }: IProps) {
-  const navigate = useRouter();
+export default function StoreSection({ name }: IProps) {
   const [isStoreOpen, setIsStoreOpen] = useState(true);
 
   const { setActiveMenu, activeMenu, menu } = useSidebar();
-  const { setStoreId } = useStoreId();
 
   const checkActive = (text: string) => activeMenu === `${name}-${text}`;
 
@@ -53,38 +49,33 @@ export default function StoreSection({ name, storeId }: IProps) {
           </div>
           <div className="z-10">
             {menu?.map((item) => (
-              <button
-                type="button"
+              <Link
+                href={item.url}
                 key={item.text}
                 className="flex items-center md:py-[9px] lg:py-3"
                 onClick={() => {
                   setActiveMenu(`${name}-${item.text}`);
-                  setStoreId(storeId!);
-                  navigate.push(item.url);
                 }}
               >
                 <div
                   className={`mr-3 h-[6px] w-[6px] rounded-full ${checkActive(item.text) ? "bg-primary" : "bg-gray-600"}`}
                 />
                 <div className="hidden lg:block">
-                  {renderIcon({
-                    iconKey: item.icon,
-                    isActive: checkActive(item.text),
-                  })}
+                  <Icon iconKey={item.icon} isActive={checkActive(item.text)} />
                 </div>
                 <div className="md:block lg:hidden">
-                  {renderIcon({
-                    iconKey: item.icon,
-                    isActive: checkActive(item.text),
-                    size: 24,
-                  })}
+                  <Icon
+                    iconKey={item.icon}
+                    isActive={checkActive(item.text)}
+                    size={24}
+                  />
                 </div>
                 <span
                   className={`md:text-s ml-[6px] md:font-medium lg:text-base lg:font-medium ${checkActive(item.text) ? "text-primary" : "text-gray-300"}`}
                 >
                   {item.text}
                 </span>
-              </button>
+              </Link>
             ))}
           </div>
         </div>

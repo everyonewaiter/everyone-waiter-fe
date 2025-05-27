@@ -1,7 +1,7 @@
 import API_PATH from "./paths";
 import { instance, authInstance } from "../axios/instance";
 
-export const createAccount = async (body: TAccount) => {
+export const createAccount = async (body: Account) => {
   const response = await authInstance.post(API_PATH.account, body);
   return response.data;
 };
@@ -15,7 +15,7 @@ export const verifyEmail = async ({ token }: { token: string }) => {
 
 export const sendAuthCode = async ({
   phoneNumber,
-}: Pick<TAccount, "phoneNumber">) => {
+}: Pick<Account, "phoneNumber">) => {
   const response = await authInstance.post(
     `${API_PATH.account}/send-auth-code`,
     {
@@ -28,7 +28,7 @@ export const sendAuthCode = async ({
 export const verifyAuthCode = async ({
   phoneNumber,
   code,
-}: Pick<TAccount, "phoneNumber"> & { code: number }) => {
+}: Pick<Account, "phoneNumber"> & { code: number }) => {
   const response = await authInstance.post(
     `${API_PATH.account}/verify-auth-code`,
     {
@@ -40,13 +40,13 @@ export const verifyAuthCode = async ({
 };
 
 export const login = async (
-  body: Omit<TAccount, "phoneNumber">
+  body: Omit<Account, "phoneNumber">
 ): Promise<{ accessToken: string; refreshToken: string }> => {
   const response = await authInstance.post(`${API_PATH.account}/sign-in`, body);
   return response.data;
 };
 
-export const sendAuthMail = async (body: Pick<TAccount, "email">) => {
+export const sendAuthMail = async (body: Pick<Account, "email">) => {
   const response = await authInstance.post(
     `${API_PATH.account}/send-auth-mail`,
     body
@@ -57,11 +57,14 @@ export const sendAuthMail = async (body: Pick<TAccount, "email">) => {
 export const renewToken = async (body: {
   refreshToken: string;
 }): Promise<{ accessToken: string; refreshToken: string }> => {
-  const response = await instance.post(`${API_PATH.account}/renew-token`, body);
+  const response = await authInstance.post(
+    `${API_PATH.account}/renew-token`,
+    body
+  );
   return response.data;
 };
 
-export const getAccount = async (): Promise<TProfile> => {
+export const getAccount = async (): Promise<UserProfile> => {
   const response = await instance.get(`${API_PATH.account}/me`);
   return response.data;
 };

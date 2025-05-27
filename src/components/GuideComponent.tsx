@@ -60,9 +60,7 @@ export default function GuideComponent({
         </div>
         <ResponsiveButton
           color="primary"
-          onClick={() =>
-            navigate.push(isFromHome ? "/store/create" : "/stores")
-          }
+          onClick={() => navigate.push(isFromHome ? "/create" : "/stores")}
           responsiveButtons={{
             lg: { buttonSize: "lg", className: "!h-12" },
             md: { buttonSize: "md", className: "!h-9" },

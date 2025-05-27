@@ -1,15 +1,14 @@
-import { IResWithPagination } from "@/types/common";
 import { authInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
 interface Ids {
-  storeId: bigint;
-  deviceId: bigint;
+  storeId: string;
+  deviceId: string;
 }
 
 export const getDevices = async ({
   storeId,
-}: Pick<Ids, "storeId">): Promise<IResWithPagination<IDevice[]>> => {
+}: Pick<Ids, "storeId">): Promise<ResWithPagination<Device[]>> => {
   const response = await instance.get(`${API_PATH.stores}/${storeId}/devices`);
   return response.data;
 };
@@ -25,7 +24,7 @@ export const updateDevice = async ({
   storeId,
   deviceId,
   ...body
-}: Pick<IDevice, "name" | "purpose" | "paymentType"> & {
+}: Pick<Device, "name" | "purpose" | "paymentType"> & {
   tableNo: number;
   ksnetDeviceNo: string;
 } & Ids) => {
@@ -46,7 +45,7 @@ export const deleteDevice = async ({ storeId, deviceId }: Ids) => {
 export const addDevice = async ({
   storeId,
   ...body
-}: Omit<IDevice, "state" | "updatedAt"> & {
+}: Omit<Device, "state" | "updatedAt"> & {
   tableNo: number;
   ksnetDeviceNo: string;
   phoneNumber: string;
