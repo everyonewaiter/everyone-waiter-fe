@@ -50,11 +50,12 @@ export const deleteDevice = async ({ storeId, deviceId }: Ids) => {
 export const addDevice = async ({
   storeId,
   ...body
-}: Omit<Device, "state" | "updatedAt"> & {
+}: Omit<Device, "state" | "updatedAt" | "deviceId"> & {
   tableNo: number;
   ksnetDeviceNo: string;
   phoneNumber: string;
-} & Ids): Promise<{ deviceId: bigint; secretKey: string }> => {
+  storeId: string;
+}): Promise<{ deviceId: bigint; secretKey: string }> => {
   const response = await authInstance.post(
     `${API_PATH.stores}/${storeId}/devices`,
     body

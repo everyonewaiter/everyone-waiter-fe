@@ -10,7 +10,6 @@ import { useMutation } from "@tanstack/react-query";
 import { addDevice } from "@/lib/api/device.api";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/lib/cookies";
-import useDeviceId from "@/hooks/store/useDeviceId";
 
 type FormValues = {
   deviceName: string;
@@ -23,14 +22,13 @@ const tabs = [
 ];
 
 interface IProps {
-  storeId: bigint;
+  storeId: string;
   phoneNumber: string;
 }
 
 export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
   const navigate = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
-  const { setDeviceId } = useDeviceId();
 
   const now = new Date();
   const dn = `POS-${now.getFullYear().toString().slice(-2)}${(now.getMonth() + 1).toString().padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}${now.getHours().toString().padStart(2, "0")}${now.getMinutes().toString().padStart(2, "0")}${now.getSeconds().toString().padStart(2, "0")}${now.getMilliseconds().toString().padStart(3, "0")}`;
@@ -52,21 +50,17 @@ export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
       phoneNumber: phoneNumber.replaceAll("-", ""),
       storeId,
       name: data.deviceName,
-      purpose: activeIndex === 0 ? "HALL" : ("POS" as TDevicePurpose),
+      purpose: activeIndex === 0 ? "HALL" : ("POS" as DevicePurpose),
       tableNo: 0,
       ksnetDeviceNo: activeIndex === 1 ? data.deviceNumber : "",
-      paymentType: "POSTPAID" as TDevicePayment,
+      paymentType: "POSTPAID" as DevicePayment,
     };
 
     mutate(submitData, {
       onSuccess: (returnData) => {
-        const { deviceId, secretKey } = returnData;
+        const { secretKey } = returnData;
         setCookie("secretKey", secretKey);
-        setDeviceId(deviceId);
         navigate.push(activeIndex === 0 ? "/control/hall" : "/control/pos");
-      },
-      onError: (error) => {
-        alert((error as any).response.message);
       },
     });
   };
