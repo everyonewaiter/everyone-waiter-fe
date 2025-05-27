@@ -5,7 +5,7 @@ import { useSidebar } from "@/stores/useSidebar";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import renderIcon from "./renderIcons";
+import Icon from "@/components/common/Icon";
 
 interface IProps {
   name: string;
@@ -61,17 +61,14 @@ export default function StoreSection({ name }: IProps) {
                   className={`mr-3 h-[6px] w-[6px] rounded-full ${checkActive(item.text) ? "bg-primary" : "bg-gray-600"}`}
                 />
                 <div className="hidden lg:block">
-                  {renderIcon({
-                    iconKey: item.icon,
-                    isActive: checkActive(item.text),
-                  })}
+                  <Icon iconKey={item.icon} isActive={checkActive(item.text)} />
                 </div>
                 <div className="md:block lg:hidden">
-                  {renderIcon({
-                    iconKey: item.icon,
-                    isActive: checkActive(item.text),
-                    size: 24,
-                  })}
+                  <Icon
+                    iconKey={item.icon}
+                    isActive={checkActive(item.text)}
+                    size={24}
+                  />
                 </div>
                 <span
                   className={`md:text-s ml-[6px] md:font-medium lg:text-base lg:font-medium ${checkActive(item.text) ? "text-primary" : "text-gray-300"}`}

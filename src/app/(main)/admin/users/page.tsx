@@ -3,7 +3,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Paginations from "@/components/common/Pagination/Paginations";
 import Searchbar from "@/components/Searchbar";
-import SectionHeader from "@/components/SectionHeader";
 import { useEffect, useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import DropdownGroup from "./_components/DropdownGroup";
@@ -59,7 +58,6 @@ export default function Users() {
 
   return (
     <div className="h-full min-h-screen w-full overflow-y-scroll">
-      <SectionHeader title="회원 관리" />
       <div className="mt-4 flex w-full px-5 md:hidden">
         <Searchbar
           searchWord={debouncedValue}

@@ -1,6 +1,5 @@
 "use client";
 
-import SectionHeader from "@/components/SectionHeader";
 import {
   MobileTable,
   MobileTableCell,
@@ -23,7 +22,7 @@ import { useState } from "react";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
 import { Button } from "@/components/common/Button";
-import renderIcon from "@/app/(main)/_components/renderIcons";
+import Icon from "@/components/common/Icon";
 import DeviceInfoModal from "./_components/DeviceInfoModal";
 import useTableCheck from "./_hooks/useTableCheck";
 
@@ -96,18 +95,17 @@ export default function Device() {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <SectionHeader title="기기 관리" />
       <button
         type="button"
         className="mt-4 mb-4 flex w-full flex-row items-center justify-end gap-1 pr-5 md:mb-0 md:pr-0 lg:mt-6 lg:mb-[-10px]"
         onClick={handleAlertOpen}
       >
-        {renderIcon({
-          iconKey: "trash",
-          isActive: true,
-          size: 20,
-          className: "lg:w-5 lg:h-5 w-[15px] h-[15gpx]",
-        })}
+        <Icon
+          iconKey="trash-02"
+          isActive
+          size={20}
+          className="h-[15gpx] w-[15px] lg:h-5 lg:w-5"
+        />
         <span className="text-status-error text-sm lg:text-lg">삭제</span>
       </button>
       <div className="hidden min-h-[calc(100dvh-420px)] w-full overflow-y-scroll md:block">

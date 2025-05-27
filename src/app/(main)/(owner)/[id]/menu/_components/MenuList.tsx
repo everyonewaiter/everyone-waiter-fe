@@ -6,7 +6,7 @@ import MenuCard from "./MenuCard";
 import AddMenu from "./AddMenu";
 
 interface MenuListProps {
-  storeId: string;
+  // storeId: string;
   menus: MenuWithOption[] | Menu[];
 }
 
@@ -15,7 +15,7 @@ interface SelectedMenu {
   categoryId: string;
 }
 
-export default function MenuList({ storeId, menus }: MenuListProps) {
+export default function MenuList({ menus }: MenuListProps) {
   const [selectedMenus, setSelectedMenus] = useState<SelectedMenu[]>([]);
 
   const handleMenuSelect = (
@@ -31,7 +31,6 @@ export default function MenuList({ storeId, menus }: MenuListProps) {
   };
 
   const handleDelete = () => {
-    console.log("선택된 메뉴들:", selectedMenus, storeId);
     // TODO - 삭제 로직 구현
   };
   const isMenuSelected = (menuId: string) =>
@@ -42,7 +41,9 @@ export default function MenuList({ storeId, menus }: MenuListProps) {
       <div className="my-4 flex items-center gap-4 self-end md:my-0 md:-translate-y-7">
         <button
           type="button"
-          onClick={() => console.log("순서변경")}
+          onClick={() => {
+            // 순서 변경
+          }}
           className="flex items-center gap-1"
         >
           <ArrowLeftRightIcon

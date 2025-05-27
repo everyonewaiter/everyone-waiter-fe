@@ -116,7 +116,7 @@ export default function StoreModal({ close, registrationId, email }: IProps) {
                   {data?.image && (
                     <div className="flex w-full justify-center rounded-[16px] border border-gray-600 py-6">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_PROD_CDN}/${data?.image!}`}
+                        src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${data?.image!}`}
                         alt="사업자 등록증"
                         width={381}
                         height={458}

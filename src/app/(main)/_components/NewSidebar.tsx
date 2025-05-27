@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useStore } from "zustand";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ICON_MAP from "@/components/icons";
 import { useEffect, useState } from "react";
 
 import { getStoreList } from "@/lib/api/stores.api";
@@ -17,8 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/common/select";
-import { MENU_ITEMS } from "@/constants/sidebarMenus";
+import MENU_ITEMS from "@/constants/sidebarMenus";
 import { getComparePath } from "@/utils/getPathname";
+import Icon from "@/components/common/Icon";
 
 export default function NewSidebar() {
   const { user } = useStore(useAuthStore, (state) => state);
@@ -91,12 +91,11 @@ export default function NewSidebar() {
             )}
             {MENU_ITEMS[permission].map((item) => {
               const isActive = comparePath === item.href;
-              const IconComponent = ICON_MAP[item.icon];
               return (
                 <li key={item.href}>
                   <Link
                     href={
-                      permission === "OWNER" && item.href !== "/"
+                      permission === "OWNER"
                         ? `/${selectedStoreId}${item.href}`
                         : item.href
                     }
@@ -110,7 +109,8 @@ export default function NewSidebar() {
                         isActive ? "bg-primary" : "bg-gray-600"
                       }`}
                     />
-                    <IconComponent
+                    <Icon
+                      iconKey={item.icon as string}
                       className={`size-6 ${isActive ? "text-primary" : "text-gray-300"}`}
                     />
                     <span className="font-medium">{item.label}</span>

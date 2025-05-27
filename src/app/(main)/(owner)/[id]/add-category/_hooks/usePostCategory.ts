@@ -12,8 +12,5 @@ export default function usePostCategory({ storeId }: { storeId: string }) {
         queryKey: ["category-list", storeId],
       });
     },
-    onError: (error) => {
-      console.error(error);
-    },
   });
 }

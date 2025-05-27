@@ -6,8 +6,8 @@ import Image from "next/image";
 import useAuthStore from "@/stores/useAuthStore";
 import { useSidebar } from "@/stores/useSidebar";
 import { useRouter } from "next/navigation";
-import StoreSection from "./StoreSection";
 import useStores from "../(owner)/[id]/store/_hooks/useStores";
+import StoreSection from "./StoreSection";
 
 export default function Sidebar() {
   const navigate = useRouter();

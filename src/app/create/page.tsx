@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import GuideComponent from "@/components/GuideComponent";
-import CreateForm from "../_components/CreateForm";
+import CreateForm from "./_components/CreateForm";
 
 export default function CreateStore() {
   const searchParams = useSearchParams();

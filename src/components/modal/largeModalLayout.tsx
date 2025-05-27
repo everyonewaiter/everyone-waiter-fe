@@ -75,7 +75,7 @@ function Layout({
   return (
     <div
       className={cn(
-        "min-h-[362px] overflow-y-scroll md:h-87 lg:h-145",
+        "min-h-[362px] overflow-y-scroll md:max-h-87 lg:max-h-145",
         className
       )}
     >

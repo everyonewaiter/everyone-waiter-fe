@@ -1,4 +1,4 @@
-import { MENU_ITEMS } from "@/constants/sidebarMenus";
+import MENU_ITEMS from "@/constants/sidebarMenus";
 
 export function getComparePath(pathname: string, permission: Permission) {
   if (permission === "OWNER") {

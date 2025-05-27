@@ -41,7 +41,7 @@ export default function PhotoForBusiness({
       ) : (
         <div className="mt-5 h-[346px] w-full md:mt-0 lg:h-[457px]">
           <Image
-            src={`${process.env.NEXT_PUBLIC_PROD_CDN}/${imageUrl}`}
+            src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${imageUrl}`}
             alt="사업자 등록증"
             width={380}
             height={457}

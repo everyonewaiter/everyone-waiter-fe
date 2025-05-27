@@ -21,7 +21,7 @@ const useStores = () => {
 
   const mutateRegisterStore = useMutation({
     mutationFn: registerStore,
-    onSuccess: () => navigate.push("/store/create?state=pending"),
+    onSuccess: () => navigate.push("/create?state=pending"),
   });
 
   const registrationListQuery = (page: number = 1) =>
@@ -41,13 +41,14 @@ const useStores = () => {
     mutationFn: reapplyRegistration,
   });
 
-  const { mutate: mutateReapplyWithImage } = useMutation({
-    mutationFn: reapplyRegistrationWithImage,
-    onSuccess: () => {
-      navigate.push("/stores");
-      queryClient.invalidateQueries({ queryKey: ["get-stores"] });
-    },
-  });
+  const mutateReapplyWithImage = (storeId: string) =>
+    useMutation({
+      mutationFn: reapplyRegistrationWithImage,
+      onSuccess: () => {
+        navigate.push(`/${storeId}`);
+        queryClient.invalidateQueries({ queryKey: ["get-stores"] });
+      },
+    });
 
   const acceptedStoresListQuery = (enabled: boolean) =>
     useQuery<{

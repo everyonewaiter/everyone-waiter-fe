@@ -22,7 +22,7 @@ export default function MenuCard({
       key={menu.menuId}
     >
       <Image
-        src={`${process.env.NEXT_PUBLIC_PROD_CDN}/${menu.image}`}
+        src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${menu.image}`}
         alt={menu.name}
         fill
         sizes="100%"

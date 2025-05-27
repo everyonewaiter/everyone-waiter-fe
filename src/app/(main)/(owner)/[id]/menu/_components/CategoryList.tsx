@@ -30,7 +30,7 @@ export default function CategoryList({ storeId }: CategoryListProps) {
       <button
         type="button"
         onClick={() => {
-          console.log("카테고리 설정 버튼 클릭");
+          // 카테고리 설정 액션
         }}
         className="rounded-xl bg-[#f5f5f5] p-[10px]"
       >

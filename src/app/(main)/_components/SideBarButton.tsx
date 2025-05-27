@@ -1,6 +1,7 @@
 "use client";
 
 import MobileSidebar from "@/app/(main)/_components/MobileSidebar";
+import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/use-overlay";
 import { Menu } from "lucide-react";
 
@@ -8,7 +9,11 @@ export default function SideBarButton() {
   const { open, close } = useOverlay();
 
   const handleOpenSidebar = () => {
-    open(() => <MobileSidebar onClose={close} />);
+    open(() => (
+      <QueryProviders>
+        <MobileSidebar onClose={close} />
+      </QueryProviders>
+    ));
   };
 
   return (
