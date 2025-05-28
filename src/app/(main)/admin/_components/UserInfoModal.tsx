@@ -5,7 +5,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";

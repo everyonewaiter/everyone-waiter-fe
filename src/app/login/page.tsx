@@ -8,7 +8,7 @@ import { loginSchema, TypeLogin } from "@/schema/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import LabeledInput from "@/components/common/LabeledInput";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 
 import SignupLayout from "../signup/layout";
 import useLogin from "./_hooks/useLogin";

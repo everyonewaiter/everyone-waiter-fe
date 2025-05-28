@@ -17,12 +17,12 @@ import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
 import { stateTranslate } from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Paginations from "@/components/common/Pagination/Paginations";
 import { useState } from "react";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import getQueryClient from "@/app/get-query-client";
 import QueryProviders from "@/app/query-providers";
@@ -161,7 +161,7 @@ export default function Device() {
                   <div>
                     <ResponsiveButton
                       variant="outline"
-                      color="outline-primary"
+                      color="primary"
                       responsiveButtons={{
                         lg: {
                           buttonSize: "sm",
@@ -217,7 +217,7 @@ export default function Device() {
                   <MobileTableCell>
                     <Button
                       variant="outline"
-                      color="outline-primary"
+                      color="primary"
                       className="font-regular rounded-[24px] px-3 py-1 text-xs"
                     >
                       {

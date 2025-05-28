@@ -59,7 +59,7 @@ export default function WaitingSection({
           type="button"
           iconKey="door-open"
           variant="outline"
-          color="outline-primary"
+          color="primary"
           className="text-primary"
           text="입장"
           onClick={onEnterance}
