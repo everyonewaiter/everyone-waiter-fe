@@ -1,4 +1,6 @@
-export default function Layout({ children }: Children) {
+import { PropsWithChildren } from "react";
+
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <div>
       <div className="flex h-full w-full items-center justify-center pt-4 md:hidden">

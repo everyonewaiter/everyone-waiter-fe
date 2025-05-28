@@ -17,5 +17,5 @@ export default function AllMenu({ storeId }: AllMenuProps) {
   // 메뉴만 뽑아내기
   const allMenus = data?.categories.flatMap((category) => category.menus) || [];
 
-  return <MenuList storeId={storeId} menus={allMenus} />;
+  return <MenuList menus={allMenus} />;
 }
