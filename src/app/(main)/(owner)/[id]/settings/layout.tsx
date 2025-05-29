@@ -8,7 +8,11 @@ export default async function Layout({
   return (
     <>
       <PageTitle title="설정" />
-      {children}
+      <div className="h-full w-full overflow-y-auto">
+        <div className="mt-6 flex w-full items-start justify-center md:items-center lg:mt-10 lg:h-full">
+          {children}
+        </div>
+      </div>
     </>
   );
 }
