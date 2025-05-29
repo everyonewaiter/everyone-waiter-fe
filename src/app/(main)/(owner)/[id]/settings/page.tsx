@@ -39,10 +39,6 @@ export default function Settings() {
     <div className="flex w-[480px] flex-col gap-8">
       <div className="flex flex-col gap-2 md:gap-3">
         <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">설정</h1>
-        <div className="font-regular md:text-s gap-1/2 flex flex-col text-xs text-gray-300 lg:text-sm">
-          <span>메뉴 카테고리를 등록하거나 수정할 수 있습니다.</span>
-          <span>카테고리는 메뉴 정렬 및 노출에 활용됩니다.</span>
-        </div>
       </div>
       <div className="flex flex-col gap-6">
         <div>
