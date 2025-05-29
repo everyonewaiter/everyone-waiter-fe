@@ -9,7 +9,7 @@ export default async function Layout({
     <>
       <PageTitle title="설정" />
       <div className="h-full w-full overflow-y-auto">
-        <div className="mt-6 flex w-full items-start justify-center md:items-center lg:mt-10 lg:h-full">
+        <div className="flex h-full w-full items-start justify-center py-6 md:items-center lg:py-10">
           {children}
         </div>
       </div>

@@ -122,11 +122,12 @@ export default function Settings() {
                     color="black"
                     responsiveButtons={{
                       lg: {
-                        buttonSize: "custom",
-                        className: "mt-1.5 relative gap-0 !w-[71px]",
+                        buttonSize: "sm",
+                        className: "relative gap-0 !w-[71px]",
                       },
                       md: {
                         buttonSize: "sm",
+                        className: "flex",
                       },
                       sm: {
                         buttonSize: "sm",
