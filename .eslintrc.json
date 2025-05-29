@@ -19,7 +19,16 @@
       { "blankLine": "always", "prev": "import", "next": "*" },
       { "blankLine": "any", "prev": "import", "next": "import" }
     ],
-    "import/no-cycle": "off"
+    "import/no-cycle": "off",
+    "import/no-extraneous-dependencies": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "paths": ["."]
+      }
+    }
   },
   "parser": "@typescript-eslint/parser"
 }

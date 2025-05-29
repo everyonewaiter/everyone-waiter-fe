@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-alert */
 import axios, { AxiosInstance } from "axios";
-
+import { Mutex } from "async-mutex";
 import { deleteCookie, getToken, setCookie } from "../cookies";
 import { renewToken } from "../api/auth.api";
 
@@ -34,6 +34,8 @@ const instance = axios.create({
 
 // NOTE - 요청 인터셉터(요청 전달 전 작업 수행)
 
+const mutex = new Mutex();
+
 const setupInterceptors = (axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.request.use(
     async (config) => {
@@ -55,49 +57,52 @@ const setupInterceptors = (axiosInstance: AxiosInstance) => {
     (response) => response,
     // 2xx 외의 범위 상태 코드(실패)
     async (error) => {
-      const originalRequest = error.config;
+      const originalRequest = error.config as any;
+
+      if (error.response.status === 403) {
+        console.error("접근 권한이 없습니다");
+        // 필요한 경우 리다이렉트 설정 추가 필요
+        return Promise.reject(error);
+      }
 
       if (
-        error.response.status === 401 &&
+        error.response?.status === 401 &&
         !originalRequest.isRetry &&
         !window.location.href.includes("/control")
       ) {
         originalRequest.isRetry = true;
 
-        try {
-          const refreshToken = await getToken("refreshToken");
-          if (!refreshToken) {
-            window.location.href = "/login";
+        return mutex.runExclusive(async () => {
+          try {
+            const refreshToken = await getToken("refreshToken");
+            if (!refreshToken) {
+              window.location.href = "/login";
+              throw error;
+            }
+
+            const { accessToken } = await renewToken({ refreshToken });
+
+            if (accessToken) {
+              await setCookie("accessToken", accessToken);
+              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+              return await instance(originalRequest);
+            }
+
             return await Promise.reject(error);
-          }
+          } catch (refreshError: any) {
+            const code = refreshError?.response?.data?.code;
 
-          const { accessToken } = await renewToken({ refreshToken });
+            if (["FORBIDDEN", "UNAUTHORIZED"].includes(code)) {
+              alert(refreshError.response.data.message);
+              window.location.href = "/login";
+            } else {
+              await deleteCookie("accessToken");
+              await deleteCookie("refreshToken");
+            }
 
-          const newAccessToken = accessToken;
-          if (newAccessToken) {
-            await setCookie("accessToken", newAccessToken);
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            return await instance(originalRequest);
-          }
-        } catch (refreshError) {
-          if (
-            ["FORBIDDEN", "UNAUTHORIZED"].includes(
-              (refreshError as any).response.data.code
-            )
-          ) {
-            alert((refreshError as any).response.data.message);
-            window.location.href = "/login";
-          } else {
-            await deleteCookie("accessToken");
-            await deleteCookie("refreshToken");
             return Promise.reject(refreshError);
           }
-        }
-      }
-      if (error.response.status === 403) {
-        console.error("접근 권한이 없습니다");
-        // 필요한 경우 리다이렉트 설정 추가 필요
-        return Promise.reject(error);
+        });
       }
 
       return Promise.reject(error);
