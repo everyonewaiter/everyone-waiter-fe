@@ -15,7 +15,11 @@ import {
 } from "@/components/common/Table/Tables";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
-import { stateTranslate } from "@/constants/translates";
+import {
+  deviceTranslate,
+  paymentTimeTranslate,
+  stateTranslate,
+} from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Paginations from "@/components/common/Pagination/Paginations";
@@ -49,7 +53,7 @@ export default function Device() {
   const { data } = getDevicesQuery(storeId);
 
   const { checkedItems, allChecked, handleCheckAll, handleCheckItem } =
-    useTableCheck(data?.content!, "deviceId");
+    useTableCheck<Device>(data?.content!, "deviceId");
 
   const modalOverlay = useOverlay();
   const alertOverlay = useOverlay();
@@ -90,7 +94,7 @@ export default function Device() {
       >
         {checkedKeys.length >= 1 ? (
           <div>
-            <span className="text-primary">{firstItem?.name}</span>
+            <span className="text-primary">{firstItem?.deviceId}</span>
             {length > 1 ? ` 외 ${length - 1}개의 ` : " "}
             기기를 삭제하시겠습니까?
           </div>
@@ -105,7 +109,7 @@ export default function Device() {
     <div className="flex h-full w-full flex-col">
       <button
         type="button"
-        className="mt-4 mb-4 flex w-full flex-row items-center justify-end gap-1 pr-5 md:mb-0 md:pr-0 lg:mt-6 lg:mb-[-10px]"
+        className="mt-4 mb-4 flex w-full flex-row items-center justify-end gap-1 md:mb-0 lg:mt-6 lg:mb-[-10px]"
         onClick={handleAlertOpen}
       >
         <Icon
@@ -140,7 +144,7 @@ export default function Device() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.content?.map((item) => (
+            {data?.content?.map((item: Device) => (
               <TableRow
                 key={item.deviceId.toString()}
                 onClick={() => handleModalOpen(item.deviceId)}
@@ -193,9 +197,9 @@ export default function Device() {
         </Table>
       </div>
       <div className="flex flex-col gap-5 md:hidden">
-        {data?.content.map((item, index) => (
+        {data?.content.map((item: Device, index: number) => (
           <div className="flex flex-col gap-2" key={item.deviceId}>
-            <div className="text-gray-0 flex flex-row items-center gap-[10px] pl-5 text-lg font-semibold">
+            <div className="text-gray-0 flex flex-row items-center gap-[10px] text-lg font-semibold">
               <Checkbox
                 checked={!!checkedItems[item.deviceId.toString()]}
                 onCheckedChange={(checked) => handleCheckItem(item, !!checked)}
@@ -203,7 +207,7 @@ export default function Device() {
               <span>{index + 1}</span>
             </div>
             <MobileTable
-              className="z-10 mx-5"
+              className="z-10"
               key={item.deviceId}
               onClick={() => handleModalOpen(item.deviceId)}
             >
@@ -230,11 +234,23 @@ export default function Device() {
                 </MobileTableRow>
                 <MobileTableRow>
                   <MobileTableHead>권한</MobileTableHead>
-                  <MobileTableCell>{item.purpose}</MobileTableCell>
+                  <MobileTableCell>
+                    {
+                      deviceTranslate[
+                        item.purpose as keyof typeof deviceTranslate
+                      ]
+                    }
+                  </MobileTableCell>
                 </MobileTableRow>
                 <MobileTableRow>
                   <MobileTableHead>결제 방식</MobileTableHead>
-                  <MobileTableCell>{item.paymentType}</MobileTableCell>
+                  <MobileTableCell>
+                    {
+                      paymentTimeTranslate[
+                        item.paymentType as keyof typeof paymentTimeTranslate
+                      ]
+                    }
+                  </MobileTableCell>
                 </MobileTableRow>
                 <MobileTableRow>
                   <MobileTableHead>등록 일시</MobileTableHead>
