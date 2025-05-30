@@ -5,7 +5,7 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import {
   MobileTable,
   MobileTableCell,

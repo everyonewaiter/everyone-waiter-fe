@@ -6,12 +6,6 @@ import { Button, ButtonColors, buttonVariants } from "./Button";
 type ButtonSize = "sm" | "md" | "lg" | "xl" | "custom";
 type ScreenSize = "sm" | "md" | "lg";
 
-const responsiveClass: Record<ScreenSize, string> = {
-  sm: "block md:hidden",
-  md: "hidden md:block lg:hidden",
-  lg: "hidden lg:block",
-};
-
 interface IProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color"> {
   /**
@@ -20,7 +14,10 @@ interface IProps
    * - Example: `sm: { buttonSize: 'md', className: '...' }`
    */
   responsiveButtons: Partial<
-    Record<ScreenSize, { buttonSize: ButtonSize; className?: string }>
+    Record<
+      ScreenSize,
+      { buttonSize: ButtonSize; className?: string; color?: string }
+    >
   >;
   /**
    * - 전체 사이즈에 적용되는 공통 스타일
@@ -63,16 +60,18 @@ export default function ResponsiveButton({
           <Button
             key={screenSize}
             variant={variant}
-            color={color as keyof ButtonColors}
+            color={(color || buttonProps?.color) as keyof ButtonColors}
             className={cn(
-              screenSize === "sm" && buttonProps ? "flex md:!hidden" : "hidden",
+              screenSize === "sm" && buttonProps ? "flex md:hidden" : "hidden",
               screenSize === "md" && buttonProps
                 ? "hidden md:flex lg:!hidden"
                 : "hidden",
               screenSize === "lg" && buttonProps ? "hidden lg:!flex" : "hidden",
-              buttonStyle(buttonProps?.buttonSize!, buttonProps?.className!),
-              commonClassName,
-              responsiveClass[screenSize as ScreenSize]
+              buttonStyle(
+                buttonProps?.buttonSize ?? "md",
+                buttonProps?.className ?? ""
+              ),
+              commonClassName
             )}
             {...props}
           >

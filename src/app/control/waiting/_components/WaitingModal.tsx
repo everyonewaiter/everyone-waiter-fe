@@ -1,5 +1,5 @@
 import Icon from "@/components/common/Icon";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
 
@@ -89,7 +89,7 @@ export default function WaitingModal({ close, type }: IProps) {
             </ResponsiveButton>
             <ResponsiveButton
               variant="outline"
-              color="outline-primary"
+              color="primary"
               responsiveButtons={{
                 lg: {
                   buttonSize: "xl",

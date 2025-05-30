@@ -18,5 +18,5 @@ export default function MenusByCategory({
     queryFn: () => getMenusByCategory(storeId, categoryId),
   });
 
-  return <MenuList storeId={storeId} menus={data?.menus || []} />;
+  return <MenuList menus={data?.menus || []} />;
 }

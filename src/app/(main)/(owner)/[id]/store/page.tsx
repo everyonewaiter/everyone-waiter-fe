@@ -5,7 +5,7 @@
 import { Form } from "@/components/common/Form";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PropsWithChildren, useState } from "react";
@@ -211,7 +211,7 @@ export default function StoreInfo() {
                     <ResponsiveButton
                       type="button"
                       variant="outline"
-                      color="outline-gray"
+                      color="gray"
                       responsiveButtons={{
                         sm: { buttonSize: "sm", className: "!flex md:hidden" },
                         md: {
@@ -257,7 +257,7 @@ export default function StoreInfo() {
               <ResponsiveButton
                 type="button"
                 variant="outline"
-                color="outline-black"
+                color="black"
                 responsiveButtons={{
                   sm: {
                     buttonSize: "sm",

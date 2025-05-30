@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import ResponsiveButton from "./common/ResponsiveButton";
+import ResponsiveButton from "./common/Button/ResponsiveButton";
 
 interface IProps {
   title: string;

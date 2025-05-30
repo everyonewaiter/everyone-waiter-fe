@@ -46,7 +46,10 @@ export default function Device() {
           />
         )}
         {step === 1 && (
-          <AddDeviceStep2 storeId={storeId} phoneNumber={phoneNumber} />
+          <AddDeviceStep2
+            storeId={storeId.toString()}
+            phoneNumber={phoneNumber}
+          />
         )}
       </div>
     </div>

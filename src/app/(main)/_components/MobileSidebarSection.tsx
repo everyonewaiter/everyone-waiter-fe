@@ -1,66 +1,121 @@
 "use client";
 
-import { useSidebar } from "@/stores/useSidebar";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getStoreList } from "@/lib/api/stores.api";
+import { useQuery } from "@tanstack/react-query";
+import { getComparePath } from "@/utils/getPathname";
+import { useStore } from "zustand";
+import useAuthStore from "@/stores/useAuthStore";
+import MENU_ITEMS from "@/constants/sidebarMenus";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/common/select";
 import Icon from "../../../components/common/Icon";
 
 interface IProps {
   onClose: () => void;
-  name: string;
 }
 
-export default function MobileSidebarSection({ onClose, name }: IProps) {
+export default function MobileSidebarSection({ onClose }: IProps) {
   const navigate = useRouter();
-  const [isOpen, setIsOpen] = useState(true);
 
-  const { setActiveMenu, activeMenu, menu } = useSidebar();
+  const { user } = useStore(useAuthStore, (state) => state);
+  const permission = user?.permission || "USER";
+  const pathname = usePathname();
+  const [selectedStoreId, setSelectedStoreId] = useState<string>("");
+  const comparePath = getComparePath(pathname, permission);
 
-  const checkActive = (text: string) => activeMenu === `${name}-${text}`;
+  // OWNER인 경우에만 매장 목록 조회
+  const { data: storeList } = useQuery({
+    queryKey: ["store-list"],
+    queryFn: getStoreList,
+    enabled: permission === "OWNER",
+  });
+
+  // storeList가 있을 때 첫 번째 매장 ID를 기본값으로 설정
+  useEffect(() => {
+    if (storeList?.stores.length) {
+      setSelectedStoreId(storeList.stores[0].storeId);
+    }
+  }, [storeList]);
+
+  const isOwnerWithoutStore =
+    permission === "OWNER" && storeList?.stores.length === 0;
+
+  const handleClick = (href: string) => {
+    if (permission === "OWNER") {
+      navigate.push(`/${selectedStoreId}${href}`);
+    } else {
+      navigate.push(href);
+    }
+    onClose();
+  };
 
   return (
-    <div>
-      <div>
-        <button
-          type="button"
-          className="text-gray-0 flex w-full items-center justify-between py-3 text-base font-semibold"
-          onClick={() => setIsOpen((prev) => !prev)}
-        >
-          {name}
-          <div className="center h-6 w-6">
-            {isOpen ? (
-              <ChevronUp strokeWidth="1.3" width={20} height={20} />
-            ) : (
-              <ChevronDown strokeWidth="1.3" width={20} height={20} />
-            )}
+    <div className={`${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}>
+      <nav>
+        {permission === "OWNER" ? (
+          <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
+            <SelectTrigger className="bg-primary flex w-full items-center justify-between rounded-xl text-sm font-bold text-white">
+              <SelectValue placeholder="매장 선택">
+                {storeList?.stores.find(
+                  (store) => store.storeId === selectedStoreId
+                )?.name || "매장 선택"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {storeList?.stores.map((store) => (
+                <SelectItem key={store.storeId} value={store.storeId}>
+                  {store.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : (
+          <div className="bg-primary flex w-full items-center justify-between rounded-xl py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5">
+            <h1 className="text-[15px] font-bold text-white lg:text-[18px]">
+              관리자
+            </h1>
           </div>
-        </button>
-      </div>
-      <div className={isOpen ? "block" : "hidden"}>
-        {menu?.map((item) => (
-          <button
-            type="button"
-            key={item.text}
-            className={`flex items-center gap-[10px] py-[10px] ${checkActive(item.text) ? "pl-0" : "pl-[12px]"}`}
-            onClick={() => {
-              setActiveMenu(item.text);
-              navigate.push(item.url);
-              onClose();
-            }}
-          >
-            <div
-              className={`h-5 w-0.5 ${checkActive(item.text) ? "bg-primary" : "hidden"}`}
-            />
-            <Icon iconKey={item.icon} isActive={checkActive(item.text)} />
-            <span
-              className={`text-[15px] font-medium ${checkActive(item.text) ? "text-primary" : "text-gray-300"}`}
-            >
-              {item.text}
-            </span>
-          </button>
-        ))}
-      </div>
+        )}
+        <ul className="relative">
+          {MENU_ITEMS[permission].length > 1 && (
+            <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
+          )}
+          {MENU_ITEMS[permission].map((item) => {
+            const isActive = comparePath === item.href;
+            return (
+              <li key={item.href}>
+                <button
+                  type="button"
+                  className={`flex items-center gap-[6px] px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
+                    isActive ? "text-primary" : "text-gray-300"
+                  }`}
+                  onClick={() => handleClick(item.href)}
+                >
+                  {/* 빨간 점 (활성 메뉴만) */}
+                  <div
+                    className={`z-1 size-2 rounded-full ${
+                      isActive ? "bg-primary" : "bg-gray-600"
+                    }`}
+                  />
+                  <Icon
+                    iconKey={item.icon as string}
+                    className={`${isActive ? "text-primary" : "text-gray-300"}`}
+                    size={24}
+                  />
+                  <span className="font-medium">{item.label}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </div>
   );
 }

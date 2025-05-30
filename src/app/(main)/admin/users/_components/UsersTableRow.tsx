@@ -1,5 +1,5 @@
 import Checkbox from "@/components/common/Checkbox";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { TableCell, TableRow } from "@/components/common/Table/Tables";
 import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";

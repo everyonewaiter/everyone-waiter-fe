@@ -1,10 +1,4 @@
-import { ReactNode } from "react";
-
 declare global {
-  interface Children {
-    children: ReactNode;
-  }
-
   type ValueOf<T> = T[keyof T];
 
   interface ResWithPagination<T> {

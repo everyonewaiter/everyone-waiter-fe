@@ -2,7 +2,11 @@ import { useParams } from "next/navigation";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import { deviceTranslate, paymentTimeTranslate } from "@/constants/translates";
+import {
+  deviceTranslate,
+  paymentTimeTranslate,
+  stateTranslate,
+} from "@/constants/translates";
 import { useForm } from "react-hook-form";
 import Label from "@/components/common/Label";
 import Dropdown from "@/components/common/Dropdown";
@@ -32,6 +36,7 @@ export default function DeviceInfoModal({ close, deviceId }: IProps) {
   >({
     defaultValues: {
       ...data,
+      state: stateTranslate[data?.state as keyof typeof stateTranslate],
       deviceNumber: data?.ksnetDeviceNo,
       tableNo: data?.tableNo,
       createdAt: data?.createdAt,
@@ -95,15 +100,15 @@ export default function DeviceInfoModal({ close, deviceId }: IProps) {
               <Dropdown
                 data={Object.values(deviceTranslate)}
                 active={
-                  deviceTranslate[data?.purpose as keyof typeof deviceTranslate]
+                  deviceTranslate[
+                    form.watch("purpose") as keyof typeof deviceTranslate
+                  ]
                 }
                 setActive={(value) => {
                   const selected = Object.entries(deviceTranslate).find(
                     (el) => el[1] === value
                   );
-                  if (selected) {
-                    form.setValue("purpose", selected[0] as DevicePurpose);
-                  }
+                  form.setValue("purpose", selected?.[0] as DevicePurpose);
                 }}
                 defaultText={
                   deviceTranslate[data?.purpose as keyof typeof deviceTranslate]
