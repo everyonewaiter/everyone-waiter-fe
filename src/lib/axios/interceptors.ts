@@ -97,11 +97,11 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
       ) {
         config.headers.Authorization = `Bearer ${signature}`;
       } else {
-        // const timestamp = Date.now().toString();
+        const timestamp = Date.now().toString();
 
-        config.headers["x-ew-access-key"] = deviceInfo.deviceId;
+        config.headers["x-ew-access-key"] = secretKey;
         config.headers["x-ew-signature"] = signature;
-        // config.headers["x-ew-timestamp"] = timestamp;
+        config.headers["x-ew-timestamp"] = timestamp;
       }
 
       return config;
