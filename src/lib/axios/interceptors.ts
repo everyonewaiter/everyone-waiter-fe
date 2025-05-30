@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 
 import { Mutex } from "async-mutex";
@@ -7,6 +8,8 @@ import { deleteCookie, getToken, setCookie } from "../cookies";
 import { renewToken } from "../api/auth.api";
 import { getSecureItem } from "../auth/localStorage";
 
+let isRefreshing = false;
+let refreshPromise: Promise<any> | null = null;
 const mutex = new Mutex();
 
 export const setupInterceptors = (axiosInstance: AxiosInstance) => {
@@ -32,19 +35,29 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     async (error) => {
       const originalRequest = error.config as any;
 
-      if (error.response.status === 403) {
+      if (error.response?.status === 403) {
         // 필요한 경우 리다이렉트 설정 추가 필요
         return Promise.reject(error);
       }
 
       if (
         error.response?.status === 401 &&
-        !originalRequest.isRetry &&
+        !originalRequest._retry &&
         !window.location.href.includes("/control")
       ) {
-        originalRequest.isRetry = true;
+        originalRequest._retry = true;
 
-        return mutex.runExclusive(async () => {
+        // 갱신 중이면 기다림
+        if (isRefreshing && refreshPromise) {
+          await refreshPromise;
+          const token = await getToken("accessToken");
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return axiosInstance(originalRequest);
+        }
+
+        // 갱신 시작
+        isRefreshing = true;
+        refreshPromise = mutex.runExclusive(async () => {
           try {
             const refreshToken = await getToken("refreshToken");
             if (!refreshToken) {
@@ -54,26 +67,26 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
 
             const { accessToken } = await renewToken({ refreshToken });
 
-            if (accessToken) {
-              await setCookie("accessToken", accessToken);
-              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-              return await axiosInstance(originalRequest);
-            }
-
-            return await Promise.reject(error);
+            await setCookie("accessToken", accessToken);
+            return accessToken;
           } catch (refreshError: any) {
             const code = refreshError?.response?.data?.code;
-
             if (["FORBIDDEN", "UNAUTHORIZED"].includes(code)) {
               window.location.href = "/login";
             } else {
               await deleteCookie("accessToken");
               await deleteCookie("refreshToken");
             }
-
-            return Promise.reject(refreshError);
+            throw refreshError;
+          } finally {
+            isRefreshing = false;
+            refreshPromise = null;
           }
         });
+
+        const accessToken = await refreshPromise;
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return axiosInstance(originalRequest);
       }
 
       return Promise.reject(error);
@@ -89,20 +102,12 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
 
       if (!deviceInfo || !secretKey) return config;
 
-      const signature = makeSignature({ secretKey, ...deviceInfo });
+      const timestamp = Date.now().toString();
+      const signature = makeSignature({ secretKey, timestamp, ...deviceInfo });
 
-      if (
-        config.url?.startsWith("/stores") &&
-        config.method?.toLowerCase() === "post"
-      ) {
-        config.headers.Authorization = `Bearer ${signature}`;
-      } else {
-        const timestamp = Date.now().toString();
-
-        config.headers["x-ew-access-key"] = secretKey;
-        config.headers["x-ew-signature"] = signature;
-        config.headers["x-ew-timestamp"] = timestamp;
-      }
+      config.headers["x-ew-access-key"] = secretKey;
+      config.headers["x-ew-signature"] = signature;
+      config.headers["x-ew-timestamp"] = timestamp;
 
       return config;
     },
