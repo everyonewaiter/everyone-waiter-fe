@@ -10,7 +10,7 @@ const makeSignature = ({
   purpose,
   name,
   secretKey, // 기기 생성 시 응답 본문으로 전달된 비밀키
-}: IDevice & { secretKey: string }) => {
+}: Device & { secretKey: string }) => {
   const method = "GET";
   const uri = "/v1/devices";
 

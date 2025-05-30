@@ -9,7 +9,7 @@ import ResponsiveButton from "@/components/common/ResponsiveButton";
 import { useMutation } from "@tanstack/react-query";
 import { addDevice } from "@/lib/api/device.api";
 import { useRouter } from "next/navigation";
-import { setCookie } from "@/lib/cookies";
+import { setSecureItem } from "@/lib/auth/localStorage";
 
 type FormValues = {
   deviceName: string;
@@ -58,8 +58,13 @@ export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
 
     mutate(submitData, {
       onSuccess: (returnData) => {
-        const { secretKey } = returnData;
-        setCookie("secretKey", secretKey);
+        const { deviceId, secretKey } = returnData;
+        setSecureItem("deviceInfo", {
+          deviceId,
+          name: submitData.name,
+          purpose: submitData.purpose,
+        });
+        setSecureItem("secretKey", secretKey);
         navigate.push(activeIndex === 0 ? "/control/hall" : "/control/pos");
       },
     });
