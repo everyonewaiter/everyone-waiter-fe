@@ -109,7 +109,7 @@ export default function Device() {
         onClick={handleAlertOpen}
       >
         <Icon
-          iconKey="trash-02"
+          iconKey="trash"
           isActive
           size={20}
           className="h-[15gpx] w-[15px] lg:h-5 lg:w-5"
