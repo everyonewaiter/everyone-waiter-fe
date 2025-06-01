@@ -16,8 +16,9 @@ interface IProps {
 
 export default function TableBox({ isMoving, onClick, ...props }: IProps) {
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       className={cn(
         "flex h-[320px] w-[432px] flex-col justify-between rounded-[24px] border-[2px] p-7 text-left",
         props.orderedMenu?.length > 0 ? "border-primary" : "border-gray-500",
@@ -92,6 +93,6 @@ export default function TableBox({ isMoving, onClick, ...props }: IProps) {
           </strong>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
