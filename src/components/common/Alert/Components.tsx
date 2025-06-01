@@ -36,7 +36,7 @@ const AlertDialogContent = React.forwardRef<
     <AlertDialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed top-1/2 left-1/2 z-100 flex w-80 -translate-x-1/2 -translate-y-1/2 transform flex-col gap-6 rounded-[20px] bg-white p-5 md:w-85 md:gap-8 lg:w-136 lg:rounded-[30px] lg:p-8",
+        "fixed top-1/2 left-1/2 z-100 flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-6 rounded-[20px] bg-white p-5 md:w-85 md:gap-8 lg:min-w-136 lg:rounded-[30px] lg:p-8",
         className
       )}
       {...props}
@@ -51,10 +51,7 @@ function AlertDialogHeader({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        "flex w-full items-center justify-center py-4 lg:py-6",
-        className
-      )}
+      className={cn("flex w-full items-center justify-center py-4", className)}
       {...props}
     />
   );
@@ -78,7 +75,7 @@ const AlertDialogTitle = React.forwardRef<
   <AlertDialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-center text-base font-semibold break-words whitespace-pre-wrap md:text-lg",
+      "w-full text-center text-base font-semibold break-words whitespace-pre-wrap md:text-lg",
       className
     )}
     {...props}
@@ -95,7 +92,7 @@ const AlertDialogAction = React.forwardRef<
       asChild
       type="button"
       responsiveButtons={{
-        lg: { buttonSize: "lg" },
+        lg: { buttonSize: "xl" },
         md: {
           buttonSize: "sm",
           className: "justify-center items-center !flex hidden lg:hidden",
@@ -118,16 +115,13 @@ const AlertDialogCancel = React.forwardRef<
     hasNoAction?: boolean;
   }
 >(({ className, hasNoAction, ...props }, ref) => (
-  <AlertDialogPrimitive.Cancel
-    ref={ref}
-    className={hasNoAction ? "flex-1" : "flex-[0.6]"}
-  >
+  <AlertDialogPrimitive.Cancel ref={ref} className="flex-1">
     <ResponsiveButton
       asChild
       color="grey"
       type="button"
       responsiveButtons={{
-        lg: { buttonSize: "lg" },
+        lg: { buttonSize: "xl" },
         md: {
           buttonSize: "sm",
           className: "justify-center items-center !flex hidden lg:hidden",

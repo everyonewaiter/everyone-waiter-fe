@@ -42,66 +42,69 @@ export default function Dropdown({
         }
       }}
     >
-      <DropdownMenuTrigger
-        disabled={disabled}
-        className="outline-none"
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <div
-          className={cn(
-            "font-regular text-gray-0 text-s flex h-[32px] w-fit flex-row items-center justify-between gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4 lg:text-sm",
-            triggerClassName
-          )}
-          onClick={() => setIsOpen((prev) => !prev)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              setIsOpen((prev) => !prev);
-            }
+      <div className="relative w-full">
+        <DropdownMenuTrigger
+          disabled={disabled}
+          className="w-full outline-none"
+          onClick={(e) => {
+            e.stopPropagation();
           }}
         >
-          {active || defaultText}
-          {isOpen ? (
-            <ChevronUp
-              size={16}
-              strokeWidth={1}
-              className="mt-1 h-3 w-3 lg:h-4 lg:w-4"
-            />
-          ) : (
-            <ChevronDown
-              size={16}
-              strokeWidth={1}
-              className="mt-1 h-3 w-3 lg:h-4 lg:w-4"
-            />
-          )}
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className={cn(
-          "z-100 mt-1 rounded-[16px] bg-white px-2 py-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
-          className
-        )}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        {data.map((item) => (
-          <DropdownMenuItem
-            key={item}
+          <div
             className={cn(
-              "font-regular text-gray-0 !w-full cursor-pointer rounded-[12px] px-3 py-2 text-sm lg:text-base",
-              active === item ? "bg-gray-700" : ""
+              "font-regular text-gray-0 text-s flex h-[32px] w-full flex-row items-center justify-between gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4 lg:text-sm",
+              triggerClassName
             )}
-            onClick={(e) => {
-              e.stopPropagation();
-              setActive(item);
+            onClick={() => setIsOpen((prev) => !prev)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                setIsOpen((prev) => !prev);
+              }
             }}
           >
-            {item}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
+            {active || defaultText}
+            {isOpen ? (
+              <ChevronUp
+                size={16}
+                strokeWidth={1}
+                className="mt-1 h-3 w-3 lg:h-4 lg:w-4"
+              />
+            ) : (
+              <ChevronDown
+                size={16}
+                strokeWidth={1}
+                className="mt-1 h-3 w-3 lg:h-4 lg:w-4"
+              />
+            )}
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          style={{ minWidth: "var(--radix-dropdown-menu-trigger-width)" }}
+          className={cn(
+            "z-100 mt-1 w-full rounded-[16px] bg-white px-2 py-3 text-left shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
+            className
+          )}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          {data.map((item) => (
+            <DropdownMenuItem
+              key={item}
+              className={cn(
+                "font-regular text-gray-0 block w-full cursor-pointer rounded-[12px] px-3 py-2 text-sm lg:text-base",
+                active === item ? "bg-gray-700" : ""
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActive(item);
+              }}
+            >
+              {item}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </div>
     </DropdownMenu>
   );
 }
