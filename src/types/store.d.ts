@@ -19,12 +19,6 @@ interface StoreDetail extends Omit<StoreForm, "file"> {
   updatedAt: string;
 }
 
-interface Menu {
-  icon: string;
-  text: string;
-  url: string;
-}
-
 type StoreStatus = "OPEN" | "CLOSE";
 
 interface CountryOfOriginItem {
