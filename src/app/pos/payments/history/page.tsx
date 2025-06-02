@@ -26,7 +26,7 @@ const itemWidth = {
   시간: "flex-[9]",
 };
 
-interface DUMMY {
+export interface DUMMY {
   id: string;
   cash: number;
   card: number;
@@ -101,7 +101,10 @@ export default function PaymentHistory() {
               {dummy?.map((item) => (
                 <TableRow
                   key={item.id.toString()}
-                  onClick={() => setSelectedRow(item)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedRow(item);
+                  }}
                 >
                   <TableCell
                     className={itemWidth["No." as keyof typeof itemWidth]}
@@ -156,13 +159,10 @@ export default function PaymentHistory() {
         />
       </div>
       <SideLayout
-        className={cn(
-          "h-[calc(100dvh-134px)] transition-all duration-300 ease-in-out",
-          selectedRow ? "translate-x-0" : "hidden translate-x-full"
-        )}
+        className="h-[calc(100dvh-134px)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <SideSection2 />
+        <SideSection2 selectedRow={selectedRow} />
       </SideLayout>
     </div>
   );

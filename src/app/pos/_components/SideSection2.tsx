@@ -6,9 +6,15 @@ import useOverlay from "@/hooks/use-overlay";
 import { Fragment } from "react";
 import QueryProviders from "@/app/query-providers";
 import Alert from "@/components/common/Alert/Alert";
+import cn from "@/lib/utils";
 import MenuBox from "./MenuBox";
+import { DUMMY } from "../payments/history/page";
 
-export default function SideSection2() {
+interface IProps {
+  selectedRow: DUMMY | null;
+}
+
+export default function SideSection2({ selectedRow }: IProps) {
   const openReceipt = useOverlay();
   const cancel = useOverlay();
 
@@ -62,8 +68,15 @@ export default function SideSection2() {
   return (
     <>
       <div className="flex items-center gap-4">
-        <div className="text-primary rounded-[80px] bg-[#F2202016] px-5 py-3 text-xl font-medium">
-          4888
+        <div
+          className={cn(
+            "rounded-[80px] px-5 py-3 text-xl font-medium",
+            selectedRow
+              ? "text-primary bg-[#F2202016]"
+              : "bg-gray-700 text-gray-300"
+          )}
+        >
+          {selectedRow ? "4888" : "-"}
         </div>
         <strong className="text-gray-0 text-[28px] font-semibold">
           주문 내역
@@ -71,14 +84,15 @@ export default function SideSection2() {
       </div>
       <div className="flex flex-col">
         <ScrollArea className="h-[700px] w-full">
-          {[1, 2].map((item, index, arr) => (
-            <Fragment key={item}>
-              <MenuBox key={item} index={index} />
-              {index < arr.length - 1 && (
-                <div className="my-8 h-[2px] w-full bg-gray-700" />
-              )}
-            </Fragment>
-          ))}
+          {selectedRow &&
+            [1, 2].map((item, index, arr) => (
+              <Fragment key={item}>
+                <MenuBox key={item} index={index} />
+                {index < arr.length - 1 && (
+                  <div className="my-8 h-[2px] w-full bg-gray-700" />
+                )}
+              </Fragment>
+            ))}
         </ScrollArea>
         <div className="mt-8 flex gap-3">
           <Button
@@ -86,6 +100,7 @@ export default function SideSection2() {
             color="black"
             className="flex h-[64px] w-[180px] rounded-[12px] px-8 text-xl"
             onClick={handleCancelPayment}
+            disabled={!selectedRow}
           >
             결제 취소하기
           </Button>
@@ -93,6 +108,7 @@ export default function SideSection2() {
             color="black"
             className="flex h-[64px] flex-1 rounded-[12px] px-8 text-xl"
             onClick={handlePrintReceipt}
+            disabled={!selectedRow}
           >
             영수증 출력하기
           </Button>
