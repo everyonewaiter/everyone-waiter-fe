@@ -11,6 +11,7 @@ export default function ResendAlert({ close }: IProps) {
       onClose={close}
       buttonText="재전송하기"
       buttonColor="black"
+      noResponsive
     >
       <div className="flex flex-col gap-3">
         <strong className="text-primary text-[28px] font-semibold">

@@ -7,7 +7,7 @@ interface IProps {
 
 export default function MemoAlert({ close }: IProps) {
   return (
-    <Alert onClose={close} hasNoAction>
+    <Alert onClose={close} hasNoAction noResponsive>
       <div className="-mt-4 flex w-full flex-col gap-5">
         <div className="flex items-center justify-between">
           <h3 className="text-2xl font-semibold">메모</h3>

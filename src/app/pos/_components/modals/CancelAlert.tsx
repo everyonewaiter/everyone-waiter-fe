@@ -11,6 +11,7 @@ export default function CancelAlert({ close }: IProps) {
       buttonColor="primary"
       onAction={() => {}}
       buttonText="취소하기"
+      noResponsive
     >
       <div className="-mt-4 flex w-full flex-col gap-8">
         <div className="flex items-center justify-between rounded-[12px] border border-gray-600 px-6 py-4">

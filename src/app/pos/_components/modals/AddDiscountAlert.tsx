@@ -14,12 +14,11 @@ import Label from "@/components/common/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/common/Radio";
 import { MinusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
-import useOutsideClick from "@/hooks/useOutSideClick";
 
 interface FormType {
   discount: number | null;
   result: number | null;
+  discountType: "fixed" | "percent";
 }
 
 interface IProps {
@@ -27,29 +26,21 @@ interface IProps {
 }
 
 export default function AddDiscountAlert({ close }: IProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const [discountType, setDiscountType] = useState<"fixed" | "percentage">(
-    "fixed"
-  );
-  const discountText = discountType === "fixed" ? "원" : "%";
-
   const form = useForm<FormType>({
     defaultValues: {
       discount: null,
       result: null,
+      discountType: "fixed",
     },
   });
 
-  useOutsideClick({ ref, handler: close });
-
   return (
     <Alert
-      ref={ref}
       onClose={close}
       onAction={() => {}}
       buttonColor="black"
       buttonText="할인하기"
+      noResponsive
     >
       <div className="-mt-4 flex w-full flex-col gap-10">
         <div className="flex items-center justify-between">
@@ -62,10 +53,10 @@ export default function AddDiscountAlert({ close }: IProps) {
           <RadioGroup
             defaultValue="option-one"
             className="flex items-center gap-6"
-            value={discountType}
-            onValueChange={(value) => {
-              setDiscountType(value as "fixed" | "percentage");
-            }}
+            value={form.watch("discountType")}
+            onValueChange={(value) =>
+              form.setValue("discountType", value as "fixed" | "percent")
+            }
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="fixed" id="fixed" />
@@ -104,11 +95,15 @@ export default function AddDiscountAlert({ close }: IProps) {
                             value={field.value || ""}
                             className="!pl-9 text-base font-medium placeholder:text-gray-300"
                             placeholder={
-                              discountType === "fixed" ? "12,000" : "10"
+                              form.watch("discountType") === "fixed"
+                                ? "12,000"
+                                : "10"
                             }
                           />
                           <strong className="text-xl font-semibold">
-                            {discountText}
+                            {form.watch("discountType") === "fixed"
+                              ? "원"
+                              : "%"}
                           </strong>
                         </div>
                       </FormControl>
@@ -129,7 +124,9 @@ export default function AddDiscountAlert({ close }: IProps) {
                             disabled={!field.value}
                           />
                           <strong className="text-xl font-semibold">
-                            {discountText}
+                            {form.watch("discountType") === "fixed"
+                              ? "원"
+                              : "%"}
                           </strong>
                         </div>
                       </FormControl>
