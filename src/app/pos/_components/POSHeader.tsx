@@ -14,7 +14,7 @@ export default function POSHeader({ children }: { children?: ReactNode }) {
   return (
     <header className="flex flex-col px-[60px] pt-10">
       <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-5">
+        <Link href="/pos" className="flex flex-row items-center gap-5">
           <Image
             src="/icons/logo/logo.svg"
             alt="모두의 웨이터 로고"
@@ -22,7 +22,7 @@ export default function POSHeader({ children }: { children?: ReactNode }) {
             height={60}
           />
           <h1 className="font-hakgyo text-primary text-2xl">모두의 웨이터</h1>
-        </div>
+        </Link>
         <span className="text-2xl">{`${fullDate}(${day}) ${time}`}</span>
         <div className="flex flex-row items-center gap-6">
           {children || (

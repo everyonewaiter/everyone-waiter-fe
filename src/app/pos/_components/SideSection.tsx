@@ -1,4 +1,4 @@
-import { Button } from "@/components/common/Button";
+import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import { MinusIcon, PlusIcon } from "lucide-react";
@@ -49,7 +49,7 @@ export default function SideSection() {
         <Button
           asChild={false}
           variant="outline"
-          color="outline-primary"
+          color="primary"
           className="button-lg !rounded-[8px] text-[15px]"
           onClick={handleCancel}
         >
@@ -60,14 +60,14 @@ export default function SideSection() {
         <div className="flex gap-3">
           <Button
             variant="outline"
-            color="outline-gray"
+            color="grey"
             className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
           >
             <MinusIcon size={24} />
           </Button>
           <Button
             variant="outline"
-            color="outline-gray"
+            color="grey"
             className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
           >
             <PlusIcon size={24} />
@@ -75,7 +75,7 @@ export default function SideSection() {
         </div>
         <Button
           variant="outline"
-          color="outline-gray"
+          color="grey"
           className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
         >
           <Icon iconKey="trash" size={24} />
@@ -98,7 +98,7 @@ export default function SideSection() {
             <span className="font-regular text-xl text-gray-300">할인</span>
             <Button
               variant="outline"
-              color="outline-black"
+              color="black"
               className="h-10 rounded-[8px] border border-[#4f4f4f] px-5"
               onClick={handleDiscount}
             >
@@ -136,7 +136,7 @@ export default function SideSection() {
           <div className="mt-8 flex gap-3">
             <Button
               variant="outline"
-              color="outline-black"
+              color="black"
               className="flex h-[64px] flex-1 rounded-[12px] px-8"
               onClick={() => handlePay("cash")}
             >

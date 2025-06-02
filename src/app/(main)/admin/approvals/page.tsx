@@ -23,7 +23,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Checkbox from "@/components/common/Checkbox";
 import useDebounce from "@/hooks/useDebounce";
 import { registerStateTranslate } from "@/constants/translates";
-import { Button } from "@/components/common/Button/Button";
+import Button from "@/components/common/Button/Button";
 import QueryProviders from "@/app/query-providers";
 import StoreModal from "../_components/StoreModal";
 import useAdmin from "../_hooks/useAdmin";

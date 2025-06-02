@@ -1,7 +1,8 @@
 import { VariantProps } from "class-variance-authority";
 import { ButtonHTMLAttributes, PropsWithChildren } from "react";
 import cn from "@/lib/utils";
-import { Button, ButtonColors, buttonVariants } from "./Button";
+import Button, { ButtonColors } from "./Button";
+import buttonVariants from "./styles";
 
 type ButtonSize = "sm" | "md" | "lg" | "xl" | "custom";
 type ScreenSize = "sm" | "md" | "lg";

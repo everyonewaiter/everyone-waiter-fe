@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
-import { Button } from "@/components/common/Button";
+import Button from "@/components/common/Button/Button";
 import Paginations from "@/components/common/Pagination/Paginations";
 import SideLayout from "../../_components/SideLayout";
 import SideSection2 from "../../_components/SideSection2";

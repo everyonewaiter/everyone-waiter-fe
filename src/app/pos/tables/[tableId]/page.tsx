@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { Button } from "@/components/common/Button";
+import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
 import QueryProviders from "@/app/query-providers";
@@ -61,9 +61,7 @@ export default function DetailTableOrder() {
                 variant={
                   isActive === category.categoryId ? "default" : "outline"
                 }
-                color={
-                  isActive === category.categoryId ? "primary" : "outline-black"
-                }
+                color={isActive === category.categoryId ? "primary" : "black"}
                 className="button-sm text-s px-5"
                 onClick={() => setIsActive(category.categoryId)}
               >

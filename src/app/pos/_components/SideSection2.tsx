@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/common/Button";
+import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
 import { Fragment } from "react";
@@ -83,7 +83,7 @@ export default function SideSection2() {
         <div className="mt-8 flex gap-3">
           <Button
             variant="outline"
-            color="outline-black"
+            color="black"
             className="flex h-[64px] w-[180px] rounded-[12px] px-8 text-xl"
             onClick={handleCancelPayment}
           >

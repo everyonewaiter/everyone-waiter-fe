@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/common/Button";
+import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import { useRouter, useSearchParams } from "next/navigation";
 import useOverlay from "@/hooks/use-overlay";
@@ -72,7 +72,7 @@ export default function PosTables() {
             <div className="flex gap-3">
               <Button
                 variant="outline"
-                color="outline-gray"
+                color="grey"
                 className="text-gray-0 h-20 w-full rounded-[16px] p-6"
               >
                 2번 테이블
@@ -80,7 +80,7 @@ export default function PosTables() {
               <ChevronsRight strokeWidth={1} />
               <Button
                 variant="outline"
-                color="outline-primary"
+                color="primary"
                 className="!text-gray-0 h-20 w-full rounded-[16px] p-6"
               >
                 {tableNo}번 테이블
@@ -111,7 +111,7 @@ export default function PosTables() {
         {move && (
           <Button
             variant="outline"
-            color="outline-black"
+            color="black"
             className="mb-6 flex h-[58px] gap-2 rounded-[24px] px-5 py-[15px]"
             onClick={() => navigate.back()}
           >

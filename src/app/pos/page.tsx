@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/common/Button";
+import Button from "@/components/common/Button/Button";
 import useGetDate from "@/hooks/useGetDate";
 import Image from "next/image";
 import useOverlay from "@/hooks/use-overlay";

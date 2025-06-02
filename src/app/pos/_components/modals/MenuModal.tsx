@@ -1,4 +1,4 @@
-import { Button } from "@/components/common/Button";
+import Button from "@/components/common/Button/Button";
 import Label from "@/components/common/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/common/Radio";
 import { ScrollArea } from "@/components/common/ScrollArea";

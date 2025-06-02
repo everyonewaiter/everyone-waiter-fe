@@ -26,7 +26,7 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import { useState } from "react";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
-import { Button } from "@/components/common/Button/Button";
+import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import getQueryClient from "@/app/get-query-client";
 import QueryProviders from "@/app/query-providers";

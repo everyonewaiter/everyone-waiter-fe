@@ -1,7 +1,7 @@
 "use client";
 
 import Alert from "@/components/common/Alert/Alert";
-import { Button } from "@/components/common/Button";
+import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
@@ -51,7 +51,7 @@ export default function PayAlert({ close, type }: IProps) {
           <h3 className="text-[28px] font-semibold">2번 테이블</h3>
           <Button
             variant="outline"
-            color="outline-primary"
+            color="primary"
             className="button-lg !rounded-[8px] text-[15px] !font-medium"
           >
             결제 취소
@@ -81,9 +81,7 @@ export default function PayAlert({ close, type }: IProps) {
                     <Button
                       key={key}
                       color={
-                        form.watch("receiptType") === key
-                          ? "outline-primary"
-                          : "outline-gray"
+                        form.watch("receiptType") === key ? "primary" : "grey"
                       }
                       variant="outline"
                       className="button-lg w-full !font-medium"

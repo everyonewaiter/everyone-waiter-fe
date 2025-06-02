@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/common/Button/Button";
+import Button from "@/components/common/Button/Button";
 import Calendar from "@/components/common/Calender";
 import {
   Popover,

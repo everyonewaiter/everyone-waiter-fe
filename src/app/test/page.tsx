@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/common/Button/Button";
+import Button from "@/components/common/Button/Button";
 import DatePicker from "@/components/common/DatePicker";
 import DateRangePicker from "@/components/common/DateRangePicker";
 import Input from "@/components/common/Input";
