@@ -46,7 +46,7 @@ export default function Hall() {
                 6
               </div>
             </div>
-            <ScrollArea orientation="horizontal" className="h-full w-full">
+            <ScrollArea className="h-full w-full">
               <div className="flex w-max gap-6">
                 <CallingCard />
                 <CallingCard />
