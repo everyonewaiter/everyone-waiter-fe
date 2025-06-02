@@ -4,8 +4,7 @@ import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
 import InfoPopup from "@/components/InfoPopup";
 import useOverlay from "@/hooks/use-overlay";
-import useEscapeKey from "@/hooks/useEscapeKey";
-import useOutsideClick from "@/hooks/useOutSideClick";
+import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import { useRef } from "react";
 
 export default function PageTitle({ title }: { title: string }) {
@@ -13,8 +12,7 @@ export default function PageTitle({ title }: { title: string }) {
 
   const { open, close } = useOverlay();
 
-  useOutsideClick({ ref, handler: close });
-  useEscapeKey({ handler: close });
+  useModalCloseTriggers({ ref, onClose: close });
 
   const handleOpenPopup = () => {
     open(() => (

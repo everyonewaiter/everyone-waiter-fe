@@ -1,9 +1,8 @@
 "use client";
 
-import useEscapeKey from "@/hooks/useEscapeKey";
-import useOutsideClick from "@/hooks/useOutSideClick";
 import { useParams, useRouter } from "next/navigation";
 import { useRef } from "react";
+import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import Icon from "./common/Icon";
 
 const popupList = [
@@ -23,8 +22,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
   const params = useParams();
   const { id } = params;
 
-  useOutsideClick({ ref, handler: close });
-  useEscapeKey({ handler: close });
+  useModalCloseTriggers({ ref, onClose: close });
 
   return (
     <div

@@ -1,6 +1,7 @@
 "use client";
 
-import { PropsWithChildren, useState, forwardRef } from "react";
+import { PropsWithChildren, useState, useRef } from "react";
+import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./Components";
+import { ButtonColors } from "../Button/Button";
 
 interface IProps {
   onAction?: () => void;
@@ -19,68 +21,69 @@ interface IProps {
   buttonText?: string;
   buttonColor?: string;
   layoutClassName?: string;
+  noResponsive?: boolean;
 }
 
-const Alert = forwardRef<HTMLDivElement, PropsWithChildren<IProps>>(
-  (
-    {
-      children,
-      onAction,
-      onClose,
-      hasNoCancel,
-      hasNoAction,
-      buttonText,
-      layoutClassName,
-      buttonColor = "primary",
-    },
-    ref
-  ) => {
-    const [open, setOpen] = useState(true);
+function Alert({
+  children,
+  onAction,
+  onClose,
+  hasNoCancel,
+  hasNoAction,
+  buttonText,
+  layoutClassName,
+  buttonColor = "primary",
+  noResponsive,
+}: PropsWithChildren<IProps>) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(true);
 
-    const handleClose = () => {
-      setOpen(false);
-      onClose();
-    };
+  useModalCloseTriggers<HTMLDivElement>({ ref, onClose });
 
-    const handleAction = () => {
-      onAction?.();
-      setOpen(false);
-    };
+  const handleClose = () => {
+    setOpen(false);
+    onClose();
+  };
 
-    return (
-      <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent ref={ref} className={layoutClassName}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              <div>{children}</div>
-            </AlertDialogTitle>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            {!hasNoCancel && (
-              <AlertDialogCancel
-                onClick={handleClose}
-                className="flex-[0.6]"
-                hasNoAction={hasNoAction}
-              >
-                <span>닫기</span>
-              </AlertDialogCancel>
-            )}
-            {!hasNoAction && (
-              <AlertDialogAction
-                color={buttonColor}
-                onClick={handleAction}
-                className="flex-1"
-              >
-                <span>{buttonText}</span>
-              </AlertDialogAction>
-            )}
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    );
-  }
-);
+  const handleAction = () => {
+    onAction?.();
+    setOpen(false);
+  };
 
-Alert.displayName = "Alert";
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogContent ref={ref} className={layoutClassName}>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            <div>{children}</div>
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          {!hasNoCancel && (
+            <AlertDialogCancel
+              color="grey"
+              onClick={handleClose}
+              className="flex-[0.6]"
+              hasNoAction={hasNoAction}
+              noResponsive={noResponsive}
+            >
+              <span>닫기</span>
+            </AlertDialogCancel>
+          )}
+          {!hasNoAction && (
+            <AlertDialogAction
+              color={buttonColor as ButtonColors}
+              onClick={handleAction}
+              noResponsive={noResponsive}
+              className="flex-1"
+            >
+              <span>{buttonText}</span>
+            </AlertDialogAction>
+          )}
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 export default Alert;

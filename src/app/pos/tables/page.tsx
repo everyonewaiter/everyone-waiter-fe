@@ -7,8 +7,6 @@ import useOverlay from "@/hooks/use-overlay";
 import QueryProviders from "@/app/query-providers";
 import Alert from "@/components/common/Alert/Alert";
 import { ChevronsRight } from "lucide-react";
-import useOutsideClick from "@/hooks/useOutSideClick";
-import { useRef } from "react";
 import TableBox from "../_components/TableBox";
 import POSHeader from "../_components/POSHeader";
 
@@ -48,13 +46,11 @@ const dummy = [
 ];
 
 export default function PosTables() {
-  const ref = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
   const searchParams = useSearchParams();
   const move = searchParams.get("move");
 
   const { open, close } = useOverlay();
-  useOutsideClick({ ref, handler: close });
 
   const handleChangeTable = (tableNo: number) => {
     // 원래 테이블이라면 액션 금지
@@ -62,12 +58,7 @@ export default function PosTables() {
     // 모달
     open(() => (
       <QueryProviders>
-        <Alert
-          ref={ref}
-          onClose={close}
-          buttonColor="black"
-          buttonText="이동하기"
-        >
+        <Alert onClose={close} buttonColor="black" buttonText="이동하기">
           <div className="flex flex-col gap-8">
             <div className="flex gap-3">
               <Button

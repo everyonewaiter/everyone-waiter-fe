@@ -5,9 +5,6 @@ import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
-import useEscapeKey from "@/hooks/useEscapeKey";
-import useOutsideClick from "@/hooks/useOutSideClick";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
 
 interface IProps {
@@ -22,7 +19,6 @@ interface FormType {
 }
 
 export default function PayAlert({ close, type }: IProps) {
-  const ref = useRef<HTMLDivElement>(null);
   const form = useForm<FormType>({
     defaultValues: {
       receiptType: "개인소득공제용",
@@ -33,18 +29,15 @@ export default function PayAlert({ close, type }: IProps) {
 
   const monthlyPlan = new Array(12).fill(0).map((_, i) => `${i + 1}개월`);
 
-  useOutsideClick({ ref, handler: close });
-  useEscapeKey({ handler: close });
-
   return (
     <Alert
-      ref={ref}
       onClose={close}
       hasNoCancel
       onAction={() => {}}
       buttonText={type === "cash" ? "현금 결제하기" : "카드 결제하기"}
       buttonColor="black"
       layoutClassName="!w-[648px]"
+      noResponsive
     >
       <div className="-mt-4 flex w-full flex-col gap-10">
         <div className="flex items-center justify-between">
