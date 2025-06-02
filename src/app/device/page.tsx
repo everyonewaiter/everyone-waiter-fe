@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import cn from "@/lib/utils";
 import AddDeviceStep1 from "./_components/AddDeviceStep1";
@@ -21,7 +23,7 @@ export default function Device() {
     >
       <div>
         <Image
-          src="/icons/logo/logo.svg"
+          src="/logo/logo.svg"
           alt="로고"
           width={90}
           height={90}

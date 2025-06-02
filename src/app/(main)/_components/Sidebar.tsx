@@ -51,7 +51,7 @@ export default function Sidebar() {
       <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-4 md:w-[186px] lg:w-[318px] lg:px-5 lg:pt-8">
         <div className="mb-6 flex items-center gap-[18px] lg:mb-9">
           <Image
-            src="/icons/logo/logo.svg"
+            src="/logo/logo.svg"
             alt="모두의 웨이터 로고"
             width={40}
             height={40}

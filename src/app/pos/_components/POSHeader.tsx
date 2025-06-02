@@ -16,7 +16,7 @@ export default function POSHeader({ children }: { children?: ReactNode }) {
       <div className="flex flex-row items-center justify-between">
         <Link href="/pos" className="flex flex-row items-center gap-5">
           <Image
-            src="/icons/logo/logo.svg"
+            src="/logo/logo.svg"
             alt="모두의 웨이터 로고"
             width={60}
             height={60}

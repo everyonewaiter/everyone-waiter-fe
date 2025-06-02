@@ -16,7 +16,7 @@ export default function useDebounce({ searchWord, delay }: IProps) {
     return () => {
       clearTimeout(timer);
     };
-  }, [searchWord]);
+  }, [searchWord, delay]);
 
   return {
     debouncedValue,

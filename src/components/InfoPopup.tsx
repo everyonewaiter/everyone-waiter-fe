@@ -2,9 +2,9 @@
 
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useRef } from "react";
+import Icon from "./common/Icon";
 
 const popupList = [
   {
@@ -33,13 +33,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
     >
       <div className="flex h-9 w-full items-center gap-1 rounded-[8px] bg-gray-700 px-2 md:gap-2 lg:h-12 lg:px-4">
         <div className="center flex h-5 w-5 rounded-[16px] border border-gray-500 bg-white lg:h-7 lg:w-7">
-          <Image
-            src="/icons/user.svg"
-            alt="유저 정보 표시 아이콘"
-            width={16}
-            height={16}
-            className="h-4 w-4 lg:h-6 lg:w-6"
-          />
+          <Icon iconKey="user" size={16} className="h-4 w-4 lg:h-6 lg:w-6" />
         </div>
         <span className="md:text-s font-regular text-xs text-gray-100 lg:text-[15px]">
           asdf@gmail.com

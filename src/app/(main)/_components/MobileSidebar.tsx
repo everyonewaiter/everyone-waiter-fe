@@ -35,13 +35,13 @@ export default function MobileSidebar({ onClose }: IProps) {
             }}
           >
             <Image
-              src="/icons/logo/logo-medium.svg"
+              src="/logo/logo-medium.svg"
               alt="모두의 웨이터 로고"
               width={40}
               height={40}
             />
             <Image
-              src="/icons/logo/logo-text.svg"
+              src="/logo/logo-text.svg"
               alt="모두의 웨이터 텍스트"
               width={106}
               height={19}

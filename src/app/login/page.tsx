@@ -31,7 +31,7 @@ export default function Login() {
   return (
     <SignupLayout>
       <Image
-        src="/icons/logo/logo-with-text.svg"
+        src="/logo/logo-with-text.svg"
         alt="logo with text"
         className="h-[97px] w-[160px] md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
         width={200}
