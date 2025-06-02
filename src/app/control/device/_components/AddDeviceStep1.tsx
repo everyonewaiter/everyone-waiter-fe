@@ -7,7 +7,7 @@ import Dropdown from "@/components/common/Dropdown";
 import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useOverlay from "@/hooks/use-overlay";
 import {
   sendAuthCodeInDevice,

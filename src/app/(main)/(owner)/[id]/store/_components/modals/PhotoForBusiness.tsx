@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import UploadPhoto from "../UploadPhoto";
 
 interface IProps {
@@ -49,7 +49,7 @@ export default function PhotoForBusiness({
           />
           {isUpdating && (
             <ResponsiveButton
-              color="outline-black"
+              color="black"
               variant="outline"
               onClick={onResetPhoto}
               responsiveButtons={{
