@@ -5,6 +5,7 @@ import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
 import QueryProviders from "@/app/query-providers";
+import cn from "@/lib/utils";
 import Floating from "../../_components/Floating";
 import POSMenuCard from "../../_components/POSMenuCard";
 import SideSection from "../../_components/SideSection";
@@ -62,7 +63,12 @@ export default function DetailTableOrder() {
                   isActive === category.categoryId ? "default" : "outline"
                 }
                 color={isActive === category.categoryId ? "primary" : "black"}
-                className="button-sm text-s px-5"
+                className={cn(
+                  "button-sm text-s px-5",
+                  isActive === category.categoryId
+                    ? "text-white"
+                    : "text-gray-0"
+                )}
                 onClick={() => setIsActive(category.categoryId)}
               >
                 {category.name}
