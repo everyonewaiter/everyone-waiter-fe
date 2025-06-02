@@ -12,7 +12,7 @@ import ResponsiveButton from "../common/Button/ResponsiveButton";
 
 interface IProps {
   onClose: () => void;
-  title: ReactNode | string;
+  title?: ReactNode | string;
   topRightComponent?: ReactNode;
   className?: string;
   preventOutsideClose?: boolean;
@@ -47,21 +47,23 @@ export default function ModalWithTitle({
           className
         )}
       >
-        <div className="flex items-center justify-between pb-6 md:pb-5 lg:pb-8">
-          <h1 className="text-gray-0 font-semibold md:text-base lg:text-2xl">
-            {title}
-          </h1>
-          {topRightComponent || (
-            <button type="button" onClick={onClose}>
-              <CloseIcon
-                width={32}
-                height={32}
-                color="#222"
-                className="h-6 w-6 lg:h-8 lg:w-8"
-              />
-            </button>
-          )}
-        </div>
+        {title && (
+          <div className="flex items-center justify-between pb-6 md:pb-5 lg:pb-8">
+            <h1 className="text-gray-0 font-semibold md:text-base lg:text-2xl">
+              {title}
+            </h1>
+            {topRightComponent || (
+              <button type="button" onClick={onClose}>
+                <CloseIcon
+                  width={32}
+                  height={32}
+                  color="#222"
+                  className="h-6 w-6 lg:h-8 lg:w-8"
+                />
+              </button>
+            )}
+          </div>
+        )}
         {children}
       </div>
     </div>
