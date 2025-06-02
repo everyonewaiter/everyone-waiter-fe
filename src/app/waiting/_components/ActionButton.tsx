@@ -1,5 +1,5 @@
 import Icon from "@/components/common/Icon";
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { ButtonHTMLAttributes, PropsWithChildren } from "react";
 
 interface IProps

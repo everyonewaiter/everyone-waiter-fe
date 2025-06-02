@@ -1,6 +1,6 @@
 "use client";
 
-import ResponsiveButton from "@/components/common/ResponsiveButton";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useOverlay from "@/hooks/use-overlay";
 import QueryProviders from "@/app/query-providers";
 import { useRouter } from "next/navigation";

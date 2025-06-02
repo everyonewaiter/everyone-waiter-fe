@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import cn from "@/lib/utils";
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   iconKey: string;
   isActive?: boolean;
   size?: number;
@@ -34,7 +34,7 @@ export default function Icon({
         `inline-block text-gray-300 ${isActive ? "text-primary" : "text-gray-300"}`,
         className
       )}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size, stroke: "none" }}
       dangerouslySetInnerHTML={{ __html: svg }}
       {...props}
     />

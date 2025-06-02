@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/common/Button/Button";
 import Calendar from "@/components/common/Calender";
 import {
   Popover,
@@ -27,7 +27,7 @@ export default function DatePickerWithRange({
         <PopoverTrigger asChild>
           <Button
             id="date"
-            color="outline-black"
+            color="black"
             className={cn(
               "relative h-[48px] w-[280px] justify-start border border-gray-500 px-4 py-3 pr-4 text-left text-[16px] font-normal text-gray-500",
               !date && "text-muted-foreground"
