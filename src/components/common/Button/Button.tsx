@@ -4,10 +4,15 @@ import { type VariantProps } from "class-variance-authority";
 import * as React from "react";
 import buttonVariants from "./styles";
 
-export type ButtonColors = Pick<
-  VariantProps<typeof buttonVariants>,
-  "color"
-> | null;
+export type ButtonColors =
+  | "primary"
+  | "approve"
+  | "black"
+  | "grey"
+  | "apply"
+  | "reject"
+  | "reapply"
+  | undefined;
 
 export interface ButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
@@ -48,4 +53,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-export { Button, buttonVariants };
+export default Button;

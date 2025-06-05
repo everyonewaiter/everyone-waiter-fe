@@ -63,6 +63,22 @@
   --breakpoint-sm: 360px;
   --breakpoint-md: 960px;
   --breakpoint-lg: 1920px;
+
+  /* Shadow */
+  --shadow-custom: -2px 0px 20px 0px rgba(0, 0, 0, 0.08);
+  --shadow-floating: 0px 0px 24px 0px rgba(0, 0, 0, 0.08);
+
+  /* Animation */
+  --animate-wiggle: wiggle 0.3s ease-in-out infinite;
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-0.35deg);
+    }
+    50% {
+      transform: rotate(0.35deg);
+    }
+  }
 }
 
 @layer {

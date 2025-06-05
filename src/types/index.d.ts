@@ -21,3 +21,5 @@ declare global {
     timestamp: string;
   }
 }
+
+export {};

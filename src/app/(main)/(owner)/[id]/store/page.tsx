@@ -10,9 +10,9 @@ import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PropsWithChildren, useState } from "react";
 import { useForm } from "react-hook-form";
-import EditIcon from "@public/icons/edit.svg";
 import { Plus } from "lucide-react";
 import { useParams } from "next/navigation";
+import Icon from "@/components/common/Icon";
 import useStores from "./_hooks/useStores";
 
 export default function StoreInfo() {
@@ -276,7 +276,7 @@ export default function StoreInfo() {
                 }}
                 onClick={isEditing ? undefined : () => setIsEditing(true)}
               >
-                <EditIcon width={20} height={20} />
+                <Icon iconKey="edit" size={20} />
                 <span>수정하기</span>
               </ResponsiveButton>
             )}

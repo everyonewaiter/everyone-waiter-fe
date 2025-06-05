@@ -199,7 +199,7 @@ export default function StoreList() {
       <div className="z-10 hidden w-full justify-end md:flex">
         <ResponsiveButton
           variant="outline"
-          color="outline-primary"
+          color="primary"
           onClick={() => navigate.push("/create")}
           responsiveButtons={{
             lg: { buttonSize: "lg" },

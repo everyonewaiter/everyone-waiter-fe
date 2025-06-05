@@ -1,11 +1,10 @@
 "use client";
 
 import QueryProviders from "@/app/query-providers";
+import Icon from "@/components/common/Icon";
 import InfoPopup from "@/components/InfoPopup";
 import useOverlay from "@/hooks/use-overlay";
-import useEscapeKey from "@/hooks/useEscapeKey";
-import useOutsideClick from "@/hooks/useOutSideClick";
-import Image from "next/image";
+import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import { useRef } from "react";
 
 export default function PageTitle({ title }: { title: string }) {
@@ -13,8 +12,7 @@ export default function PageTitle({ title }: { title: string }) {
 
   const { open, close } = useOverlay();
 
-  useOutsideClick({ ref, handler: close });
-  useEscapeKey({ handler: close });
+  useModalCloseTriggers({ ref, onClose: close });
 
   const handleOpenPopup = () => {
     open(() => (
@@ -35,11 +33,9 @@ export default function PageTitle({ title }: { title: string }) {
         className="center relative h-8 w-8 rounded-[12px] border border-gray-400 lg:h-12 lg:w-12 lg:rounded-[16px]"
         onClick={handleOpenPopup}
       >
-        <Image
-          src="/icons/user.svg"
-          alt="사이드 메뉴"
-          width={24}
-          height={24}
+        <Icon
+          iconKey="user"
+          size={24}
           className="md:h-6 md:w-6 lg:h-8 lg:w-8"
         />
       </button>

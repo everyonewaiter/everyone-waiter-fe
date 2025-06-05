@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "모두의 웨이터",
   description: "모두의 웨이터",
   icons: {
-    icon: "/icons/logo/logo.svg",
+    icon: "/logo/logo.svg",
   },
 };
 

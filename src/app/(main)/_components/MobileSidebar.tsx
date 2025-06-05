@@ -1,11 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import useEscapeKey from "@/hooks/useEscapeKey";
-import useOutsideClick from "@/hooks/useOutSideClick";
 import { useRef } from "react";
 import { X as CloseIcon } from "lucide-react";
 import Image from "next/image";
+import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import MobileSidebarSection from "./MobileSidebarSection";
 
 interface IProps {
@@ -16,8 +15,7 @@ export default function MobileSidebar({ onClose }: IProps) {
   const navigate = useRouter();
   const ref = useRef<HTMLDivElement>(null);
 
-  useOutsideClick({ ref, handler: onClose });
-  useEscapeKey({ handler: onClose });
+  useModalCloseTriggers({ ref, onClose });
 
   return (
     <div className="bg-opacity-100 fixed inset-0 z-[9999] flex backdrop-blur-sm md:hidden">
@@ -35,13 +33,13 @@ export default function MobileSidebar({ onClose }: IProps) {
             }}
           >
             <Image
-              src="/icons/logo/logo-medium.svg"
+              src="/logo/logo-medium.svg"
               alt="모두의 웨이터 로고"
               width={40}
               height={40}
             />
             <Image
-              src="/icons/logo/logo-text.svg"
+              src="/logo/logo-text.svg"
               alt="모두의 웨이터 텍스트"
               width={106}
               height={19}
