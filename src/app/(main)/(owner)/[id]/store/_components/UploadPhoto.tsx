@@ -1,6 +1,7 @@
 import React, { ChangeEvent, forwardRef, RefObject } from "react";
 import Image from "next/image";
 import cn from "@/lib/utils";
+import Icon from "@/components/common/Icon";
 
 interface IProps {
   image?: string;
@@ -28,11 +29,9 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
         />
       ) : (
         <>
-          <Image
-            src="/icons/file-attach.svg"
-            alt="사업자 등록 아이콘"
-            width={40}
-            height={40}
+          <Icon
+            iconKey="file-attach"
+            size={40}
             className="h-8 w-8 md:h-10 md:w-10"
           />
           <strong className="mt-3 text-sm font-medium text-gray-100 lg:text-base">

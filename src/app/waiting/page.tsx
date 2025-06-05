@@ -58,7 +58,7 @@ export default function Waiting() {
                   className: "bg-gray-300 text-white text-lg font-semibold",
                 },
               }}
-              onClick={() => navigate.push("/control/hall")}
+              onClick={() => navigate.push("/hall")}
             >
               홀 화면 이동
             </ResponsiveButton>

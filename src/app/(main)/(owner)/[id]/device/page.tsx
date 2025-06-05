@@ -26,7 +26,7 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import { useState } from "react";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
-import { Button } from "@/components/common/Button/Button";
+import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import getQueryClient from "@/app/get-query-client";
 import QueryProviders from "@/app/query-providers";
@@ -113,7 +113,7 @@ export default function Device() {
         onClick={handleAlertOpen}
       >
         <Icon
-          iconKey="trash-02"
+          iconKey="trash"
           isActive
           size={20}
           className="h-[15gpx] w-[15px] lg:h-5 lg:w-5"

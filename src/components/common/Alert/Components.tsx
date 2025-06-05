@@ -5,6 +5,7 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
 import cn from "@/lib/utils";
 import ResponsiveButton from "../Button/ResponsiveButton";
+import Button from "../Button/Button";
 
 const AlertDialog = AlertDialogPrimitive.Root;
 
@@ -36,7 +37,7 @@ const AlertDialogContent = React.forwardRef<
     <AlertDialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed top-1/2 left-1/2 z-100 flex w-80 -translate-x-1/2 -translate-y-1/2 transform flex-col gap-6 rounded-[20px] bg-white p-5 md:w-85 md:gap-8 lg:w-136 lg:rounded-[30px] lg:p-8",
+        "fixed top-1/2 left-1/2 z-100 flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-6 rounded-[20px] bg-white p-5 md:w-85 md:gap-8 lg:min-w-136 lg:rounded-[30px] lg:p-8",
         className
       )}
       {...props}
@@ -51,10 +52,7 @@ function AlertDialogHeader({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        "flex w-full items-center justify-center py-4 lg:py-6",
-        className
-      )}
+      className={cn("flex w-full items-center justify-center py-4", className)}
       {...props}
     />
   );
@@ -78,7 +76,7 @@ const AlertDialogTitle = React.forwardRef<
   <AlertDialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-center text-base font-semibold break-words whitespace-pre-wrap md:text-lg",
+      "w-full text-center text-base font-semibold break-words whitespace-pre-wrap md:text-lg",
       className
     )}
     {...props}
@@ -88,26 +86,47 @@ AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName;
 
 const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
-  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
->(({ className, onClick, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action> & {
+    noResponsive?: boolean;
+    color?:
+      | "approve"
+      | "primary"
+      | "black"
+      | "grey"
+      | "apply"
+      | "reject"
+      | "reapply"
+      | null
+      | undefined;
+  }
+>(({ className, onClick, noResponsive, ...props }, ref) => (
   <AlertDialogPrimitive.Action ref={ref} className="flex-1">
-    <ResponsiveButton
-      asChild
-      type="button"
-      responsiveButtons={{
-        lg: { buttonSize: "lg" },
-        md: {
-          buttonSize: "sm",
-          className: "justify-center items-center !flex hidden lg:hidden",
-        },
-        sm: {
-          buttonSize: "sm",
-          className: "justify-center items-center !flex md:hidden",
-        },
-      }}
-      onClick={onClick}
-      {...props}
-    />
+    {noResponsive ? (
+      <Button
+        type="button"
+        onClick={onClick}
+        className="button-xl w-full"
+        {...props}
+      />
+    ) : (
+      <ResponsiveButton
+        asChild
+        type="button"
+        responsiveButtons={{
+          lg: { buttonSize: "xl" },
+          md: {
+            buttonSize: "sm",
+            className: "justify-center items-center !flex hidden lg:hidden",
+          },
+          sm: {
+            buttonSize: "sm",
+            className: "justify-center items-center !flex md:hidden",
+          },
+        }}
+        onClick={onClick}
+        {...props}
+      />
+    )}
   </AlertDialogPrimitive.Action>
 ));
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
@@ -116,29 +135,41 @@ const AlertDialogCancel = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel> & {
     hasNoAction?: boolean;
+    noResponsive?: boolean;
+    color?:
+      | "approve"
+      | "primary"
+      | "black"
+      | "grey"
+      | "apply"
+      | "reject"
+      | "reapply"
+      | null
+      | undefined;
   }
->(({ className, hasNoAction, ...props }, ref) => (
-  <AlertDialogPrimitive.Cancel
-    ref={ref}
-    className={hasNoAction ? "flex-1" : "flex-[0.6]"}
-  >
-    <ResponsiveButton
-      asChild
-      color="grey"
-      type="button"
-      responsiveButtons={{
-        lg: { buttonSize: "lg" },
-        md: {
-          buttonSize: "sm",
-          className: "justify-center items-center !flex hidden lg:hidden",
-        },
-        sm: {
-          buttonSize: "sm",
-          className: "justify-center items-center !flex md:hidden",
-        },
-      }}
-      {...props}
-    />
+>(({ className, hasNoAction, noResponsive, ...props }, ref) => (
+  <AlertDialogPrimitive.Cancel ref={ref} className="flex-1">
+    {noResponsive ? (
+      <Button type="button" className="button-xl w-full" {...props} />
+    ) : (
+      <ResponsiveButton
+        asChild
+        color="grey"
+        type="button"
+        responsiveButtons={{
+          lg: { buttonSize: "xl" },
+          md: {
+            buttonSize: "sm",
+            className: "justify-center items-center !flex hidden lg:hidden",
+          },
+          sm: {
+            buttonSize: "sm",
+            className: "justify-center items-center !flex md:hidden",
+          },
+        }}
+        {...props}
+      />
+    )}
   </AlertDialogPrimitive.Cancel>
 ));
 AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;

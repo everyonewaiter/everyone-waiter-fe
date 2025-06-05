@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { SVGProps, useEffect, useState } from "react";
 import cn from "@/lib/utils";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+interface Props extends React.HTMLAttributes<SVGSVGElement> {
   iconKey: string;
   isActive?: boolean;
   size?: number;
@@ -17,25 +17,22 @@ export default function Icon({
   className = "",
   ...props
 }: Props) {
-  const [svg, setSvg] = useState<string | null>(null);
-  const iconSrc = `/icons/${iconKey}.svg`;
+  const [IconComponent, setIconComponent] = useState<React.FC<
+    SVGProps<SVGSVGElement>
+  > | null>(null);
 
   useEffect(() => {
-    fetch(iconSrc)
-      .then((res) => res.text())
-      .then(setSvg);
-  }, [iconKey, iconSrc]);
+    import(`@/assets/icons/${iconKey}.svg`)
+      .then((mod) => setIconComponent(() => mod.default))
+      .catch(() => setIconComponent(null));
+  }, [iconKey]);
 
-  if (!svg) return null;
-
+  if (!IconComponent) return null;
   return (
-    <div
-      className={cn(
-        `inline-block text-gray-300 ${isActive ? "text-primary" : "text-gray-300"}`,
-        className
-      )}
-      style={{ width: size, height: size, stroke: "none" }}
-      dangerouslySetInnerHTML={{ __html: svg }}
+    <IconComponent
+      width={size}
+      height={size}
+      className={cn(isActive ? "text-primary" : "text-gray-300", className)}
       {...props}
     />
   );

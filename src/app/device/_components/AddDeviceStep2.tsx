@@ -65,7 +65,7 @@ export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
           purpose: submitData.purpose,
         });
         setSecureItem("secretKey", secretKey);
-        navigate.push(activeIndex === 0 ? "/control/hall" : "/control/pos");
+        navigate.push(activeIndex === 0 ? "/hall" : "/pos");
       },
     });
   };

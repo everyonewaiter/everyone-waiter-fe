@@ -43,7 +43,18 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
       if (
         error.response?.status === 401 &&
         !originalRequest._retry &&
-        !window.location.href.includes("/control")
+        ![
+          "/auth",
+          "/create",
+          "/device",
+          "/hall",
+          "/login",
+          "/pos",
+          "/signup",
+          "/stores",
+          "/test",
+          "/waiting",
+        ].some((path) => window.location.pathname.startsWith(path))
       ) {
         originalRequest._retry = true;
 
