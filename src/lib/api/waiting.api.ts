@@ -2,7 +2,7 @@ import { signatureInstance } from "../axios/instance";
 import API_PATH from "./paths";
 
 export const waitingList = async (): Promise<{ waitings: Waiting[] }> => {
-  const response = await signatureInstance.get(`${API_PATH}/waitings`);
+  const response = await signatureInstance.get(`${API_PATH.waitings}`);
   return response.data;
 };
 
