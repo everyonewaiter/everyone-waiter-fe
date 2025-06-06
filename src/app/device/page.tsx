@@ -10,10 +10,6 @@ export default function Device() {
   const { step, setStep, storeId, setStoreId, phoneNumber, setPhoneNumber } =
     useDeviceUI();
 
-  // const { mutate: submitDevice } = useMutation({
-  //   mutationFn: addDevice,
-  // });
-
   return (
     <div
       className={cn(
