@@ -105,23 +105,105 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   );
 };
 
+type CacheKey = `${string}:${string}:${string}`; 
+
+const signatureMutex = new Mutex();
+
+const signatureCache: Record<
+  CacheKey,
+  { timestamp: string; signature: string; createdAt: number }
+> = {};
+
+const getCacheKey = (method: string, uri: string, purpose: string) =>
+  `${method}:${uri}:${purpose}` as const;
+
 export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.request.use(
     async (config) => {
-      const deviceInfo = await getSecureItem("deviceInfo");
-      const secretKey = await getSecureItem("secretKey");
+      const method = config.method?.toUpperCase() || "GET";
+      const uri = config.url || "/";
 
-      if (!deviceInfo || !secretKey) return config;
+      await signatureMutex.runExclusive(async () => {
+        const purpose = "HALL";
+        const key = getCacheKey(method, `/v1${uri}`, purpose);
+        const cached = signatureCache[key];
 
-      const timestamp = Date.now().toString();
-      const signature = makeSignature({ secretKey, timestamp, ...deviceInfo });
+        if (!cached || Date.now() - cached.createdAt > 1000) {
+          const deviceInfo = await getSecureItem("deviceInfo");
+          const secretKey = await getSecureItem("secretKey");
 
-      config.headers["x-ew-access-key"] = secretKey;
-      config.headers["x-ew-signature"] = signature;
-      config.headers["x-ew-timestamp"] = timestamp;
+          if (!deviceInfo || !secretKey) {
+            console.warn("❌ deviceInfo 또는 secretKey가 없습니다.");
+            return;
+          }
+
+          const timestamp = Date.now().toString();
+          const signature = makeSignature({
+            uri: `/v1${uri}`,
+            method,
+            secretKey,
+            timestamp,
+            purpose,
+            name: deviceInfo.name,
+            deviceId: deviceInfo.deviceId,
+          });
+
+          console.log("🧾 Signing Payload", {
+            method,
+            uri: `/v1${uri}`,
+            secretKey,
+            timestamp,
+            purpose,
+            name: deviceInfo.name,
+            deviceId: deviceInfo.deviceId,
+          });
+
+          console.log("🧾 Headers", {
+            "x-ew-access-key": deviceInfo.deviceId,
+            "x-ew-signature": signature,
+            "x-ew-timestamp": timestamp,
+          });
+
+          config.headers["x-ew-access-key"] = deviceInfo.deviceId;
+          config.headers["x-ew-signature"] = signature;
+          config.headers["x-ew-timestamp"] = timestamp;
+        }
+      });
 
       return config;
     },
     (error) => Promise.reject(error)
+  );
+
+  axiosInstance.interceptors.response.use(
+    (response) => {
+      // 응답 성공 시 처리
+      console.log("✅ Axios Response Success:", response);
+      return response;
+    },
+    (error) => {
+      // 응답 에러 발생 시 처리
+      console.error(
+        "❌ Axios Response Error:",
+        error.response || error.message || error
+      );
+
+      // 에러 응답 데이터 확인
+      if (error.response) {
+        // 서버가 응답했지만 상태 코드가 2xx 범위가 아닌 경우
+        console.error("   Status:", error.response.status);
+        console.error("   Data:", error.response.data); // <-- 여기가 에러 응답 데이터
+        console.error("   Headers:", error.response.headers);
+      } else if (error.request) {
+        // 요청이 만들어졌지만 응답을 받지 못한 경우 (예: 네트워크 문제)
+        console.error("   No response received for the request.");
+        console.error("   Request:", error.request);
+      } else {
+        // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생한 경우
+        console.error("   Error setting up the request:", error.message);
+      }
+
+      return Promise.reject(error); // 에러를 다시 throw하여 호출자에게 전달
+    }
   );
 };
