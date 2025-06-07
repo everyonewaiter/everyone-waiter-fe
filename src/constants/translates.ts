@@ -23,6 +23,7 @@ export const paymentTimeTranslate = {
 } as const;
 
 export const deviceTranslate = {
+  POS: "POS",
   TABLE: "테이블",
   HALL: "홀",
   WAITING: "웨이팅",

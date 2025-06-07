@@ -1,5 +1,5 @@
 import { TypeCategory } from "@/schema/store.schema";
-import { formInstance, instance } from "../axios/instance";
+import { formInstance, instance, signatureInstance } from "../axios/instance";
 import API_PATH from "./paths";
 
 export const registerStore = async (body: FormData) => {
@@ -114,5 +114,11 @@ export const getMenusWithCategory = async (
   storeId: string
 ): Promise<MenuListWithCategory> => {
   const response = await instance.get(`${API_PATH.stores}/${storeId}/menus`);
+  return response.data;
+};
+
+// 스토어 오픈/클로즈
+export const postStoreAction = async (type: "open" | "close") => {
+  const response = await signatureInstance.post(`${API_PATH.stores}/${type}`);
   return response.data;
 };

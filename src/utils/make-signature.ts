@@ -4,15 +4,19 @@ import CryptoJS from "crypto-js";
 // 요청 헤더와 시그니처 생성 시 동일한 timestamp 사용
 // 5분 경과 시 사용 불가 (요청할 때마다 생성 권장)
 const makeSignature = ({
+  method,
+  uri,
   deviceId,
   purpose,
   name,
   secretKey,
   timestamp,
-}: Device & { secretKey: string; timestamp: string }) => {
-  const method = "GET";
-  const uri = "/v1/devices";
-
+}: Pick<Device, "deviceId" | "purpose" | "name"> & {
+  secretKey: string;
+  timestamp: string;
+  method: string;
+  uri: string;
+}) => {
   const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
   hmac.update(`${method} ${uri}`);
   hmac.update("\n");

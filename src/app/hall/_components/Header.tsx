@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/common/Button/Button";
+import Button from "@/components/common/Button/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
