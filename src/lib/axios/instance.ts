@@ -41,4 +41,4 @@ setupInterceptors(instance);
 setupInterceptors(formInstance);
 setupDeviceInterceptors(signatureInstance);
 
-export { instance, formInstance, authInstance };
+export { instance, formInstance, authInstance, signatureInstance };
