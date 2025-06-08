@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/common/Button/Button";
+import Button from "@/components/common/Button/Button";
 import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
 import { useState } from "react";
 import cn from "@/lib/utils";

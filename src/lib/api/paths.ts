@@ -3,6 +3,7 @@ const API_PATH = {
   account: "/accounts",
   stores: "/stores",
   devices: "/devices",
+  pos: "/pos",
 };
 
 export default API_PATH;

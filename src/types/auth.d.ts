@@ -4,16 +4,12 @@ type Account = {
   phoneNumber: string;
 };
 
-type ADMIN = "ADMIN";
-type USER = "USER";
-type OWNER = "OWNER";
-
-type Permission = ADMIN | USER | OWNER;
+type AccountPermission = "ADMIN" | "USER" | "OWNER";
 
 type UserProfile = {
   accountId: string;
   email: string;
-  permission: Permission;
+  permission: AccountPermission;
 };
 
 type Status = "INACTIVE" | "ACTIVE" | "DELETE";

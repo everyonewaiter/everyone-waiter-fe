@@ -3,7 +3,7 @@ import API_PATH from "./paths";
 
 interface GetAccountParams {
   searchEmail?: string;
-  searchPermission?: Permission | "";
+  searchPermission?: AccountPermission | "";
   searchState?: Status | "";
   page?: number;
   size?: number;
@@ -41,7 +41,7 @@ export const updateDetailAccount = async ({
   state,
 }: {
   accountId: bigint;
-  permission: Permission;
+  permission: AccountPermission;
   state: Status;
 }) => {
   const response = await instance.put(

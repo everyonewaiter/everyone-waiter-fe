@@ -15,7 +15,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import useAdmin from "../_hooks/useAdmin";
 
 interface TypeActive {
-  permission: Permission | "";
+  permission: AccountPermission | "";
   status: Status | "";
 }
 
@@ -58,7 +58,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
       setActive({
         permission: permissionTranslate[
           accountData.permission as keyof typeof permissionTranslate
-        ] as Permission,
+        ] as AccountPermission,
         status: stateTranslate[
           accountData.state as keyof typeof stateTranslate
         ] as Status,
@@ -78,7 +78,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
         permission: findKeyByValue(
           permissionTranslate,
           active.permission
-        ) as Permission,
+        ) as AccountPermission,
         state: findKeyByValue(stateTranslate, active.status) as Status,
       },
       {
@@ -131,7 +131,7 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                     setActive={(value) =>
                       setActive((prev) => ({
                         ...prev,
-                        permission: value as Permission,
+                        permission: value as AccountPermission,
                       }))
                     }
                     active={active.permission}

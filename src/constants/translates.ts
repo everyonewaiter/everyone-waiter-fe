@@ -1,4 +1,4 @@
-export const permissionTranslate: Record<Permission, string> = {
+export const permissionTranslate: Record<AccountPermission, string> = {
   ADMIN: "관리자",
   USER: "사용자",
   OWNER: "사장님",

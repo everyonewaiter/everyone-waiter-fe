@@ -1,5 +1,4 @@
 import Checkbox from "@/components/common/Checkbox";
-import formatPrice from "@/utils/format/price";
 import Image from "next/image";
 
 interface MenuCardProps {
@@ -40,7 +39,7 @@ export default function MenuCard({
         <div className="flex flex-col gap-0.5 lg:flex-row lg:items-center lg:justify-between">
           <p className="text-[13px] text-black lg:text-lg">{menu.name}</p>
           <p className="text-xl font-semibold text-black lg:text-[28px]">
-            {formatPrice(menu.price)}원
+            {menu.price.toLocaleString()}원
           </p>
         </div>
       </div>

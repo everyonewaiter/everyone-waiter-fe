@@ -45,7 +45,7 @@ export default function Users() {
     debouncedValue,
     permissionObj[
       active.permission as keyof typeof permissionObj
-    ] as Permission,
+    ] as AccountPermission,
     stateObj[active.status as keyof typeof stateObj] as Status,
     currentPage
   );
