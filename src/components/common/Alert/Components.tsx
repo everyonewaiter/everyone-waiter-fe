@@ -103,6 +103,7 @@ const AlertDialogAction = React.forwardRef<
   <AlertDialogPrimitive.Action ref={ref} className="flex-1">
     {noResponsive ? (
       <Button
+        asChild
         type="button"
         onClick={onClick}
         className="button-xl w-full"
@@ -150,7 +151,7 @@ const AlertDialogCancel = React.forwardRef<
 >(({ className, hasNoAction, noResponsive, ...props }, ref) => (
   <AlertDialogPrimitive.Cancel ref={ref} className="flex-1">
     {noResponsive ? (
-      <Button type="button" className="button-xl w-full" {...props} />
+      <Button asChild type="button" className="button-xl w-full" {...props} />
     ) : (
       <ResponsiveButton
         asChild

@@ -1,10 +1,10 @@
 "use client";
 
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import useDeviceInfo from "@/hooks/useDeviceInfo";
 import { useRouter } from "next/navigation";
 import WaitingSection from "./_components/WaitingSection";
 import useWaiting from "./_hooks/useWaiting";
-import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
 
 export default function Waiting() {
