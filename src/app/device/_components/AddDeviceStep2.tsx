@@ -24,9 +24,14 @@ const tabs = [
 interface IProps {
   storeId: string;
   phoneNumber: string;
+  storeName: string;
 }
 
-export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
+export default function AddDeviceStep2({
+  storeId,
+  storeName,
+  phoneNumber,
+}: IProps) {
   const navigate = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -61,6 +66,8 @@ export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
         const { deviceId, secretKey } = returnData;
         setSecureItem("deviceInfo", {
           deviceId,
+          storeId: submitData.storeId,
+          storeName,
           name: submitData.name,
           purpose: submitData.purpose,
         });

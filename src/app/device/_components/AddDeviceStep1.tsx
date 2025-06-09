@@ -24,7 +24,15 @@ interface FormValues {
 }
 
 interface IProps {
-  onNextStep: (storeId: bigint, phoneNumber: string) => void;
+  onNextStep: ({
+    storeId,
+    name,
+    phoneNumber,
+  }: {
+    storeId: bigint;
+    name: string;
+    phoneNumber: string;
+  }) => void;
 }
 
 export default function AddDeviceStep1({ onNextStep }: IProps) {
@@ -155,7 +163,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
       handleOpenAlert();
     } else {
       const phoneNumber = form.watch("phone");
-      onNextStep(matchedStore.storeId, phoneNumber);
+      onNextStep({ ...matchedStore, phoneNumber });
     }
   };
 

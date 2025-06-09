@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import cn from "@/lib/utils";
+import { useState } from "react";
 import AddDeviceStep1 from "./_components/AddDeviceStep1";
 import AddDeviceStep2 from "./_components/AddDeviceStep2";
 import useDeviceUI from "./_hooks/useDeviceUi";
 
 export default function Device() {
+  const [storeName, setStoreName] = useState("");
   const { step, setStep, storeId, setStoreId, phoneNumber, setPhoneNumber } =
     useDeviceUI();
 
@@ -36,9 +38,14 @@ export default function Device() {
       <div className="mt-8 md:mt-6 lg:mt-12">
         {step === 0 && (
           <AddDeviceStep1
-            onNextStep={(_storeId: bigint, _phoneNumber: string) => {
+            onNextStep={({
+              storeId: _storeId,
+              name,
+              phoneNumber: _phoneNumber,
+            }) => {
               setStoreId(_storeId);
               setPhoneNumber(_phoneNumber);
+              setStoreName(name);
               setStep(step + 1);
             }}
           />
@@ -47,6 +54,7 @@ export default function Device() {
           <AddDeviceStep2
             storeId={storeId.toString()}
             phoneNumber={phoneNumber}
+            storeName={storeName}
           />
         )}
       </div>
