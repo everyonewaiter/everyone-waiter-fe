@@ -6,6 +6,7 @@ import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
+import getCdn from "@/utils/getCdn";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -116,7 +117,7 @@ export default function StoreModal({ close, registrationId, email }: IProps) {
                   {data?.image && (
                     <div className="flex w-full justify-center rounded-[16px] border border-gray-600 py-6">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${data?.image!}`}
+                        src={getCdn(data?.image)}
                         alt="사업자 등록증"
                         width={381}
                         height={458}
