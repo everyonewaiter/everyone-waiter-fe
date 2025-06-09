@@ -6,7 +6,8 @@ import useGetDate from "@/hooks/useGetDate";
 import Image from "next/image";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
-import useStoreOpenStore from "@/stores/useStoreOpenStore";
+import { useMutation } from "@tanstack/react-query";
+import { postStoreAction } from "@/lib/api/stores.api";
 import Link from "next/link";
 import QueryProviders from "../query-providers";
 import OpenSwitch from "./_components/OpenSwitch";
@@ -17,7 +18,10 @@ export default function Pos() {
 
   const { date, day } = useGetDate(now);
   const { open, close } = useOverlay();
-  const { storeOpen } = useStoreOpenStore();
+
+  const { mutate } = useMutation({
+    mutationFn: postStoreAction,
+  });
 
   const handleOpenPos = () => {
     open(() => (
@@ -25,10 +29,17 @@ export default function Pos() {
         <Alert
           onClose={close}
           buttonText="오픈하기"
+          noResponsive
           onAction={() => {
-            storeOpen();
-            close();
-            navigate.push("/pos/tables");
+            mutate(
+              { type: "open" },
+              {
+                onSuccess: () => {
+                  close();
+                  navigate.push("/pos/tables");
+                },
+              }
+            );
           }}
         >
           매장을 오픈하시겠습니까?

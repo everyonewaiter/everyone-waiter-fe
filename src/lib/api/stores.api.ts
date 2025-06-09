@@ -118,7 +118,7 @@ export const getMenusWithCategory = async (
 };
 
 // 스토어 오픈/클로즈
-export const postStoreAction = async (type: "open" | "close") => {
+export const postStoreAction = async ({ type }: { type: "open" | "close" }) => {
   const response = await signatureInstance.post(`${API_PATH.stores}/${type}`);
   return response.data;
 };
