@@ -20,7 +20,7 @@ const MENU_ITEMS: Record<Permission, MenuItem[]> = {
     { icon: "category", label: "메뉴 관리", href: "/menu" },
     { icon: "mobile", label: "기기 관리", href: "/device" },
     { icon: "subscribe", label: "구독 설정", href: "/subscription" },
-    { icon: "pos", label: "POS", href: "/pos" },
+    // { icon: "pos", label: "POS", href: "/pos" },
     { icon: "settings", label: "설정", href: "/settings" },
   ],
   USER: [{ icon: "home", label: "HOME", href: "/" }],
