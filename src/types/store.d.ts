@@ -26,6 +26,15 @@ interface CountryOfOriginItem {
   origin: string;
 }
 
+interface Settings {
+  extraTableCount: number;
+  printerLocation: string;
+  showMenuPopup: boolean;
+  showOrderTotalPrice: boolean;
+  countryOfOrigin: CountryOfOriginItem[];
+  staffCallOptions: string[];
+}
+
 interface StoreInfoDetail extends Omit<StoreForm, "file"> {
   accountId: bigint;
   storeId: bigint;
@@ -33,14 +42,7 @@ interface StoreInfoDetail extends Omit<StoreForm, "file"> {
   status: StoreStatus;
   lastOpenedAt: string;
   lastClosedAt: string;
-  setting: {
-    extraTableCount: number;
-    printerLocation: string;
-    showMenuPopup: boolean;
-    showOrderTotalPrice: boolean;
-    countryOfOrigin: CountryOfOriginItem[];
-    staffCallOptions: string[];
-  };
+  setting: Settings;
   createdAt: string;
   updatedAt: string;
 }

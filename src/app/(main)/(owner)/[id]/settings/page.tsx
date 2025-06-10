@@ -1,5 +1,7 @@
 "use client";
 
+import { useParams } from "next/navigation";
+import { useForm } from "react-hook-form";
 import {
   DndContext,
   PointerSensor,
@@ -15,25 +17,48 @@ import {
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Input from "@/components/common/Input";
 import Switch from "@/components/common/Switch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "@/components/common/Form";
 import MoveableChips from "./_components/MoveableChips";
-import useSettingsForm from "./_hooks/useSettingsForm";
+import useSettings from "./_hooks/useSettings";
 
 export default function Settings() {
-  const [active, setActive] = useState<0 | 1>(0);
-  const [items, setItems] = useState(["1", "2", "3", "4"]);
+  const params = useParams();
+  const storeId = params?.id as string;
 
-  const { form, submitHandler } = useSettingsForm(setItems);
+  const [items, setItems] = useState<string[]>([]);
+
+  const form = useForm({ defaultValues: { value: "" } });
+  const { updateSetting, settingData } = useSettings(storeId);
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const handleDrag = ({ _active, over }: any) => {
-    if (_active.id !== over?.id) {
-      const oldIndex = items.indexOf(_active.id);
-      const newIndex = items.indexOf(over.id);
-      setItems((prev) => arrayMove(prev, oldIndex, newIndex));
+  const submitHandler = () => {
+    const value = form.getValues("value");
+    if (value.trim()) {
+      const nextItems = [...items, value];
+      updateSetting({ staffCallOptions: nextItems }, () => {
+        setItems(nextItems);
+        form.reset();
+      });
     }
   };
+
+  const handleDrag = ({ active, over }: any) => {
+    if (active.id !== over?.id) {
+      const oldIndex = items.indexOf(active.id);
+      const newIndex = items.indexOf(over.id);
+      const changeSort = arrayMove(items, oldIndex, newIndex);
+      updateSetting({ staffCallOptions: changeSort }, () =>
+        setItems(changeSort)
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (settingData?.staffCallOptions) {
+      setItems(settingData?.staffCallOptions);
+    }
+  }, [settingData]);
 
   return (
     <div className="flex w-[480px] flex-col gap-8">
@@ -49,8 +74,8 @@ export default function Settings() {
             주방 프린터기와 연결된 기기를 선택해주세요.
           </p>
           <div className="mt-3 flex flex-row gap-3">
-            {["POS", "홀"].map((key, index) => {
-              const isActive = active === index;
+            {["POS", "HALL"].map((key) => {
+              const isActive = settingData?.printerLocation === key;
               return (
                 <ResponsiveButton
                   key={key}
@@ -71,9 +96,9 @@ export default function Settings() {
                     },
                   }}
                   commonClassName={isActive ? "" : "border-gray-500"}
-                  onClick={() => setActive(index as 0 | 1)}
+                  onClick={() => updateSetting({ printerLocation: key })}
                 >
-                  {key}
+                  {key === "HALL" ? "홀" : key}
                 </ResponsiveButton>
               );
             })}
@@ -88,13 +113,23 @@ export default function Settings() {
               <span className="flex-1 text-sm">
                 손님 테이블 메뉴 팝업창 띄우기
               </span>
-              <Switch />
+              <Switch
+                checked={settingData?.showMenuPopup}
+                onCheckedChange={(checked) =>
+                  updateSetting({ showMenuPopup: checked })
+                }
+              />
             </div>
             <div className="flex w-full items-center">
               <span className="flex-1 text-sm">
                 손님 테이블 주문 내역에서 총 주문금액 표시하기
               </span>
-              <Switch />
+              <Switch
+                checked={settingData?.showOrderTotalPrice}
+                onCheckedChange={(checked) =>
+                  updateSetting({ showOrderTotalPrice: checked })
+                }
+              />
             </div>
             <div className="flex w-full flex-col gap-3 md:gap-2 lg:gap-3">
               <span className="flex-1 text-sm">
