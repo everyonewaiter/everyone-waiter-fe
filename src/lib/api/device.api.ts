@@ -6,9 +6,9 @@ interface Ids {
   deviceId: string;
 }
 
-export const getDevices = async ({
-  storeId,
-}: Pick<Ids, "storeId">): Promise<ResWithPagination<Device[]>> => {
+export const getDevices = async (
+  storeId: string
+): Promise<ResWithPagination<Device[]>> => {
   const response = await instance.get(`${API_PATH.stores}/${storeId}/devices`);
   return response.data;
 };

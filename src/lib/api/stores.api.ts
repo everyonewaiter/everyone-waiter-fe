@@ -58,14 +58,6 @@ export const getStoreList = async (): Promise<StoreList> => {
   return response.data;
 };
 
-// 매장 상세 정보
-export const getStoreInfoDetail = async (
-  storeId: string
-): Promise<StoreInfoDetail> => {
-  const response = await instance.get(`${API_PATH.stores}/${storeId}`);
-  return response.data;
-};
-
 // 카테고리 목록
 export const getStoreCategoryList = async (
   storeId: string
@@ -120,5 +112,25 @@ export const getMenusWithCategory = async (
 // 스토어 오픈/클로즈
 export const postStoreAction = async (type: "open" | "close") => {
   const response = await signatureInstance.post(`${API_PATH.stores}/${type}`);
+  return response.data;
+};
+
+// 매장 정보 수정
+export const putUpdateStore = async ({
+  storeId,
+  body,
+}: {
+  storeId: string;
+  body: { landline: string; setting: Settings };
+}) => {
+  const response = await instance.put(`${API_PATH.stores}/${storeId}`, body);
+  return response.data;
+};
+
+// 매장 상세 정보
+export const getStoreInfoDetail = async (
+  storeId: string
+): Promise<StoreInfoDetail> => {
+  const response = await instance.get(`${API_PATH.stores}/${storeId}`);
   return response.data;
 };

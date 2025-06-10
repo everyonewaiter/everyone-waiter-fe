@@ -11,7 +11,7 @@ const useDevice = () => {
   const getDevicesQuery = (storeId: string) =>
     useQuery({
       queryKey: ["get-devices", storeId.toString()],
-      queryFn: () => getDevices({ storeId }),
+      queryFn: () => getDevices(storeId),
       enabled: !!storeId,
     });
 
