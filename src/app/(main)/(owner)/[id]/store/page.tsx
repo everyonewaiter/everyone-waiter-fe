@@ -1,85 +1,21 @@
 "use client";
 
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/no-unstable-nested-components */
 import { Form } from "@/components/common/Form";
 import Label from "@/components/common/Label";
-import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { PropsWithChildren, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { Plus } from "lucide-react";
-import { useParams } from "next/navigation";
 import Icon from "@/components/common/Icon";
-import useStores from "./_hooks/useStores";
+import OriginTable from "./_components/OriginTable";
+import InfoFields from "./_components/InfoFields";
+import useStoreInfoForm from "./_hooks/useStoreInfoForm";
+import SubmitButton from "./_components/SubmitButton";
 
 export default function StoreInfo() {
-  const params = useParams();
-
-  const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [makeDisabled, setMakeDisabled] = useState(false);
 
-  const storeId = params?.id;
-
-  const { detailStoreInfoQuery } = useStores();
-  const { data } = detailStoreInfoQuery(storeId as string);
-
-  const form = useForm<TypeStoreInfo>({
-    mode: "onChange",
-    resolver: zodResolver(storeInfoSchema),
-    defaultValues: {
-      name: data?.name,
-      license: data?.license,
-      address: data?.address,
-    },
-  });
-
-  const [countryOfOrigins, setCountryOfOrigins] = useState<
-    CountryOfOriginItem[]
-  >(data?.setting.countryOfOrigin!);
-  const newItem = {
-    item: "",
-    origin: "",
-    menu: "",
-  };
-
-  function TableRow({
-    children,
-    className,
-  }: PropsWithChildren<{ className?: string }>) {
-    return (
-      <div className={`center h-full w-full text-center ${className}`}>
-        {children}
-      </div>
-    );
-  }
-
-  // const handleDeleteItem = () => {
-  //   // delete item: OriginItem
-  // };
-
-  // // const handle
-
-  // const handleChangeItem = (
-  //   index: number,
-  //   field: keyof OriginItem,
-  //   value: string
-  // ) => {
-  //   const newOrigins = countryOfOrigins.map((origin, i) => {
-  //     if (i === index) {
-  //       return { ...origin, [field]: value };
-  //     }
-  //     return origin;
-  //   });
-  //   setCountryOfOrigins(newOrigins);
-  // };
-
-  const submitHandler = () => {
-    setMakeDisabled(true);
-    // submit data: TypeStoreinfo
-  };
+  const { form, submitHandler, newItem } = useStoreInfoForm();
 
   return (
     <div className="h-full w-full">
@@ -96,106 +32,15 @@ export default function StoreInfo() {
             <Form {...form}>
               <form
                 className="flex flex-col gap-3 lg:gap-4"
-                onSubmit={form.handleSubmit(submitHandler)}
+                onSubmit={form.handleSubmit((data) => {
+                  setMakeDisabled(true);
+                  submitHandler(data, () => setMakeDisabled(false));
+                })}
               >
-                <LabeledInput
-                  form={form}
-                  label="상호명"
-                  name="name"
-                  disabled={!isEditing}
-                  labelDisabled={!isEditing}
-                />
-                <LabeledInput
-                  form={form}
-                  label="사업자 번호"
-                  name="license"
-                  disabled={!isEditing}
-                  labelDisabled={!isEditing}
-                />
-                <LabeledInput
-                  form={form}
-                  label="주소"
-                  name="address"
-                  disabled={!isEditing}
-                  labelDisabled={!isEditing}
-                />
+                <InfoFields form={form} />
                 <Label>원산지</Label>
-                {isEditing || countryOfOrigins?.length > 0 ? (
-                  <div className="text-s flex flex-col overflow-hidden rounded-[12px] border border-gray-600 font-medium">
-                    <div className="flex h-10 w-full bg-gray-700">
-                      <TableRow>품목</TableRow>
-                      <TableRow>원산지</TableRow>
-                      <TableRow>음식명</TableRow>
-                      {isEditing && (
-                        <TableRow className="text-primary w-full">
-                          삭제
-                        </TableRow>
-                      )}
-                    </div>
-                    {countryOfOrigins.map((item, idx) => (
-                      <div
-                        // TODO - 추후 API 연결 시 아이템으로 변경
-                        key={idx}
-                        className={`flex h-10 w-full ${
-                          idx !== countryOfOrigins.length - 1 &&
-                          "border-b border-b-gray-600"
-                        }`}
-                      >
-                        {/* {item.isAdded ? (
-                          <input
-                            className="w-full text-center outline-none md:px-2 lg:px-4"
-                            placeholder="품목 입력"
-                            value={item.item}
-                            onChange={(e) =>
-                              handleChangeItem(idx, "item", e.target.value)
-                            }
-                          />
-                        ) : (
-                          <TableRow>{item.item}</TableRow>
-                        )}
-                        {item.isAdded ? (
-                          <input
-                            className="w-full text-center outline-none md:px-2 lg:px-4"
-                            placeholder="원산지 입력"
-                            value={item.origin}
-                            onChange={(e) =>
-                              handleChangeItem(idx, "origin", e.target.value)
-                            }
-                          />
-                        ) : (
-                          <TableRow>{item.origin}</TableRow>
-                        )}
-                        {item.isAdded ? (
-                          <input
-                            className="mr-1 w-full text-center outline-none md:px-2 lg:px-4"
-                            placeholder="음식명 입력"
-                            value={item.menu}
-                            onChange={(e) =>
-                              handleChangeItem(idx, "menu", e.target.value)
-                            }
-                          />
-                        ) : (
-                          <TableRow className="pr-1">{item.menu}</TableRow>
-                        )}
-                        {isEditing && (
-                          <button
-                            type="button"
-                            className={
-                              item.isAdded
-                                ? "mr-1/2 flex w-full items-center justify-center md:px-2 lg:px-4"
-                                : "flex w-full items-center justify-center"
-                            }
-                            onClick={handleDeleteItem}
-                          >
-                            <DeleteIcon
-                              color="#F22020"
-                              className="h-[18px] w-[16px]"
-                            />
-                          </button>
-                        )} */}
-                      </div>
-                    ))}
-                  </div>
+                {isEditing || form.watch("origins")?.length > 0 ? (
+                  <OriginTable form={form} isEditing={isEditing} />
                 ) : (
                   <div className="flex w-full flex-col items-center justify-center rounded-[16px] border border-gray-600 bg-gray-700 md:h-35 md:gap-1 md:p-6">
                     <span className="text-gray-0 text-sm font-medium">
@@ -213,72 +58,53 @@ export default function StoreInfo() {
                       variant="outline"
                       color="gray"
                       responsiveButtons={{
-                        sm: { buttonSize: "sm", className: "!flex md:hidden" },
+                        sm: { buttonSize: "sm", className: "flex" },
                         md: {
                           buttonSize: "sm",
-                          className: "md-4 md:!flex",
+                          className: "md-4 flex",
                         },
                         lg: { buttonSize: "lg", className: "!h-10" },
                       }}
                       disabled={makeDisabled}
                       commonClassName="border-dashed mt-3"
-                      onClick={() =>
-                        setCountryOfOrigins([...countryOfOrigins, newItem])
-                      }
+                      onClick={() => {
+                        const current = form.watch("origins");
+                        const updated = [...current];
+
+                        if (
+                          updated.length > 0 &&
+                          updated[updated.length - 1].isAdded
+                        ) {
+                          updated[updated.length - 1] = {
+                            ...updated[updated.length - 1],
+                            isAdded: false,
+                          };
+                        }
+
+                        form.setValue("origins", [...updated, newItem]);
+                      }}
                     >
                       <Plus className="h-5 w-5 text-gray-400" />
                     </ResponsiveButton>
-                    <ResponsiveButton
-                      type="submit"
-                      responsiveButtons={{
-                        sm: {
-                          buttonSize: "sm",
-                          className:
-                            "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
-                        },
-                        md: {
-                          buttonSize: "sm",
-                          className:
-                            "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
-                        },
-                        lg: {
-                          buttonSize: "lg",
-                          className: "hidden lg:!flex mt-8",
-                        },
-                      }}
-                    >
+                    <SubmitButton type="submit" disabled={makeDisabled}>
                       저장하기
-                    </ResponsiveButton>
+                    </SubmitButton>
                   </>
                 )}
               </form>
             </Form>
+
             {!isEditing && (
-              <ResponsiveButton
+              <SubmitButton
                 type="button"
                 variant="outline"
                 color="black"
-                responsiveButtons={{
-                  sm: {
-                    buttonSize: "sm",
-                    className:
-                      "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
-                  },
-                  md: {
-                    buttonSize: "sm",
-                    className:
-                      "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
-                  },
-                  lg: {
-                    buttonSize: "lg",
-                    className: "hidden lg:!flex mt-8",
-                  },
-                }}
+                disabled={makeDisabled}
                 onClick={isEditing ? undefined : () => setIsEditing(true)}
               >
                 <Icon iconKey="edit" size={20} />
                 <span>수정하기</span>
-              </ResponsiveButton>
+              </SubmitButton>
             )}
           </div>
         </div>

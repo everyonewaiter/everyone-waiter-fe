@@ -20,7 +20,8 @@ export default function useSettings(storeId: string) {
 
   const updateSetting = (
     newSetting: Partial<Settings>,
-    onSuccess?: () => void
+    onSuccess?: () => void,
+    onSettled?: () => void
   ) => {
     if (!data?.setting || !data?.landline) return;
 
@@ -35,9 +36,9 @@ export default function useSettings(storeId: string) {
           },
         },
       },
-      { onSuccess }
+      { onSuccess, onSettled }
     );
   };
 
-  return { updateSetting, settingData: data?.setting };
+  return { updateSetting, data, settingData: data?.setting };
 }

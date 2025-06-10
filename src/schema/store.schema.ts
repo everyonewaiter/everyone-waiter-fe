@@ -13,10 +13,17 @@ export const storeSchema = z.object({
 
 export type TypeStore = z.infer<typeof storeSchema>;
 
+export const originSchema = z.object({
+  item: z.string(),
+  origin: z.string(),
+  isAdded: z.boolean(),
+});
+
 export const storeInfoSchema = z.object({
   name: z.string().min(1, "잘못된 형식입니다.").max(20, "잘못된 형식입니다."),
   address: z.string().min(1, "잘못된 형식입니다."),
   license: z.string().min(1, "잘못된 형식입니다."),
+  origins: z.array(originSchema),
 });
 
 export const CategorySchema = z.object({
