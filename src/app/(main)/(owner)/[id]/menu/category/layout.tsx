@@ -1,4 +1,3 @@
-import PageTitle from "@/app/(main)/_components/PageTitle";
 import { PropsWithChildren, ReactNode } from "react";
 
 export default async function Layout({
@@ -13,7 +12,6 @@ export default async function Layout({
 
   return (
     <div className="relative flex-1 flex-col">
-      <PageTitle title="메뉴 관리" />
       {children}
       {modal && <div className="fixed inset-0 z-50">{modal}</div>}
     </div>

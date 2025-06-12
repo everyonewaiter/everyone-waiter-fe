@@ -20,7 +20,7 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ModalTitle from "../../../_components/ModalTitle";
 import CategoryForm from "../../../../menu/_components/CategoryForm";
 import ModalButton from "../../../_components/ModalButton";
-import { useCategoryStore } from "../../../../menu/_hooks/useCategoryStore";
+import useCategoryStore from "../../../../menu/_hooks/useCategoryStore";
 
 export default function Page() {
   const [changeMove, setChangeMove] = useState(false);

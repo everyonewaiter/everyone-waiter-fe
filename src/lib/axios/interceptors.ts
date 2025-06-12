@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
+/* eslint-disable no-console */
 
 import { Mutex } from "async-mutex";
 import { AxiosInstance } from "axios";
@@ -42,19 +43,16 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
 
       if (
         error.response?.status === 401 &&
-        !originalRequest._retry &&
-        ![
-          "/auth",
-          "/create",
-          "/device",
-          "/hall",
-          "/login",
-          "/pos",
-          "/signup",
-          "/stores",
-          "/test",
-          "/waiting",
-        ].some((path) => window.location.pathname.startsWith(path))
+        !originalRequest._retry
+        // ![
+        //   "/auth",
+        //   "/device",
+        //   "/hall",
+        //   "/login",
+        //   "/pos",
+        //   "/signup",
+        //   "/waiting",
+        // ].some((path) => window.location.pathname.startsWith(path))
       ) {
         originalRequest._retry = true;
 
@@ -71,6 +69,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
         refreshPromise = mutex.runExclusive(async () => {
           try {
             const refreshToken = await getToken("refreshToken");
+            console.log(`refresh ${refreshToken}`);
             if (!refreshToken) {
               window.location.href = "/login";
               throw error;
@@ -105,7 +104,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   );
 };
 
-type CacheKey = `${string}:${string}:${string}`; 
+type CacheKey = `${string}:${string}:${string}`;
 
 const signatureMutex = new Mutex();
 
