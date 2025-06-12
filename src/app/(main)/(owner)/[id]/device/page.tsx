@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   MobileTable,
   MobileTableCell,
@@ -29,10 +29,8 @@ import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import getQueryClient from "@/app/get-query-client";
-import QueryProviders from "@/app/query-providers";
 import useTableCheck from "./_hooks/useTableCheck";
 import useDevice from "./_hooks/useDevice";
-import DeviceInfoModal from "./_components/DeviceInfoModal";
 
 const itemWidth = {
   이름: "flex flex-1",
@@ -47,6 +45,8 @@ export default function Device() {
   const params = useParams();
   const storeId = params?.id as string;
 
+  const navigate = useRouter();
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const { getDevicesQuery, mutateDeleteDevice } = useDevice();
@@ -55,16 +55,7 @@ export default function Device() {
   const { checkedItems, allChecked, handleCheckAll, handleCheckItem } =
     useTableCheck<Device>(data?.content!, "deviceId");
 
-  const modalOverlay = useOverlay();
   const alertOverlay = useOverlay();
-
-  const handleModalOpen = (deviceId: string) => {
-    modalOverlay.open(() => (
-      <QueryProviders>
-        <DeviceInfoModal close={modalOverlay.close} deviceId={deviceId} />
-      </QueryProviders>
-    ));
-  };
 
   const handleDeleteDevice = () => {
     const deletePromises = Object.keys(checkedItems).map((deviceId) =>
@@ -147,7 +138,9 @@ export default function Device() {
             {data?.content?.map((item: Device) => (
               <TableRow
                 key={item.deviceId.toString()}
-                onClick={() => handleModalOpen(item.deviceId)}
+                onClick={() =>
+                  navigate.push(`/${storeId}/device/${item.deviceId}`)
+                }
               >
                 <TableCell
                   className="md:w-20 lg:w-[66px]"
@@ -209,7 +202,7 @@ export default function Device() {
             <MobileTable
               className="z-10"
               key={item.deviceId}
-              onClick={() => handleModalOpen(item.deviceId)}
+              // onClick={() => handleModalOpen(item.deviceId)}
             >
               <TableBody className="flex flex-col">
                 <MobileTableRow>
