@@ -52,10 +52,13 @@ export default function Dropdown({
         >
           <div
             className={cn(
-              "font-regular text-gray-0 text-s flex h-[32px] w-full flex-row items-center justify-between gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 lg:h-[38px] lg:pl-4 lg:text-sm",
+              "font-regular text-gray-0 text-s md:text-s flex h-9 w-full flex-row items-center justify-between gap-[6px] rounded-[8px] border border-gray-600 md:pr-4 md:pl-4 lg:h-[48px] lg:rounded-[12px] lg:py-3 lg:pr-3 lg:pl-4 lg:text-sm",
+              disabled
+                ? "pointer-events-none cursor-not-allowed bg-[#F5F5F5] text-gray-300 placeholder:text-gray-400"
+                : "",
               triggerClassName
             )}
-            onClick={() => setIsOpen((prev) => !prev)}
+            onClick={() => (disabled ? null : setIsOpen((prev) => !prev))}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 setIsOpen((prev) => !prev);

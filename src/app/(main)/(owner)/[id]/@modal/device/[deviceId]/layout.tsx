@@ -3,6 +3,7 @@ import getQueryClient from "@/app/get-query-client";
 import { getDevices } from "@/lib/api/device.api";
 import ModalButton from "../../_components/ModalButton";
 import ModalTitle from "../../_components/ModalTitle";
+import RefLayout from "../../_components/RefLayout";
 
 export default async function Layout({
   children,
@@ -17,10 +18,10 @@ export default async function Layout({
   });
 
   return (
-    <>
+    <RefLayout>
       <ModalTitle title="기기 정보" />
       {children}
       <ModalButton buttonText="확인" />
-    </>
+    </RefLayout>
   );
 }

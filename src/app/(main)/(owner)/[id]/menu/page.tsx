@@ -1,15 +1,11 @@
 "use client";
 
-import GuideAddCategory from "./_components/GuideAddCategory";
-// import MenuList from "./_components/MenuList";
+import { useParams } from "next/navigation";
+import MenuList from "./_components/MenuList";
 
 export default function Page() {
-  // const { id } = use(params);
+  const params = useParams();
+  const storeId = params?.id as string;
 
-  return (
-    <>
-      <GuideAddCategory />
-      {/* <MenuList storeId={id} /> */}
-    </>
-  );
+  return <MenuList storeId={storeId} />;
 }

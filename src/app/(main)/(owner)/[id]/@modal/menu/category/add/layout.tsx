@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 import getQueryClient from "@/app/get-query-client";
 import { getDevices } from "@/lib/api/device.api";
+import RefLayout from "../../../_components/RefLayout";
 
 export default async function Layout({
   children,
@@ -14,5 +15,5 @@ export default async function Layout({
     queryFn: () => getDevices(id),
   });
 
-  return children;
+  return <RefLayout>{children}</RefLayout>;
 }
