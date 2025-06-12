@@ -90,7 +90,11 @@ export default function Sidebar() {
               <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
             )}
             {MENU_ITEMS[permission].map((item) => {
-              const isActive = comparePath === item.href;
+              const isActive =
+                item.href === "/"
+                  ? comparePath === "/"
+                  : comparePath === item.href ||
+                    comparePath.startsWith(`${item.href}/`);
               return (
                 <li key={item.href}>
                   <Link

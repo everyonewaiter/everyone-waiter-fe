@@ -116,11 +116,11 @@ const AlertDialogAction = React.forwardRef<
           lg: { buttonSize: "xl" },
           md: {
             buttonSize: "sm",
-            className: "justify-center items-center !flex hidden lg:hidden",
+            className: "justify-center items-center flex",
           },
           sm: {
             buttonSize: "sm",
-            className: "justify-center items-center !flex md:hidden",
+            className: "justify-center items-center flex",
           },
         }}
         onClick={onClick}
@@ -160,11 +160,11 @@ const AlertDialogCancel = React.forwardRef<
           lg: { buttonSize: "xl" },
           md: {
             buttonSize: "sm",
-            className: "justify-center items-center !flex hidden lg:hidden",
+            className: "justify-center items-center flex",
           },
           sm: {
             buttonSize: "sm",
-            className: "justify-center items-center !flex md:hidden",
+            className: "justify-center items-center flex",
           },
         }}
         {...props}
