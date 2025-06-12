@@ -11,6 +11,8 @@ interface IProps {
   };
   gap?: number;
   isFromHome?: boolean;
+  buttonText?: string;
+  href: string;
 }
 
 export default function GuideComponent({
@@ -19,6 +21,8 @@ export default function GuideComponent({
   image,
   gap,
   isFromHome,
+  buttonText,
+  href,
 }: IProps) {
   const navigate = useRouter();
 
@@ -60,7 +64,7 @@ export default function GuideComponent({
         </div>
         <ResponsiveButton
           color="primary"
-          onClick={() => navigate.push(isFromHome ? "/create" : "/stores")}
+          onClick={() => navigate.push(href)}
           responsiveButtons={{
             lg: { buttonSize: "lg", className: "!h-12" },
             md: { buttonSize: "md", className: "!h-9" },
@@ -68,7 +72,7 @@ export default function GuideComponent({
           }}
           commonClassName="w-full md:relative"
         >
-          {isFromHome ? "매장 등록하기" : " 내 신청 현황 보기"}
+          {buttonText || (isFromHome ? "매장 등록하기" : " 내 신청 현황 보기")}
         </ResponsiveButton>
       </div>
     </div>

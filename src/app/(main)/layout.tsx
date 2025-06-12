@@ -1,8 +1,8 @@
 import MobileHeader from "@/app/(main)/_components/MobileHeader";
-import { Suspense } from "react";
+import { PropsWithChildren, Suspense } from "react";
 import Sidebar from "./_components/Sidebar";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <Suspense fallback={<div>페이지를 불러오는 중입니다</div>}>
       <div className="flex h-screen w-screen flex-col overflow-hidden bg-white md:flex-row md:bg-[#F5F5F5]">

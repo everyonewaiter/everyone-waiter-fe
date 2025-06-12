@@ -17,7 +17,12 @@ interface IProps
   responsiveButtons: Partial<
     Record<
       ScreenSize,
-      { buttonSize: ButtonSize; className?: string; color?: string }
+      {
+        buttonSize: ButtonSize;
+        className?: string;
+        color?: string;
+        variant?: string;
+      }
     >
   >;
   /**
@@ -60,7 +65,11 @@ export default function ResponsiveButton({
         return (
           <Button
             key={screenSize}
-            variant={variant}
+            variant={
+              (variant || buttonProps?.variant) as VariantProps<
+                typeof buttonVariants
+              >["variant"]
+            }
             color={(color || buttonProps?.color) as keyof ButtonColors}
             className={cn(
               screenSize === "sm" && buttonProps ? "flex md:hidden" : "hidden",
