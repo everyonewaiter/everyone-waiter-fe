@@ -17,6 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import Icon from "@/components/common/Icon";
 import ModalTitle from "../../../_components/ModalTitle";
 import CategoryForm from "../../../../menu/_components/CategoryForm";
 import ModalButton from "../../../_components/ModalButton";
@@ -56,22 +57,47 @@ export default function Page() {
       <ModalTitle
         title="카테고리"
         topRightComponent={
-          <ResponsiveButton
-            color="grey"
-            responsiveButtons={{
-              lg: {
-                buttonSize: "md",
-                className: "!rounded-[24px] !px-4 !py-2",
-              },
-            }}
-            onClick={() => setChangeMove(true)}
-          >
-            <ArrowDownUp size={18} strokeWidth={1.5} />
-            <span className="lg:text-base">순서 변경</span>
-          </ResponsiveButton>
+          <>
+            <ResponsiveButton
+              color="grey"
+              responsiveButtons={{
+                lg: {
+                  buttonSize: "md",
+                  className: "!rounded-[24px] !px-4 !py-2",
+                },
+              }}
+              commonClassName="hidden lg:flex"
+              onClick={() => setChangeMove(true)}
+            >
+              <ArrowDownUp
+                size={18}
+                strokeWidth={1.5}
+                className="md:h-3 md:w-3 lg:h-[18px] lg:w-[18px]"
+              />
+              <span className="lg:text-base">순서 변경</span>
+            </ResponsiveButton>
+            <div className="flex items-center gap-4 lg:hidden">
+              <button
+                type="button"
+                className="flex items-center gap-1"
+                onClick={() => setChangeMove(true)}
+              >
+                <ArrowDownUp
+                  size={16}
+                  strokeWidth={1.5}
+                  className="text-gray-300"
+                />
+                <span className="text-sm text-gray-300">순서 변경</span>
+              </button>
+              <button type="button" className="flex items-center gap-1">
+                <Icon iconKey="trash" className="text-status-error" size={16} />
+                <span className="text-status-error text-sm">삭제</span>
+              </button>
+            </div>
+          </>
         }
       />
-      <ScrollArea className="h-[464px]">
+      <ScrollArea className="h-[270px]">
         {changeMove ? (
           <DndContext
             sensors={sensors}
@@ -103,7 +129,7 @@ export default function Page() {
       </ScrollArea>
 
       {!changeMove && (
-        <div className="mb-8 flex flex-col">
+        <div className="flex flex-col md:mb-6 lg:mb-8">
           <ResponsiveButton
             type="button"
             variant="outline"
@@ -115,17 +141,17 @@ export default function Page() {
               },
               md: {
                 buttonSize: "sm",
-                className: "h-[34px] items-center hidden gap-1",
+                className: "items-center gap-1 !text-s !font-medium mt-4",
               },
               lg: {
                 buttonSize: "lg",
                 className: "mt-4",
               },
             }}
-            commonClassName="w-full border-gray-400 border-dotted"
+            commonClassName="w-full border-none dashed-light"
             onClick={() => append({ name: "" })}
           >
-            <Plus />
+            <Plus size={24} className="md:h-4 md:w-4 lg:h-6 lg:w-6" />
             <span>카테고리 추가</span>
           </ResponsiveButton>
         </div>

@@ -15,5 +15,5 @@ export default async function Layout({
     queryFn: () => getDevices(id),
   });
 
-  return <RefLayout>{children}</RefLayout>;
+  return <RefLayout className="md:w-[340px]">{children}</RefLayout>;
 }

@@ -2,7 +2,12 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import MenuCard from "./MenuCard";
 
-export default function SortableItem({ item }: { item: Menu }) {
+interface IProps {
+  item: Menu;
+  onClick: () => void;
+}
+
+export default function SortableItem({ item, onClick }: IProps) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: item.menuId });
 
@@ -13,7 +18,13 @@ export default function SortableItem({ item }: { item: Menu }) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <MenuCard {...item} onToggle={() => null} isSelected={false} hideSelect />
+      <MenuCard
+        {...item}
+        onToggle={() => null}
+        isSelected={false}
+        hideSelect
+        onClick={onClick}
+      />
     </div>
   );
 }

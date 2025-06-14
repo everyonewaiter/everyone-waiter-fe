@@ -63,12 +63,19 @@ export default function CategoryFormField({
                       changeMove ? "border-gray-600" : "border-status-error "
                     ),
                   },
+                  md: {
+                    buttonSize: "custom",
+                    className: "w-7 h-7 rounded-[8px] border-gray-600 border",
+                  },
                 }}
                 onClick={() => remove(index)}
               >
                 <Icon
                   iconKey={changeMove ? "move" : "trash"}
-                  className={changeMove ? "text-black" : "text-status-error"}
+                  className={cn(
+                    changeMove ? "text-black" : "text-status-error",
+                    "md:h-4 md:w-4 lg:h-5 lg:w-5"
+                  )}
                   size={20}
                   {...attributes}
                   {...listeners}

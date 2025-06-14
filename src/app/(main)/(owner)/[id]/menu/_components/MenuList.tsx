@@ -1,7 +1,8 @@
+"use client";
+
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
 import { ScrollArea } from "@/components/common/ScrollArea";
-import cn from "@/lib/utils";
 import { ArrowDownUp, PlusIcon, SettingsIcon } from "lucide-react";
 import { useState } from "react";
 import DashedBorder from "@/components/DashedBorder";
@@ -20,7 +21,8 @@ import {
   rectSortingStrategy,
   SortableContext,
 } from "@dnd-kit/sortable";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMediaQuery } from "react-responsive";
 import SortableItem from "./SortableItem";
 import useSelectedCard from "../_hooks/useSelectedCard";
 import MenuCard from "./MenuCard";
@@ -61,6 +63,28 @@ const dummy: Menu[] = [
     label: "BEST",
     image: "license/202504/0KA652ZFZ26DG.webp",
   },
+  {
+    menuId: "694865267482835536",
+    categoryId: "694865267482835533",
+    name: "안심 스테이크2",
+    description: "1++ 한우 안심을 사용합니다.",
+    price: 24900,
+    spicy: 0,
+    state: "DEFAULT",
+    label: "BEST",
+    image: "license/202504/0KA652ZFZ26DG.webp",
+  },
+  {
+    menuId: "694865267482835537",
+    categoryId: "694865267482835533",
+    name: "안심 스테이크3",
+    description: "1++ 한우 안심을 사용합니다.",
+    price: 14900,
+    spicy: 0,
+    state: "DEFAULT",
+    label: "BEST",
+    image: "license/202504/0KA652ZFZ26DG.webp",
+  },
 ];
 
 interface IProps {
@@ -68,6 +92,9 @@ interface IProps {
 }
 
 export default function MenuList({ storeId }: IProps) {
+  const navigate = useRouter();
+  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+
   const [changeSort, setChangeSort] = useState(false);
   const [active, setActive] = useState("전체");
   const [data, setData] = useState(dummy);
@@ -100,9 +127,9 @@ export default function MenuList({ storeId }: IProps) {
   };
 
   return (
-    <div className="h-full pt-6 pb-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <div className="flex flex-1 flex-col pb-2 md:pt-4 lg:pt-6">
+      <div className="flex flex-col md:flex-row md:justify-between">
+        <div className="scrollbar-hide md:overflow-none my-5 flex items-center gap-2 overflow-auto md:my-0 lg:gap-3">
           <ResponsiveButton
             color="grey"
             responsiveButtons={{
@@ -110,6 +137,14 @@ export default function MenuList({ storeId }: IProps) {
                 buttonSize: "md",
                 className:
                   "!text-[15px] !rounded-[12px] !p-0 !w-[32px] !h-[32px]",
+              },
+              md: {
+                buttonSize: "sm",
+                className: "h-8 !p-2 !rounded-[12px]",
+              },
+              sm: {
+                buttonSize: "sm",
+                className: "h-8 !p-2 !rounded-[12px]",
               },
             }}
           >
@@ -123,22 +158,24 @@ export default function MenuList({ storeId }: IProps) {
               responsiveButtons={{
                 lg: {
                   buttonSize: "md",
-                  className: cn(
-                    "h-10 !text-[15px]",
-                    active === cat ? "border-black" : "border-gray-300"
-                  ),
+                  className: "h-10 !text-[15px]",
                 },
+                md: { buttonSize: "sm" },
+                sm: { buttonSize: "sm" },
               }}
+              commonClassName={
+                active === cat ? "border-black" : "border-gray-300"
+              }
               onClick={() => setActive(cat)}
             >
               {cat}
             </ResponsiveButton>
           ))}
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center justify-end gap-4 lg:gap-6">
           {changeSort ? (
             <div className="flex items-center gap-2">
-              <div className="center text-primary font-regular h-9 rounded-[8px] bg-[rgba(242,32,32,0.04)] px-4 text-sm">
+              <div className="text-primary font-regular hidden h-9 items-center justify-center rounded-[8px] bg-[rgba(242,32,32,0.04)] px-4 text-sm lg:flex">
                 메뉴의 순서 변경은 메뉴를 꾹 누르신 후, 원하시는 자리로 메뉴를
                 이동해주세요
               </div>
@@ -146,6 +183,8 @@ export default function MenuList({ storeId }: IProps) {
                 variant="outline"
                 responsiveButtons={{
                   lg: { buttonSize: "sm" },
+                  md: { buttonSize: "sm" },
+                  sm: { buttonSize: "sm" },
                 }}
                 onClick={handleSaveSort}
               >
@@ -156,7 +195,7 @@ export default function MenuList({ storeId }: IProps) {
             <>
               <button
                 type="button"
-                className="flex items-center gap-2"
+                className="flex items-center gap-1 lg:gap-2"
                 onClick={() => setChangeSort(true)}
               >
                 <ArrowDownUp
@@ -164,62 +203,79 @@ export default function MenuList({ storeId }: IProps) {
                   strokeWidth={1.5}
                   className="text-gray-300"
                 />
-                <span className="text-lg text-gray-300">순서 변경</span>
+                <span className="text-sm text-gray-300 lg:text-lg">
+                  순서 변경
+                </span>
               </button>
               <button
                 type="button"
-                className="flex items-center gap-2"
+                className="flex items-center gap-1 lg:gap-2"
                 onClick={handleDeleteSelected}
               >
                 <Icon iconKey="trash" className="text-status-error" size={18} />
-                <span className="text-status-error text-lg">삭제</span>
+                <span className="text-status-error text-sm lg:text-lg">
+                  삭제
+                </span>
               </button>
             </>
           )}
         </div>
       </div>
-      <ScrollArea className="mt-6 mb-4 h-full">
-        <div className="grid grid-cols-4 gap-x-[32px] gap-y-[40px]">
-          <DashedBorder
-            layoutClassName="bg-gray-700 cursor-pointer"
-            className="flex flex-col items-center justify-center gap-2"
-          >
-            <PlusIcon strokeWidth={1.5} />
-            <span>메뉴 추가</span>
-          </DashedBorder>
-          {changeSort ? (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
+      <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
+        <ScrollArea className="h-[550px] md:h-[385px] lg:h-[785px]">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-[16px] lg:gap-x-[32px] lg:gap-y-[40px]">
+            <DashedBorder
+              layoutClassName="bg-gray-700 cursor-pointer"
+              radius={{
+                lg: 24,
+                md: 12,
+                sm: 15,
+              }}
             >
-              <SortableContext
-                items={data.map((item) => item.menuId)}
-                strategy={rectSortingStrategy}
+              <PlusIcon strokeWidth={1.5} />
+              <span className="text-base">메뉴 추가</span>
+            </DashedBorder>
+            {changeSort ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
               >
-                {data.map((item) => (
-                  <Link
-                    href={`/${storeId}/menu/${item.menuId}`}
-                    key={item.menuId}
-                  >
-                    <SortableItem item={item} />
-                  </Link>
-                ))}
-              </SortableContext>
-            </DndContext>
-          ) : (
-            dummy.map((item) => (
-              <Link href={`/${storeId}/menu/${item.menuId}`} key={item.menuId}>
+                <SortableContext
+                  items={data.map((item) => item.menuId)}
+                  strategy={rectSortingStrategy}
+                >
+                  {data.map((item) => (
+                    <SortableItem
+                      key={item.menuId}
+                      item={item}
+                      onClick={() =>
+                        navigate.push(
+                          `/${storeId}/menu/${item.menuId}?hideModal=${isMobile}`
+                        )
+                      }
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              dummy.map((item) => (
                 <MenuCard
+                  key={item.menuId}
                   onToggle={toggle}
                   isSelected={isSelected(item)}
+                  onClick={() =>
+                    navigate.push(
+                      `/${storeId}/menu/${item.menuId}?hideModal=${isMobile}`
+                    )
+                  }
                   {...item}
                 />
-              </Link>
-            ))
-          )}
-        </div>
-      </ScrollArea>
+              ))
+            )}
+          </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 }

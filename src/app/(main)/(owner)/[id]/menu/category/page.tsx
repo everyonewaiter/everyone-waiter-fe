@@ -33,7 +33,7 @@ export default function Page() {
 
   return (
     <div className="h-full w-full">
-      <div className="mt-10 flex w-full flex-col items-center overflow-y-scroll md:mt-6 md:h-[calc(100%-45px)] lg:mt-10 lg:h-[calc(100%-100px)]">
+      <div className="mt-10 flex w-full flex-col items-center overflow-y-scroll md:mt-5 md:h-[calc(100%-45px)] lg:mt-10 lg:h-[calc(100%-100px)]">
         <div className="w-80 md:w-[272px] lg:w-120">
           <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
             카테고리
@@ -65,16 +65,15 @@ export default function Page() {
                       sm: {
                         buttonSize: "sm",
                         className:
-                          "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
+                          "flex mt-4 gap-2 items-center rounded-[12px]",
                       },
                       md: {
                         buttonSize: "sm",
-                        className:
-                          "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
+                        className: "gap-1 !text-s",
                       },
                       lg: {
                         buttonSize: "lg",
-                        className: "hidden lg:!flex mt-8",
+                        className: "mt-8",
                       },
                     }}
                     commonClassName="dashed-light bg-white border-none w-full text-gray-300 !font-medium"

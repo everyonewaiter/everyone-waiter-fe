@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/common/ScrollArea";
 import Icon from "@/components/common/Icon";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import cn from "@/lib/utils";
 import OptionComponent from "./OptionComponent";
 import OptionBox from "./OptionBox";
 
@@ -14,15 +15,23 @@ interface IProps {
   showInfo: boolean;
   onClick?: () => void;
   isOpen: boolean;
+  className: string;
 }
 
-export default function OptionTemplate({ onClick, ...props }: IProps) {
+export default function OptionTemplate({
+  onClick,
+  className,
+  ...props
+}: IProps) {
   const [optionCount, setOptionCount] = useState(1);
   const [popupAction, setPopupAction] = useState("");
 
   return (
     <div
-      className="flex flex-1 cursor-pointer flex-col rounded-[24px] border border-gray-600 p-6"
+      className={cn(
+        "flex cursor-pointer flex-col justify-between rounded-[12px] border border-gray-600 p-3 lg:rounded-[24px] lg:p-6",
+        className
+      )}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -40,13 +49,20 @@ export default function OptionTemplate({ onClick, ...props }: IProps) {
       {props.isOpen && (
         <>
           {optionCount ? (
-            <ScrollArea className="h-[373px]">
+            <ScrollArea className="mt-3 h-[320px] md:mt-0 md:h-[220px] lg:h-[293px]">
               {Array.from({ length: optionCount })
                 .fill(0)
                 .map((_, i) => (
-                  <div className="flex items-center gap-3">
+                  /* eslint-disable react/no-array-index-key */
+                  <div
+                    key={i + 1}
+                    className={cn(
+                      "flex items-center gap-3",
+                      i > 0 ? "mt-3 lg:mt-4" : ""
+                    )}
+                  >
                     {/* eslint-disable react/no-array-index-key */}
-                    <OptionBox key={i + 1} />
+                    <OptionBox />
                     {popupAction && (
                       <button
                         type="button"
@@ -78,8 +94,10 @@ export default function OptionTemplate({ onClick, ...props }: IProps) {
             color="black"
             responsiveButtons={{
               lg: { buttonSize: "sm", className: "w-full border-gray-600" },
+              md: { buttonSize: "sm", className: "w-full border-gray-600" },
+              sm: { buttonSize: "sm", className: "w-full border-gray-600" },
             }}
-            commonClassName="mt-4"
+            commonClassName="lg:mt-6 md:mt-3"
             onClick={() => setOptionCount((prev) => prev + 1)}
           >
             <Plus size={16} className="text-gray-0" strokeWidth={2} />

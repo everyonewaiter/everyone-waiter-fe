@@ -33,7 +33,7 @@ export default function OptionBox() {
   });
 
   return (
-    <div className="w-full rounded-[12px] border border-gray-600 p-4">
+    <div className="w-full rounded-[12px] border border-gray-600 p-3 lg:p-4">
       <Form {...form}>
         <form>
           <FormField
@@ -41,10 +41,10 @@ export default function OptionBox() {
             name="optionTitle"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormControl className="flex flex-1 gap-2">
+                <FormControl>
                   <Input
                     placeholder="옵션명을 입력해주세요."
-                    className="border-gray-400 placeholder:text-gray-300"
+                    className="placeholder:text-gray-300"
                     {...field}
                   />
                 </FormControl>
@@ -52,15 +52,18 @@ export default function OptionBox() {
               </FormItem>
             )}
           />
-          <Separator className="my-4 h-[1px] bg-[#eee]" />
-          <div className="flex flex-col gap-3">
+          <Separator className="my-3 h-[1px] bg-[#eee] lg:my-4" />
+          <div className="flex flex-col gap-2 lg:gap-3">
             {fields.map((field, index) => (
-              <div key={field.id} className="flex w-full items-center gap-2">
+              <div
+                key={field.id}
+                className="flex w-full items-center gap-1 lg:gap-2"
+              >
                 <FormField
                   control={form.control}
                   name={`subOptions.${index}.name`}
                   render={({ field: nameField }) => (
-                    <FormItem className="flex w-full flex-[72]">
+                    <FormItem className="flex w-full flex-1 lg:flex-[72]">
                       <FormControl>
                         <Input
                           placeholder="하위 옵션명을 입력해주세요."
@@ -75,7 +78,7 @@ export default function OptionBox() {
                   control={form.control}
                   name={`subOptions.${index}.price`}
                   render={({ field: priceField }) => (
-                    <FormItem className="relative flex w-full flex-[52.5]">
+                    <FormItem className="relative flex w-full flex-1 lg:flex-[52.5]">
                       <FormControl>
                         <Input
                           placeholder="ex. 33,000"
@@ -92,10 +95,14 @@ export default function OptionBox() {
                 />
                 <button
                   type="button"
-                  className="flex flex-[12]"
+                  className="flex p-1 lg:p-2"
                   onClick={() => remove(index)}
                 >
-                  <Minus size={20} className="text-gray-300" strokeWidth={2} />
+                  <Minus
+                    size={20}
+                    className="text-gray-300 md:h-4 md:w-4 lg:h-5 lg:w-5"
+                    strokeWidth={2}
+                  />
                 </button>
               </div>
             ))}
@@ -108,10 +115,20 @@ export default function OptionBox() {
                   className:
                     "w-full h-8 rounded-[8px] text-center border-gray-600 text-sm text-gray-0",
                 },
+                md: {
+                  buttonSize: "custom",
+                  className:
+                    "w-full h-8 rounded-[8px] text-center border-gray-600 text-xs text-gray-0 flex gap-1",
+                },
               }}
               onClick={() => append({ name: "", price: "" })}
             >
-              하위 옵션 추가 <Plus strokeWidth={1.5} size={16} />
+              하위 옵션 추가{" "}
+              <Plus
+                strokeWidth={1.5}
+                size={16}
+                className="md:h-3 md:w-3 lg:h-4 lg:w-4"
+              />
             </ResponsiveButton>
           </div>
         </form>

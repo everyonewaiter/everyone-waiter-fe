@@ -12,9 +12,9 @@ export default async function Layout({
   // const { id } = await params;
 
   return (
-    <div className="relative flex-1 flex-col">
+    <div className="relative flex h-full flex-col">
       <PageTitle title="메뉴 관리" />
-      {children}
+      <div className="flex min-h-screen flex-1 flex-col">{children}</div>
       {modal && <div className="fixed inset-0 z-50">{modal}</div>}
     </div>
   );

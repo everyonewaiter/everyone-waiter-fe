@@ -29,7 +29,7 @@ export default function CategoryForm({ changeMove, fields, remove }: IProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(submitHandler)}
-        className="flex flex-col gap-4"
+        className="flex flex-col md:gap-3 lg:gap-4"
       >
         {fields.map((field, index) => (
           <CategoryFormField
