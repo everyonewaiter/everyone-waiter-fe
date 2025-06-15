@@ -17,7 +17,7 @@ const useDevice = () => {
 
   const useGetDeviceDetailQuery = (deviceId: string, storeId: string) =>
     useQuery({
-      queryKey: ["get-device-detail", deviceId.toString()],
+      queryKey: ["get-device-detail", storeId, deviceId],
       queryFn: () => getDetailDevice({ storeId, deviceId }),
       enabled: !!storeId && !!deviceId,
     });

@@ -17,6 +17,7 @@ export default function CreateStore() {
             subtitle="관리자의 승인이 완료될 때까지 1~2일 소요될\n예정이니 양해 부탁드립니다."
             image={{ url: "/gif/hourglass.gif", size: 160 }}
             gap={5}
+            href="/stores"
           />
         </div>
       );
@@ -28,6 +29,7 @@ export default function CreateStore() {
             subtitle="반려 사유 관련 메일을 발송했습니다.\n메일함을 확인해주세요."
             image={{ url: "/gif/rejected.gif", size: 160 }}
             gap={5}
+            href="/stores"
           />
         </div>
       );

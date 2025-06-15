@@ -1,24 +1,20 @@
-import getQueryClient from "@/app/get-query-client";
-import { getMenusWithCategory } from "@/lib/api/stores.api";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import AllMenu from "./_components/AllMenu";
+"use client";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const queryClient = getQueryClient();
+import { useParams } from "next/navigation";
+import MenuList from "./_components/MenuList";
+// import GuideAddCategory from "./_components/GuideAddCategory";
+// import Button from "@/components/common/Button/Button";
 
-  await queryClient.prefetchQuery({
-    queryKey: ["menus-with-category", id],
-    queryFn: () => getMenusWithCategory(id),
-  });
+export default function Page() {
+  const params = useParams();
+  const storeId = params?.id as string;
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <AllMenu storeId={id} />
-    </HydrationBoundary>
+    <>
+      {/* <div className="flex flex-1 flex-col items-center justify-center">
+        <GuideAddCategory />
+      </div> */}
+      <MenuList storeId={storeId} />
+    </>
   );
 }

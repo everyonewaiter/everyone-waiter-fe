@@ -7,9 +7,9 @@ import { PropsWithChildren } from "react";
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{ params: Promise<{ id: string }> }>) {
+}: PropsWithChildren<{ params: { id: string } }>) {
   const queryClient = getQueryClient();
-  const { id } = await params;
+  const { id } = params;
 
   await queryClient.prefetchQuery({
     queryKey: ["store-detail-info", id],

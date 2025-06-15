@@ -1,29 +1,21 @@
 import PageTitle from "@/app/(main)/_components/PageTitle";
-import getQueryClient from "@/app/get-query-client";
-import { getStoreCategoryList } from "@/lib/api/stores.api";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import CategoryList from "./_components/CategoryList";
+import { PropsWithChildren, ReactNode } from "react";
 
 export default async function Layout({
   children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["category-list", id],
-    queryFn: () => getStoreCategoryList(id),
-  });
+  // params,
+  modal,
+}: PropsWithChildren<{
+  // params: Promise<{ id: string }>;
+  modal: ReactNode;
+}>) {
+  // const { id } = await params;
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <div className="relative flex h-full flex-col">
       <PageTitle title="메뉴 관리" />
-      <CategoryList storeId={id} />
-      {children}
-    </HydrationBoundary>
+      <div className="flex min-h-screen flex-1 flex-col">{children}</div>
+      {modal && <div className="fixed inset-0 z-50">{modal}</div>}
+    </div>
   );
 }

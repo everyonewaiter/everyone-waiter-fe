@@ -1,5 +1,4 @@
 import getQueryClient from "@/app/get-query-client";
-import { putUpdateStore } from "@/lib/api/stores.api";
 import { useMutation } from "@tanstack/react-query";
 import useStores from "../../store/_hooks/useStores";
 
@@ -11,9 +10,9 @@ export default function useSettings(storeId: string) {
 
   const { mutate } = useMutation({
     mutationFn: putUpdateStore,
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["store-detail-info", variables.storeId],
+        queryKey: ["store-detail-info", storeId],
       });
     },
   });

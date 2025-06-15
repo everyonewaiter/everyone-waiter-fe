@@ -1,47 +1,87 @@
+"use client";
+
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
-import formatPrice from "@/utils/format/price";
+import cn from "@/lib/utils";
 import Image from "next/image";
 
-interface MenuCardProps {
-  menu: MenuWithOption | Menu;
-  isSelected?: boolean;
-  onSelect?: (menuId: string, categoryId: string, isChecked: boolean) => void;
+interface IProps extends Menu {
+  onToggle: (value: Menu) => void;
+  isSelected: boolean;
+  hideSelect?: boolean;
+  onClick: () => void;
 }
 
 export default function MenuCard({
-  menu,
-  isSelected = false,
-  onSelect,
-}: MenuCardProps) {
-  const handleCheckboxChange = (checked: boolean) => {
-    onSelect?.(menu.menuId, menu.categoryId, checked);
-  };
+  onToggle,
+  isSelected,
+  hideSelect = false,
+  onClick,
+  ...menu
+}: IProps) {
   return (
     <div
-      className="relative h-[210px] w-[152px] rounded-xl bg-gray-200 md:h-[220px] md:w-[159px] lg:h-[440px] lg:w-[329px]"
-      key={menu.menuId}
+      className={cn(
+        "relative overflow-hidden rounded-[12px] border md:h-[220px] lg:h-[440px] lg:rounded-[24px]",
+        isSelected ? "border-primary" : "border-gray-600"
+      )}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
     >
       <Image
         src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${menu.image}`}
-        alt={menu.name}
-        fill
-        sizes="100%"
-        className="object-cover"
+        alt="menu image"
+        width={329}
+        height={440}
+        className="w-full object-cover"
       />
-      <Checkbox
-        checked={isSelected}
-        onCheckedChange={handleCheckboxChange}
-        className="absolute top-0 left-0 m-1.5 lg:m-4"
-      />
-      <div className="absolute right-0 bottom-0 left-0 m-1 rounded-xl bg-white p-2 lg:m-2 lg:px-5 lg:py-4">
-        <p className="mb-1 w-fit rounded-3xl bg-[#3900B5]/8 px-3 py-[3px] text-[12px] text-[#3900B5] lg:text-sm">
-          {menu.label}
-        </p>
-        <div className="flex flex-col gap-0.5 lg:flex-row lg:items-center lg:justify-between">
-          <p className="text-[13px] text-black lg:text-lg">{menu.name}</p>
-          <p className="text-xl font-semibold text-black lg:text-[28px]">
-            {formatPrice(menu.price)}원
-          </p>
+      <div className="absolute top-0 flex h-full w-full flex-col justify-between bg-red-50 p-1 lg:p-2">
+        {!hideSelect && (
+          <Checkbox
+            className="mt-2 ml-2 h-6 w-6"
+            checked={isSelected}
+            onCheckedChange={() => onToggle(menu)}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          />
+        )}
+        <div className="mt-auto flex flex-col gap-1 rounded-[12px] bg-white p-2 lg:gap-2 lg:rounded-[20px] lg:px-5 lg:py-4">
+          {menu.label && (
+            <ResponsiveButton
+              responsiveButtons={{
+                lg: {
+                  buttonSize: "custom",
+                  className:
+                    "w-fit px-4 py-1 bg-[#3900B508] !text-[#3900B5] border-none text-sm font-regular  rounded-[24px]",
+                },
+                md: {
+                  buttonSize: "custom",
+                  className: "w-fit h-6 px-3 py-1 rounded-[24px] text-xs",
+                },
+                sm: {
+                  buttonSize: "custom",
+                  className: "w-fit h-6 px-3 py-1 rounded-[24px] text-xs",
+                },
+              }}
+            >
+              {menu.label}
+            </ResponsiveButton>
+          )}
+          <div className="flex flex-col items-start justify-between gap-1 lg:flex-row lg:items-center">
+            <span className="text-gray-0 text-s font-medium lg:text-lg lg:font-semibold">
+              {menu.name}
+            </span>
+            <strong className="text-gray-0 text-xl lg:text-[28px]">
+              {menu.price.toLocaleString()}원
+            </strong>
+          </div>
         </div>
       </div>
     </div>
