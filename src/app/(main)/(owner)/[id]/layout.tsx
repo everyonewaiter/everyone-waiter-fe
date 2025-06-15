@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode } from "react";
 import ClientModalWrapper from "../../_components/ClientModalWrapper";
 
-export default async function OwnerLayout({
+export default function OwnerLayout({
   children,
   modal,
 }: PropsWithChildren<{ modal: ReactNode }>) {
