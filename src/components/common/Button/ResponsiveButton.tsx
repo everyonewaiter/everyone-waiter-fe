@@ -58,6 +58,20 @@ export default function ResponsiveButton({
     }
   };
 
+  const getClassName = (screenSize: ScreenSize) => {
+    let buttonClassName = "hidden";
+
+    if (screenSize === "sm") {
+      buttonClassName = "flex md:hidden";
+    } else if (screenSize === "md") {
+      buttonClassName = "hidden md:flex lg:!hidden";
+    } else if (screenSize === "lg") {
+      buttonClassName = "hidden lg:!flex";
+    }
+
+    return buttonClassName;
+  };
+
   return (
     <>
       {Object.keys(responsiveButtons).map((screenSize) => {
@@ -72,11 +86,7 @@ export default function ResponsiveButton({
             }
             color={(color || buttonProps?.color) as keyof ButtonColors}
             className={cn(
-              screenSize === "sm" && buttonProps ? "flex md:hidden" : "hidden",
-              screenSize === "md" && buttonProps
-                ? "hidden md:flex lg:!hidden"
-                : "hidden",
-              screenSize === "lg" && buttonProps ? "hidden lg:!flex" : "hidden",
+              getClassName(screenSize as ScreenSize),
               buttonStyle(
                 buttonProps?.buttonSize ?? "md",
                 buttonProps?.className ?? ""

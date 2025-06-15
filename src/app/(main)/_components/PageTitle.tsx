@@ -23,7 +23,7 @@ export default function PageTitle({ title }: { title: string }) {
   };
 
   return (
-    <div className="sticky top-0 z-50 hidden w-full items-center justify-between border-b border-gray-600 bg-white pb-3 md:flex lg:pt-8 lg:pb-[26px]">
+    <div className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-gray-600 bg-white pt-6 pb-3 md:flex lg:pt-8 lg:pb-[26px]">
       <h2 className="text-[18px] font-bold md:text-[16px] lg:text-[28px]">
         {title}
       </h2>

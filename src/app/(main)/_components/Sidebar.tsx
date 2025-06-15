@@ -46,7 +46,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`hidden py-8 pl-[60px] ${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}
+      className={`hidden md:py-5 md:pr-3 md:pl-5 lg:py-8 lg:pl-[60px] ${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}
     >
       <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-4 md:w-[186px] lg:w-[318px] lg:px-5 lg:pt-8">
         <div className="mb-6 flex items-center gap-[18px] lg:mb-9">

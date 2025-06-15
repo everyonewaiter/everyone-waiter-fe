@@ -1,8 +1,8 @@
-import React, { PropsWithChildren } from "react";
+import React, { forwardRef, PropsWithChildren } from "react";
 
-export default function FloatingInfo({ children }: PropsWithChildren) {
-  return (
-    <aside className="absolute -top-22.5 left-3 z-50">
+const FloatingInfo = forwardRef<HTMLDivElement, PropsWithChildren>(
+  ({ children }, ref) => (
+    <aside className="absolute -top-22.5 left-3 z-50" ref={ref}>
       <div className="relative inline-block">
         {/* 본체 */}
         <div className="w-[240px] rounded-2xl bg-white p-3 text-left text-xs whitespace-pre-line text-[#505050] shadow-md">
@@ -10,7 +10,7 @@ export default function FloatingInfo({ children }: PropsWithChildren) {
         </div>
 
         {/* 삼각형을 감싸는 컨테이너에 그림자 적용 */}
-        <div className="absolute -bottom-6 left-6">
+        <div className="absolute -bottom-6 md:left-2 lg:left-6">
           <svg
             width="97"
             height="34"
@@ -65,5 +65,7 @@ export default function FloatingInfo({ children }: PropsWithChildren) {
         </div>
       </div>
     </aside>
-  );
-}
+  )
+);
+
+export default FloatingInfo;
