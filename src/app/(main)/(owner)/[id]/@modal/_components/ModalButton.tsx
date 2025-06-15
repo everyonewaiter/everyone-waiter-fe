@@ -11,6 +11,7 @@ interface IProps {
   onlyAction?: boolean;
   className?: string;
   type?: "submit" | "button";
+  onAction?: () => void;
 }
 
 export default function ModalButton({
@@ -19,6 +20,7 @@ export default function ModalButton({
   onlyClose,
   onlyAction,
   className,
+  onAction,
   type = "button",
 }: IProps) {
   const router = useRouter();
@@ -56,6 +58,7 @@ export default function ModalButton({
             sm: { buttonSize: "sm", className: "!h-10" },
           }}
           commonClassName={cn("w-full", className)}
+          onClick={onAction}
         >
           {buttonText}
         </ResponsiveButton>

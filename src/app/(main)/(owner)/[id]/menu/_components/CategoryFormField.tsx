@@ -1,7 +1,6 @@
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import {
   FormControl,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage,
@@ -11,34 +10,70 @@ import Input from "@/components/common/Input";
 import cn from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+import { useParams } from "next/navigation";
+import useCategories from "../_hooks/useCategories";
+import useCategoryForm from "../../@modal/menu/category/add/_hooks/useCategoryForm";
 
 interface IProps {
-  index: number;
   changeMove: boolean;
-  remove: UseFieldArrayRemove;
+  fields: Category;
 }
 
-export default function CategoryFormField({
-  index,
-  changeMove,
-  remove,
-}: IProps) {
+export default function CategoryFormField({ changeMove, fields }: IProps) {
+  const params = useParams();
+  const storeId = params?.id as string;
+
   const form = useFormContext<{
-    categories: { name: string }[];
+    categories: Category[];
   }>();
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: index });
+  const index = form
+    .watch("categories")
+    .findIndex((f) => f.categoryId === fields.categoryId);
+
+  const { initialCategoriesRef } = useCategoryForm();
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: fields.categoryId });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
+  const { update, add, remove } = useCategories(storeId);
+
+  const handleUpdate = async () => {
+    const category = form.getValues(`categories.${index}`);
+    const prevCategory = initialCategoriesRef.current[index];
+
+    if (!category.name.trim()) return;
+    if (prevCategory && prevCategory.name === category.name) return;
+
+    if (category.categoryId) {
+      update({
+        storeId,
+        categoryId: category.categoryId,
+        categoryName: category.name,
+      });
+    } else {
+      add({
+        storeId,
+        categoryName: category.name,
+      });
+    }
+  };
+
   return (
     <div className="mb-2 flex gap-2">
-      <FormField
+      <Controller
         control={form.control}
         name={`categories.${index}.name`}
         render={({ field }) => (
@@ -48,9 +83,19 @@ export default function CategoryFormField({
               <FormControl className="flex flex-1 gap-2">
                 <Input
                   placeholder="카테고리 이름"
-                  className="placeholder:text-gray-500"
+                  className={cn(
+                    "placeholder:text-gray-500",
+                    changeMove ? "cursor-default" : ""
+                  )}
                   readOnly={changeMove}
                   {...field}
+                  value={field.value}
+                  onBlur={() => handleUpdate()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+                      handleUpdate();
+                    }
+                  }}
                 />
               </FormControl>
               <ResponsiveButton
@@ -68,7 +113,17 @@ export default function CategoryFormField({
                     className: "w-7 h-7 rounded-[8px] border-gray-600 border",
                   },
                 }}
-                onClick={() => remove(index)}
+                onClick={() =>
+                  changeMove
+                    ? null
+                    : remove({
+                        categoryId: form.watch("categories")[index].categoryId,
+                        storeId,
+                      })
+                }
+                commonClassName="hover:!bg-white"
+                ref={changeMove ? setActivatorNodeRef : undefined}
+                {...(changeMove ? { ...attributes, ...listeners } : {})}
               >
                 <Icon
                   iconKey={changeMove ? "move" : "trash"}
@@ -77,8 +132,6 @@ export default function CategoryFormField({
                     "md:h-4 md:w-4 lg:h-5 lg:w-5"
                   )}
                   size={20}
-                  {...attributes}
-                  {...listeners}
                 />
               </ResponsiveButton>
             </div>

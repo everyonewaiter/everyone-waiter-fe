@@ -26,8 +26,7 @@ import { useMediaQuery } from "react-responsive";
 import SortableItem from "./SortableItem";
 import useSelectedCard from "../_hooks/useSelectedCard";
 import MenuCard from "./MenuCard";
-
-const category = ["전체", "스테이크", "파스타", "라멘", "볶음밥"];
+import useCategories from "../_hooks/useCategories";
 
 const dummy: Menu[] = [
   {
@@ -95,6 +94,9 @@ export default function MenuList({ storeId }: IProps) {
   const navigate = useRouter();
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
+  const { categoryListQuery } = useCategories(storeId);
+  const categories = categoryListQuery.data?.categories;
+
   const [changeSort, setChangeSort] = useState(false);
   const [active, setActive] = useState("전체");
   const [data, setData] = useState(dummy);
@@ -147,14 +149,33 @@ export default function MenuList({ storeId }: IProps) {
                 className: "h-8 !p-2 !rounded-[12px]",
               },
             }}
+            onClick={() => navigate.push(`/${storeId}/menu/category/add`)}
           >
             <SettingsIcon size={18} strokeWidth={1.5} />
           </ResponsiveButton>
-          {category.map((cat) => (
+          <ResponsiveButton
+            variant={active === "전체" ? "default" : "outline"}
+            color={active === "전체" ? "black" : "grey"}
+            responsiveButtons={{
+              lg: {
+                buttonSize: "md",
+                className: "h-10 !text-[15px]",
+              },
+              md: { buttonSize: "sm" },
+              sm: { buttonSize: "sm" },
+            }}
+            commonClassName={
+              active === "전체" ? "border-black" : "border-gray-300"
+            }
+            onClick={() => setActive("전체")}
+          >
+            전체
+          </ResponsiveButton>
+          {categories?.map((cat) => (
             <ResponsiveButton
-              key={cat}
-              variant={active === cat ? "default" : "outline"}
-              color={active === cat ? "black" : "grey"}
+              key={cat.categoryId}
+              variant={active === cat.name ? "default" : "outline"}
+              color={active === cat.name ? "black" : "grey"}
               responsiveButtons={{
                 lg: {
                   buttonSize: "md",
@@ -164,11 +185,11 @@ export default function MenuList({ storeId }: IProps) {
                 sm: { buttonSize: "sm" },
               }}
               commonClassName={
-                active === cat ? "border-black" : "border-gray-300"
+                active === cat.name ? "border-black" : "border-gray-300"
               }
-              onClick={() => setActive(cat)}
+              onClick={() => setActive(cat.name)}
             >
-              {cat}
+              {cat.name}
             </ResponsiveButton>
           ))}
         </div>
