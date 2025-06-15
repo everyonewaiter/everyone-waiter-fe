@@ -4,12 +4,14 @@ import Sidebar from "./_components/Sidebar";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
-    <Suspense fallback={<div>페이지를 불러오는 중입니다</div>}>
+    <Suspense fallback={<div>페이지를 불s러오는 중입니다</div>}>
       <div className="flex h-screen w-screen flex-col overflow-hidden bg-white md:flex-row md:bg-[#F5F5F5]">
         <Sidebar />
-        <MobileHeader />
-        <main className="flex flex-1 flex-col rounded-[20px] px-5 md:mx-8 md:my-8 md:bg-white md:px-6 md:py-5 lg:px-8 lg:pt-0 lg:pb-8">
-          {children}
+        <main className="flex flex-1 flex-col md:py-5 md:pr-5 md:pl-0 lg:py-8">
+          <MobileHeader />
+          <div className="w-full rounded-[20px] px-5 md:bg-white md:px-6 md:py-5 lg:px-8 lg:pt-0 lg:pb-8">
+            {children}
+          </div>
         </main>
       </div>
     </Suspense>

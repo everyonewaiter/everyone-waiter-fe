@@ -1,4 +1,5 @@
 import { PropsWithChildren, ReactNode } from "react";
+import ClientModalWrapper from "../../_components/ClientModalWrapper";
 
 export default async function OwnerLayout({
   children,
@@ -7,7 +8,7 @@ export default async function OwnerLayout({
   return (
     <div className="relative">
       {children}
-      {modal}
+      <ClientModalWrapper>{modal}</ClientModalWrapper>
     </div>
   );
 }

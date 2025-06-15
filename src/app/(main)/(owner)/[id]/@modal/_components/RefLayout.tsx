@@ -4,11 +4,12 @@ import { PropsWithChildren, useRef } from "react";
 import { useRouter } from "next/navigation";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import useEscapeKey from "@/hooks/useEscapeKey";
+import cn from "@/lib/utils";
 
 export default function RefLayout({
   children,
-  width,
-}: PropsWithChildren<{ width?: number }>) {
+  className,
+}: PropsWithChildren<{ className?: string }>) {
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -27,8 +28,10 @@ export default function RefLayout({
   return (
     <div
       ref={ref}
-      className="rounded-[30px] bg-white p-8"
-      style={{ width: width || "540px" }}
+      className={cn(
+        "bg-white md:rounded-[20px] md:p-5 lg:rounded-[30px] lg:p-8",
+        className
+      )}
     >
       {children}
     </div>
