@@ -77,11 +77,19 @@ export default function CategoryModal({ close }: IProps) {
               items={fields}
               strategy={horizontalListSortingStrategy}
             >
-              <CategoryForm remove={remove} changeMove={changeMove} />
+              <CategoryForm
+                remove={remove}
+                changeMove={changeMove}
+                fields={fields}
+              />
             </SortableContext>
           </DndContext>
         ) : (
-          <CategoryForm remove={remove} changeMove={changeMove} />
+          <CategoryForm
+            remove={remove}
+            changeMove={changeMove}
+            fields={fields}
+          />
         )}
       </ScrollArea>
       {!changeMove && (

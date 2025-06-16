@@ -65,3 +65,19 @@ export const getStoreInfoDetail = async (
   const response = await instance.get(`${API_PATH.stores}/${storeId}`);
   return response.data;
 };
+
+export const putUpdateStore = async ({
+  storeId,
+  body,
+}: {
+  storeId: string;
+  body: {
+    landline: string;
+    setting: Settings;
+  };
+}) => {
+  const response = await instance.put(`${API_PATH.stores}/${storeId}`, {
+    body,
+  });
+  return response.data;
+};
