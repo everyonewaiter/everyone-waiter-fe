@@ -34,6 +34,7 @@ export default function Dropdown({
 
   return (
     <DropdownMenu
+      modal={false}
       onOpenChange={(open) => {
         if (open) {
           document.body.classList.add("disable-modal-close");
@@ -44,6 +45,7 @@ export default function Dropdown({
     >
       <div className="relative w-full">
         <DropdownMenuTrigger
+          asChild
           disabled={disabled}
           className="w-full outline-none"
           onClick={(e) => {
@@ -91,7 +93,7 @@ export default function Dropdown({
             e.stopPropagation();
           }}
         >
-          {data.map((item) => (
+          {data?.map((item) => (
             <DropdownMenuItem
               key={item}
               className={cn(

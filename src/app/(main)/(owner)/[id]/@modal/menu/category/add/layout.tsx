@@ -4,7 +4,9 @@ import dynamic from "next/dynamic";
 import { getCategories } from "@/lib/api/menu.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-const ClientWrapper = dynamic(() => import("./_components/Wrapper"));
+const ClientWrapper = dynamic(
+  () => import("@/app/(main)/(owner)/[id]/@modal/menu/_components/Wrapper")
+);
 
 export default async function Layout({
   children,

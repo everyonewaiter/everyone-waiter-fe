@@ -4,7 +4,7 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import { ArrowDownUp, PlusIcon, SettingsIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashedBorder from "@/components/DashedBorder";
 import useOverlay from "@/hooks/use-overlay";
 import QueryProviders from "@/app/query-providers";
@@ -27,64 +27,7 @@ import SortableItem from "./SortableItem";
 import useSelectedCard from "../_hooks/useSelectedCard";
 import MenuCard from "./MenuCard";
 import useCategories from "../_hooks/useCategories";
-
-const dummy: Menu[] = [
-  {
-    menuId: "694865267482835533",
-    categoryId: "694865267482835533",
-    name: "안심 스테이크1",
-    description: "1++ 한우 안심을 사용합니다.",
-    price: 34900,
-    spicy: 0,
-    state: "DEFAULT",
-    label: "BEST",
-    image: "license/202504/0KA652ZFZ26DG.webp",
-  },
-  {
-    menuId: "694865267482835534",
-    categoryId: "694865267482835533",
-    name: "안심 스테이크2",
-    description: "1++ 한우 안심을 사용합니다.",
-    price: 24900,
-    spicy: 0,
-    state: "DEFAULT",
-    label: "BEST",
-    image: "license/202504/0KA652ZFZ26DG.webp",
-  },
-  {
-    menuId: "694865267482835535",
-    categoryId: "694865267482835533",
-    name: "안심 스테이크3",
-    description: "1++ 한우 안심을 사용합니다.",
-    price: 14900,
-    spicy: 0,
-    state: "DEFAULT",
-    label: "BEST",
-    image: "license/202504/0KA652ZFZ26DG.webp",
-  },
-  {
-    menuId: "694865267482835536",
-    categoryId: "694865267482835533",
-    name: "안심 스테이크2",
-    description: "1++ 한우 안심을 사용합니다.",
-    price: 24900,
-    spicy: 0,
-    state: "DEFAULT",
-    label: "BEST",
-    image: "license/202504/0KA652ZFZ26DG.webp",
-  },
-  {
-    menuId: "694865267482835537",
-    categoryId: "694865267482835533",
-    name: "안심 스테이크3",
-    description: "1++ 한우 안심을 사용합니다.",
-    price: 14900,
-    spicy: 0,
-    state: "DEFAULT",
-    label: "BEST",
-    image: "license/202504/0KA652ZFZ26DG.webp",
-  },
-];
+import useMenu from "../_hooks/useMenu";
 
 interface IProps {
   storeId: string;
@@ -97,13 +40,23 @@ export default function MenuList({ storeId }: IProps) {
   const { categoryListQuery } = useCategories(storeId);
   const categories = categoryListQuery.data?.categories;
 
+  const [active, setActive] = useState(categories?.[0]?.categoryId ?? "");
+
+  const { menuListQuery } = useMenu(storeId);
+  const menu = menuListQuery(active).data?.menus;
+
   const [changeSort, setChangeSort] = useState(false);
-  const [active, setActive] = useState("전체");
-  const [data, setData] = useState(dummy);
+  const [data, setData] = useState(menu);
 
   const { isSelected, toggle } = useSelectedCard();
   const { open, close } = useOverlay();
   const sensors = useSensors(useSensor(PointerSensor));
+
+  useEffect(() => {
+    if (categories && categories.length > 0 && !active) {
+      setActive(categories[0].categoryId);
+    }
+  }, [categories, active]);
 
   const handleDeleteSelected = () => {
     open(() => (
@@ -121,9 +74,9 @@ export default function MenuList({ storeId }: IProps) {
 
   const handleDragEnd = ({ active: _active, over }: any) => {
     if (_active.id !== over?.id) {
-      const oldIndex = data.findIndex((item) => item.menuId === _active.id);
-      const newIndex = data.findIndex((item) => item.menuId === over?.id);
-      const sorted = arrayMove(data, oldIndex, newIndex);
+      const oldIndex = data?.findIndex((item) => item.menuId === _active.id);
+      const newIndex = data?.findIndex((item) => item.menuId === over?.id);
+      const sorted = arrayMove(data!, oldIndex!, newIndex!);
       setData(sorted);
     }
   };
@@ -153,9 +106,9 @@ export default function MenuList({ storeId }: IProps) {
           >
             <SettingsIcon size={18} strokeWidth={1.5} />
           </ResponsiveButton>
-          <ResponsiveButton
-            variant={active === "전체" ? "default" : "outline"}
-            color={active === "전체" ? "black" : "grey"}
+          {/* <ResponsiveButton
+            variant={active === "" ? "default" : "outline"}
+            color={active === "" ? "black" : "grey"}
             responsiveButtons={{
               lg: {
                 buttonSize: "md",
@@ -170,12 +123,12 @@ export default function MenuList({ storeId }: IProps) {
             onClick={() => setActive("전체")}
           >
             전체
-          </ResponsiveButton>
+          </ResponsiveButton> */}
           {categories?.map((cat) => (
             <ResponsiveButton
               key={cat.categoryId}
-              variant={active === cat.name ? "default" : "outline"}
-              color={active === cat.name ? "black" : "grey"}
+              variant={active === cat.categoryId ? "default" : "outline"}
+              color={active === cat.categoryId ? "black" : "grey"}
               responsiveButtons={{
                 lg: {
                   buttonSize: "md",
@@ -185,9 +138,9 @@ export default function MenuList({ storeId }: IProps) {
                 sm: { buttonSize: "sm" },
               }}
               commonClassName={
-                active === cat.name ? "border-black" : "border-gray-300"
+                active === cat.categoryId ? "border-black" : "border-gray-300"
               }
-              onClick={() => setActive(cat.name)}
+              onClick={() => setActive(cat.categoryId)}
             >
               {cat.name}
             </ResponsiveButton>
@@ -244,18 +197,26 @@ export default function MenuList({ storeId }: IProps) {
       </div>
       <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
         <ScrollArea className="h-[550px] md:h-[385px] lg:h-[785px]">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-[16px] lg:gap-x-[32px] lg:gap-y-[40px]">
-            <DashedBorder
-              layoutClassName="bg-gray-700 cursor-pointer"
-              radius={{
-                lg: 24,
-                md: 12,
-                sm: 15,
-              }}
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-[16px] lg:h-[440px] lg:gap-x-[32px] lg:gap-y-[40px]">
+            <button
+              type="button"
+              className="h-full"
+              onClick={() =>
+                navigate.push(`/${storeId}/menu/create?hideModal=${isMobile}`)
+              }
             >
-              <PlusIcon strokeWidth={1.5} />
-              <span className="text-base">메뉴 추가</span>
-            </DashedBorder>
+              <DashedBorder
+                layoutClassName="bg-gray-700 cursor-pointer h-full"
+                radius={{
+                  lg: 24,
+                  md: 12,
+                  sm: 15,
+                }}
+              >
+                <PlusIcon strokeWidth={1.5} />
+                <span className="text-base">메뉴 추가</span>
+              </DashedBorder>
+            </button>
             {changeSort ? (
               <DndContext
                 sensors={sensors}
@@ -263,10 +224,10 @@ export default function MenuList({ storeId }: IProps) {
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
-                  items={data.map((item) => item.menuId)}
+                  items={data?.map((item) => item.menuId)!}
                   strategy={rectSortingStrategy}
                 >
-                  {data.map((item) => (
+                  {data?.map((item) => (
                     <SortableItem
                       key={item.menuId}
                       item={item}
@@ -280,7 +241,7 @@ export default function MenuList({ storeId }: IProps) {
                 </SortableContext>
               </DndContext>
             ) : (
-              dummy.map((item) => (
+              data?.map((item) => (
                 <MenuCard
                   key={item.menuId}
                   onToggle={toggle}

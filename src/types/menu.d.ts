@@ -4,7 +4,7 @@ interface Category {
 }
 
 type MenuState = "DEFAULT" | "HIDE" | "SOLD_OUT";
-type MenuLabel = "BEST" | "NEW" | null;
+type MenuLabel = "BEST" | "NEW" | "DEFAULT" | "RECOMMEND" | null;
 
 interface Menu {
   menuId: string;

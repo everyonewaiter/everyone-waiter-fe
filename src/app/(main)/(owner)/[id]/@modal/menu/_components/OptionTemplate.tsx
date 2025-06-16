@@ -15,21 +15,24 @@ interface IProps {
   showInfo: boolean;
   onClick?: () => void;
   isOpen: boolean;
-  className: string;
+  className?: string;
+  data: { name: string; price: string }[];
 }
 
 export default function OptionTemplate({
   onClick,
   className,
+  data,
   ...props
 }: IProps) {
-  const [optionCount, setOptionCount] = useState(1);
+  const [optionCount, setOptionCount] = useState(data?.length);
   const [popupAction, setPopupAction] = useState("");
 
   return (
     <div
       className={cn(
-        "flex cursor-pointer flex-col justify-between rounded-[12px] border border-gray-600 p-3 lg:rounded-[24px] lg:p-6",
+        "flex cursor-pointer flex-col rounded-[12px] border border-gray-600 p-3 lg:rounded-[24px] lg:p-6",
+        props.isOpen ? "justify-between" : "",
         className
       )}
       onClick={onClick}
@@ -46,46 +49,43 @@ export default function OptionTemplate({
         onSetPopupAction={setPopupAction}
         popupAction={popupAction}
       />
-      {props.isOpen && (
-        <>
+      {props.isOpen ? (
+        <div>
           {optionCount ? (
-            <ScrollArea className="mt-3 h-[320px] md:mt-0 md:h-[220px] lg:h-[293px]">
-              {Array.from({ length: optionCount })
-                .fill(0)
-                .map((_, i) => (
-                  /* eslint-disable react/no-array-index-key */
-                  <div
-                    key={i + 1}
-                    className={cn(
-                      "flex items-center gap-3",
-                      i > 0 ? "mt-3 lg:mt-4" : ""
-                    )}
-                  >
-                    {/* eslint-disable react/no-array-index-key */}
-                    <OptionBox />
-                    {popupAction && (
-                      <button
-                        type="button"
-                        className="center h-8 w-8 rounded-[8px] border border-gray-600"
-                      >
-                        <Icon
-                          iconKey={
-                            popupAction === "순서 변경" ? "move" : "trash"
-                          }
-                          size={18}
-                          className={
-                            popupAction === "순서 변경"
-                              ? "text-gray-300"
-                              : '"text-gray-0"'
-                          }
-                        />
-                      </button>
-                    )}
-                  </div>
-                ))}
+            <ScrollArea className="h-[320px] md:h-[220px] lg:h-[354px]">
+              {data?.map((_, i) => (
+                /* eslint-disable react/no-array-index-key */
+                <div
+                  key={i + 1}
+                  className={cn(
+                    "flex gap-3",
+                    i > 0 ? "mt-3 lg:mt-4" : "",
+                    popupAction ? "items-center" : "item-start"
+                  )}
+                >
+                  {/* eslint-disable react/no-array-index-key */}
+                  <OptionBox />
+                  {popupAction && (
+                    <button
+                      type="button"
+                      className="center h-8 w-8 rounded-[8px] border border-gray-600"
+                    >
+                      <Icon
+                        iconKey={popupAction === "순서 변경" ? "move" : "trash"}
+                        size={18}
+                        className={
+                          popupAction === "순서 변경"
+                            ? "text-gray-300"
+                            : '"text-gray-0"'
+                        }
+                      />
+                    </button>
+                  )}
+                </div>
+              ))}
             </ScrollArea>
           ) : (
-            <div className="center font-regular flex-1 flex-col text-sm text-gray-300">
+            <div className="center font-regular h-[320px] flex-1 flex-col text-sm text-gray-300 md:h-[220px] lg:h-[354px]">
               현재 등록된 필수 옵션이 없습니다.
             </div>
           )}
@@ -102,8 +102,8 @@ export default function OptionTemplate({
           >
             <Plus size={16} className="text-gray-0" strokeWidth={2} />
           </ResponsiveButton>
-        </>
-      )}
+        </div>
+      ) : null}
     </div>
   );
 }
