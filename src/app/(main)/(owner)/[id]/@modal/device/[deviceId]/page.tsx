@@ -13,15 +13,15 @@ import LabeledInput from "@/components/common/LabeledInput";
 import Label from "@/components/common/Label";
 import { Form } from "@/components/common/Form";
 import { useEffect } from "react";
-import useDevice from "../../../device/_hooks/useDevice";
+import useDevice from "../../../device/_queries/useDevice";
 
 export default function DeviceInfoModal() {
   const params = useParams();
   const storeId = params?.id as string;
   const deviceId = params?.deviceId as string;
 
-  const { useGetDeviceDetailQuery, mutateUpdateDevice } = useDevice();
-  const { data } = useGetDeviceDetailQuery(deviceId, storeId);
+  const { detailQuery, update } = useDevice();
+  const { data } = detailQuery(deviceId, storeId);
 
   const queryClient = getQueryClient();
 
@@ -56,7 +56,7 @@ export default function DeviceInfoModal() {
   }, [form, data]);
 
   const submitHandler = () => {
-    mutateUpdateDevice.mutate(
+    update.mutate(
       {
         name: form.watch("name"),
         purpose: form.watch("purpose") as DevicePurpose,

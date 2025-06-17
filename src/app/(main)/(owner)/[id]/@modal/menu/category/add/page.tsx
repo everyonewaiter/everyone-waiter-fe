@@ -22,7 +22,7 @@ import { useParams, useRouter } from "next/navigation";
 import ModalTitle from "../../../_components/ModalTitle";
 import CategoryForm from "../../../../menu/_components/CategoryForm";
 import ModalButton from "../../../_components/ModalButton";
-import useCategories from "../../../../menu/_hooks/useCategories";
+import useCategories from "../../../../menu/_queries/useCategories";
 import useCategoryForm from "./_hooks/useCategoryForm";
 
 export default function Page() {
@@ -36,8 +36,8 @@ export default function Page() {
   >([]);
 
   const sensors = useSensors(useSensor(PointerSensor));
-  const { categoryListQuery, move } = useCategories(storeId);
-  const data = categoryListQuery.data?.categories;
+  const { query, move } = useCategories(storeId);
+  const data = query.data?.categories;
 
   const { form, setInitialCategories } = useCategoryForm();
 
@@ -73,7 +73,10 @@ export default function Page() {
   const handleSortSave = () => {
     Promise.all(
       pendingMoves.map((moveData) =>
-        move({ storeId, ...moveData }, { onSuccess: () => navigate.back() })
+        move.mutate(
+          { storeId, ...moveData },
+          { onSuccess: () => navigate.back() }
+        )
       )
     );
   };

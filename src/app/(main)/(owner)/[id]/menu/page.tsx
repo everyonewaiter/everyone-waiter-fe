@@ -3,12 +3,13 @@
 import { useStoreContext } from "@/providers/storeProvider";
 import MenuList from "./_components/MenuList";
 import GuideAddCategory from "./_components/GuideAddCategory";
-import { useCategoryListQuery } from "./_queries/useCategoryQuery";
+import useCategories from "./_queries/useCategories";
 
 export default function Page() {
   const { storeId } = useStoreContext();
 
-  const data = useCategoryListQuery(storeId).data?.categories;
+  const { query } = useCategories(storeId);
+  const data = query.data?.categories;
 
   return (
     <div className="flex flex-1">

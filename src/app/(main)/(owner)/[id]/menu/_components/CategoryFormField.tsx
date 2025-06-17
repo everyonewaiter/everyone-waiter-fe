@@ -10,14 +10,10 @@ import Input from "@/components/common/Input";
 import cn from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Controller, useFormContext } from "react-hook-form";
 import { useStoreContext } from "@/providers/storeProvider";
+import { Controller, useFormContext } from "react-hook-form";
 import useCategoryForm from "../../@modal/menu/category/add/_hooks/useCategoryForm";
-import {
-  useAddCategory,
-  useRemoveCategory,
-  useUpdateCategory,
-} from "../_queries/useCategoryMutation";
+import useCategories from "../_queries/useCategories";
 
 interface IProps {
   changeMove: boolean;
@@ -51,9 +47,7 @@ export default function CategoryFormField({ changeMove, fields }: IProps) {
     transition,
   };
 
-  const { mutate: update } = useUpdateCategory();
-  const { mutate: add } = useAddCategory();
-  const { mutate: remove } = useRemoveCategory();
+  const { update, add, remove } = useCategories(storeId);
 
   const handleUpdate = async () => {
     const category = form.getValues(`categories.${index}`);
@@ -63,13 +57,13 @@ export default function CategoryFormField({ changeMove, fields }: IProps) {
     if (prevCategory && prevCategory.name === category.name) return;
 
     if (category.categoryId) {
-      update({
+      update.mutate({
         storeId,
         categoryId: category.categoryId,
         categoryName: category.name,
       });
     } else {
-      add({
+      add.mutate({
         storeId,
         categoryName: category.name,
       });
@@ -121,7 +115,7 @@ export default function CategoryFormField({ changeMove, fields }: IProps) {
                 onClick={() =>
                   changeMove
                     ? null
-                    : remove({
+                    : remove.mutate({
                         categoryId: form.watch("categories")[index].categoryId,
                         storeId,
                       })

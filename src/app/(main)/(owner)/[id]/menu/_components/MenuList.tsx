@@ -21,29 +21,27 @@ import {
   rectSortingStrategy,
   SortableContext,
 } from "@dnd-kit/sortable";
+import { useStoreContext } from "@/providers/storeProvider";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 import SortableItem from "./SortableItem";
 import useSelectedCard from "../_hooks/useSelectedCard";
 import MenuCard from "./MenuCard";
-import useCategories from "../_hooks/useCategories";
-import useMenu from "../_hooks/useMenu";
+import useCategories from "../_queries/useCategories";
+import useMenu from "../_queries/useMenu";
 
-interface IProps {
-  storeId: string;
-}
-
-export default function MenuList({ storeId }: IProps) {
+export default function MenuList() {
   const navigate = useRouter();
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
-  const { categoryListQuery } = useCategories(storeId);
-  const categories = categoryListQuery.data?.categories;
+  const { storeId } = useStoreContext();
+  const { query } = useCategories(storeId);
+  const categories = query.data?.categories;
 
   const [active, setActive] = useState(categories?.[0]?.categoryId ?? "");
 
-  const { menuListQuery } = useMenu(storeId);
-  const menu = menuListQuery(active).data?.menus;
+  const { query: menuQuery } = useMenu(storeId);
+  const menu = menuQuery(active).data?.menus;
 
   const [changeSort, setChangeSort] = useState(false);
   const [data, setData] = useState(menu);

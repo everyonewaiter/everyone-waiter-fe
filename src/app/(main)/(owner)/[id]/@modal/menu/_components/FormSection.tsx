@@ -10,7 +10,7 @@ import Separator from "@/components/common/separator";
 import formatPrice from "@/utils/format/price";
 import { menuLabelTranslate, menuStateTranslate } from "@/constants/translates";
 import { MenuFormType } from "./DetailMenuModal";
-import useCategories from "../../../menu/_hooks/useCategories";
+import useCategories from "../../../menu/_queries/useCategories";
 
 interface IProps {
   isEditing: boolean;
@@ -18,8 +18,8 @@ interface IProps {
 }
 
 export default function FormSection({ isEditing, storeId }: IProps) {
-  const { categoryListQuery } = useCategories(storeId);
-  const categories = categoryListQuery.data?.categories;
+  const { query } = useCategories(storeId);
+  const categories = query.data?.categories;
 
   const form = useFormContext<MenuFormType>();
 

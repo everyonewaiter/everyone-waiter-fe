@@ -11,25 +11,25 @@ import {
   updateMenuWithoutImage,
 } from "@/lib/api/menu.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import menuKeys from "./queryKeys";
+import { menuKeys } from "./queryKeys";
 
 export default function useMenu(storeId: string) {
   const queryClient = getQueryClient();
 
-  const menuListQuery = (categoryId: string) =>
+  const query = (categoryId: string) =>
     useQuery({
       queryKey: menuKeys.category(storeId, categoryId),
       queryFn: () => getMenuList({ storeId, categoryId }),
       enabled: !!categoryId,
     });
 
-  const menuDetailQuery = (categoryId: string, menuId: string) =>
+  const detailQuery = (categoryId: string, menuId: string) =>
     useQuery({
       queryKey: menuKeys.menuInCategory(storeId, categoryId, menuId),
       queryFn: () => getMenuDetail({ storeId, categoryId, menuId }),
     });
 
-  const { mutate: add } = useMutation({
+  const add = useMutation({
     mutationFn: postMenu,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -38,7 +38,7 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const { mutate: update } = useMutation({
+  const update = useMutation({
     mutationFn: updateMenuWithoutImage,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -47,7 +47,7 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const { mutate: updateWithImg } = useMutation({
+  const updateWithImg = useMutation({
     mutationFn: updateMenuWithImage,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -56,7 +56,7 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const { mutate: remove } = useMutation({
+  const remove = useMutation({
     mutationFn: deleteMenu,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -69,7 +69,7 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const { mutate: multiRemove } = useMutation({
+  const multiRemove = useMutation({
     mutationFn: deleteMultipleMenus,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -78,7 +78,7 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const { mutate: move } = useMutation({
+  const move = useMutation({
     mutationFn: moveMenus,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -88,8 +88,8 @@ export default function useMenu(storeId: string) {
   });
 
   return {
-    menuListQuery,
-    menuDetailQuery,
+    query,
+    detailQuery,
     add,
     update,
     updateWithImg,

@@ -1,4 +1,4 @@
-const menuKeys = {
+export const menuKeys = {
   all: (storeId: string) => ["menus", storeId] as const,
   category: (storeId: string, categoryId: string) =>
     ["menus", storeId, categoryId] as const,
@@ -8,4 +8,6 @@ const menuKeys = {
     ["menus", storeId, categoryId, menuId] as const,
 };
 
-export default menuKeys;
+export const categoryKeys = {
+  all: (storeId: string) => ["categories", storeId] as const,
+};

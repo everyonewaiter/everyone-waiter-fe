@@ -5,14 +5,13 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { getPathnameWithoutStoreId } from "@/utils/getPathname";
+import { useStoreContext } from "@/providers/storeProvider";
 import { FormProvider, useForm } from "react-hook-form";
 import FormSection from "./FormSection";
 import OptionTemplate from "./OptionTemplate";
 import Header from "./Header";
-import useCategories from "../../../menu/_hooks/useCategories";
-import useMenu from "../../../menu/_hooks/useMenu";
-// import useMenu from "../../../menu/_hooks/useMenu";
-// import useCategories from "../../../menu/_hooks/useCategories";
+import useCategories from "../../../menu/_queries/useCategories";
+import useMenu from "../../../menu/_queries/useMenu";
 
 export interface MenuFormType extends Omit<Menu, "price"> {
   price: string;
@@ -25,17 +24,14 @@ export interface MenuFormType extends Omit<Menu, "price"> {
 interface IProps {
   isEditing: boolean;
   onSetEditing: (value: boolean) => void;
-  storeId: string;
 }
 
-export default function DetailMenuModal({
-  isEditing,
-  onSetEditing,
-  storeId,
-}: IProps) {
+export default function DetailMenuModal({ isEditing, onSetEditing }: IProps) {
   const navigate = useRouter();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const pathname = usePathname();
+
+  const { storeId } = useStoreContext();
 
   const form = useForm<Omit<MenuFormType, "image"> & { image: File | null }>({
     mode: "onChange",
@@ -69,13 +65,13 @@ export default function DetailMenuModal({
     }
   };
 
-  const { categoryListQuery } = useCategories(storeId);
-  const categories = categoryListQuery.data?.categories;
+  const { query } = useCategories(storeId);
+  const categories = query.data?.categories;
 
   const { add } = useMenu(storeId);
 
   const handleSubmit = () => {
-    add(
+    add.mutate(
       {
         storeId,
         categoryId: categories?.find((el) => el.name === form.watch("category"))
@@ -108,7 +104,6 @@ export default function DetailMenuModal({
       },
       {
         onSuccess: () => navigate.back(),
-        onError: (e) => console.log(e),
       }
     );
   };

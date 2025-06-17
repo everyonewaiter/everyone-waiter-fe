@@ -7,42 +7,43 @@ import {
   updateCategory,
 } from "@/lib/api/menu.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { categoryKeys } from "./queryKeys";
 
 export default function useCategories(storeId: string) {
   const queryClient = getQueryClient();
 
   const query = useQuery({
-    queryKey: ["categories", storeId],
+    queryKey: categoryKeys.all(storeId),
     queryFn: () => getCategories({ storeId }),
   });
 
-  const { mutate: add } = useMutation({
+  const add = useMutation({
     mutationFn: makeCategory,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories", storeId] });
+      queryClient.invalidateQueries({ queryKey: categoryKeys.all(storeId) });
     },
   });
 
-  const { mutate: move } = useMutation({
+  const move = useMutation({
     mutationFn: moveCategory,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories", storeId] });
+      queryClient.invalidateQueries({ queryKey: categoryKeys.all(storeId) });
     },
   });
 
-  const { mutate: update } = useMutation({
+  const update = useMutation({
     mutationFn: updateCategory,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories", storeId] });
+      queryClient.invalidateQueries({ queryKey: categoryKeys.all(storeId) });
     },
   });
 
-  const { mutate: remove } = useMutation({
+  const remove = useMutation({
     mutationFn: deleteCategory,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories", storeId] });
+      queryClient.invalidateQueries({ queryKey: categoryKeys.all(storeId) });
     },
   });
 
-  return { categoryListQuery: query, add, move, update, remove };
+  return { query, add, move, update, remove };
 }

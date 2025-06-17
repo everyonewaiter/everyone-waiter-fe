@@ -8,13 +8,14 @@ import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { useStoreContext } from "@/providers/storeProvider";
-import useCategoryStore from "../_hooks/useCategoryStore";
+import useCategories from "../_queries/useCategories";
 
 export default function Page() {
   const navigate = useRouter();
   const { storeId } = useStoreContext();
 
-  const { categories } = useCategoryStore();
+  const { query } = useCategories(storeId);
+  const { categories } = query.data!;
 
   const form = useForm<{ categories: { name: string }[] }>({
     defaultValues: { categories },

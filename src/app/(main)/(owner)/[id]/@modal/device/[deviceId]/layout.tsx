@@ -4,6 +4,7 @@ import { getDevices } from "@/lib/api/device.api";
 import ModalButton from "../../_components/ModalButton";
 import ModalTitle from "../../_components/ModalTitle";
 import RefLayout from "../../_components/RefLayout";
+import { deviceKeys } from "../../../device/_queries/keys";
 
 export default async function Layout({
   children,
@@ -13,7 +14,7 @@ export default async function Layout({
   const { id, deviceId } = params;
 
   await queryClient.prefetchQuery({
-    queryKey: ["get-device-detail", id, deviceId],
+    queryKey: deviceKeys.detail(id, deviceId),
     queryFn: () => getDevices(id),
   });
 
