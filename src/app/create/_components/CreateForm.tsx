@@ -14,7 +14,7 @@ import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import dynamic from "next/dynamic";
-import useStores from "@/app/(main)/(owner)/[id]/store/_hooks/useStores";
+import useStores from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
 
 const UploadPhoto = dynamic(
   () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),
@@ -40,8 +40,9 @@ export default function CreateForm() {
     },
   });
 
-  const { mutateRegisterStore } = useStores();
-  const { mutate, error } = mutateRegisterStore;
+  const {
+    add: { mutate, error },
+  } = useStores();
 
   useEffect(() => {
     if (error?.message) {

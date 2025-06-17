@@ -11,7 +11,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 const useAdmin = () => {
-  const accountListQuery = (
+  const accountList = (
     searchEmail: string,
     searchPermission: Permission | "",
     searchState: Status | "",
@@ -66,7 +66,7 @@ const useAdmin = () => {
   });
 
   return {
-    accountListQuery,
+    accountList,
     detailAccountQuery,
     mutateUpdateDetail,
     adminStoresListQuery,

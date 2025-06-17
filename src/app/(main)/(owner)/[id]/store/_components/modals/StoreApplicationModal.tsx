@@ -14,7 +14,7 @@ import getQueryClient from "@/app/get-query-client";
 import { useStoreContext } from "@/providers/storeProvider";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
-import useStores from "../../_hooks/useStores";
+import useStores from "../../_queries/useStores";
 
 type FormState = Omit<StoreDetail, "updatedAt" | "accountId"> & {
   image: string;
@@ -57,8 +57,8 @@ export default function StoreApplicationModal({
   });
 
   const { handleOpenAddress } = useOpenDaumPostcode(form);
-  const { mutateReapply, mutateReapplyWithImage } = useStores();
-  const { mutate } = mutateReapplyWithImage(storeId);
+  const { reapply, reapplyWithImg } = useStores();
+  const { mutate } = reapplyWithImg(storeId);
 
   const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
@@ -87,7 +87,7 @@ export default function StoreApplicationModal({
   };
 
   const handleReapply = () => {
-    mutateReapply(
+    reapply.mutate(
       {
         registrationId: item.registrationId.toString(),
         name: form.getValues("name"),

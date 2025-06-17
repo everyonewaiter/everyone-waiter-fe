@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { Form } from "@/components/common/Form";
 import { useStoreContext } from "@/providers/storeProvider";
 import MoveableChips from "./_components/MoveableChips";
-import useSettings from "./_hooks/useSettings";
+import useSettings from "./_queries/useSettings";
 
 export default function Settings() {
   const { storeId } = useStoreContext();

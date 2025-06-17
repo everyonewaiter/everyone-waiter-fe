@@ -3,7 +3,7 @@ import getQueryClient from "@/app/get-query-client";
 import { getCategories, getMenuList } from "@/lib/api/menu.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { PropsWithChildren, ReactNode } from "react";
-import { categoryKeys, menuKeys } from "./_queries/queryKeys";
+import { categoryKeys, menuKeys } from "./_queries/keys";
 
 export default async function Layout({
   children,

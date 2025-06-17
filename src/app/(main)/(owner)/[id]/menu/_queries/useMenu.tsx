@@ -11,7 +11,7 @@ import {
   updateMenuWithoutImage,
 } from "@/lib/api/menu.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { menuKeys } from "./queryKeys";
+import { menuKeys } from "./keys";
 
 export default function useMenu(storeId: string) {
   const queryClient = getQueryClient();

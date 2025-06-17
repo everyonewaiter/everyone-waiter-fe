@@ -7,7 +7,7 @@ import {
   updateCategory,
 } from "@/lib/api/menu.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { categoryKeys } from "./queryKeys";
+import { categoryKeys } from "./keys";
 
 export default function useCategories(storeId: string) {
   const queryClient = getQueryClient();

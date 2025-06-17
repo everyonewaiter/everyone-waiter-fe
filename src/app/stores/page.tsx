@@ -23,7 +23,7 @@ import useOverlay from "@/hooks/use-overlay";
 import { registerStateTranslate } from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
 import QueryProviders from "@/app/query-providers";
-import useStores from "../(main)/(owner)/[id]/store/_hooks/useStores";
+import useStores from "../(main)/(owner)/[id]/store/_queries/useStores";
 import StoreApplicationModal from "../(main)/(owner)/[id]/store/_components/modals/StoreApplicationModal";
 import PendingAcceptModal from "../(main)/(owner)/[id]/store/_components/modals/PendingAcceptModal";
 
@@ -55,8 +55,8 @@ export default function StoreList() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { registrationListQuery } = useStores();
-  const { data, refetch } = registrationListQuery(currentPage);
+  const { registrationList } = useStores();
+  const { data, refetch } = registrationList(currentPage);
 
   const { open, close } = useOverlay();
 

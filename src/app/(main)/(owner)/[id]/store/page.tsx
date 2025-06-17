@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { Plus } from "lucide-react";
 import Icon from "@/components/common/Icon";
 import { useStoreContext } from "@/providers/storeProvider";
-import useStores from "./_hooks/useStores";
+import useStores from "./_queries/useStores";
 
 export default function StoreInfo() {
   const { storeId } = useStoreContext();
@@ -21,8 +21,8 @@ export default function StoreInfo() {
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { detailStoreInfoQuery } = useStores();
-  const { data } = detailStoreInfoQuery(storeId as string);
+  const { storesDetail } = useStores();
+  const { data } = storesDetail(storeId);
 
   const form = useForm<TypeStoreInfo>({
     mode: "onChange",

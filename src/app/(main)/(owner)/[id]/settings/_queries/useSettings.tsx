@@ -1,19 +1,20 @@
 import getQueryClient from "@/app/get-query-client";
 import { useMutation } from "@tanstack/react-query";
 import { putUpdateStore } from "@/lib/api/stores.api";
-import useStores from "../../store/_hooks/useStores";
+import useStores from "../../store/_queries/useStores";
+import { settingsKeys } from "./keys";
 
 const queryClient = getQueryClient();
 
 export default function useSettings(storeId: string) {
-  const { detailStoreInfoQuery } = useStores();
-  const { data } = detailStoreInfoQuery(storeId);
+  const { storesDetail } = useStores();
+  const { data } = storesDetail(storeId);
 
-  const { mutate } = useMutation({
+  const update = useMutation({
     mutationFn: putUpdateStore,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["store-detail-info", storeId],
+        queryKey: settingsKeys.all(storeId),
       });
     },
   });
@@ -23,7 +24,7 @@ export default function useSettings(storeId: string) {
     onSuccess?: () => void
   ) => {
     if (!data?.setting || !data?.landline) return;
-    mutate(
+    update.mutate(
       {
         storeId,
         body: {
