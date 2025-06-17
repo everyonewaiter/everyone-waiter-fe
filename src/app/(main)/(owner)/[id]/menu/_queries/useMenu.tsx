@@ -58,13 +58,9 @@ export default function useMenu(storeId: string) {
 
   const remove = useMutation({
     mutationFn: deleteMenu,
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: menuKeys.menuInCategory(
-          storeId,
-          variables.categoryId,
-          variables.menuId
-        ),
+        queryKey: menuKeys.all(storeId),
       });
     },
   });

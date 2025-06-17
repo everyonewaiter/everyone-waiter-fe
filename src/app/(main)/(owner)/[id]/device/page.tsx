@@ -28,7 +28,7 @@ import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
-import useTableCheck from "./_hooks/useTableCheck";
+import useControlCheck from "../../../../../hooks/useControlCheck";
 import useDevice from "./_queries/useDevice";
 
 const itemWidth = {
@@ -51,7 +51,7 @@ export default function Device() {
   const { data } = deviceQuery(storeId);
 
   const { checkedItems, allChecked, handleCheckAll, handleCheckItem } =
-    useTableCheck<Device>(data?.content!, "deviceId");
+    useControlCheck<Device>(data?.content!, "deviceId");
 
   const alertOverlay = useOverlay();
 

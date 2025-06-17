@@ -22,6 +22,7 @@ interface IProps {
   buttonColor?: string;
   layoutClassName?: string;
   noResponsive?: boolean;
+  disabled?: boolean;
 }
 
 function Alert({
@@ -34,6 +35,7 @@ function Alert({
   layoutClassName,
   buttonColor = "primary",
   noResponsive,
+  disabled,
 }: PropsWithChildren<IProps>) {
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(true);
@@ -76,6 +78,7 @@ function Alert({
               onClick={handleAction}
               noResponsive={noResponsive}
               className="flex-1"
+              disabled={disabled}
             >
               <span>{buttonText}</span>
             </AlertDialogAction>

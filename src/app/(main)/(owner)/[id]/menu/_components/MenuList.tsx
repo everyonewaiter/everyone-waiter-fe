@@ -1,83 +1,32 @@
 "use client";
 
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon";
-import { ScrollArea } from "@/components/common/ScrollArea";
-import { ArrowDownUp, PlusIcon, SettingsIcon } from "lucide-react";
+import { SettingsIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import DashedBorder from "@/components/DashedBorder";
-import useOverlay from "@/hooks/use-overlay";
-import QueryProviders from "@/app/query-providers";
-import Alert from "@/components/common/Alert/Alert";
-import {
-  closestCenter,
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  rectSortingStrategy,
-  SortableContext,
-} from "@dnd-kit/sortable";
 import { useStoreContext } from "@/providers/storeProvider";
 import { useRouter } from "next/navigation";
-import { useMediaQuery } from "react-responsive";
-import SortableItem from "./SortableItem";
 import useSelectedCard from "../_hooks/useSelectedCard";
-import MenuCard from "./MenuCard";
 import useCategories from "../_queries/useCategories";
-import useMenu from "../_queries/useMenu";
+import RenderMenu from "./RenderMenu";
+import HeaderButton from "./HeaderButton";
 
 export default function MenuList() {
   const navigate = useRouter();
-  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const { storeId } = useStoreContext();
+  const { isSelected, toggle, selectedCards } = useSelectedCard();
+
   const { query } = useCategories(storeId);
   const categories = query.data?.categories;
 
   const [active, setActive] = useState(categories?.[0]?.categoryId ?? "");
-
-  const { query: menuQuery } = useMenu(storeId);
-  const menu = menuQuery(active).data?.menus;
-
   const [changeSort, setChangeSort] = useState(false);
-  const [data, setData] = useState(menu);
-
-  const { isSelected, toggle } = useSelectedCard();
-  const { open, close } = useOverlay();
-  const sensors = useSensors(useSensor(PointerSensor));
 
   useEffect(() => {
     if (categories && categories.length > 0 && !active) {
       setActive(categories[0].categoryId);
     }
   }, [categories, active]);
-
-  const handleDeleteSelected = () => {
-    open(() => (
-      <QueryProviders>
-        <Alert onClose={close} onAction={() => {}} buttonText="삭제">
-          선택한 메뉴를 삭제하시겠습니까?
-        </Alert>
-      </QueryProviders>
-    ));
-  };
-
-  const handleSaveSort = () => {
-    setChangeSort(false);
-  };
-
-  const handleDragEnd = ({ active: _active, over }: any) => {
-    if (_active.id !== over?.id) {
-      const oldIndex = data?.findIndex((item) => item.menuId === _active.id);
-      const newIndex = data?.findIndex((item) => item.menuId === over?.id);
-      const sorted = arrayMove(data!, oldIndex!, newIndex!);
-      setData(sorted);
-    }
-  };
 
   return (
     <div className="flex flex-1 flex-col pb-2 md:pt-4 lg:pt-6">
@@ -104,24 +53,6 @@ export default function MenuList() {
           >
             <SettingsIcon size={18} strokeWidth={1.5} />
           </ResponsiveButton>
-          {/* <ResponsiveButton
-            variant={active === "" ? "default" : "outline"}
-            color={active === "" ? "black" : "grey"}
-            responsiveButtons={{
-              lg: {
-                buttonSize: "md",
-                className: "h-10 !text-[15px]",
-              },
-              md: { buttonSize: "sm" },
-              sm: { buttonSize: "sm" },
-            }}
-            commonClassName={
-              active === "전체" ? "border-black" : "border-gray-300"
-            }
-            onClick={() => setActive("전체")}
-          >
-            전체
-          </ResponsiveButton> */}
           {categories?.map((cat) => (
             <ResponsiveButton
               key={cat.categoryId}
@@ -144,118 +75,19 @@ export default function MenuList() {
             </ResponsiveButton>
           ))}
         </div>
-        <div className="flex items-center justify-end gap-4 lg:gap-6">
-          {changeSort ? (
-            <div className="flex items-center gap-2">
-              <div className="text-primary font-regular hidden h-9 items-center justify-center rounded-[8px] bg-[rgba(242,32,32,0.04)] px-4 text-sm lg:flex">
-                메뉴의 순서 변경은 메뉴를 꾹 누르신 후, 원하시는 자리로 메뉴를
-                이동해주세요
-              </div>
-              <ResponsiveButton
-                variant="outline"
-                responsiveButtons={{
-                  lg: { buttonSize: "sm" },
-                  md: { buttonSize: "sm" },
-                  sm: { buttonSize: "sm" },
-                }}
-                onClick={handleSaveSort}
-              >
-                저장
-              </ResponsiveButton>
-            </div>
-          ) : (
-            <>
-              <button
-                type="button"
-                className="flex items-center gap-1 lg:gap-2"
-                onClick={() => setChangeSort(true)}
-              >
-                <ArrowDownUp
-                  size={18}
-                  strokeWidth={1.5}
-                  className="text-gray-300"
-                />
-                <span className="text-sm text-gray-300 lg:text-lg">
-                  순서 변경
-                </span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center gap-1 lg:gap-2"
-                onClick={handleDeleteSelected}
-              >
-                <Icon iconKey="trash" className="text-status-error" size={18} />
-                <span className="text-status-error text-sm lg:text-lg">
-                  삭제
-                </span>
-              </button>
-            </>
-          )}
-        </div>
+        <HeaderButton
+          selectedCards={selectedCards}
+          categoryId={active}
+          changeSort={changeSort}
+          onSetChangeSort={setChangeSort}
+        />
       </div>
-      <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
-        <ScrollArea className="h-[550px] md:h-[385px] lg:h-[785px]">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-[16px] lg:h-[440px] lg:gap-x-[32px] lg:gap-y-[40px]">
-            <button
-              type="button"
-              className="h-full"
-              onClick={() =>
-                navigate.push(`/${storeId}/menu/create?hideModal=${isMobile}`)
-              }
-            >
-              <DashedBorder
-                layoutClassName="bg-gray-700 cursor-pointer h-full"
-                radius={{
-                  lg: 24,
-                  md: 12,
-                  sm: 15,
-                }}
-              >
-                <PlusIcon strokeWidth={1.5} />
-                <span className="text-base">메뉴 추가</span>
-              </DashedBorder>
-            </button>
-            {changeSort ? (
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={data?.map((item) => item.menuId)!}
-                  strategy={rectSortingStrategy}
-                >
-                  {data?.map((item) => (
-                    <SortableItem
-                      key={item.menuId}
-                      item={item}
-                      onClick={() =>
-                        navigate.push(
-                          `/${storeId}/menu/${item.menuId}?hideModal=${isMobile}`
-                        )
-                      }
-                    />
-                  ))}
-                </SortableContext>
-              </DndContext>
-            ) : (
-              data?.map((item) => (
-                <MenuCard
-                  key={item.menuId}
-                  onToggle={toggle}
-                  isSelected={isSelected(item)}
-                  onClick={() =>
-                    navigate.push(
-                      `/${storeId}/menu/${item.menuId}?hideModal=${isMobile}`
-                    )
-                  }
-                  {...item}
-                />
-              ))
-            )}
-          </div>
-        </ScrollArea>
-      </div>
+      <RenderMenu
+        changeSort={changeSort}
+        categoryId={active}
+        isSelected={isSelected}
+        toggle={toggle}
+      />
     </div>
   );
 }
