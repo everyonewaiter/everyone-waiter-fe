@@ -1,28 +1,25 @@
 import { PropsWithChildren } from "react";
 import getQueryClient from "@/app/get-query-client";
-import dynamic from "next/dynamic";
 import { getCategories } from "@/lib/api/menu.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-
-const ClientWrapper = dynamic(
-  () => import("@/app/(main)/(owner)/[id]/@modal/menu/_components/Wrapper")
-);
+import { categoryKeys } from "../../../../menu/_queries/queryKeys";
+import ClientRefWrapper from "../../_components/Wrapper";
 
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{ params: { id: string; deviceId: string } }>) {
+}: PropsWithChildren<{ params: Promise<{ id: string }> }>) {
   const queryClient = getQueryClient();
-  const { id } = params;
+  const { id } = await params;
 
   await queryClient.prefetchQuery({
-    queryKey: ["categories", id],
+    queryKey: categoryKeys.all(id),
     queryFn: () => getCategories({ storeId: id }),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ClientWrapper>{children}</ClientWrapper>
+      <ClientRefWrapper>{children}</ClientRefWrapper>
     </HydrationBoundary>
   );
 }
