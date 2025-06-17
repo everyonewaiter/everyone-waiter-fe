@@ -1,5 +1,6 @@
 import getQueryClient from "@/app/get-query-client";
 import { useMutation } from "@tanstack/react-query";
+import { putUpdateStore } from "@/lib/api/stores.api";
 import useStores from "../../store/_hooks/useStores";
 
 const queryClient = getQueryClient();
@@ -22,7 +23,6 @@ export default function useSettings(storeId: string) {
     onSuccess?: () => void
   ) => {
     if (!data?.setting || !data?.landline) return;
-
     mutate(
       {
         storeId,

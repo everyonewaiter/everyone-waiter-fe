@@ -2,13 +2,12 @@ import PageTitle from "@/app/(main)/_components/PageTitle";
 import getQueryClient from "@/app/get-query-client";
 import { getDevices } from "@/lib/api/device.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren } from "react";
 
 export default async function Layout({
   children,
   params,
-  modal,
-}: PropsWithChildren<{ params: Promise<{ id: string }>; modal: ReactNode }>) {
+}: PropsWithChildren<{ params: Promise<{ id: string }> }>) {
   const queryClient = getQueryClient();
   const { id } = await params;
 
@@ -21,7 +20,6 @@ export default async function Layout({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <PageTitle title="기기 관리" />
       {children}
-      {modal && <div className="fixed inset-0 z-50">{modal}</div>}
     </HydrationBoundary>
   );
 }
