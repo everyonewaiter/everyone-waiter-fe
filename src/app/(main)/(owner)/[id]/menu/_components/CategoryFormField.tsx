@@ -11,9 +11,13 @@ import cn from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Controller, useFormContext } from "react-hook-form";
-import { useParams } from "next/navigation";
-import useCategories from "../_hooks/useCategories";
+import { useStoreContext } from "@/providers/storeProvider";
 import useCategoryForm from "../../@modal/menu/category/add/_hooks/useCategoryForm";
+import {
+  useAddCategory,
+  useRemoveCategory,
+  useUpdateCategory,
+} from "../_queries/useCategoryMutation";
 
 interface IProps {
   changeMove: boolean;
@@ -21,8 +25,7 @@ interface IProps {
 }
 
 export default function CategoryFormField({ changeMove, fields }: IProps) {
-  const params = useParams();
-  const storeId = params?.id as string;
+  const { storeId } = useStoreContext();
 
   const form = useFormContext<{
     categories: Category[];
@@ -48,7 +51,9 @@ export default function CategoryFormField({ changeMove, fields }: IProps) {
     transition,
   };
 
-  const { update, add, remove } = useCategories(storeId);
+  const { mutate: update } = useUpdateCategory();
+  const { mutate: add } = useAddCategory();
+  const { mutate: remove } = useRemoveCategory();
 
   const handleUpdate = async () => {
     const category = form.getValues(`categories.${index}`);

@@ -1,18 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import DetailMenuModal from "../_components/DetailMenuModal";
 
 export default function Page() {
-  const params = useParams();
   const [isEditing, setIsEditing] = useState(false);
 
-  return (
-    <DetailMenuModal
-      isEditing={isEditing}
-      onSetEditing={setIsEditing}
-      storeId={params?.id as string}
-    />
-  );
+  return <DetailMenuModal isEditing={isEditing} onSetEditing={setIsEditing} />;
 }

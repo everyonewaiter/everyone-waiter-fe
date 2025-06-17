@@ -31,7 +31,7 @@ export default function CategoryModal({ close }: IProps) {
     categories: { name: string }[];
   }>();
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control: form.control,
     name: "categories",
   });
@@ -77,19 +77,11 @@ export default function CategoryModal({ close }: IProps) {
               items={fields}
               strategy={horizontalListSortingStrategy}
             >
-              <CategoryForm
-                remove={remove}
-                changeMove={changeMove}
-                fields={fields}
-              />
+              <CategoryForm changeMove={changeMove} />
             </SortableContext>
           </DndContext>
         ) : (
-          <CategoryForm
-            remove={remove}
-            changeMove={changeMove}
-            fields={fields}
-          />
+          <CategoryForm changeMove={changeMove} />
         )}
       </ScrollArea>
       {!changeMove && (

@@ -11,9 +11,9 @@ const ClientWrapper = dynamic(
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{ params: Promise<{ id: string; deviceId: string }> }>) {
+}: PropsWithChildren<{ params: { id: string; deviceId: string } }>) {
   const queryClient = getQueryClient();
-  const { id } = await params;
+  const { id } = params;
 
   await queryClient.prefetchQuery({
     queryKey: ["categories", id],

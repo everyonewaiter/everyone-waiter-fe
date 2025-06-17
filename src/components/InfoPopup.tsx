@@ -1,8 +1,9 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
+import { useStoreContext } from "@/providers/storeProvider";
 import Icon from "./common/Icon";
 
 const popupList = [
@@ -19,8 +20,7 @@ const popupList = [
 export default function InfoPopup({ close }: { close: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
-  const params = useParams();
-  const { id } = params;
+  const { storeId } = useStoreContext();
 
   useModalCloseTriggers({ ref, onClose: close });
 
@@ -37,7 +37,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
           asdf@gmail.com
         </span>
       </div>
-      {id &&
+      {storeId &&
         popupList.map((item) => (
           <div
             key={item.text}

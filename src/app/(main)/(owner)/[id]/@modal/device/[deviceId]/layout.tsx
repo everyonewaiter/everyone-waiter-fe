@@ -8,9 +8,9 @@ import RefLayout from "../../_components/RefLayout";
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{ params: Promise<{ id: string; deviceId: string }> }>) {
+}: PropsWithChildren<{ params: { id: string; deviceId: string } }>) {
   const queryClient = getQueryClient();
-  const { id, deviceId } = await params;
+  const { id, deviceId } = params;
 
   await queryClient.prefetchQuery({
     queryKey: ["get-device-detail", id, deviceId],
@@ -18,7 +18,7 @@ export default async function Layout({
   });
 
   return (
-    <RefLayout>
+    <RefLayout className="min-w-[544px]">
       <ModalTitle title="기기 정보" />
       {children}
       <ModalButton buttonText="확인" />

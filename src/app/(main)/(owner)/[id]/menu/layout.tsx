@@ -3,16 +3,17 @@ import getQueryClient from "@/app/get-query-client";
 import { getCategories, getMenuList } from "@/lib/api/menu.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { PropsWithChildren, ReactNode } from "react";
+import { menuKeys } from "./_queries/key";
 
 export default async function Layout({
   children,
   params,
   modal,
 }: PropsWithChildren<{
-  params: Promise<{ id: string }>;
+  params: { id: string };
   modal: ReactNode;
 }>) {
-  const { id } = await params;
+  const { id } = params;
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
@@ -21,7 +22,7 @@ export default async function Layout({
   });
 
   await queryClient.prefetchQuery({
-    queryKey: ["menus", id, ""],
+    queryKey: menuKeys.menu(id, ""),
     queryFn: () => getMenuList({ storeId: id, categoryId: "" }),
   });
 

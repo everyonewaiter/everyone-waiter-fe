@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import {
   DndContext,
@@ -19,12 +18,12 @@ import Input from "@/components/common/Input";
 import Switch from "@/components/common/Switch";
 import { useEffect, useState } from "react";
 import { Form } from "@/components/common/Form";
+import { useStoreContext } from "@/providers/storeProvider";
 import MoveableChips from "./_components/MoveableChips";
 import useSettings from "./_hooks/useSettings";
 
 export default function Settings() {
-  const params = useParams();
-  const storeId = params?.id as string;
+  const { storeId } = useStoreContext();
 
   const [items, setItems] = useState<string[]>([]);
 

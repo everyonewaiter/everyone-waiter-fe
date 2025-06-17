@@ -1,21 +1,19 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useStoreContext } from "@/providers/storeProvider";
 import MenuList from "./_components/MenuList";
 import GuideAddCategory from "./_components/GuideAddCategory";
-import useCategories from "./_hooks/useCategories";
+import { useCategoryListQuery } from "./_queries/useCategoryQuery";
 
 export default function Page() {
-  const params = useParams();
-  const storeId = params?.id as string;
+  const { storeId } = useStoreContext();
 
-  const { categoryListQuery } = useCategories(storeId);
-  const data = categoryListQuery.data?.categories;
+  const data = useCategoryListQuery(storeId).data?.categories;
 
   return (
     <div className="flex flex-1">
       {data?.length! > 0 ? (
-        <MenuList storeId={storeId} />
+        <MenuList />
       ) : (
         <div className="flex flex-1 items-center justify-center">
           <GuideAddCategory />

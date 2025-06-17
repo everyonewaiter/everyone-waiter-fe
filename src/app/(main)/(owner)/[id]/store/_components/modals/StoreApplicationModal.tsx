@@ -4,7 +4,6 @@
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { ChangeEvent, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useParams } from "next/navigation";
 import LabeledInput from "@/components/common/LabeledInput";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
@@ -12,6 +11,7 @@ import formatDate from "@/lib/formatting/formatDate";
 import Label from "@/components/common/Label";
 import Input from "@/components/common/Input";
 import getQueryClient from "@/app/get-query-client";
+import { useStoreContext } from "@/providers/storeProvider";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
 import useStores from "../../_hooks/useStores";
@@ -33,7 +33,7 @@ export default function StoreApplicationModal({
   item,
   isAccepted,
 }: IProps) {
-  const { id } = useParams();
+  const { storeId } = useStoreContext();
 
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -58,7 +58,7 @@ export default function StoreApplicationModal({
 
   const { handleOpenAddress } = useOpenDaumPostcode(form);
   const { mutateReapply, mutateReapplyWithImage } = useStores();
-  const { mutate } = mutateReapplyWithImage(id as string);
+  const { mutate } = mutateReapplyWithImage(storeId);
 
   const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
