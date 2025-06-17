@@ -1,14 +1,14 @@
 "use client";
 
 import cn from "@/lib/utils";
-import useStoreOpenStore from "@/stores/useStoreOpenStore";
 
 interface IProps {
   className?: string;
 }
 
 export default function OpenSwitch({ className }: IProps) {
-  const { isStoreOpen } = useStoreOpenStore();
+  const isStoreOpen = false;
+  // TODO: API에 따라 수정
 
   return (
     <div

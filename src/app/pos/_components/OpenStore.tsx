@@ -4,10 +4,10 @@ import QueryProviders from "@/app/query-providers";
 import Alert from "@/components/common/Alert/Alert";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
-import useStoreOpenStore from "@/stores/useStoreOpenStore";
 
 export default function OpenStore() {
-  const { isStoreOpen, storeClose, storeOpen } = useStoreOpenStore();
+  const isStoreOpen = false;
+  // TODO: API에 따라 수정하기
 
   const { open, close } = useOverlay();
 
@@ -16,13 +16,10 @@ export default function OpenStore() {
       <QueryProviders>
         <Alert
           onClose={close}
-          buttonText={isStoreOpen ? "마감하기" : "오픈하기"}
+          // TODO: buttonText={isStoreOpen ? "마감하기" : "오픈하기"}
           onAction={() => {
-            if (isStoreOpen) {
-              storeClose();
-            } else {
-              storeOpen();
-            }
+            // TODO: 열려 있다면 close
+            // TODO: 닫혀 있다면 open
             close();
           }}
         >

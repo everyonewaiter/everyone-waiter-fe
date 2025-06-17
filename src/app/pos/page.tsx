@@ -6,7 +6,6 @@ import useGetDate from "@/hooks/useGetDate";
 import Image from "next/image";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
-import useStoreOpenStore from "@/stores/useStoreOpenStore";
 import Link from "next/link";
 import QueryProviders from "../query-providers";
 import OpenSwitch from "./_components/OpenSwitch";
@@ -17,7 +16,6 @@ export default function Pos() {
 
   const { date, day } = useGetDate(now);
   const { open, close } = useOverlay();
-  const { storeOpen } = useStoreOpenStore();
 
   const handleOpenPos = () => {
     open(() => (
@@ -26,7 +24,7 @@ export default function Pos() {
           onClose={close}
           buttonText="오픈하기"
           onAction={() => {
-            storeOpen();
+            // 스토어 오픈 api
             close();
             navigate.push("/pos/tables");
           }}
