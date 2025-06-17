@@ -3,12 +3,14 @@
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getPathnameWithoutStoreId } from "@/utils/getPathname";
 import { FormProvider, useForm } from "react-hook-form";
 import FormSection from "./FormSection";
 import OptionTemplate from "./OptionTemplate";
 import Header from "./Header";
+import useCategories from "../../../menu/_hooks/useCategories";
+import useMenu from "../../../menu/_hooks/useMenu";
 // import useMenu from "../../../menu/_hooks/useMenu";
 // import useCategories from "../../../menu/_hooks/useCategories";
 
@@ -31,6 +33,7 @@ export default function DetailMenuModal({
   onSetEditing,
   storeId,
 }: IProps) {
+  const navigate = useRouter();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const pathname = usePathname();
 
@@ -66,20 +69,49 @@ export default function DetailMenuModal({
     }
   };
 
-  // const { categoryListQuery } = useCategories(storeId);
-  // const categories = categoryListQuery.data?.categories;
+  const { categoryListQuery } = useCategories(storeId);
+  const categories = categoryListQuery.data?.categories;
 
-  // const { add } = useMenu(storeId);
+  const { add } = useMenu(storeId);
 
-  // const handleSubmit = () => {
-  //   const formData = form.getValues();
-  //   console.log(formData);
-  //   add({
-  //     storeId,
-  //     categoryId: categories?.find((el) => el.name === form.watch("category"))
-  //       ?.categoryId as string,
-  //   });
-  // };
+  const handleSubmit = () => {
+    add(
+      {
+        storeId,
+        categoryId: categories?.find((el) => el.name === form.watch("category"))
+          ?.categoryId as string,
+        body: {
+          file: form.getValues("image")!,
+          request: {
+            ...form.getValues(),
+            price: Number(form.getValues("price").split(",").join("")),
+            menuOptionGroups: [
+              {
+                name: "필수 옵션",
+                type: "MANDATORY",
+                printEnabled: false,
+                menuOptions: form
+                  .getValues("requiredOptions")
+                  .map((el) => ({ name: el.name, price: Number(el.price) })),
+              },
+              {
+                name: "선택 옵션",
+                type: "MANDATORY",
+                printEnabled: false,
+                menuOptions: form
+                  .getValues("optionalOptions")
+                  .map((el) => ({ name: el.name, price: Number(el.price) })),
+              },
+            ],
+          },
+        },
+      },
+      {
+        onSuccess: () => navigate.back(),
+        onError: (e) => console.log(e),
+      }
+    );
+  };
 
   const buttonText = () => {
     if (getPathnameWithoutStoreId(pathname) === "/menu/create") {
@@ -165,7 +197,9 @@ export default function DetailMenuModal({
                   sm: { buttonSize: "sm", className: "!h-10 w-[480px]" },
                 }}
                 commonClassName=""
-                onClick={() => (isEditing ? null : onSetEditing(true))}
+                onClick={() =>
+                  isEditing ? handleSubmit() : onSetEditing(true)
+                }
               >
                 {buttonText()}
               </ResponsiveButton>
@@ -185,7 +219,7 @@ export default function DetailMenuModal({
               md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
               sm: { buttonSize: "sm", className: "!h-10" },
             }}
-            onClick={() => (isEditing ? null : onSetEditing(true))}
+            onClick={() => (isEditing ? handleSubmit() : onSetEditing(true))}
           >
             {buttonText()}
           </ResponsiveButton>

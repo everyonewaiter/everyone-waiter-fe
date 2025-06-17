@@ -1,4 +1,4 @@
-import { instance } from "../axios/instance";
+import { formInstance, instance } from "../axios/instance";
 import API_PATH from "./paths";
 
 type PropsWithStoreId<T extends object = {}> = T & { storeId: string };
@@ -101,7 +101,7 @@ export const postMenu = async ({
 }: PropsWithStoreId<{
   categoryId: string;
   body: {
-    file: string;
+    file: File;
     request: Omit<Menu, "menuId" | "categoryId" | "image"> & {
       printEnabled: boolean;
       menuOptionGroups: Omit<MenuOptionGroups, "menuOptionGroupId">[];
@@ -112,7 +112,7 @@ export const postMenu = async ({
   formData.append("file", body.file);
   formData.append("request", JSON.stringify(body.request));
 
-  const response = await instance.post(
+  const response = await formInstance.post(
     `${API_PATH.stores}/${storeId}/categories/${categoryId}/menus`,
     formData
   );
