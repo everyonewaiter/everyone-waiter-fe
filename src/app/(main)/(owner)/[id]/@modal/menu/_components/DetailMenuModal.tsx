@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { getPathnameWithoutStoreId } from "@/utils/getPathname";
 import { useStoreContext } from "@/providers/storeProvider";
 import { FormProvider, useForm } from "react-hook-form";
+import cn from "@/lib/utils";
 import FormSection from "./FormSection";
 import OptionTemplate from "./OptionTemplate";
 import Header from "./Header";
@@ -68,7 +69,7 @@ export default function DetailMenuModal({
           (el) => el.type === "MANDATORY"
         ),
         optionalOptions: data?.menuOptionGroups.filter(
-          (el) => el.type === "OPTION"
+          (el) => el.type === "OPTIONAL"
         ),
       });
     }
@@ -93,13 +94,13 @@ export default function DetailMenuModal({
 
   const handleSubmit = () => {
     const values = form.getValues();
-    const { request } = formToRequest(values, categoryId!);
+    const { request } = formToRequest(values);
 
     if (type === "create") {
       add.mutate(
         {
           storeId,
-          categoryId: form.watch("category"),
+          categoryId: form.watch("category") || categoryId!,
           body: {
             file: form.getValues("image") as File,
             request,
@@ -157,13 +158,20 @@ export default function DetailMenuModal({
       <FormProvider {...form}>
         <div className="flex h-full w-full flex-col overflow-y-auto md:flex-row md:gap-3 lg:gap-[18px]">
           <section className="flex basis-[28.44%] flex-col gap-1 lg:gap-2">
-            <div className="overflow-hidden rounded-[12px] md:h-[280px] lg:h-[478px] lg:rounded-[24px]">
+            <div
+              className={cn(
+                "overflow-hidden rounded-[12px] md:h-[280px] lg:h-[478px] lg:rounded-[24px]",
+                previewUrl || form.watch("image")
+                  ? ""
+                  : "border border-gray-500"
+              )}
+            >
               {(previewUrl || form.watch("image")) && (
                 <Image
                   src={
-                    form.watch("image")
-                      ? `${process.env.NEXT_PUBLIC_DEV_CDN}/${form.watch("image")}`
-                      : (previewUrl as string)
+                    previewUrl
+                      ? (previewUrl as string)
+                      : `${process.env.NEXT_PUBLIC_DEV_CDN}/${form.watch("image")}`
                   }
                   alt="menu image"
                   width={364}

@@ -9,15 +9,9 @@ export const menuDetailToForm = (menu: MenuDetail): MenuFormType => {
   );
 
   return {
+    ...menu,
+    category: menu.categoryId,
     image: null,
-    category: "",
-    name: menu.name,
-    description: menu.description,
-    price: menu.price,
-    spicy: menu.spicy,
-    state: menu.state,
-    label: menu.label,
-    printEnabled: menu.printEnabled,
     requiredOptions: requiredGroup
       ? [{ name: requiredGroup.name, menuOptions: requiredGroup.menuOptions }]
       : [],
@@ -27,30 +21,52 @@ export const menuDetailToForm = (menu: MenuDetail): MenuFormType => {
   };
 };
 
-export const formToRequest = (form: MenuFormType, categoryId: string) => ({
-  categoryId,
-  file: form.image,
-  request: {
-    name: form.name,
-    description: form.description,
-    price: form.price,
-    spicy: form.spicy,
-    state: form.state,
-    label: form.label,
-    printEnabled: form.printEnabled,
-    menuOptionGroups: [
-      ...form.requiredOptions.map((el) => ({
-        name: el.name,
-        type: "MANDATORY",
-        printEnabled: true,
-        menuOptions: el.menuOptions,
-      })),
-      ...form.optionalOptions.map((el) => ({
-        name: el.name,
-        type: "OPTION",
-        printEnabled: true,
-        menuOptions: el.menuOptions,
-      })),
-    ],
-  },
-});
+export const formToRequest = (form: MenuFormType) => {
+  const menuOptionGroups = [];
+
+  if (form.requiredOptions?.length > 0) {
+    menuOptionGroups.push(
+      ...form.requiredOptions
+        .filter((group) => group.name.trim() !== "")
+        .map((group) => ({
+          name: group.name,
+          type: "MANDATORY" as MenuOptionType,
+          printEnabled: true,
+          menuOptions: group.menuOptions.filter(
+            (opt) => opt.name.trim() !== ""
+          ),
+        }))
+        .filter((group) => group.menuOptions.length > 0)
+    );
+  }
+
+  if (form.optionalOptions?.length > 0) {
+    menuOptionGroups.push(
+      ...form.optionalOptions
+        .filter((group) => group.name.trim() !== "")
+        .map((group) => ({
+          name: group.name,
+          type: "OPTIONAL" as MenuOptionType,
+          printEnabled: true,
+          menuOptions: group.menuOptions.filter(
+            (opt) => opt.name.trim() !== ""
+          ),
+        }))
+        .filter((group) => group.menuOptions.length > 0)
+    );
+  }
+
+  return {
+    file: form.image,
+    request: {
+      name: form.name,
+      description: form.description,
+      price: Number(form.price),
+      spicy: form.spicy,
+      state: form.state,
+      label: form.label,
+      printEnabled: form.printEnabled,
+      menuOptionGroups,
+    },
+  };
+};

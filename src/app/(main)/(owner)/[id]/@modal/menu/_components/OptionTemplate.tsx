@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+
 "use client";
 
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -58,7 +60,6 @@ export default function OptionTemplate({
       />
       {props.isOpen ? (
         <div className="flex h-full flex-col gap-4">
-          {/* 옵션 리스트만 스크롤 */}
           <div
             className={cn(
               "flex flex-col gap-3 overflow-y-auto",
@@ -68,9 +69,9 @@ export default function OptionTemplate({
             )}
           >
             {form.watch(type)?.length > 0 ? (
-              form.watch(type)?.map((item, i) => (
+              form.watch(type)?.map((option, i) => (
                 <div
-                  key={item.name}
+                  key={`${type}-${i}-${option.name || "unnamed"}`}
                   className={cn(
                     "flex gap-3",
                     i > 0 ? "mt-3 lg:mt-4" : "",

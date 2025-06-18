@@ -5,6 +5,7 @@ interface Category {
 
 type MenuState = "DEFAULT" | "HIDE" | "SOLD_OUT";
 type MenuLabel = "BEST" | "NEW" | "DEFAULT" | "RECOMMEND" | null;
+type MenuOptionType = "MANDATORY" | "OPTIONAL";
 
 interface Menu {
   menuId: string;
@@ -23,7 +24,7 @@ interface MenuOptions extends Pick<Menu, "name" | "price"> {}
 interface MenuOptionGroups {
   menuOptionGroupId: string;
   name: string;
-  type: string;
+  type: MenuOptionType;
   printEnabled: boolean;
   menuOptions: MenuOptions[];
 }
