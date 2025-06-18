@@ -12,7 +12,7 @@ import useOverlay from "@/hooks/use-overlay";
 import {
   sendAuthCodeInDevice,
   verifyPhoneInDevice,
-} from "@/lib/api/device.api";
+} from "@/app/device/_api/device.api";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";

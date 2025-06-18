@@ -1,5 +1,5 @@
-import { signatureInstance } from "../axios/instance";
-import API_PATH from "./paths";
+import { signatureInstance } from "../../../lib/axios/instance";
+import API_PATH from "../../../lib/api/paths";
 
 export const waitingList = async (): Promise<{ waitings: Waiting[] }> => {
   const response = await signatureInstance.get(`${API_PATH.waitings}`);

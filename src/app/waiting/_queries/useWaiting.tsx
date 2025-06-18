@@ -1,30 +1,38 @@
 import getQueryClient from "@/app/get-query-client";
-import { addWaiting, waitingAction, waitingList } from "@/lib/api/waiting.api";
+import {
+  addWaiting,
+  waitingAction,
+  waitingList,
+} from "@/app/waiting/_api/waiting.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { waitingKeys } from "./keys";
 
 const queryClient = getQueryClient();
 
 export default function useWaiting(enabled = true) {
   const { data: list } = useQuery({
-    queryKey: ["waiting-list"],
+    queryKey: waitingKeys.all(),
     queryFn: waitingList,
     enabled,
   });
 
-  const { mutate: mutateWaiting } = useMutation({
+  const add = useMutation({
     mutationFn: addWaiting,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["waiting-list"] });
+      queryClient.invalidateQueries({ queryKey: waitingKeys.all() });
     },
   });
 
-  const { mutate: mutateAction } = useMutation({
+  const action = useMutation({
     mutationFn: waitingAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: waitingKeys.all() });
+    },
   });
 
   return {
     list,
-    mutateWaiting,
-    mutateAction,
+    add,
+    action,
   };
 }

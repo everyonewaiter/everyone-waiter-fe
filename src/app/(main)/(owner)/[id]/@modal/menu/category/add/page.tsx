@@ -23,7 +23,7 @@ import ModalTitle from "../../../_components/ModalTitle";
 import CategoryForm from "../../../../menu/_components/CategoryForm";
 import ModalButton from "../../../_components/ModalButton";
 import useCategories from "../../../../menu/_queries/useCategories";
-import useCategoryForm from "./_hooks/useCategoryForm";
+import useCategoryForm from "../../_hooks/useCategoryForm";
 
 export default function Page() {
   const navigate = useRouter();

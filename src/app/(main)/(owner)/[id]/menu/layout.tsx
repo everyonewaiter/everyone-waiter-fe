@@ -1,6 +1,9 @@
 import PageTitle from "@/app/(main)/_components/PageTitle";
 import getQueryClient from "@/app/get-query-client";
-import { getCategories, getMenuList } from "@/lib/api/menu.api";
+import {
+  getCategories,
+  getMenuList,
+} from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { PropsWithChildren, ReactNode } from "react";
 import { categoryKeys, menuKeys } from "./_queries/keys";

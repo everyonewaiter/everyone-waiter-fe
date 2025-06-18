@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import getQueryClient from "@/app/get-query-client";
-import { getDevices } from "@/lib/api/device.api";
+import { getDevices } from "@/app/device/_api/device.api";
 import ModalButton from "../../_components/ModalButton";
 import ModalTitle from "../../_components/ModalTitle";
 import RefLayout from "../../_components/RefLayout";

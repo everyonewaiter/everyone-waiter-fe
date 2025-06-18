@@ -1,5 +1,5 @@
-import { instance } from "../axios/instance";
-import API_PATH from "./paths";
+import API_PATH from "@/lib/api/paths";
+import { instance } from "@/lib/axios/instance";
 
 interface GetAccountParams {
   searchEmail?: string;

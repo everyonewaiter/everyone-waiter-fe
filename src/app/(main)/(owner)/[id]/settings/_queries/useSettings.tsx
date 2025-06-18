@@ -1,6 +1,6 @@
 import getQueryClient from "@/app/get-query-client";
 import { useMutation } from "@tanstack/react-query";
-import { putUpdateStore } from "@/lib/api/stores.api";
+import { putUpdateStore } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import useStores from "../../store/_queries/useStores";
 import { settingsKeys } from "./keys";
 

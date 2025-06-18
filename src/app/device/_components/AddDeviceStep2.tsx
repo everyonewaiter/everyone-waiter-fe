@@ -7,7 +7,7 @@ import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useMutation } from "@tanstack/react-query";
-import { addDevice } from "@/lib/api/device.api";
+import { addDevice } from "@/app/device/_api/device.api";
 import { useRouter } from "next/navigation";
 import { setSecureItem } from "@/lib/auth/localStorage";
 

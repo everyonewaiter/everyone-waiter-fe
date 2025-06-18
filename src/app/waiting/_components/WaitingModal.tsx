@@ -3,7 +3,7 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
 import getQueryClient from "@/app/get-query-client";
-import useWaiting from "../_hooks/useWaiting";
+import useWaiting from "../_queries/useWaiting";
 import useElapsedMinutes from "../_hooks/useElapsedMinutes";
 
 interface IProps extends Waiting {

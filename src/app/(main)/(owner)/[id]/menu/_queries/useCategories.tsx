@@ -5,7 +5,7 @@ import {
   makeCategory,
   moveCategory,
   updateCategory,
-} from "@/lib/api/menu.api";
+} from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { categoryKeys } from "./keys";
 

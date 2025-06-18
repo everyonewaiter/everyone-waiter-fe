@@ -1,5 +1,5 @@
-import { formInstance, instance } from "../axios/instance";
-import API_PATH from "./paths";
+import { formInstance, instance } from "../../../../../../lib/axios/instance";
+import API_PATH from "../../../../../../lib/api/paths";
 
 export const registerStore = async (body: FormData) => {
   const response = await formInstance.post(

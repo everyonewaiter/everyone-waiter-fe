@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   approveRegistration,
   getAccounts,
@@ -7,8 +8,7 @@ import {
   getDetailAdminRegistrations,
   rejectResigtration,
   updateDetailAccount,
-} from "@/lib/api/admin.api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+} from "../_api/admin.api";
 
 const useAdmin = () => {
   const accountList = (

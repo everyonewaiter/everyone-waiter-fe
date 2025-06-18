@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { getStoreList } from "@/lib/api/stores.api";
+import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { useQuery } from "@tanstack/react-query";
 import {
   Select,

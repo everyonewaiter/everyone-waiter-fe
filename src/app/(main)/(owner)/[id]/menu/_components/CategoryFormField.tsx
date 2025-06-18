@@ -12,7 +12,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useStoreContext } from "@/providers/storeProvider";
 import { Controller, useFormContext } from "react-hook-form";
-import useCategoryForm from "../../@modal/menu/category/add/_hooks/useCategoryForm";
+import useCategoryForm from "../../@modal/menu/_hooks/useCategoryForm";
 import useCategories from "../_queries/useCategories";
 
 interface IProps {

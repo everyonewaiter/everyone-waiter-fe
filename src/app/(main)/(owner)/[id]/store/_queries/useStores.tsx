@@ -10,7 +10,7 @@ import {
   reapplyRegistrationWithImage,
   registerDetails,
   registerStore,
-} from "@/lib/api/stores.api";
+} from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { storeKeys } from "./keys";
