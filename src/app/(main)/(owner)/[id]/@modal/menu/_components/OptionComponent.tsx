@@ -4,7 +4,6 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
 import FloatingInfo from "@/components/FloatingInfo";
 import { useRef, useState } from "react";
-import cn from "@/lib/utils";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import Popup from "./Popup";
 
@@ -15,6 +14,7 @@ interface IProps {
   onSetPopupAction: (value: string) => void;
   popupAction: string;
   isOpen: boolean;
+  isEditing: boolean;
 }
 
 export default function OptionComponent({
@@ -24,6 +24,7 @@ export default function OptionComponent({
   onSetPopupAction,
   popupAction,
   isOpen,
+  isEditing,
 }: IProps) {
   const infoRef = useRef<HTMLDivElement>(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -34,13 +35,8 @@ export default function OptionComponent({
   });
 
   return (
-    <div
-      className={cn(
-        "relative flex items-center justify-between",
-        isOpen ? "md:pb-3 lg:pb-4" : ""
-      )}
-    >
-      <div className="relative flex items-center gap-[6px] lg:gap-2">
+    <div className="relative flex items-center justify-between">
+      <div className="flex items-center gap-[6px] lg:gap-2">
         <h3 className="font-gray-0 text-medium text-sm lg:text-lg">{title}</h3>
         <Icon
           iconKey="information"
@@ -55,7 +51,7 @@ export default function OptionComponent({
         )}
       </div>
 
-      {isOpen && (
+      {isOpen && isEditing && (
         <>
           {popupAction === "순서 변경" ? (
             <ResponsiveButton

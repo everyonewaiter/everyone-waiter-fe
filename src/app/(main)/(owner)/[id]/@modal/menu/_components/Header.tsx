@@ -5,7 +5,7 @@ export default function Header() {
   const navigate = useRouter();
 
   return (
-    <div className="mt-8 flex w-full justify-between md:mt-0 md:mb-5 lg:mb-8">
+    <div className="mt-8 flex w-full justify-between md:mt-0">
       <div className="flex flex-col gap-1 lg:gap-3">
         <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
           매장 정보

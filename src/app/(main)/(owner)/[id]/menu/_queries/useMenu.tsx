@@ -23,12 +23,14 @@ export default function useMenu(storeId: string) {
       enabled: !!categoryId,
     });
 
-  const detailQuery = (categoryId: string, menuId: string) =>
+  const detailQuery = (categoryId: string, menuId: string, enabled?: boolean) =>
     useQuery({
       queryKey: menuKeys.menuInCategory(storeId, categoryId, menuId),
       queryFn: () => getMenuDetail({ storeId, categoryId, menuId }),
+      enabled,
     });
 
+  // TODO: API 연결하기
   const add = useMutation({
     mutationFn: postMenu,
     onSuccess: (_, variables) => {
@@ -38,6 +40,7 @@ export default function useMenu(storeId: string) {
     },
   });
 
+  // TODO: API 연결하기
   const update = useMutation({
     mutationFn: updateMenuWithoutImage,
     onSuccess: (_, variables) => {

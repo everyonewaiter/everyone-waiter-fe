@@ -89,7 +89,7 @@ export const getMenuDetail = async ({
   menuId: string;
 }>): Promise<MenuDetail> => {
   const response = await instance.get(
-    `${API_PATH.stores}/${storeId}/categories/${categoryId}/menu/${menuId}`
+    `${API_PATH.stores}/${storeId}/categories/${categoryId}/menus/${menuId}`
   );
   return response.data;
 };
@@ -145,7 +145,7 @@ export const updateMenuWithImage = async ({
   storeId: string;
   menuId: string;
   body: {
-    file: string;
+    file: File;
     request: Omit<Menu, "menuId" | "categoryId" | "image"> & {
       printEnabled: boolean;
       menuOptionGroups: Omit<MenuOptionGroups, "menuOptionGroupId">[];

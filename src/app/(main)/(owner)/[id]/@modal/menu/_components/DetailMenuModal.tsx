@@ -1,7 +1,7 @@
 "use client";
 
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { getPathnameWithoutStoreId } from "@/utils/getPathname";
@@ -10,37 +10,45 @@ import { FormProvider, useForm } from "react-hook-form";
 import FormSection from "./FormSection";
 import OptionTemplate from "./OptionTemplate";
 import Header from "./Header";
-import useCategories from "../../../menu/_queries/useCategories";
 import useMenu from "../../../menu/_queries/useMenu";
-
-export interface MenuFormType extends Omit<Menu, "price"> {
-  price: string;
-  category: string;
-  printEnabled: boolean;
-  requiredOptions: { name: string; price: string }[];
-  optionalOptions: { name: string; price: string }[];
-}
+import { MenuFormType } from "../_types/menuForm.type";
+import { formToRequest } from "../_hooks/useMenuForm";
 
 interface IProps {
   isEditing: boolean;
   onSetEditing: (value: boolean) => void;
+  type: "create" | "update";
+  categoryId?: string;
+  menuId?: string;
 }
 
-export default function DetailMenuModal({ isEditing, onSetEditing }: IProps) {
+export default function DetailMenuModal({
+  isEditing,
+  onSetEditing,
+  type,
+  categoryId,
+  menuId,
+}: IProps) {
   const navigate = useRouter();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const pathname = usePathname();
 
   const { storeId } = useStoreContext();
+  const { detailQuery } = useMenu(storeId);
 
-  const form = useForm<Omit<MenuFormType, "image"> & { image: File | null }>({
+  const isUpdateReady = type === "update" && !!categoryId && !!menuId;
+  const { data } = detailQuery(categoryId!, menuId!, isUpdateReady);
+
+  const form = useForm<
+    Omit<MenuFormType, "image"> & { image: File | string | null }
+  >({
     mode: "onChange",
     defaultValues: {
       image: null,
       category: "",
       name: "",
       description: "",
-      price: "",
+      price: 0,
       spicy: 1,
       state: "DEFAULT",
       label: "DEFAULT",
@@ -49,6 +57,22 @@ export default function DetailMenuModal({ isEditing, onSetEditing }: IProps) {
       optionalOptions: [],
     },
   });
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (data?.menuId) {
+      form.reset({
+        ...data,
+        category: data?.categoryId,
+        requiredOptions: data?.menuOptionGroups.filter(
+          (el) => el.type === "MANDATORY"
+        ),
+        optionalOptions: data?.menuOptionGroups.filter(
+          (el) => el.type === "OPTION"
+        ),
+      });
+    }
+  }, [data]);
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [showInfo, setShowInfo] = useState({
@@ -65,47 +89,55 @@ export default function DetailMenuModal({ isEditing, onSetEditing }: IProps) {
     }
   };
 
-  const { query } = useCategories(storeId);
-  const categories = query.data?.categories;
-
-  const { add } = useMenu(storeId);
+  const { add, update, updateWithImg } = useMenu(storeId);
 
   const handleSubmit = () => {
-    add.mutate(
-      {
-        storeId,
-        categoryId: categories?.find((el) => el.name === form.watch("category"))
-          ?.categoryId as string,
-        body: {
-          file: form.getValues("image")!,
-          request: {
-            ...form.getValues(),
-            price: Number(form.getValues("price").split(",").join("")),
-            menuOptionGroups: [
-              {
-                name: "필수 옵션",
-                type: "MANDATORY",
-                printEnabled: false,
-                menuOptions: form
-                  .getValues("requiredOptions")
-                  .map((el) => ({ name: el.name, price: Number(el.price) })),
-              },
-              {
-                name: "선택 옵션",
-                type: "MANDATORY",
-                printEnabled: false,
-                menuOptions: form
-                  .getValues("optionalOptions")
-                  .map((el) => ({ name: el.name, price: Number(el.price) })),
-              },
-            ],
+    const values = form.getValues();
+    const { request } = formToRequest(values, categoryId!);
+
+    if (type === "create") {
+      add.mutate(
+        {
+          storeId,
+          categoryId: form.watch("category"),
+          body: {
+            file: form.getValues("image") as File,
+            request,
           },
         },
-      },
-      {
-        onSuccess: () => navigate.back(),
+        {
+          onSuccess: () => navigate.back(),
+        }
+      );
+    } else if (type === "update") {
+      if (
+        form.watch("image") instanceof File &&
+        data?.image !== form.watch("image")
+      ) {
+        updateWithImg.mutate(
+          {
+            storeId,
+            menuId: data?.menuId as string,
+            body: {
+              file: form.watch("image") as File,
+              request,
+            },
+          },
+          {
+            onSuccess: () => navigate.back(),
+          }
+        );
+      } else {
+        update.mutate(
+          {
+            storeId,
+            menuId: data?.menuId as string,
+            body: request,
+          },
+          { onSuccess: () => navigate.back() }
+        );
       }
-    );
+    }
   };
 
   const buttonText = () => {
@@ -116,109 +148,111 @@ export default function DetailMenuModal({ isEditing, onSetEditing }: IProps) {
   };
 
   return (
-    <div className="scrollbar-hide flex h-full w-full flex-col md:justify-between">
+    <div className="scrollbar-hide flex h-full w-full flex-col md:gap-5 lg:gap-8">
       {/* 헤더 */}
-      <Header />
-      {/* 콘텐츠 랩 */}
-      <div className="h-[580px] w-full flex-1 md:flex md:h-full md:flex-col">
-        {/* 콘텐츠 */}
-        <div className="flex h-full w-full flex-1 flex-col overflow-y-auto">
-          <div className="flex flex-col gap-4 overflow-y-auto md:flex-row md:gap-[12px] lg:gap-[18px]">
-            <section className="flex basis-[28.44%] flex-col gap-1 lg:gap-2">
-              <div className="overflow-hidden rounded-[12px] bg-red-50 md:h-[280px] lg:h-[478px] lg:rounded-[24px]">
-                {previewUrl && (
-                  <Image
-                    src={previewUrl}
-                    alt="menu image"
-                    width={364}
-                    height={478}
-                    className="h-full w-full object-cover"
-                  />
-                )}
-              </div>
+      <div className="shrink-0">
+        <Header />
+      </div>
+      {/* 콘텐츠 */}
+      <FormProvider {...form}>
+        <div className="flex h-full w-full flex-col overflow-y-auto md:flex-row md:gap-3 lg:gap-[18px]">
+          <section className="flex basis-[28.44%] flex-col gap-1 lg:gap-2">
+            <div className="overflow-hidden rounded-[12px] md:h-[280px] lg:h-[478px] lg:rounded-[24px]">
+              {(previewUrl || form.watch("image")) && (
+                <Image
+                  src={
+                    form.watch("image")
+                      ? `${process.env.NEXT_PUBLIC_DEV_CDN}/${form.watch("image")}`
+                      : (previewUrl as string)
+                  }
+                  alt="menu image"
+                  width={364}
+                  height={478}
+                  className="h-full w-full bg-red-50 object-cover"
+                />
+              )}
+            </div>
+            {isEditing && (
               <button
                 type="button"
                 className="center lg:text-s text-gray-0 md:font-regular h-8 rounded-[8px] border border-gray-300 text-xs lg:h-9 lg:font-medium"
                 onClick={() => fileRef.current?.click()}
               >
-                이미지 등록
+                이미지 {form.watch("image") ? "수정" : "등록"}
               </button>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                hidden
-                ref={fileRef}
-              />
-            </section>
-            <FormProvider {...form}>
-              <FormSection isEditing={isEditing} storeId={storeId} />
-            </FormProvider>
-            <section className="flex basis-[31.3%] flex-col gap-3 md:mt-0 lg:gap-[18px]">
-              <FormProvider {...form}>
-                <OptionTemplate
-                  title="필수 옵션"
-                  onSetShowInfo={(value) =>
-                    setShowInfo({ ...showInfo, required: value })
-                  }
-                  showInfo={showInfo.required}
-                  onClick={() => setCurrentOption("required")}
-                  isOpen={currentOption === "required"}
-                  data={form.watch("requiredOptions")}
-                />
-                <OptionTemplate
-                  title="선택 옵션"
-                  onSetShowInfo={(value) =>
-                    setShowInfo({ ...showInfo, optional: value })
-                  }
-                  showInfo={showInfo.optional}
-                  onClick={() => setCurrentOption("optional")}
-                  isOpen={currentOption === "optional"}
-                  data={form.watch("optionalOptions")}
-                />
-              </FormProvider>
-            </section>
-            {/* 바텀 버튼 */}
-            <div className="flex w-full justify-center md:hidden">
-              <ResponsiveButton
-                type={isEditing ? "submit" : "button"}
-                color={isEditing ? "black" : "primary"}
-                responsiveButtons={{
-                  lg: {
-                    buttonSize: "xl",
-                    className: "!text-lg !font-semibold !h-14 py-8",
-                  },
-                  md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
-                  sm: { buttonSize: "sm", className: "!h-10 w-[480px]" },
-                }}
-                commonClassName=""
-                onClick={() =>
-                  isEditing ? handleSubmit() : onSetEditing(true)
-                }
-              >
-                {buttonText()}
-              </ResponsiveButton>
-            </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              hidden
+              ref={fileRef}
+            />
+          </section>
+
+          <FormSection isEditing={isEditing} storeId={storeId} type={type} />
+
+          <section className="flex h-full basis-[31.3%] flex-col gap-3 lg:gap-[18px]">
+            <OptionTemplate
+              title="필수 옵션"
+              onSetShowInfo={(value) =>
+                setShowInfo({ ...showInfo, required: value })
+              }
+              showInfo={showInfo.required}
+              onClick={() => setCurrentOption("required")}
+              isOpen={currentOption === "required"}
+              type="requiredOptions"
+              isEditing={isEditing}
+            />
+            <OptionTemplate
+              title="선택 옵션"
+              onSetShowInfo={(value) =>
+                setShowInfo({ ...showInfo, optional: value })
+              }
+              showInfo={showInfo.optional}
+              onClick={() => setCurrentOption("optional")}
+              isOpen={currentOption === "optional"}
+              type="optionalOptions"
+              isEditing={isEditing}
+            />
+          </section>
+          <div className="flex w-full justify-center md:hidden">
+            <ResponsiveButton
+              type={isEditing ? "submit" : "button"}
+              color={isEditing ? "black" : "primary"}
+              responsiveButtons={{
+                lg: {
+                  buttonSize: "xl",
+                  className: "!text-lg !font-semibold !h-14 py-8",
+                },
+                md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
+                sm: { buttonSize: "sm", className: "!h-10 w-[480px]" },
+              }}
+              commonClassName=""
+              onClick={() => (isEditing ? handleSubmit() : onSetEditing(true))}
+            >
+              {buttonText()}
+            </ResponsiveButton>
           </div>
         </div>
-        {/* 바텀 버튼 */}
-        <div className="hidden w-full justify-center md:flex">
-          <ResponsiveButton
-            type={isEditing ? "submit" : "button"}
-            color={isEditing ? "black" : "primary"}
-            responsiveButtons={{
-              lg: {
-                buttonSize: "xl",
-                className: "!text-lg !font-semibold !h-14 py-8 w-[480px]",
-              },
-              md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
-              sm: { buttonSize: "sm", className: "!h-10" },
-            }}
-            onClick={() => (isEditing ? handleSubmit() : onSetEditing(true))}
-          >
-            {buttonText()}
-          </ResponsiveButton>
-        </div>
+      </FormProvider>
+      {/* 바텀 버튼 */}
+      <div className="hidden w-full justify-center md:flex">
+        <ResponsiveButton
+          type={isEditing ? "submit" : "button"}
+          color={isEditing ? "black" : "primary"}
+          responsiveButtons={{
+            lg: {
+              buttonSize: "xl",
+              className: "!text-lg !font-semibold !h-14 py-8 w-[480px]",
+            },
+            md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
+            sm: { buttonSize: "sm", className: "!h-10" },
+          }}
+          onClick={() => (isEditing ? handleSubmit() : onSetEditing(true))}
+        >
+          {buttonText()}
+        </ResponsiveButton>
       </div>
     </div>
   );

@@ -28,7 +28,8 @@
   },
   "include": [
     "src",
-    "src/types",
+    "src/app/**/types/*.d.ts",
+    "src/types/index.d.ts",
     "tests",
     "next-env.d.ts",
     ".next/types/**/*.ts",

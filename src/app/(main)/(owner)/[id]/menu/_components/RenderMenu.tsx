@@ -54,6 +54,9 @@ export default function RenderMenu({
     }
   };
 
+  const handleNavigate = (menuId: string) =>
+    `/${storeId}/menu/${menuId}?hideModal=${isMobile}&categoryId=${categoryId}`;
+
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
       <ScrollArea className="h-[550px] md:h-[385px] lg:h-[785px]">
@@ -91,11 +94,7 @@ export default function RenderMenu({
                   <SortableItem
                     key={item.menuId}
                     item={item}
-                    onClick={() =>
-                      navigate.push(
-                        `/${storeId}/menu/${item.menuId}?hideModal=${isMobile}`
-                      )
-                    }
+                    onClick={() => navigate.push(handleNavigate(item.menuId))}
                   />
                 ))}
               </SortableContext>
@@ -106,11 +105,7 @@ export default function RenderMenu({
                 key={item.menuId}
                 onToggle={toggle}
                 isSelected={isSelected(item)}
-                onClick={() =>
-                  navigate.push(
-                    `/${storeId}/menu/${item.menuId}?hideModal=${isMobile}`
-                  )
-                }
+                onClick={() => navigate.push(handleNavigate(item.menuId))}
                 {...item}
               />
             ))

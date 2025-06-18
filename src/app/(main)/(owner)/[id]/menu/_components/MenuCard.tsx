@@ -39,9 +39,9 @@ export default function MenuCard({
         alt="menu image"
         width={329}
         height={440}
-        className="w-full object-cover"
+        className="h-full w-full object-cover"
       />
-      <div className="absolute top-0 flex h-full w-full flex-col justify-between bg-red-50 p-1 lg:p-2">
+      <div className="absolute top-0 flex h-full w-full flex-col justify-between p-1 lg:p-2">
         {!hideSelect && (
           <Checkbox
             className="mt-2 ml-2 h-6 w-6"
