@@ -11,6 +11,7 @@ import {
   updateMenuWithoutImage,
 } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useOptimisticReorderMutation } from "@/hooks/useOptimisticReorder";
 import { menuKeys } from "./keys";
 
 export default function useMenu(storeId: string) {
@@ -30,7 +31,6 @@ export default function useMenu(storeId: string) {
       enabled,
     });
 
-  // TODO: API 연결하기
   const add = useMutation({
     mutationFn: postMenu,
     onSuccess: (_, variables) => {
@@ -40,7 +40,6 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  // TODO: API 연결하기
   const update = useMutation({
     mutationFn: updateMenuWithoutImage,
     onSuccess: (_, variables) => {
@@ -77,14 +76,9 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const move = useMutation({
-    mutationFn: moveMenus,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: menuKeys.all(storeId),
-      });
-    },
-  });
+  const move = useOptimisticReorderMutation(moveMenus, (_storeId) =>
+    menuKeys.all(_storeId)
+  );
 
   return {
     query,

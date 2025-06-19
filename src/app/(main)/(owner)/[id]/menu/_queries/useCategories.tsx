@@ -7,6 +7,7 @@ import {
   updateCategory,
 } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useOptimisticReorderMutation } from "@/hooks/useOptimisticReorder";
 import { categoryKeys } from "./keys";
 
 export default function useCategories(storeId: string) {
@@ -24,12 +25,9 @@ export default function useCategories(storeId: string) {
     },
   });
 
-  const move = useMutation({
-    mutationFn: moveCategory,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: categoryKeys.all(storeId) });
-    },
-  });
+  const move = useOptimisticReorderMutation(moveCategory, (_storeId) =>
+    categoryKeys.all(_storeId)
+  );
 
   const update = useMutation({
     mutationFn: updateCategory,

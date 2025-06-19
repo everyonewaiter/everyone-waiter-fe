@@ -14,7 +14,7 @@ interface IProps extends Waiting {
 const queryClient = getQueryClient();
 
 export default function WaitingModal({ close, type, ...waiting }: IProps) {
-  const { mutateAction } = useWaiting();
+  const { action } = useWaiting();
   const elapsedCreatedAt = useElapsedMinutes(waiting.createdAt);
   const elapsedLastCall = useElapsedMinutes(waiting.lastCallTime);
 
@@ -26,7 +26,7 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
   };
 
   const handleCall = () => {
-    mutateAction(
+    action.mutate(
       { waitingId: String(waiting.waitingId), type },
       {
         onSuccess: () => {
