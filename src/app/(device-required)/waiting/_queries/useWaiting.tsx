@@ -3,7 +3,7 @@ import {
   addWaiting,
   waitingAction,
   waitingList,
-} from "@/app/waiting/_api/waiting.api";
+} from "@/app/(device-required)/waiting/_api/waiting.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { waitingKeys } from "./keys";
 

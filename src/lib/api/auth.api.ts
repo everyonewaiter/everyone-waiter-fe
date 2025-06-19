@@ -1,5 +1,5 @@
-import API_PATH from "./paths";
-import { instance, authInstance } from "../axios/instance";
+import API_PATH from "@/lib/api/paths";
+import { authInstance, instance } from "@/lib/axios/instance";
 
 export const createAccount = async (body: Account) => {
   const response = await authInstance.post(API_PATH.account, body);

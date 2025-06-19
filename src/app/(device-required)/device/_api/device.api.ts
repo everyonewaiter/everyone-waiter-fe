@@ -1,5 +1,5 @@
-import { authInstance, instance } from "../../../lib/axios/instance";
-import API_PATH from "../../../lib/api/paths";
+import API_PATH from "@/lib/api/paths";
+import { authInstance, instance } from "@/lib/axios/instance";
 
 interface Ids {
   storeId: string;

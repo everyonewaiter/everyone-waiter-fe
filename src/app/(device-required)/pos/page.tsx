@@ -6,8 +6,8 @@ import useGetDate from "@/hooks/useGetDate";
 import Image from "next/image";
 import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
+import QueryProviders from "@/app/query-providers";
 import Link from "next/link";
-import QueryProviders from "../query-providers";
 import OpenSwitch from "./_components/OpenSwitch";
 
 export default function Pos() {

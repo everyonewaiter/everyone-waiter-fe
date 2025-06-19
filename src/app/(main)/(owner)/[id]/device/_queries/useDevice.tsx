@@ -4,7 +4,7 @@ import {
   getDetailDevice,
   getDevices,
   updateDevice,
-} from "@/app/device/_api/device.api";
+} from "@/app/(device-required)/device/_api/device.api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import { deviceKeys } from "./keys";

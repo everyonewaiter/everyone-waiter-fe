@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Head from "next/head";
-
 import "./globals.css";
 import Script from "next/script";
 import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
@@ -21,9 +19,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
       <Script
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"

@@ -23,9 +23,9 @@ import useOverlay from "@/hooks/use-overlay";
 import { registerStateTranslate } from "@/constants/translates";
 import transformDate from "@/lib/formatting/transformDate";
 import QueryProviders from "@/app/query-providers";
-import useStores from "../(main)/(owner)/[id]/store/_queries/useStores";
-import StoreApplicationModal from "../(main)/(owner)/[id]/store/_components/modals/StoreApplicationModal";
-import PendingAcceptModal from "../(main)/(owner)/[id]/store/_components/modals/PendingAcceptModal";
+import useStores from "../(owner)/[id]/store/_queries/useStores";
+import StoreApplicationModal from "../(owner)/[id]/store/_components/modals/StoreApplicationModal";
+import PendingAcceptModal from "../(owner)/[id]/store/_components/modals/PendingAcceptModal";
 
 const itemWidths = {
   "No.": {

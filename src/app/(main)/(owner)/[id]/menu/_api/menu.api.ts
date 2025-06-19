@@ -1,5 +1,5 @@
-import { formInstance, instance } from "../../../../../../lib/axios/instance";
-import API_PATH from "../../../../../../lib/api/paths";
+import API_PATH from "@/lib/api/paths";
+import { formInstance, instance } from "@/lib/axios/instance";
 
 type PropsWithStoreId<T extends object = {}> = T & { storeId: string };
 
