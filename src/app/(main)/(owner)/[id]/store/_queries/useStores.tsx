@@ -22,8 +22,9 @@ const useStores = () => {
 
   const registrationList = (page: number = 1) =>
     useQuery({
-      queryKey: storeKeys.list(),
+      queryKey: storeKeys.list(page),
       queryFn: () => getRegisters(page),
+      placeholderData: (previousData) => previousData,
     });
 
   const registrationDetail = (registrationId: string) =>
@@ -37,7 +38,7 @@ const useStores = () => {
     mutationFn: reapplyRegistration,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: storeKeys.list(),
+        queryKey: storeKeys.all(),
       });
       queryClient.invalidateQueries({
         queryKey: storeKeys.registration(variables.registrationId),
@@ -59,7 +60,7 @@ const useStores = () => {
     useMutation({
       mutationFn: reapplyRegistrationWithImage,
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: storeKeys.list() });
+        queryClient.invalidateQueries({ queryKey: storeKeys.all() });
         navigate.push(`/${storeId}`);
       },
     });

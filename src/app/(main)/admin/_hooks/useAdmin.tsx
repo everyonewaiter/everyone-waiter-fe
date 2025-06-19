@@ -20,13 +20,11 @@ const useAdmin = () => {
     useQuery({
       queryKey: [
         "get-account",
-        page,
-        searchEmail,
-        searchPermission,
-        searchState,
+        { page, searchEmail, searchPermission, searchState },
       ],
       queryFn: () =>
         getAccounts({ page, searchEmail, searchPermission, searchState }),
+      placeholderData: (previousData) => previousData,
     });
 
   const detailAccountQuery = (accountId: bigint) =>
@@ -46,9 +44,10 @@ const useAdmin = () => {
     page?: number
   ) =>
     useQuery({
-      queryKey: ["stores-to-approve"],
+      queryKey: ["stores-to-approve", { email, name, status, page }],
       queryFn: () =>
         getAdminRegistrations({ email, name, status, page, size: 20 }),
+      placeholderData: (previousData) => previousData,
     });
 
   const detailStoreQuery = (registrationId: bigint) =>

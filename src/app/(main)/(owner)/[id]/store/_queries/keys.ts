@@ -1,5 +1,6 @@
 export const storeKeys = {
-  list: () => ["get-stores"] as const,
+  all: () => ["get-stores"] as const,
+  list: (page: number = 1) => [...storeKeys.all(), page] as const,
   stores: () => ["get-stores-list"] as const,
   detail: (storeId: string) => ["store-detail-info", storeId] as const,
   registration: (registrationId: string) =>
