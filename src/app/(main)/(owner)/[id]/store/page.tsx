@@ -80,7 +80,7 @@ export default function StoreInfo() {
   };
 
   return (
-    <div className="h-full w-full">
+    <div className="flex h-full w-full flex-1 flex-col justify-center">
       <div className="mt-10 flex w-full flex-col items-center overflow-y-scroll md:mt-6 md:h-[calc(100%-45px)] lg:mt-10 lg:h-[calc(100%-100px)]">
         <div className="w-80 md:w-[272px] lg:w-120">
           <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
@@ -101,21 +101,18 @@ export default function StoreInfo() {
                   label="상호명"
                   name="name"
                   disabled={!isEditing}
-                  labelDisabled={!isEditing}
                 />
                 <LabeledInput
                   form={form}
                   label="사업자 번호"
                   name="license"
                   disabled={!isEditing}
-                  labelDisabled={!isEditing}
                 />
                 <LabeledInput
                   form={form}
                   label="주소"
                   name="address"
                   disabled={!isEditing}
-                  labelDisabled={!isEditing}
                 />
                 <Label>원산지</Label>
                 {isEditing || countryOfOrigins?.length > 0 ? (
@@ -259,17 +256,16 @@ export default function StoreInfo() {
                 responsiveButtons={{
                   sm: {
                     buttonSize: "sm",
-                    className:
-                      "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
+                    className: "mt-6 !h-[34px] !gap-2 items-center",
                   },
                   md: {
                     buttonSize: "sm",
                     className:
-                      "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
+                      "!h-[34px] md:flex items-center hidden lg:hidden !gap-1 mt-6",
                   },
                   lg: {
                     buttonSize: "lg",
-                    className: "hidden lg:!flex mt-8",
+                    className: "mt-8",
                   },
                 }}
                 onClick={isEditing ? undefined : () => setIsEditing(true)}

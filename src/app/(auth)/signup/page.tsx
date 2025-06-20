@@ -208,6 +208,7 @@ export default function Signup() {
               <Checkbox
                 checked={isConsentGiven}
                 onCheckedChange={() => setIsConsentGiven((prev) => !prev)}
+                aria-label="개인정보 수집 동의"
               />
               <span className="font-regular text-gray-0 text-s lg:text-sm">
                 개인정보 수집을 동의합니다 (필수)
