@@ -1,6 +1,11 @@
 import { Form } from "@/components/common/Form";
 import { useFormContext } from "react-hook-form";
-import CategoryFormField from "./CategoryFormField";
+import dynamic from "next/dynamic";
+
+const CategoryFormField = dynamic(() => import("./CategoryFormField"), {
+  ssr: false,
+  loading: () => <div>필드 로딩 중...</div>,
+});
 
 interface IProps {
   changeMove: boolean;

@@ -2,25 +2,23 @@
 
 import { ScrollArea } from "@/components/common/ScrollArea";
 import DashedBorder from "@/components/DashedBorder";
-import {
-  closestCenter,
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  // arrayMove,
-  rectSortingStrategy,
-  SortableContext,
-} from "@dnd-kit/sortable";
 import { PlusIcon } from "lucide-react";
 import { useMediaQuery } from "react-responsive";
 import { useRouter } from "next/navigation";
 import { useStoreContext } from "@/providers/storeProvider";
-import SortableItem from "./SortableItem";
+import dynamic from "next/dynamic";
 import MenuCard from "./MenuCard";
 import useMenu from "../_queries/useMenu";
+
+const Sortable = dynamic(() => import("@/components/Sortable"), {
+  ssr: false,
+  loading: () => <div>순서 변경 로딩 중...</div>,
+});
+
+const SortableItem = dynamic(() => import("./SortableItem"), {
+  ssr: false,
+  loading: () => <div>로딩 중...</div>,
+});
 
 interface IProps {
   changeSort: boolean;
@@ -39,9 +37,6 @@ export default function RenderMenu({
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const { storeId } = useStoreContext();
-
-  const sensors = useSensors(useSensor(PointerSensor));
-
   const { query: menuQuery } = useMenu(storeId);
   const menu = menuQuery(categoryId).data?.menus;
 
@@ -81,24 +76,18 @@ export default function RenderMenu({
             </DashedBorder>
           </button>
           {changeSort ? (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
+            <Sortable
+              items={menu?.map((item) => item.menuId)!}
               onDragEnd={handleDragEnd}
             >
-              <SortableContext
-                items={menu?.map((item) => item.menuId)!}
-                strategy={rectSortingStrategy}
-              >
-                {menu?.map((item) => (
-                  <SortableItem
-                    key={item.menuId}
-                    item={item}
-                    onClick={() => navigate.push(handleNavigate(item.menuId))}
-                  />
-                ))}
-              </SortableContext>
-            </DndContext>
+              {menu?.map((item) => (
+                <SortableItem
+                  key={item.menuId}
+                  item={item}
+                  onClick={() => navigate.push(handleNavigate(item.menuId))}
+                />
+              ))}
+            </Sortable>
           ) : (
             menu?.map((item) => (
               <MenuCard

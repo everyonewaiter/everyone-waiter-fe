@@ -3,27 +3,25 @@
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { ArrowDownUp, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import {
-  closestCenter,
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import { FormProvider } from "react-hook-form";
 import Icon from "@/components/common/Icon";
 import { useParams, useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import ModalTitle from "../../../_components/ModalTitle";
 import CategoryForm from "../../../../menu/_components/CategoryForm";
 import ModalButton from "../../../_components/ModalButton";
 import useCategories from "../../../../menu/_queries/useCategories";
 import useCategoryForm from "../../_hooks/useCategoryForm";
+
+const Sortable = dynamic(
+  () => import("../../../../../../../../components/Sortable"),
+  {
+    ssr: false,
+    loading: () => <div>순서 변경 로딩 중...</div>,
+  }
+);
 
 export default function Page() {
   const navigate = useRouter();
@@ -35,7 +33,6 @@ export default function Page() {
     { sourceId: string; targetId: string; where: "NEXT" | "PREVIOUS" }[]
   >([]);
 
-  const sensors = useSensors(useSensor(PointerSensor));
   const { query, move } = useCategories(storeId);
   const data = query.data?.categories;
 
@@ -134,20 +131,14 @@ export default function Page() {
       />
       <ScrollArea className="md:h-[270px] lg:h-[424px]">
         {changeMove ? (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
+          <Sortable
+            items={form.watch("categories").map((field) => field.categoryId)}
             onDragEnd={handleDrag}
           >
-            <SortableContext
-              items={form.watch("categories").map((field) => field.categoryId)}
-              strategy={verticalListSortingStrategy}
-            >
-              <FormProvider {...form}>
-                <CategoryForm changeMove={changeMove} />
-              </FormProvider>
-            </SortableContext>
-          </DndContext>
+            <FormProvider {...form}>
+              <CategoryForm changeMove={changeMove} />
+            </FormProvider>
+          </Sortable>
         ) : (
           <FormProvider {...form}>
             <CategoryForm changeMove={changeMove} />
