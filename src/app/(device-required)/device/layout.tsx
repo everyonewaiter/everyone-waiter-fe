@@ -12,6 +12,7 @@ export default function Layout({ children }: PropsWithChildren) {
               alt="모두의 웨이터 로고"
               width={60}
               height={60}
+              priority
             />
             <h1 className="font-hakgyo text-primary text-2xl">모두의 웨이터</h1>
           </div>

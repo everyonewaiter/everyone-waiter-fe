@@ -11,6 +11,7 @@ export default function MobileHeader() {
           alt="모두의 웨이터 로고"
           width={24}
           height={24}
+          priority
         />
         <h1 className="font-hakgyo text-primary text-lg">모두의 웨이터</h1>
       </div>

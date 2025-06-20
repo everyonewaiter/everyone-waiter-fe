@@ -10,7 +10,13 @@ export default function Header() {
   return (
     <header className="flex w-full items-center justify-between rounded-[32px] bg-white px-8 py-6">
       <div className="flex items-center gap-5">
-        <Image src="/icons/logo/logo.svg" alt="logo" width={60} height={60} />
+        <Image
+          src="/icons/logo/logo.svg"
+          alt="logo"
+          width={60}
+          height={60}
+          priority
+        />
         <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
           모두의 웨이터
         </h1>
