@@ -40,6 +40,8 @@ export default function MenuCard({
         width={329}
         height={440}
         className="h-full w-full object-cover"
+        priority
+        loading="eager"
       />
       <div className="absolute top-0 flex h-full w-full flex-col justify-between p-1 lg:p-2">
         {!hideSelect && (
