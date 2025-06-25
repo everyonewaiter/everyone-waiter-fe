@@ -5,16 +5,16 @@ import {
   getMenuList,
 } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren } from "react";
 import { categoryKeys, menuKeys } from "./_queries/keys";
 
 export default async function Layout({
   children,
   params,
-  modal,
+  // modal,
 }: PropsWithChildren<{
   params: Promise<{ id: string }>;
-  modal: ReactNode;
+  // modal: ReactNode;
 }>) {
   const { id } = await params;
   const queryClient = getQueryClient();
@@ -34,7 +34,7 @@ export default async function Layout({
       <div className="relative flex min-h-screen flex-col">
         <PageTitle title="메뉴 관리" />
         {children}
-        {modal && modal}
+        {/* {modal} */}
       </div>
     </HydrationBoundary>
   );
