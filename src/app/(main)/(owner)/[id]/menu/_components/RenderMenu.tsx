@@ -25,6 +25,7 @@ interface IProps {
   categoryId: string;
   isSelected: (value: { menuId: string }) => boolean;
   toggle: (value: { menuId: string }) => void;
+  handleDragEnd: ({ active, over }: any) => void;
 }
 
 export default function RenderMenu({
@@ -32,6 +33,7 @@ export default function RenderMenu({
   categoryId,
   isSelected,
   toggle,
+  handleDragEnd,
 }: IProps) {
   const navigate = useRouter();
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
@@ -39,15 +41,6 @@ export default function RenderMenu({
   const { storeId } = useStoreContext();
   const { query: menuQuery } = useMenu(storeId);
   const menu = menuQuery(categoryId).data?.menus;
-
-  const handleDragEnd = ({ active: _active, over }: any) => {
-    if (_active.id !== over?.id) {
-      // const oldIndex = menu?.findIndex((item) => item.menuId === _active.id);
-      // const newIndex = menu?.findIndex((item) => item.menuId === over?.id);
-      // const sorted = arrayMove(menu!, oldIndex!, newIndex!);
-      // setData(sorted);
-    }
-  };
 
   const handleNavigate = (menuId: string) =>
     `/${storeId}/menu/${menuId}?hideModal=${isMobile}&categoryId=${categoryId}`;

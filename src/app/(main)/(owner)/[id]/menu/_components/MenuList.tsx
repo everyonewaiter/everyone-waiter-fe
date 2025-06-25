@@ -2,31 +2,24 @@
 
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { SettingsIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useStoreContext } from "@/providers/storeProvider";
 import { useRouter } from "next/navigation";
 import useSelectedCard from "../_hooks/useSelectedCard";
-import useCategories from "../_queries/useCategories";
 import RenderMenu from "./RenderMenu";
 import HeaderButton from "./HeaderButton";
+import { useMenuSort } from "../_hooks/useMenuSort";
+import { useActiveCategory } from "../_hooks/useActiveCategory";
 
 export default function MenuList() {
   const navigate = useRouter();
 
   const { storeId } = useStoreContext();
   const { isSelected, toggle, selectedCards } = useSelectedCard();
+  const { active, categories, setActive } = useActiveCategory(storeId);
+  const { handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
 
-  const { query } = useCategories(storeId);
-  const categories = query.data?.categories;
-
-  const [active, setActive] = useState(categories?.[0]?.categoryId ?? "");
   const [changeSort, setChangeSort] = useState(false);
-
-  useEffect(() => {
-    if (categories && categories.length > 0 && !active) {
-      setActive(categories[0].categoryId);
-    }
-  }, [categories, active]);
 
   return (
     <div className="flex flex-1 flex-col pb-2 md:pt-4 lg:pt-6">
@@ -80,6 +73,7 @@ export default function MenuList() {
           categoryId={active}
           changeSort={changeSort}
           onSetChangeSort={setChangeSort}
+          onSaveSort={handleSortSave}
         />
       </div>
       <RenderMenu
@@ -87,6 +81,7 @@ export default function MenuList() {
         categoryId={active}
         isSelected={isSelected}
         toggle={toggle}
+        handleDragEnd={handleDragEnd}
       />
     </div>
   );

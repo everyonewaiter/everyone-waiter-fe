@@ -11,6 +11,7 @@ interface IProps {
   categoryId: string;
   changeSort: boolean;
   onSetChangeSort: (value: boolean) => void;
+  onSaveSort: () => void;
 }
 
 export default function HeaderButton({
@@ -18,6 +19,7 @@ export default function HeaderButton({
   categoryId,
   changeSort,
   onSetChangeSort,
+  onSaveSort,
 }: IProps) {
   const { open, close } = useOverlay();
   const { storeId } = useStoreContext();
@@ -35,7 +37,10 @@ export default function HeaderButton({
     ));
   };
 
-  const handleSaveSort = () => onSetChangeSort(false);
+  const handleSaveSort = () => {
+    onSaveSort();
+    onSetChangeSort(false);
+  };
 
   return (
     <div className="flex items-center justify-end gap-4 lg:gap-6">
