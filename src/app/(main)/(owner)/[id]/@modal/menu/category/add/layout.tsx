@@ -1,19 +1,25 @@
 import { PropsWithChildren } from "react";
 import getQueryClient from "@/app/get-query-client";
-import { getDevices } from "@/lib/api/device.api";
+import { getCategories } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { categoryKeys } from "../../../../menu/_queries/keys";
 import RefLayout from "../../../_components/RefLayout";
 
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{ params: Promise<{ id: string; deviceId: string }> }>) {
+}: PropsWithChildren<{ params: Promise<{ id: string }> }>) {
   const queryClient = getQueryClient();
-  const { id, deviceId } = await params;
+  const { id } = await params;
 
   await queryClient.prefetchQuery({
-    queryKey: ["get-device-detail", id, deviceId],
-    queryFn: () => getDevices(id),
+    queryKey: categoryKeys.all(id),
+    queryFn: () => getCategories({ storeId: id }),
   });
 
-  return <RefLayout className="md:w-[340px]">{children}</RefLayout>;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <RefLayout>{children}</RefLayout>
+    </HydrationBoundary>
+  );
 }

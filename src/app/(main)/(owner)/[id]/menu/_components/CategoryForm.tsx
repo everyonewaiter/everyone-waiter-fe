@@ -1,27 +1,18 @@
 import { Form } from "@/components/common/Form";
-import {
-  useFormContext,
-  FieldArrayWithId,
-  UseFieldArrayRemove,
-} from "react-hook-form";
-import CategoryFormField from "./CategoryFormField";
+import { useFormContext } from "react-hook-form";
+import dynamic from "next/dynamic";
+
+const CategoryFormField = dynamic(() => import("./CategoryFormField"), {
+  ssr: false,
+  loading: () => <div>필드 로딩 중...</div>,
+});
 
 interface IProps {
   changeMove: boolean;
-  fields: FieldArrayWithId<
-    {
-      categories: {
-        name: string;
-      }[];
-    },
-    "categories",
-    "id"
-  >[];
-  remove: UseFieldArrayRemove;
 }
 
-export default function CategoryForm({ changeMove, fields, remove }: IProps) {
-  const form = useFormContext<{ categories: { name: string }[] }>();
+export default function CategoryForm({ changeMove }: IProps) {
+  const form = useFormContext<{ categories: Category[] }>();
 
   const submitHandler = () => {};
 
@@ -31,14 +22,15 @@ export default function CategoryForm({ changeMove, fields, remove }: IProps) {
         onSubmit={form.handleSubmit(submitHandler)}
         className="flex flex-col md:gap-3 lg:gap-4"
       >
-        {fields.map((field, index) => (
-          <CategoryFormField
-            key={field.id}
-            index={index}
-            changeMove={changeMove}
-            remove={remove}
-          />
-        ))}
+        {form
+          .watch("categories")
+          ?.map((field) => (
+            <CategoryFormField
+              key={field.categoryId}
+              changeMove={changeMove}
+              fields={field}
+            />
+          ))}
       </form>
     </Form>
   );

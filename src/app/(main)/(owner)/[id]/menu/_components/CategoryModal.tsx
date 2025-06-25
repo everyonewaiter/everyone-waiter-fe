@@ -1,37 +1,30 @@
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import {
-  closestCenter,
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  horizontalListSortingStrategy,
-  SortableContext,
-} from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 import { ArrowDownUp, Plus } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import dynamic from "next/dynamic";
 import CategoryForm from "./CategoryForm";
 
 interface IProps {
   close: () => void;
 }
 
+const Sortable = dynamic(() => import("@/components/Sortable"), {
+  ssr: false,
+  loading: () => <div>순서 변경 로딩 중...</div>,
+});
+
 export default function CategoryModal({ close }: IProps) {
   const [changeMove, setChangeMove] = useState(false);
-
-  const sensors = useSensors(useSensor(PointerSensor));
 
   const form = useFormContext<{
     categories: { name: string }[];
   }>();
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control: form.control,
     name: "categories",
   });
@@ -68,28 +61,11 @@ export default function CategoryModal({ close }: IProps) {
     >
       <ScrollArea className="h-[464px]">
         {changeMove ? (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDrag}
-          >
-            <SortableContext
-              items={fields}
-              strategy={horizontalListSortingStrategy}
-            >
-              <CategoryForm
-                remove={remove}
-                changeMove={changeMove}
-                fields={fields}
-              />
-            </SortableContext>
-          </DndContext>
+          <Sortable items={fields} onDragEnd={handleDrag}>
+            <CategoryForm changeMove={changeMove} />
+          </Sortable>
         ) : (
-          <CategoryForm
-            remove={remove}
-            changeMove={changeMove}
-            fields={fields}
-          />
+          <CategoryForm changeMove={changeMove} />
         )}
       </ScrollArea>
       {!changeMove && (

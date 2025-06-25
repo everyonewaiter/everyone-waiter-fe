@@ -4,15 +4,15 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
 import GuideComponent from "@/components/GuideComponent";
-import useStores from "./(main)/(owner)/[id]/store/_hooks/useStores";
+import useStores from "./(main)/(owner)/[id]/store/_queries/useStores";
 
 export default function Home() {
   const { user } = useAuthStore();
   const router = useRouter();
 
-  const { acceptedStoresListQuery, registrationListQuery } = useStores();
-  const { data, isLoading } = acceptedStoresListQuery(true);
-  const { data: registerData } = registrationListQuery();
+  const { storesList, registrationList } = useStores();
+  const { data, isLoading } = storesList(true);
+  const { data: registerData } = registrationList();
   const firstStoreId = data?.stores?.[0].storeId;
 
   useEffect(() => {

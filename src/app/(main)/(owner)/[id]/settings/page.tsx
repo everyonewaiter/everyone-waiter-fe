@@ -1,36 +1,33 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import {
-  DndContext,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  horizontalListSortingStrategy,
-  arrayMove,
-} from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Input from "@/components/common/Input";
 import Switch from "@/components/common/Switch";
 import { useEffect, useState } from "react";
 import { Form } from "@/components/common/Form";
-import MoveableChips from "./_components/MoveableChips";
-import useSettings from "./_hooks/useSettings";
+import { useStoreContext } from "@/providers/storeProvider";
+import dynamic from "next/dynamic";
+import useSettings from "./_queries/useSettings";
+
+const Sortable = dynamic(() => import("@/components/Sortable"), {
+  ssr: false,
+  loading: () => <div>순서 변경 로딩 중...</div>,
+});
+
+const MoveableChips = dynamic(() => import("./_components/MoveableChips"), {
+  ssr: false,
+  loading: () => <div>로딩 중...</div>,
+});
 
 export default function Settings() {
-  const params = useParams();
-  const storeId = params?.id as string;
+  const { storeId } = useStoreContext();
 
   const [items, setItems] = useState<string[]>([]);
 
   const form = useForm({ defaultValues: { value: "" } });
   const { updateSetting, settingData } = useSettings(storeId);
-  const sensors = useSensors(useSensor(PointerSensor));
 
   const submitHandler = () => {
     const value = form.getValues("value");
@@ -171,24 +168,15 @@ export default function Settings() {
                 </form>
               </Form>
             </div>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDrag}
-            >
-              <SortableContext
-                items={items}
-                strategy={horizontalListSortingStrategy}
-              >
-                <div className="flex flex-wrap gap-2">
-                  {items.map((id) => (
-                    <MoveableChips key={id} id={id} onDelete={() => {}}>
-                      {id}
-                    </MoveableChips>
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
+            <Sortable items={items} onDragEnd={handleDrag}>
+              <div className="flex flex-wrap gap-2">
+                {items.map((id) => (
+                  <MoveableChips key={id} id={id} onDelete={() => {}}>
+                    {id}
+                  </MoveableChips>
+                ))}
+              </div>
+            </Sortable>
           </div>
         </div>
       </div>

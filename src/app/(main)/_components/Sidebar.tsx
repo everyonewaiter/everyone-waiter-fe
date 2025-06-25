@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { getStoreList } from "@/lib/api/stores.api";
+import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { useQuery } from "@tanstack/react-query";
 import {
   Select,
@@ -55,6 +55,7 @@ export default function Sidebar() {
             alt="모두의 웨이터 로고"
             width={40}
             height={40}
+            priority
           />
           <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
             모두의 웨이터
@@ -63,7 +64,10 @@ export default function Sidebar() {
         <nav>
           {permission === "OWNER" ? (
             <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
-              <SelectTrigger className="bg-primary flex w-full items-center justify-between rounded-xl text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]">
+              <SelectTrigger
+                className="bg-primary flex w-full items-center justify-between rounded-xl text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
+                aria-label="매장 선택"
+              >
                 <SelectValue placeholder="매장 선택">
                   {storeList?.stores.find(
                     (store) => store.storeId === selectedStoreId
@@ -85,44 +89,46 @@ export default function Sidebar() {
               </h1>
             </div>
           )}
-          <ul className="relative mt-2">
+          <div className="relative mt-2">
             {MENU_ITEMS[permission].length > 1 && (
               <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
             )}
-            {MENU_ITEMS[permission].map((item) => {
-              const isActive =
-                item.href === "/"
-                  ? comparePath === "/"
-                  : comparePath === item.href ||
-                    comparePath.startsWith(`${item.href}/`);
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={
-                      permission === "OWNER"
-                        ? `/${selectedStoreId}${item.href}`
-                        : item.href
-                    }
-                    className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
-                      isActive ? "text-primary" : "text-gray-300"
-                    }`}
-                  >
-                    {/* 빨간 점 (활성 메뉴만) */}
-                    <div
-                      className={`z-1 size-2 rounded-full ${
-                        isActive ? "bg-primary" : "bg-gray-600"
+            <ul>
+              {MENU_ITEMS[permission].map((item) => {
+                const isActive =
+                  item.href === "/"
+                    ? comparePath === "/"
+                    : comparePath === item.href ||
+                      comparePath.startsWith(`${item.href}/`);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={
+                        permission === "OWNER"
+                          ? `/${selectedStoreId}${item.href}`
+                          : item.href
+                      }
+                      className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
+                        isActive ? "text-primary" : "text-gray-300"
                       }`}
-                    />
-                    <Icon
-                      iconKey={item.icon as string}
-                      className={`size-6 ${isActive ? "text-primary" : "text-gray-300"}`}
-                    />
-                    <span className="font-medium">{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+                    >
+                      {/* 빨간 점 (활성 메뉴만) */}
+                      <div
+                        className={`z-1 size-2 rounded-full ${
+                          isActive ? "bg-primary" : "bg-gray-600"
+                        }`}
+                      />
+                      <Icon
+                        iconKey={item.icon as string}
+                        className={`size-6 ${isActive ? "text-primary" : "text-gray-300"}`}
+                      />
+                      <span className="font-medium">{item.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </nav>
       </aside>
     </div>

@@ -2,10 +2,13 @@ import React, { forwardRef, PropsWithChildren } from "react";
 
 const FloatingInfo = forwardRef<HTMLDivElement, PropsWithChildren>(
   ({ children }, ref) => (
-    <aside className="absolute -top-22.5 left-3 z-50" ref={ref}>
+    <aside
+      className="absolute -top-22.5 left-3 z-100 overflow-visible"
+      ref={ref}
+    >
       <div className="relative inline-block">
         {/* 본체 */}
-        <div className="w-[240px] rounded-2xl bg-white p-3 text-left text-xs whitespace-pre-line text-[#505050] shadow-md">
+        <div className="w-[240px] rounded-2xl bg-red-50 p-3 text-left text-xs whitespace-pre-line text-[#505050] shadow-md">
           {children}
         </div>
 

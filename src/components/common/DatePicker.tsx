@@ -1,7 +1,6 @@
 "use client";
 
 import Button from "@/components/common/Button/Button";
-import Calendar from "@/components/common/Calender";
 import {
   Popover,
   PopoverContent,
@@ -10,7 +9,12 @@ import {
 import cn from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarDays as CalendarIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import * as React from "react";
+
+const Calendar = dynamic(() => import("@/components/common/Calender"), {
+  ssr: false,
+});
 
 export default function DatePicker() {
   const [date, setDate] = React.useState<Date>();

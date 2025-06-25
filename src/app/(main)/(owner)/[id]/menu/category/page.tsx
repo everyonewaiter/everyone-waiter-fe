@@ -4,17 +4,18 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { Plus } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useEffect } from "react";
-import useCategoryStore from "../_hooks/useCategoryStore";
+import { useStoreContext } from "@/providers/storeProvider";
+import useCategories from "../_queries/useCategories";
 
 export default function Page() {
   const navigate = useRouter();
-  const params = useParams();
-  const storeId = params?.id as string;
+  const { storeId } = useStoreContext();
 
-  const { categories } = useCategoryStore();
+  const { query } = useCategories(storeId);
+  const { categories } = query.data!;
 
   const form = useForm<{ categories: { name: string }[] }>({
     defaultValues: { categories },

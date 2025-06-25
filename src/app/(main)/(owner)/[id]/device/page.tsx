@@ -28,9 +28,8 @@ import useOverlay from "@/hooks/use-overlay";
 import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
-import getQueryClient from "@/app/get-query-client";
-import useTableCheck from "./_hooks/useTableCheck";
-import useDevice from "./_hooks/useDevice";
+import useControlCheck from "../../../../../hooks/useControlCheck";
+import useDevice from "./_queries/useDevice";
 
 const itemWidth = {
   이름: "flex flex-1",
@@ -41,7 +40,6 @@ const itemWidth = {
 };
 
 export default function Device() {
-  const queryClient = getQueryClient();
   const params = useParams();
   const storeId = params?.id as string;
 
@@ -49,25 +47,20 @@ export default function Device() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { getDevicesQuery, mutateDeleteDevice } = useDevice();
-  const { data } = getDevicesQuery(storeId);
+  const { deviceQuery, remove } = useDevice();
+  const { data } = deviceQuery(storeId);
 
   const { checkedItems, allChecked, handleCheckAll, handleCheckItem } =
-    useTableCheck<Device>(data?.content!, "deviceId");
+    useControlCheck<Device>(data?.content!, "deviceId");
 
   const alertOverlay = useOverlay();
 
-  const handleDeleteDevice = () => {
+  const handleDeleteDevice = async () => {
     const deletePromises = Object.keys(checkedItems).map((deviceId) =>
-      mutateDeleteDevice.mutateAsync({
-        deviceId,
-        storeId,
-      })
+      remove.mutateAsync({ deviceId, storeId })
     );
 
-    Promise.all(deletePromises).then(() => {
-      queryClient.invalidateQueries({ queryKey: ["get-devices"] });
-    });
+    await Promise.all(deletePromises);
     alertOverlay.close();
   };
 

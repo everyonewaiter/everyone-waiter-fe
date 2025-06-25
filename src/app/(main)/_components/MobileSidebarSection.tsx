@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getStoreList } from "@/lib/api/stores.api";
+import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { useQuery } from "@tanstack/react-query";
 import { getComparePath } from "@/utils/getPathname";
 import { useStore } from "zustand";
