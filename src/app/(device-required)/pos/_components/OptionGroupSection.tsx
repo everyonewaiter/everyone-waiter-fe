@@ -16,15 +16,15 @@ export default function OptionGroupSection({
 }: PropsWithChildren<IProps>) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[15px] font-semibold">
+      <p className="text-[15px] font-semibold lg:text-base">
         {children} {required && <span className="text-primary">*</span>}
       </p>
       {data.map((item) => (
         <div
-          className="rounded-[12px] bg-gray-700 p-3"
+          className="rounded-[12px] bg-gray-700 p-3 lg:p-4"
           key={item.menuOptionGroupId}
         >
-          <p className="text-gray-0 mb-3 text-sm">{item.name}</p>
+          <p className="text-gray-0 mb-3 text-sm lg:text-lg">{item.name}</p>
 
           {type === "order" ? (
             <RadioGroup

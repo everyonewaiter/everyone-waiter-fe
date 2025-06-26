@@ -10,6 +10,7 @@ interface IProps extends Menu {
   isSelected?: boolean;
   hideSelect?: boolean;
   onClick: () => void;
+  className?: string;
 }
 
 export default function MenuCard({
@@ -17,13 +18,15 @@ export default function MenuCard({
   isSelected,
   hideSelect = false,
   onClick,
+  className,
   ...menu
 }: IProps) {
   return (
     <div
       className={cn(
         "relative overflow-hidden rounded-[12px] border md:h-[220px] lg:h-[440px] lg:rounded-[24px]",
-        isSelected ? "border-primary" : "border-gray-600"
+        isSelected ? "border-primary" : "border-gray-600",
+        className
       )}
       onClick={onClick}
       onKeyDown={(e) => {
