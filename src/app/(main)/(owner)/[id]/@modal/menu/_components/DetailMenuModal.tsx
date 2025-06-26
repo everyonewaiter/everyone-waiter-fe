@@ -19,26 +19,20 @@ interface IProps {
   isEditing: boolean;
   onSetEditing: (value: boolean) => void;
   type: "create" | "update";
-  categoryId?: string;
-  menuId?: string;
+  data: MenuDetail;
 }
 
 export default function DetailMenuModal({
   isEditing,
   onSetEditing,
   type,
-  categoryId,
-  menuId,
+  data,
 }: IProps) {
   const navigate = useRouter();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const pathname = usePathname();
 
   const { storeId } = useStoreContext();
-  const { detailQuery } = useMenu(storeId);
-
-  const isUpdateReady = type === "update" && !!categoryId && !!menuId;
-  const { data } = detailQuery(categoryId!, menuId!, isUpdateReady);
 
   const form = useForm<
     Omit<MenuFormType, "image"> & { image: File | string | null }
@@ -100,7 +94,7 @@ export default function DetailMenuModal({
       add.mutate(
         {
           storeId,
-          categoryId: form.watch("category") || categoryId!,
+          categoryId: form.watch("category"),
           body: {
             file: form.getValues("image") as File,
             request,

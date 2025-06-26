@@ -6,8 +6,8 @@ import cn from "@/lib/utils";
 import Image from "next/image";
 
 interface IProps extends Menu {
-  onToggle: (value: Menu) => void;
-  isSelected: boolean;
+  onToggle?: (value: Menu) => void;
+  isSelected?: boolean;
   hideSelect?: boolean;
   onClick: () => void;
 }
@@ -48,7 +48,7 @@ export default function MenuCard({
           <Checkbox
             className="mt-2 ml-2 h-6 w-6"
             checked={isSelected}
-            onCheckedChange={() => onToggle(menu)}
+            onCheckedChange={() => onToggle?.(menu)}
             onClick={(e) => {
               e.stopPropagation();
             }}
