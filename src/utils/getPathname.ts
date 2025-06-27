@@ -1,5 +1,9 @@
 import MENU_ITEMS from "@/constants/sidebarMenus";
 
+export function getPathnameWithoutStoreId(pathname: string) {
+  return `/${pathname.split("/").slice(2).join("/")}`;
+}
+
 export function getComparePath(
   pathname: string,
   permission: AccountPermission

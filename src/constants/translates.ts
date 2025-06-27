@@ -28,3 +28,16 @@ export const deviceTranslate = {
   HALL: "홀",
   WAITING: "웨이팅",
 } as const;
+
+export const menuLabelTranslate = {
+  DEFAULT: "기본",
+  BEST: "Best",
+  RECOMMEND: "추천",
+  NEW: "New",
+};
+
+export const menuStateTranslate = {
+  DEFAULT: "기본",
+  HIDE: "숨김",
+  SOLD_OUT: "품절",
+};

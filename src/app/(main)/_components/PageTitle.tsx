@@ -23,15 +23,16 @@ export default function PageTitle({ title }: { title: string }) {
   };
 
   return (
-    <div className="sticky top-0 z-100 hidden w-full items-center justify-between border-b border-gray-600 bg-white pb-3 md:flex lg:pt-8 lg:pb-[26px]">
-      <h2 className="text-[18px] font-bold md:text-[16px] lg:text-[28px]">
+    <div className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-gray-600 bg-white pt-6 pb-3 md:flex md:pt-0 lg:pt-8 lg:pb-[26px]">
+      <h1 className="text-[18px] font-bold md:text-[16px] lg:text-[28px]">
         {title}
-      </h2>
+      </h1>
       <button
         type="button"
         ref={ref}
         className="center relative h-8 w-8 rounded-[12px] border border-gray-400 lg:h-12 lg:w-12 lg:rounded-[16px]"
         onClick={handleOpenPopup}
+        aria-label="프로필 메뉴 열기"
       >
         <Icon
           iconKey="user"

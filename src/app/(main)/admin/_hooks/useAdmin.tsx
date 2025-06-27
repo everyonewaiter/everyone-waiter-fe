@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   approveRegistration,
   getAccounts,
@@ -7,11 +8,10 @@ import {
   getDetailAdminRegistrations,
   rejectResigtration,
   updateDetailAccount,
-} from "@/lib/api/admin.api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+} from "../_api/admin.api";
 
 const useAdmin = () => {
-  const accountListQuery = (
+  const accountList = (
     searchEmail: string,
     searchPermission: AccountPermission | "",
     searchState: Status | "",
@@ -20,13 +20,11 @@ const useAdmin = () => {
     useQuery({
       queryKey: [
         "get-account",
-        page,
-        searchEmail,
-        searchPermission,
-        searchState,
+        { page, searchEmail, searchPermission, searchState },
       ],
       queryFn: () =>
         getAccounts({ page, searchEmail, searchPermission, searchState }),
+      placeholderData: (previousData) => previousData,
     });
 
   const detailAccountQuery = (accountId: bigint) =>
@@ -46,9 +44,10 @@ const useAdmin = () => {
     page?: number
   ) =>
     useQuery({
-      queryKey: ["stores-to-approve"],
+      queryKey: ["stores-to-approve", { email, name, status, page }],
       queryFn: () =>
         getAdminRegistrations({ email, name, status, page, size: 20 }),
+      placeholderData: (previousData) => previousData,
     });
 
   const detailStoreQuery = (registrationId: bigint) =>
@@ -66,7 +65,7 @@ const useAdmin = () => {
   });
 
   return {
-    accountListQuery,
+    accountList,
     detailAccountQuery,
     mutateUpdateDetail,
     adminStoresListQuery,

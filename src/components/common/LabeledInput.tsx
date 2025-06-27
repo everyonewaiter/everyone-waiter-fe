@@ -14,6 +14,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "./Form";
 import Input from "./Input";
 
@@ -40,19 +41,18 @@ export default function LabeledInput<T extends FieldValues>({
   rightComponent,
   inputClassname,
   type = "text",
-  labelDisabled,
   containerClassName,
   ...props
 }: IProps<T>) {
   return (
     <FormField
-      control={form.control}
+      control={form?.control}
       name={name}
       render={({ field }) => (
         <FormItem
           className={cn("flex w-full flex-col gap-1", containerClassName)}
         >
-          <FormLabel labelDisabled={labelDisabled!}>{label}</FormLabel>
+          <FormLabel labelDisabled={props.disabled}>{label}</FormLabel>
           <div className="flex gap-3">
             <FormControl>
               <Input
@@ -62,7 +62,7 @@ export default function LabeledInput<T extends FieldValues>({
                   "flex grow-1 placeholder:text-gray-300",
                   inputClassname
                 )}
-                hasError={!!form.formState.errors[name]?.message}
+                hasError={!!form?.formState.errors[name]?.message}
                 {...props}
                 {...field}
               />
@@ -70,13 +70,15 @@ export default function LabeledInput<T extends FieldValues>({
             {rightComponent?.(field)}
           </div>
 
-          {form.formState.errors[name]?.message && (
-            <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
-              <Info className="stroke-error mb-[1px] h-4 w-4" />
-              {(form.formState.errors[name] as FieldError).message}
-            </div>
+          {form?.formState.errors[name]?.message && (
+            <FormMessage>
+              <div className="lg:text-s text-status-error flex items-center gap-1 text-xs md:text-xs">
+                <Info className="stroke-error mb-[1px] h-4 w-4" />
+                {(form.formState.errors[name] as FieldError)?.message}
+              </div>
+            </FormMessage>
           )}
-          {defaultMessage && !form.formState.errors[name]?.message && (
+          {defaultMessage && !form?.formState.errors[name]?.message && (
             <FormDescription className="lg:text-s text-xs text-gray-400 md:text-xs">
               {defaultMessage}
             </FormDescription>

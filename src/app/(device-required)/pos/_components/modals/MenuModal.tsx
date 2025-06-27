@@ -1,0 +1,134 @@
+import Button from "@/components/common/Button/Button";
+import { ScrollArea } from "@/components/common/ScrollArea";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import cn from "@/lib/utils";
+import { getCdn } from "@/utils/getCdn";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import OptionGroupSection from "../OptionGroupSection";
+
+interface IProps {
+  data: MenuDetail;
+  type: "order" | "preview";
+  layoutClassName?: string;
+}
+
+function MenuModal({ data, type, layoutClassName }: IProps) {
+  const navigate = useRouter();
+  return (
+    <div
+      className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center"
+      onClick={() => navigate.back()}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") navigate.back();
+      }}
+    >
+      <div
+        className={cn(
+          "relative flex h-[650px] flex-col gap-6 rounded-[32px] bg-white p-5 md:h-[460px] md:flex-row md:p-4 lg:gap-8 lg:p-6",
+          layoutClassName
+        )}
+        onClick={(e) => e.stopPropagation()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") e.stopPropagation();
+        }}
+      >
+        <div className="flex h-[160px] overflow-hidden rounded-[16px] bg-green-50 md:h-full md:flex-1 lg:rounded-[28px]">
+          {data.image && (
+            <Image
+              src={getCdn(data.image)}
+              alt="menu image"
+              className="object-cover"
+              fill
+            />
+          )}
+        </div>
+        <div className="flex flex-1 flex-col gap-6">
+          <ScrollArea className="flex flex-col md:h-[428px] lg:h-[522px]">
+            <div className="flex gap-2">
+              {["태그1", "태그2", "태그3"].map((key) => (
+                <ResponsiveButton
+                  variant="outline"
+                  key={key}
+                  responsiveButtons={{
+                    lg: {
+                      buttonSize: "md",
+                      className:
+                        "font-regular !h-10 !rounded-[40px] text-[15px]",
+                    },
+                    md: {
+                      buttonSize: "sm",
+                      className: "!h-8 !rounded-[40px] !px-4 !text-s",
+                    },
+                    sm: {
+                      buttonSize: "sm",
+                      className: "!h-8 !rounded-[40px] !px-4 !text-s",
+                    },
+                  }}
+                >
+                  {key}
+                </ResponsiveButton>
+              ))}
+            </div>
+            <div className="mt-4 lg:mt-5">
+              <h1 className="text-gray-0 text-lg font-semibold md:text-xl lg:text-3xl lg:font-bold">
+                {data.name}
+              </h1>
+              <p className="font-regular text-gray-0 mt-[10px] text-sm md:mt-3 lg:mt-4 lg:text-lg">
+                {data.description}
+              </p>
+              <div className="mt-3 w-full text-right text-2xl font-bold md:mt-5 lg:text-3xl">
+                {data.price.toLocaleString()}원
+              </div>
+            </div>
+            <div className="my-4 h-2 w-full rounded-[8px] bg-gray-700 lg:my-5" />
+            <div className="flex flex-col">
+              {data.menuOptionGroups.filter((el) => el.type === "MANDATORY")
+                ?.length > 0 && (
+                <OptionGroupSection
+                  data={data.menuOptionGroups.filter(
+                    (el) => el.type === "MANDATORY"
+                  )}
+                  type={type}
+                  required
+                >
+                  필수 추가 옵션
+                </OptionGroupSection>
+              )}
+
+              {data.menuOptionGroups.filter((el) => el.type === "OPTIONAL")
+                ?.length > 0 && (
+                <>
+                  <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
+                  <OptionGroupSection
+                    data={data.menuOptionGroups.filter(
+                      (el) => el.type === "OPTIONAL"
+                    )}
+                    type={type}
+                  >
+                    선택 추가 옵션
+                  </OptionGroupSection>
+                </>
+              )}
+            </div>
+          </ScrollArea>
+          {type === "order" && (
+            <Button
+              color="primary"
+              className="button-xl flex gap-2 !text-[15px] !font-medium"
+            >
+              총 {(17900).toLocaleString()}원{" "}
+              <div className="h-1 w-1 rounded-full bg-[#ffffff60]" /> 메뉴 추가
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default MenuModal;

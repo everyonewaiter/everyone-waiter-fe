@@ -1,39 +1,61 @@
 "use client";
 
-import {
-  DndContext,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  horizontalListSortingStrategy,
-  arrayMove,
-} from "@dnd-kit/sortable";
+import { useForm } from "react-hook-form";
+import { arrayMove } from "@dnd-kit/sortable";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Input from "@/components/common/Input";
 import Switch from "@/components/common/Switch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "@/components/common/Form";
-import MoveableChips from "./_components/MoveableChips";
-import useSettingsForm from "./_hooks/useSettingsForm";
+import { useStoreContext } from "@/providers/storeProvider";
+import dynamic from "next/dynamic";
+import useSettings from "./_queries/useSettings";
+
+const Sortable = dynamic(() => import("@/components/Sortable"), {
+  ssr: false,
+  loading: () => <div>순서 변경 로딩 중...</div>,
+});
+
+const MoveableChips = dynamic(() => import("./_components/MoveableChips"), {
+  ssr: false,
+  loading: () => <div>로딩 중...</div>,
+});
 
 export default function Settings() {
-  const [active, setActive] = useState<0 | 1>(0);
-  const [items, setItems] = useState(["1", "2", "3", "4"]);
+  const { storeId } = useStoreContext();
 
-  const { form, submitHandler } = useSettingsForm(setItems);
-  const sensors = useSensors(useSensor(PointerSensor));
+  const [items, setItems] = useState<string[]>([]);
 
-  const handleDrag = ({ _active, over }: any) => {
-    if (_active.id !== over?.id) {
-      const oldIndex = items.indexOf(_active.id);
-      const newIndex = items.indexOf(over.id);
-      setItems((prev) => arrayMove(prev, oldIndex, newIndex));
+  const form = useForm({ defaultValues: { value: "" } });
+  const { updateSetting, settingData } = useSettings(storeId);
+
+  const submitHandler = () => {
+    const value = form.getValues("value");
+    if (value.trim()) {
+      const nextItems = [...items, value];
+      updateSetting({ staffCallOptions: nextItems }, () => {
+        setItems(nextItems);
+        form.reset();
+      });
     }
   };
+
+  const handleDrag = ({ active, over }: any) => {
+    if (active.id !== over?.id) {
+      const oldIndex = items.indexOf(active.id);
+      const newIndex = items.indexOf(over.id);
+      const changeSort = arrayMove(items, oldIndex, newIndex);
+      updateSetting({ staffCallOptions: changeSort }, () =>
+        setItems(changeSort)
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (settingData?.staffCallOptions) {
+      setItems(settingData?.staffCallOptions);
+    }
+  }, [settingData]);
 
   return (
     <div className="flex w-[480px] flex-col gap-8">
@@ -49,8 +71,8 @@ export default function Settings() {
             주방 프린터기와 연결된 기기를 선택해주세요.
           </p>
           <div className="mt-3 flex flex-row gap-3">
-            {["POS", "홀"].map((key, index) => {
-              const isActive = active === index;
+            {["POS", "HALL"].map((key) => {
+              const isActive = settingData?.printerLocation === key;
               return (
                 <ResponsiveButton
                   key={key}
@@ -71,9 +93,9 @@ export default function Settings() {
                     },
                   }}
                   commonClassName={isActive ? "" : "border-gray-500"}
-                  onClick={() => setActive(index as 0 | 1)}
+                  onClick={() => updateSetting({ printerLocation: key })}
                 >
-                  {key}
+                  {key === "HALL" ? "홀" : key}
                 </ResponsiveButton>
               );
             })}
@@ -88,13 +110,23 @@ export default function Settings() {
               <span className="flex-1 text-sm">
                 손님 테이블 메뉴 팝업창 띄우기
               </span>
-              <Switch />
+              <Switch
+                checked={settingData?.showMenuPopup}
+                onCheckedChange={(checked) =>
+                  updateSetting({ showMenuPopup: checked })
+                }
+              />
             </div>
             <div className="flex w-full items-center">
               <span className="flex-1 text-sm">
                 손님 테이블 주문 내역에서 총 주문금액 표시하기
               </span>
-              <Switch />
+              <Switch
+                checked={settingData?.showOrderTotalPrice}
+                onCheckedChange={(checked) =>
+                  updateSetting({ showOrderTotalPrice: checked })
+                }
+              />
             </div>
             <div className="flex w-full flex-col gap-3 md:gap-2 lg:gap-3">
               <span className="flex-1 text-sm">
@@ -136,24 +168,15 @@ export default function Settings() {
                 </form>
               </Form>
             </div>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDrag}
-            >
-              <SortableContext
-                items={items}
-                strategy={horizontalListSortingStrategy}
-              >
-                <div className="flex flex-wrap gap-2">
-                  {items.map((id) => (
-                    <MoveableChips key={id} id={id} onDelete={() => {}}>
-                      {id}
-                    </MoveableChips>
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
+            <Sortable items={items} onDragEnd={handleDrag}>
+              <div className="flex flex-wrap gap-2">
+                {items.map((id) => (
+                  <MoveableChips key={id} id={id} onDelete={() => {}}>
+                    {id}
+                  </MoveableChips>
+                ))}
+              </div>
+            </Sortable>
           </div>
         </div>
       </div>

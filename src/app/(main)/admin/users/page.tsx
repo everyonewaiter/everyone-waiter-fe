@@ -40,8 +40,8 @@ export default function Users() {
   });
 
   const { debouncedValue } = useDebounce({ searchWord, delay: 300 });
-  const { accountListQuery } = useAdmin();
-  const { data, refetch } = accountListQuery(
+  const { accountList } = useAdmin();
+  const { data, refetch } = accountList(
     debouncedValue,
     permissionObj[
       active.permission as keyof typeof permissionObj

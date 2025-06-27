@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getStoreList } from "@/lib/api/stores.api";
+import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { useQuery } from "@tanstack/react-query";
 import { getComparePath } from "@/utils/getPathname";
 import { useStore } from "zustand";
@@ -88,7 +88,11 @@ export default function MobileSidebarSection({ onClose }: IProps) {
             <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
           )}
           {MENU_ITEMS[permission].map((item) => {
-            const isActive = comparePath === item.href;
+            const isActive =
+              item.href === "/"
+                ? comparePath === "/"
+                : comparePath === item.href ||
+                  comparePath.startsWith(`${item.href}/`);
             return (
               <li key={item.href}>
                 <button

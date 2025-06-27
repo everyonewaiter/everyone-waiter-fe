@@ -1,81 +1,88 @@
 "use client";
 
-import { ArrowLeftRightIcon, Trash2Icon } from "lucide-react";
-import { Fragment, useState } from "react";
-import MenuCard from "./MenuCard";
-import AddMenu from "./AddMenu";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { SettingsIcon } from "lucide-react";
+import { useState } from "react";
+import { useStoreContext } from "@/providers/storeProvider";
+import { useRouter } from "next/navigation";
+import useSelectedCard from "../_hooks/useSelectedCard";
+import RenderMenu from "./RenderMenu";
+import HeaderButton from "./HeaderButton";
+import { useMenuSort } from "../_hooks/useMenuSort";
+import { useActiveCategory } from "../_hooks/useActiveCategory";
 
-interface MenuListProps {
-  // storeId: string;
-  menus: MenuWithOption[] | Menu[];
-}
+export default function MenuList() {
+  const navigate = useRouter();
 
-interface SelectedMenu {
-  menuId: string;
-  categoryId: string;
-}
+  const { storeId } = useStoreContext();
+  const { isSelected, toggle, selectedCards } = useSelectedCard();
+  const { active, categories, setActive } = useActiveCategory(storeId);
+  const { handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
 
-export default function MenuList({ menus }: MenuListProps) {
-  const [selectedMenus, setSelectedMenus] = useState<SelectedMenu[]>([]);
-
-  const handleMenuSelect = (
-    menuId: string,
-    categoryId: string,
-    isChecked: boolean
-  ) => {
-    if (isChecked) {
-      setSelectedMenus((prev) => [...prev, { menuId, categoryId }]);
-    } else {
-      setSelectedMenus((prev) => prev.filter((item) => item.menuId !== menuId));
-    }
-  };
-
-  const handleDelete = () => {
-    // TODO - 삭제 로직 구현
-  };
-  const isMenuSelected = (menuId: string) =>
-    selectedMenus.some((menu) => menu.menuId === menuId);
+  const [changeSort, setChangeSort] = useState(false);
 
   return (
-    <>
-      <div className="my-4 flex items-center gap-4 self-end md:my-0 md:-translate-y-7">
-        <button
-          type="button"
-          onClick={() => {
-            // 순서 변경
-          }}
-          className="flex items-center gap-1"
-        >
-          <ArrowLeftRightIcon
-            strokeWidth={1}
-            className="size-[20px] -rotate-90 text-gray-300"
-          />
-          <p className="text-[14px] text-gray-300">순서변경</p>
-        </button>
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="flex items-center gap-1"
-        >
-          <Trash2Icon
-            strokeWidth={1}
-            className="text-status-error size-[20px]"
-          />
-          <p className="text-status-error text-[14px]">삭제</p>
-        </button>
+    <div className="flex flex-1 flex-col pb-2 md:pt-4 lg:pt-6">
+      <div className="flex flex-col md:flex-row md:justify-between">
+        <div className="scrollbar-hide md:overflow-none my-5 flex items-center gap-2 overflow-auto md:my-0 lg:gap-3">
+          <ResponsiveButton
+            color="grey"
+            responsiveButtons={{
+              lg: {
+                buttonSize: "md",
+                className:
+                  "!text-[15px] !rounded-[12px] !p-0 !w-[32px] !h-[32px]",
+              },
+              md: {
+                buttonSize: "sm",
+                className: "h-8 !p-2 !rounded-[12px]",
+              },
+              sm: {
+                buttonSize: "sm",
+                className: "h-8 !p-2 !rounded-[12px]",
+              },
+            }}
+            onClick={() => navigate.push(`/${storeId}/menu/category/add`)}
+          >
+            <SettingsIcon size={18} strokeWidth={1.5} />
+          </ResponsiveButton>
+          {categories?.map((cat) => (
+            <ResponsiveButton
+              key={cat.categoryId}
+              variant={active === cat.categoryId ? "default" : "outline"}
+              color={active === cat.categoryId ? "black" : "grey"}
+              responsiveButtons={{
+                lg: {
+                  buttonSize: "md",
+                  className: "h-10 !text-[15px]",
+                },
+                md: { buttonSize: "sm" },
+                sm: { buttonSize: "sm" },
+              }}
+              commonClassName={
+                active === cat.categoryId ? "border-black" : "border-gray-300"
+              }
+              onClick={() => setActive(cat.categoryId)}
+            >
+              {cat.name}
+            </ResponsiveButton>
+          ))}
+        </div>
+        <HeaderButton
+          selectedCards={selectedCards}
+          categoryId={active}
+          changeSort={changeSort}
+          onSetChangeSort={setChangeSort}
+          onSaveSort={handleSortSave}
+        />
       </div>
-      <div className="flex flex-wrap gap-4">
-        <AddMenu />
-        {menus?.map((menu) => (
-          <Fragment key={menu.menuId}>
-            <MenuCard
-              menu={menu}
-              isSelected={isMenuSelected(menu.menuId)}
-              onSelect={handleMenuSelect}
-            />
-          </Fragment>
-        ))}
-      </div>
-    </>
+      <RenderMenu
+        changeSort={changeSort}
+        categoryId={active}
+        isSelected={isSelected}
+        toggle={toggle}
+        handleDragEnd={handleDragEnd}
+      />
+    </div>
   );
 }

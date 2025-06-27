@@ -117,11 +117,13 @@ interface ButtonGroupProps {
     text: string;
     onClick: () => void;
     disabled: boolean;
+    color?: string;
   };
   saveBtn: {
     text: string;
     onClick: () => void;
     disabled: boolean;
+    color?: string;
   };
 }
 
@@ -130,7 +132,7 @@ function ModalButtonGroups({ cancelBtn, saveBtn }: ButtonGroupProps) {
     <div className="flex flex-row items-center justify-between gap-2 lg:gap-3">
       <ResponsiveButton
         type="button"
-        color="grey"
+        color={cancelBtn.color || "grey"}
         responsiveButtons={{
           lg: {
             buttonSize: "xl",
@@ -146,7 +148,7 @@ function ModalButtonGroups({ cancelBtn, saveBtn }: ButtonGroupProps) {
       </ResponsiveButton>
       <ResponsiveButton
         type="submit"
-        color="primary"
+        color={saveBtn.color || "primary"}
         responsiveButtons={{
           lg: {
             buttonSize: "xl",
