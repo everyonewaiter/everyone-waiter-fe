@@ -22,9 +22,7 @@ function MenuModal({ data, type, layoutClassName }: IProps) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === "Escape") {
-          navigate.back();
-        }
+        if (e.key === "Escape") navigate.back();
       }}
     >
       <div
@@ -36,12 +34,10 @@ function MenuModal({ data, type, layoutClassName }: IProps) {
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
-          if (e.key === "Escape") {
-            e.stopPropagation();
-          }
+          if (e.key === "Escape") e.stopPropagation();
         }}
       >
-        <div className="flex h-[160px] overflow-hidden rounded-[16px] bg-green-50 md:flex-1 lg:rounded-[28px]">
+        <div className="flex h-[160px] overflow-hidden rounded-[16px] bg-green-50 md:h-full md:flex-1 lg:rounded-[28px]">
           {data.image && (
             <Image
               src={getCdn(data.image)}

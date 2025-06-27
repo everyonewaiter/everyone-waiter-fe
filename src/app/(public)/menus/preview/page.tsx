@@ -4,10 +4,12 @@ import MenuCard from "@/app/(main)/(owner)/[id]/menu/_components/MenuCard";
 import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import cn from "@/lib/utils";
+import useOverlay from "@/hooks/use-overlay";
 import { useRouter } from "next/navigation";
 // import { useSearchParams } from 'next/navigation';
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import MobileMenuCard from "../_components/MobileMenuCard";
+import OriginModal from "../_components/OriginModal";
 
 const categories = ["전체", "스테이크", "파스타", "라멘", "볶음밥"];
 
@@ -73,6 +75,11 @@ export default function Page() {
   // const searchParams = useSearchParams();
   // const storeId = searchParams.get('storeId')
   const navigate = useRouter();
+  const { open, close } = useOverlay();
+
+  const handleOpenModal = () => {
+    open(() => <OriginModal close={close} />);
+  };
 
   const [activeTab, setActiveTab] = useState("전체");
 
@@ -95,6 +102,7 @@ export default function Page() {
           variant="outline"
           color="grey"
           className="mb-1 h-8 rounded-[40px] border-gray-500 px-3 text-xs text-gray-200 hover:text-gray-300 md:hidden"
+          onClick={handleOpenModal}
         >
           원산지 정보
         </Button>
@@ -131,6 +139,7 @@ export default function Page() {
             md: { buttonSize: "sm", className: "!text-s !rounded-[40px]" },
           }}
           commonClassName="border-gray-500 hover:text-gray-300"
+          onClick={handleOpenModal}
         >
           원산지 정보
         </ResponsiveButton>
@@ -146,18 +155,17 @@ export default function Page() {
           />
         ))}
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col md:hidden">
         {menu?.map((item, index) => (
-          <>
+          <Fragment key={item.menuId}>
             <MobileMenuCard
-              key={item.menuId}
               onClick={() => navigate.push(`/menus/preview/${item.menuId}`)}
               {...item}
             />
             {index < menu.length - 1 && (
               <div className="h-[1px] w-full bg-gray-600" />
             )}
-          </>
+          </Fragment>
         ))}
       </div>
     </div>
