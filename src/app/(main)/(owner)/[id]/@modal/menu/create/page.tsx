@@ -3,5 +3,12 @@
 import DetailMenuModal from "../_components/DetailMenuModal";
 
 export default function Page() {
-  return <DetailMenuModal isEditing onSetEditing={() => null} type="create" />;
+  return (
+    <DetailMenuModal
+      data={{} as MenuDetail}
+      isEditing
+      onSetEditing={() => null}
+      type="create"
+    />
+  );
 }

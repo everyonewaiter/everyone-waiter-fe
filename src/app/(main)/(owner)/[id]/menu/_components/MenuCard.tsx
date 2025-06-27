@@ -6,10 +6,11 @@ import cn from "@/lib/utils";
 import Image from "next/image";
 
 interface IProps extends Menu {
-  onToggle: (value: Menu) => void;
-  isSelected: boolean;
+  onToggle?: (value: Menu) => void;
+  isSelected?: boolean;
   hideSelect?: boolean;
   onClick: () => void;
+  className?: string;
 }
 
 export default function MenuCard({
@@ -17,13 +18,15 @@ export default function MenuCard({
   isSelected,
   hideSelect = false,
   onClick,
+  className,
   ...menu
 }: IProps) {
   return (
     <div
       className={cn(
         "relative overflow-hidden rounded-[12px] border md:h-[220px] lg:h-[440px] lg:rounded-[24px]",
-        isSelected ? "border-primary" : "border-gray-600"
+        isSelected ? "border-primary" : "border-gray-600",
+        className
       )}
       onClick={onClick}
       onKeyDown={(e) => {
@@ -48,7 +51,7 @@ export default function MenuCard({
           <Checkbox
             className="mt-2 ml-2 h-6 w-6"
             checked={isSelected}
-            onCheckedChange={() => onToggle(menu)}
+            onCheckedChange={() => onToggle?.(menu)}
             onClick={(e) => {
               e.stopPropagation();
             }}

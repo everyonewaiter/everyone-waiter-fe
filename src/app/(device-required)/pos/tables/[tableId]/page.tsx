@@ -1,16 +1,14 @@
 "use client";
 
 import { Fragment, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
-import useOverlay from "@/hooks/use-overlay";
-import QueryProviders from "@/app/query-providers";
 import cn from "@/lib/utils";
 import Floating from "../../_components/Floating";
 import POSMenuCard from "../../_components/POSMenuCard";
 import SideSection from "../../_components/SideSection";
 import POSHeader from "../../_components/POSHeader";
-import MenuModal from "../../_components/modals/MenuModal";
 
 const dummyCategory = [
   {
@@ -38,17 +36,11 @@ const dummy: Menu[] = [
 ];
 
 export default function DetailTableOrder() {
+  const navigate = useRouter();
+  const params = useParams();
+  const tableId = params?.id as string;
+
   const [isActive, setIsActive] = useState("1");
-
-  const { open, close } = useOverlay();
-
-  const handleMenuModal = () => {
-    open(() => (
-      <QueryProviders>
-        <MenuModal onClose={close} />
-      </QueryProviders>
-    ));
-  };
 
   return (
     <div className="flex flex-row">
@@ -79,7 +71,12 @@ export default function DetailTableOrder() {
             <div className="grid grid-cols-4 gap-x-6 gap-y-8">
               {dummy?.map((menu) => (
                 <Fragment key={menu.menuId}>
-                  <POSMenuCard {...menu} onClick={handleMenuModal} />
+                  <POSMenuCard
+                    onClick={() =>
+                      navigate.push(`/pos/tables/${tableId}/${menu.menuId}`)
+                    }
+                    {...menu}
+                  />
                 </Fragment>
               ))}
             </div>

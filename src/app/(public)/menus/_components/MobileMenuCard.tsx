@@ -1,0 +1,32 @@
+import { getCdn } from "@/utils/getCdn";
+import Image from "next/image";
+
+interface IProps {
+  image: string;
+  name: string;
+  price: number;
+  onClick: () => void;
+}
+
+export default function MobileMenuCard({
+  image,
+  name,
+  price,
+  onClick,
+}: IProps) {
+  return (
+    <button type="button" className="py-4" onClick={onClick}>
+      <div className="flex items-center gap-5">
+        <div className="h-24 w-24 overflow-hidden rounded-[12px]">
+          <Image src={getCdn(image)} alt="menu" width={96} height={96} />
+        </div>
+        <div className="flex flex-col items-start gap-[6px]">
+          <h3 className="text-gray-0 text-base font-medium">{name}</h3>
+          <strong className="text-gray-0 text-xl font-semibold">
+            {price.toLocaleString()}원
+          </strong>
+        </div>
+      </div>
+    </button>
+  );
+}

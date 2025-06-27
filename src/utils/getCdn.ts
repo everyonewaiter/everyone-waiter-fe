@@ -1,14 +1,12 @@
-export default function getCdn(image?: string) {
-  const {
-    NODE_ENV,
-    NEXT_PUBLIC_PROD_CDN: PROD,
-    NEXT_PUBLIC_DEV_CDN: DEV,
-  } = process.env;
+export function getCdn(path: string): string {
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_PROD_CDN
+      : process.env.NEXT_PUBLIC_DEV_CDN;
 
-  if (!image) return "";
+  if (!baseUrl) return path;
 
-  const baseUrl = NODE_ENV === "production" ? PROD : DEV;
-  if (!baseUrl) return "";
+  if (path.startsWith("http")) return path;
 
-  return `${baseUrl}/${image}`;
+  return `${baseUrl}/${path}`;
 }

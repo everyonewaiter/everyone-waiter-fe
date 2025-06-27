@@ -1,7 +1,7 @@
 "use client";
 
 import { PropsWithChildren } from "react";
-import RefLayout from "../../_components/RefLayout";
+import RefLayout from "@/components/modal/RefLayout";
 
 export default function ClientRefWrapper({ children }: PropsWithChildren) {
   return (
