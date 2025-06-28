@@ -107,9 +107,6 @@ dependencies:
   react-responsive:
     specifier: ^10.0.1
     version: 10.0.1(react@19.1.0)
-  react-secure-storage:
-    specifier: ^1.3.2
-    version: 1.3.2
   tailwind-merge:
     specifier: ^3.1.0
     version: 3.3.1
@@ -7698,10 +7695,6 @@ packages:
   /ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  /murmurhash-js@1.0.0:
-    resolution: {integrity: sha512-TvmkNhkv8yct0SVBSy+o8wYzXjE4Zz3PCesbfs8HiCXXdcTuocApFv11UWlNFWKYsP2okqrhb7JNlSm9InBhIw==}
-    dev: false
-
   /nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -8296,13 +8289,6 @@ packages:
       prop-types: 15.8.1
       react: 19.1.0
       shallow-equal: 3.1.0
-    dev: false
-
-  /react-secure-storage@1.3.2:
-    resolution: {integrity: sha512-pNCyksbLXWIYRS9vCzERXdIMErtx9Ik70TPtLKivcq44+zYybbxA72wpp5ivghK9Xe0gRku2w/7zBy/9n+RtKA==}
-    dependencies:
-      crypto-js: 4.2.0
-      murmurhash-js: 1.0.0
     dev: false
 
   /react-style-singleton@2.2.3(@types/react@19.1.8)(react@19.1.0):
@@ -9597,7 +9583,6 @@ packages:
     name: '@trivago/prettier-plugin-sort-imports'
     version: 5.2.2
     engines: {node: '>18.12'}
-    prepare: true
     requiresBuild: true
     peerDependencies:
       '@vue/compiler-sfc': 3.x
