@@ -7,7 +7,7 @@ import { AxiosInstance } from "axios";
 import makeSignature from "@/utils/make-signature";
 import { deleteCookie, getToken, setCookie } from "../cookies";
 import { renewToken } from "../api/auth.api";
-import { getSecureItem } from "../auth/localStorage";
+import { getDecryptedItem } from "../auth/secureStorage";
 
 let isRefreshing = false;
 let refreshPromise: Promise<any> | null = null;
@@ -117,62 +117,74 @@ const getCacheKey = (method: string, uri: string, purpose: string) =>
   `${method}:${uri}:${purpose}` as const;
 
 export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
-  axiosInstance.interceptors.request.use(
-    async (config) => {
-      const method = config.method?.toUpperCase() || "GET";
-      const uri = config.url || "/";
+  if (typeof window === "undefined") return;
 
-      await signatureMutex.runExclusive(async () => {
-        const purpose = "HALL";
-        const key = getCacheKey(method, `/v1${uri}`, purpose);
-        const cached = signatureCache[key];
+  axiosInstance.interceptors.request.use(async (config) => {
+    const method = config.method?.toUpperCase() || "GET";
+    const uri = config.url || "/";
 
-        if (!cached || Date.now() - cached.createdAt > 1000) {
-          const deviceInfo = await getSecureItem("deviceInfo");
-          const secretKey = await getSecureItem("secretKey");
+    await signatureMutex.runExclusive(async () => {
+      const key = getCacheKey(method, `/v1${uri}`, "HALL");
+      const cached = signatureCache[key];
 
-          if (!deviceInfo || !secretKey) {
-            console.warn("❌ deviceInfo 또는 secretKey가 없습니다.");
-            return;
-          }
+      if (!cached || Date.now() - cached.createdAt > 1000) {
+        const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
 
-          const timestamp = Date.now().toString();
-          const signature = makeSignature({
-            uri: `/v1${uri}`,
-            method,
-            secretKey,
-            timestamp,
-            purpose,
-            name: deviceInfo.name,
-            deviceId: deviceInfo.deviceId,
-          });
+        const deviceInfo = (await getDecryptedItem({
+          key: "@deviceInfo",
+          deviceId: meta.deviceId,
+          storeId: meta.storeId,
+        })) as Device;
 
-          console.log("🧾 Signing Payload", {
-            method,
-            uri: `/v1${uri}`,
-            secretKey,
-            timestamp,
-            purpose,
-            name: deviceInfo.name,
-            deviceId: deviceInfo.deviceId,
-          });
+        const secretKey = (await getDecryptedItem({
+          key: "@secretKey",
+          deviceId: meta.deviceId,
+          storeId: meta.storeId,
+        })) as string;
 
-          console.log("🧾 Headers", {
-            "x-ew-access-key": deviceInfo.deviceId,
-            "x-ew-signature": signature,
-            "x-ew-timestamp": timestamp,
-          });
-
-          config.headers["x-ew-access-key"] = deviceInfo.deviceId;
-          config.headers["x-ew-signature"] = signature;
-          config.headers["x-ew-timestamp"] = timestamp;
+        if (!deviceInfo || !secretKey) {
+          console.warn("❌ deviceInfo 또는 secretKey가 없습니다.");
+          return;
         }
-      });
 
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+        const timestamp = Date.now().toString();
+        const signature = makeSignature({
+          uri: `/v1${uri}`,
+          method,
+          secretKey,
+          timestamp,
+          purpose: deviceInfo.purpose,
+          name: deviceInfo.name,
+          deviceId: deviceInfo.deviceId,
+        });
+
+        console.log("🧾 Signing Payload", {
+          method,
+          uri: `/v1${uri}`,
+          secretKey,
+          timestamp,
+          purpose: deviceInfo.purpose,
+          name: deviceInfo.name,
+          deviceId: deviceInfo.deviceId,
+        });
+
+        console.log("🧾 Headers", {
+          "x-ew-access-key": deviceInfo.deviceId,
+          "x-ew-signature": signature,
+          "x-ew-timestamp": timestamp,
+        });
+
+        config.headers["x-ew-access-key"] = deviceInfo.deviceId;
+        config.headers["x-ew-signature"] = signature;
+        config.headers["x-ew-timestamp"] = timestamp;
+      }
+    });
+
+    return config;
+  });
+
+  let lastErrorMessage = "";
+  let lastErrorTime = 0;
 
   axiosInstance.interceptors.response.use(
     (response) => {
@@ -187,6 +199,10 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
         error.response || error.message || error
       );
 
+      const errorMsg =
+        error?.response?.data?.message || error.message || "Unknown error";
+      const now = Date.now();
+
       // 에러 응답 데이터 확인
       if (error.response) {
         // 서버가 응답했지만 상태 코드가 2xx 범위가 아닌 경우
@@ -200,6 +216,12 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
       } else {
         // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생한 경우
         console.error("   Error setting up the request:", error.message);
+      }
+
+      if (errorMsg !== lastErrorMessage || now - lastErrorTime > 3000) {
+        console.error("❌ Axios Response Error:", errorMsg);
+        lastErrorMessage = errorMsg;
+        lastErrorTime = now;
       }
 
       return Promise.reject(error); // 에러를 다시 throw하여 호출자에게 전달

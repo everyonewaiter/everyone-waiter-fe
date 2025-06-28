@@ -9,7 +9,7 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useMutation } from "@tanstack/react-query";
 import { addDevice } from "@/app/(device-required)/device/_api/device.api";
 import { useRouter } from "next/navigation";
-import { setSecureItem } from "@/lib/auth/localStorage";
+import { setEncryptedItem } from "@/lib/auth/secureStorage";
 
 type FormValues = {
   deviceName: string;
@@ -62,16 +62,35 @@ export default function AddDeviceStep2({
     };
 
     mutate(submitData, {
-      onSuccess: (returnData) => {
+      onSuccess: async (returnData) => {
         const { deviceId, secretKey } = returnData;
-        setSecureItem("deviceInfo", {
-          deviceId,
+        await setEncryptedItem({
+          key: "@deviceInfo",
+          value: {
+            deviceId,
+            storeId: submitData.storeId,
+            storeName,
+            name: submitData.name,
+            purpose: submitData.purpose,
+          },
+          deviceId: String(deviceId),
           storeId: submitData.storeId,
-          storeName,
-          name: submitData.name,
-          purpose: submitData.purpose,
         });
-        setSecureItem("secretKey", secretKey);
+
+        await setEncryptedItem({
+          key: "@secretKey",
+          value: secretKey,
+          deviceId: String(deviceId),
+          storeId: submitData.storeId,
+        });
+        localStorage.setItem(
+          "@meta",
+          JSON.stringify({
+            deviceId,
+            storeId: submitData.storeId,
+          })
+        );
+
         navigate.push(activeIndex === 0 ? "/hall" : "/pos");
       },
     });
@@ -111,7 +130,7 @@ export default function AddDeviceStep2({
             form={form}
             label="단말기 번호"
             name="deviceNumber"
-            placeholder="단말기 번호를 입력해주세요."
+            placeholder="단말기 번호를 입력해주세요." // 기본값 DPTOTEST01
           />
           <ResponsiveButton
             type="submit"
