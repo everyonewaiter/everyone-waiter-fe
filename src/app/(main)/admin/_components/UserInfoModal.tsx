@@ -107,7 +107,6 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                 label="이메일"
                 placeholder="이메일"
                 disabled
-                labelDisabled
               />
               <LabeledInput
                 form={form}
@@ -115,7 +114,6 @@ export default function UserInfoModal({ close, accountId }: IProps) {
                 label="가입 일시"
                 placeholder="가입 일시"
                 disabled
-                labelDisabled
               />
               <div className="flex flex-col gap-4">
                 <div className="relative flex w-full flex-col gap-2">

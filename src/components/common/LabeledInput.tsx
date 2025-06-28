@@ -28,7 +28,6 @@ interface IProps<T extends FieldValues>
   defaultMessage?: string;
   rightComponent?: (field: ControllerRenderProps<T, Path<T>>) => ReactNode;
   inputClassname?: string;
-  labelDisabled?: boolean;
   containerClassName?: string;
 }
 
