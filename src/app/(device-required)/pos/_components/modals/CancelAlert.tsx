@@ -1,15 +1,20 @@
 import Alert from "@/components/common/Alert/Alert";
+import useOrder from "../../_queries/useOrder";
 
 interface IProps {
   close: () => void;
+  tableNo: number;
+  orderId: string;
 }
 
-export default function CancelAlert({ close }: IProps) {
+export default function CancelAlert({ close, tableNo, orderId }: IProps) {
+  const { cancel } = useOrder();
+
   return (
     <Alert
       onClose={close}
       buttonColor="primary"
-      onAction={() => {}}
+      onAction={() => cancel.mutate({ orderId, tableNo })}
       buttonText="취소하기"
       noResponsive
     >

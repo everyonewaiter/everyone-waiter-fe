@@ -4,12 +4,10 @@ import cn from "@/lib/utils";
 
 interface IProps {
   className?: string;
+  isStoreOpen: boolean;
 }
 
-export default function OpenSwitch({ className }: IProps) {
-  const isStoreOpen = false;
-  // TODO: API에 따라 수정
-
+export default function OpenSwitch({ className, isStoreOpen }: IProps) {
   return (
     <div
       className={cn(

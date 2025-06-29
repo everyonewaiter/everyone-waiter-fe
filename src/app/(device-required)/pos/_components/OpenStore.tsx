@@ -1,26 +1,39 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import QueryProviders from "@/app/query-providers";
 import Alert from "@/components/common/Alert/Alert";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
+import usePos from "../_queries/usePos";
 
 export default function OpenStore() {
-  const isStoreOpen = false;
-  // TODO: API에 따라 수정하기
+  const navigate = useRouter();
 
   const { open, close } = useOverlay();
 
+  const {
+    store: { open: storeOpen, close: storeClose },
+    storeStatus,
+  } = usePos();
+  const { data: status } = storeStatus;
+  const isStoreOpen = status?.status === "OPEN";
+
   const handleOpenStore = () => {
+    const successHandler = () => {
+      close();
+      navigate.push("/pos");
+    };
+
     open(() => (
       <QueryProviders>
         <Alert
           onClose={close}
-          // TODO: buttonText={isStoreOpen ? "마감하기" : "오픈하기"}
+          buttonText={isStoreOpen ? "마감하기" : "오픈하기"}
           onAction={() => {
-            // TODO: 열려 있다면 close
-            // TODO: 닫혀 있다면 open
-            close();
+            if (isStoreOpen)
+              storeClose.mutate(undefined, { onSuccess: successHandler });
+            else storeOpen.mutate(undefined, { onSuccess: successHandler });
           }}
         >
           매장을 {isStoreOpen ? "마감" : "오픈"}하시겠습니까?

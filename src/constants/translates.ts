@@ -20,6 +20,7 @@ export const registerStateTranslate: Record<RegisterStatus, string> = {
 export const paymentTimeTranslate = {
   PREPAID: "선결제",
   POSTPAID: "후결제",
+  null: "대기",
 } as const;
 
 export const deviceTranslate = {

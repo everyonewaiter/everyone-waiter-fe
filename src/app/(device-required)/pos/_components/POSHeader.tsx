@@ -1,13 +1,13 @@
 "use client";
 
-import { ReactNode } from "react";
+import { PropsWithChildren } from "react";
 import Link from "next/link";
 import Icon from "@/components/common/Icon";
 import useGetDate from "@/hooks/useGetDate";
 import Image from "next/image";
 import OpenStore from "./OpenStore";
 
-export default function POSHeader({ children }: { children?: ReactNode }) {
+export default function POSHeader({ children }: PropsWithChildren) {
   const now = new Date();
   const { fullDate, day, time } = useGetDate(now);
 

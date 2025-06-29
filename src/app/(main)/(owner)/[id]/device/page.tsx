@@ -175,7 +175,7 @@ export default function Device() {
                   {stateTranslate[item.state as Status]}
                 </TableCell>
                 <TableCell className={itemWidth["등록 일시"]}>
-                  {transformDate(item.updatedAt)}
+                  {transformDate(item.createdAt)}
                 </TableCell>
               </TableRow>
             ))}

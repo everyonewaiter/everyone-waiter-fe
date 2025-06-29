@@ -8,9 +8,9 @@ import { deviceKeys } from "../../../device/_queries/keys";
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{ params: { id: string; deviceId: string } }>) {
+}: PropsWithChildren<{ params: Promise<{ id: string; deviceId: string }> }>) {
   const queryClient = getQueryClient();
-  const { id, deviceId } = params;
+  const { id, deviceId } = await params;
 
   await queryClient.prefetchQuery({
     queryKey: deviceKeys.detail(id, deviceId),

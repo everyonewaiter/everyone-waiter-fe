@@ -76,6 +76,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
             }
 
             const { accessToken } = await renewToken({ refreshToken });
+            console.log("refresh: success ✅");
 
             await setCookie("accessToken", accessToken);
             return accessToken;

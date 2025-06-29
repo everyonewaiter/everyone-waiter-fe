@@ -1,5 +1,14 @@
-import { PropsWithChildren, Suspense } from "react";
+import getQueryClient from "@/app/get-query-client";
+import { PropsWithChildren } from "react";
+import { getStoreStatus } from "./_api/pos.api";
 
-export default function PosLayout({ children }: PropsWithChildren) {
-  return <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>;
+export default async function Layout({ children }: PropsWithChildren) {
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["store-status"],
+    queryFn: getStoreStatus,
+  });
+
+  return children;
 }

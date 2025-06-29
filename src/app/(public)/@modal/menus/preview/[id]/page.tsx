@@ -32,11 +32,6 @@ const dummy: MenuDetail | undefined = {
 };
 
 export default function Page() {
-  // const params = useParams();
-  // const menuId = params?.menuId as string;
-
-  // const { storeId } = useStoreContext();
-
   return (
     <MenuModal
       data={dummy!}

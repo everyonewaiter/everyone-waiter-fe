@@ -1,46 +1,87 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import cn from "@/lib/utils";
+import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
+import useOverlay from "@/hooks/use-overlay";
 import Floating from "../../_components/Floating";
 import POSMenuCard from "../../_components/POSMenuCard";
 import SideSection from "../../_components/SideSection";
 import POSHeader from "../../_components/POSHeader";
-
-const dummyCategory = [
-  {
-    categoryId: "1",
-    name: "전체",
-  },
-  { categoryId: "2", name: "스테이크" },
-  { categoryId: "3", name: "파스타" },
-  { categoryId: "4", name: "라멘" },
-  { categoryId: "5", name: "볶음밥" },
-];
-
-const dummy: Menu[] = [
-  {
-    menuId: "694865267482835533",
-    categoryId: "694865267482835533",
-    name: "안심 스테이크",
-    description: "1++ 한우 안심을 사용합니다.",
-    price: 34900,
-    spicy: 0,
-    state: "DEFAULT",
-    label: "BEST",
-    image: "license/202505/0KJTZ2DXCDJJZ.webp",
-  },
-];
+import usePos from "../../_queries/usePos";
+import MenuModal from "../../_components/modals/MenuModal";
+import useOrder from "../../_queries/useOrder";
 
 export default function DetailTableOrder() {
-  const navigate = useRouter();
   const params = useParams();
-  const tableId = params?.id as string;
+  const tableNo = params?.tableId as string;
 
-  const [isActive, setIsActive] = useState("1");
+  const [isActive, setIsActive] = useState("전체");
+  const [orders, setOrders] = useState<
+    {
+      menuId: string;
+      menuName: string;
+      quantity: number;
+      totalPrice: number;
+      menuOptionGroups: OrderOptionGroups[];
+    }[]
+  >([]);
+
+  const { open, close } = useOverlay();
+
+  const deviceInfo = useDeviceInfo();
+  const { data: device } = deviceInfo;
+  const { menuList, activity } = usePos();
+  const categories = menuList(device?.storeId as string).data?.categories;
+  const allMenus = categories?.map((el) => el.menus).flat();
+  const selectedCategory = categories?.find(
+    (el) => el.categoryId === isActive
+  )?.menus;
+
+  const { data } = activity(Number(tableNo));
+
+  const { order } = useOrder();
+
+  const list = isActive === "전체" ? allMenus : selectedCategory;
+
+  const handleOpenDetail = (menuId: string) => {
+    open(() => (
+      <MenuModal
+        data={allMenus?.find((el) => el.menuId === menuId)!}
+        type="order"
+        layoutClassName="!w-[1002px] !h-[650px]"
+        close={close}
+        onAddOrderMenu={(item) => setOrders((prev) => [...prev, item])}
+      />
+    ));
+  };
+
+  const handleTest = () => {
+    order.mutate({
+      tableNo: 1,
+      memo: "",
+      orderMenus: [
+        {
+          menuId: "722810156599542759",
+          quantity: 1,
+          menuOptionGroups: [
+            {
+              menuOptionGroupId: "723104939523054747",
+              orderOptions: [
+                {
+                  name: "3",
+                  price: 3000,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  };
 
   return (
     <div className="flex flex-row">
@@ -48,7 +89,18 @@ export default function DetailTableOrder() {
         <POSHeader />
         <div className="relative px-[60px] pt-8">
           <div className="flex flex-row gap-3">
-            {dummyCategory.map((category) => (
+            <Button
+              variant={isActive === "전체" ? "default" : "outline"}
+              color={isActive === "전체" ? "primary" : "black"}
+              className={cn(
+                "button-sm text-s px-5",
+                isActive === "전체" ? "text-white" : "text-gray-0"
+              )}
+              onClick={() => setIsActive("전체")}
+            >
+              전체
+            </Button>
+            {categories?.map((category) => (
               <Button
                 key={category.categoryId}
                 variant={
@@ -69,22 +121,25 @@ export default function DetailTableOrder() {
           </div>
           <ScrollArea className="h-[856px] w-full pt-9">
             <div className="grid grid-cols-4 gap-x-6 gap-y-8">
-              {dummy?.map((menu) => (
+              {list?.map((menu) => (
                 <Fragment key={menu.menuId}>
                   <POSMenuCard
-                    onClick={() =>
-                      navigate.push(`/pos/tables/${tableId}/${menu.menuId}`)
-                    }
+                    onClick={() => handleOpenDetail(menu.menuId)}
                     {...menu}
                   />
                 </Fragment>
               ))}
             </div>
+
+            {/* TEST */}
+            <button type="button" onClick={handleTest}>
+              주문 추가하기
+            </button>
           </ScrollArea>
-          <Floating />
+          <Floating hasData={data?.active!} tableNo={Number(tableNo)} />
         </div>
       </div>
-      <SideSection />
+      <SideSection orders={orders} resetOrder={() => setOrders([])} />
     </div>
   );
 }

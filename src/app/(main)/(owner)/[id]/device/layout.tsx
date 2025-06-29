@@ -1,8 +1,8 @@
 import PageTitle from "@/app/(main)/_components/PageTitle";
 import getQueryClient from "@/app/get-query-client";
-import { getDevices } from "@/app/(device-required)/device/_api/device.api";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
+import { getDevices } from "./_api/device.api";
 
 export default async function Layout({
   children,

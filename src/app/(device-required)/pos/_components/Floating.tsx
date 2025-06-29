@@ -31,9 +31,20 @@ const FLOATING_ITEMS = [
   },
 ];
 
-export default function Floating() {
+interface IProps {
+  hasData: boolean;
+  tableNo: number;
+}
+
+export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
+
+  const list = hasData
+    ? FLOATING_ITEMS
+    : FLOATING_ITEMS.filter((el) =>
+        ["테이블 목록으로 이동", "메모"].includes(el.label)
+      );
 
   const handleAction = (type: string) => {
     if (type === "arrow-turn-right") navigate.push("/pos/tables");
@@ -41,7 +52,7 @@ export default function Floating() {
     else {
       open(() => (
         <QueryProviders>
-          {type === "book" && <MemoAlert close={close} />}
+          {type === "book" && <MemoAlert close={close} tableNo={tableNo} />}
           {type === "send" && <ResendAlert close={close} />}
         </QueryProviders>
       ));
@@ -49,12 +60,12 @@ export default function Floating() {
   };
 
   return (
-    <aside className="shadow-floating font-regular text-gray-0 absolute bottom-7 left-1/2 flex h-[76px] w-[885px] -translate-x-1/2 flex-row rounded-[40px] bg-white px-10 py-6 text-xl">
-      {FLOATING_ITEMS.map((item, index, arr) => (
+    <aside className="shadow-floating font-regular text-gray-0 absolute bottom-7 left-1/2 flex h-[76px] -translate-x-1/2 flex-row rounded-[40px] bg-white px-10 py-6 text-xl">
+      {list?.map((item, index, arr) => (
         <Fragment key={item.label}>
           <button
             type="button"
-            className="flex items-center gap-2"
+            className="inline-flex items-center gap-2 whitespace-nowrap"
             onClick={() => handleAction(item.icon)}
           >
             <Icon iconKey={item.icon} className="text-gray-0" />

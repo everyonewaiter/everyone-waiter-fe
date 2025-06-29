@@ -8,7 +8,7 @@ export default function Header() {
     <div className="mt-8 flex w-full justify-between md:mt-0">
       <div className="flex flex-col gap-1 lg:gap-3">
         <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
-          매장 정보
+          메뉴 상세
         </h1>
         <p className="font-regular md:text-s text-xs text-gray-300 lg:text-sm">
           메뉴의 세부 정보를 입력하고 옵션을 설정해 주세요.

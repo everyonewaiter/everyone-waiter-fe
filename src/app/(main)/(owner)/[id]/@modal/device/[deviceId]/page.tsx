@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   deviceTranslate,
   paymentTimeTranslate,
@@ -14,6 +14,7 @@ import Label from "@/components/common/Label";
 import { Form } from "@/components/common/Form";
 import { useEffect } from "react";
 import useDevice from "../../../device/_queries/useDevice";
+import ModalButton from "../../_components/ModalButton";
 
 export default function DeviceInfoModal() {
   const params = useParams();
@@ -24,6 +25,7 @@ export default function DeviceInfoModal() {
   const { data } = detailQuery(deviceId, storeId);
 
   const queryClient = getQueryClient();
+  const navigate = useRouter();
 
   const form = useForm<
     Omit<Device, "updatedAt" | "storeId" | "deviceId"> & {
@@ -68,6 +70,7 @@ export default function DeviceInfoModal() {
       },
       {
         onSuccess: () => {
+          navigate.back();
           queryClient.invalidateQueries({ queryKey: ["get-devices"] });
         },
         onError: (e) => {
@@ -89,20 +92,8 @@ export default function DeviceInfoModal() {
         onSubmit={form.handleSubmit(submitHandler)}
       >
         <LabeledInput form={form} name="name" label="기기 이름" />
-        <LabeledInput
-          form={form}
-          name="createdAt"
-          label="등록일시"
-          disabled
-          labelDisabled
-        />
-        <LabeledInput
-          form={form}
-          name="state"
-          label="상태"
-          disabled
-          labelDisabled
-        />
+        <LabeledInput form={form} name="createdAt" label="등록일시" disabled />
+        <LabeledInput form={form} name="state" label="상태" disabled />
         <div className="flex flex-col gap-2">
           <Label>권한</Label>
           <Dropdown
@@ -125,9 +116,13 @@ export default function DeviceInfoModal() {
             className="md:!w-[348px] lg:!w-[476px]"
           />
         </div>
-        {data?.purpose === "HALL" && (
+        {["HALL", "TABLE"].includes(form.watch("purpose")) && (
+          <LabeledInput form={form} name="tableNo" label="테이블 번호" />
+        )}
+
+        {(form.watch("purpose") === "HALL" ||
+          form.watch("purpose") === "TABLE") && (
           <>
-            <LabeledInput form={form} name="tableNo" label="테이블 번호" />
             <div className="flex flex-col gap-2">
               <Label>결제 방식</Label>
               <Dropdown
@@ -155,6 +150,7 @@ export default function DeviceInfoModal() {
             <LabeledInput form={form} name="deviceNumber" label="단말기 번호" />
           </>
         )}
+        <ModalButton buttonText="확인" type="submit" />
       </form>
     </Form>
   );

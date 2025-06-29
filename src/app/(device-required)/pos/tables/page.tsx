@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,52 +10,31 @@ import Alert from "@/components/common/Alert/Alert";
 import { ChevronsRight } from "lucide-react";
 import TableBox from "../_components/TableBox";
 import POSHeader from "../_components/POSHeader";
-
-const dummy = [
-  {
-    paymentType: "POSTPAID",
-    orderedMenu: ["바질 알리오올리오", "마르게리타 피자", "제로 콜라"],
-    total: 74000,
-    tableNo: 1,
-    elapsedTime: "00:00",
-    orderedTime: "00:00",
-  },
-  {
-    paymentType: "PREPAID",
-    orderedMenu: ["바질 알리오올리오", "마르게리타 피자"],
-    total: 74000,
-    tableNo: 2,
-    elapsedTime: "00:00",
-    orderedTime: "00:00",
-  },
-  {
-    paymentType: "PREPAID",
-    orderedMenu: [],
-    total: 0,
-    tableNo: 3,
-    elapsedTime: "00:00",
-    orderedTime: "00:00",
-  },
-  {
-    paymentType: "POSTPAID",
-    orderedMenu: ["바질 알리오올리오"],
-    total: 74000,
-    tableNo: 4,
-    elapsedTime: "00:00",
-    orderedTime: "00:00",
-  },
-];
+import usePos from "../_queries/usePos";
+import useDeviceInfo from "../../device/_queries/useDeviceInfo";
 
 export default function PosTables() {
   const navigate = useRouter();
   const searchParams = useSearchParams();
   const move = searchParams.get("move");
 
+  const deviceInfo = useDeviceInfo();
+  const { data: device } = deviceInfo;
+
   const { open, close } = useOverlay();
+  const { list } = usePos();
+  const { data, isLoading } = list(!!device?.deviceId);
+
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      setHasLoadedOnce(true);
+    }
+  }, [data, isLoading]);
 
   const handleChangeTable = (tableNo: number) => {
     // 원래 테이블이라면 액션 금지
-    if (tableNo === 2) return;
     // 모달
     open(() => (
       <QueryProviders>
@@ -96,9 +76,9 @@ export default function PosTables() {
   };
 
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <POSHeader />
-      <div className="px-[60px] pt-8">
+      <div className="flex flex-1 flex-col px-[60px] pt-8">
         {move && (
           <Button
             variant="outline"
@@ -116,17 +96,34 @@ export default function PosTables() {
             </span>
           </Button>
         )}
-        <div className="grid grid-cols-4 gap-x-6 gap-y-8">
-          {dummy.map((item) => (
-            <TableBox
-              key={item.tableNo}
-              {...item}
-              paymentType={item.paymentType as "POSTPAID" | "PREPAID"}
-              isMoving={!!move}
-              onClick={() => handleChangeTable(item.tableNo)}
-            />
-          ))}
-        </div>
+        {hasLoadedOnce && data?.tables?.length! > 0 && (
+          <div className="grid grid-cols-4 gap-x-6 gap-y-8">
+            {data?.tables?.map((item) => (
+              <TableBox
+                key={item.tableNo}
+                isMoving={!!move}
+                onClick={() =>
+                  move
+                    ? handleChangeTable(item.tableNo)
+                    : navigate.push(
+                        `/pos/tables/${item.tableNo}?storeId=${device?.storeId}`
+                      )
+                }
+                {...item}
+              />
+            ))}
+          </div>
+        )}
+        {!hasLoadedOnce && (
+          <div className="text-gray-0 flex flex-1 items-center justify-center text-center text-2xl">
+            테이블 목록을 가져오는 중입니다.
+          </div>
+        )}
+        {hasLoadedOnce && data?.tables?.length === 0 && (
+          <div className="text-gray-0 flex flex-1 items-center justify-center text-center text-2xl">
+            등록된 테이블이 없습니다.
+          </div>
+        )}
       </div>
     </div>
   );

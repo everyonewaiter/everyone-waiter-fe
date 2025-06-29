@@ -42,7 +42,7 @@ export const sendAuthCodeInDevice = async ({
   return response.data;
 };
 
-export const getDeviceDetail = async () => {
+export const getDeviceDetail = async (): Promise<DeviceDetail> => {
   const response = await signatureInstance.get(`${API_PATH.devices}`);
   return response.data;
 };
