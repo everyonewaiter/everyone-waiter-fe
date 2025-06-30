@@ -11,7 +11,7 @@ export default function Home() {
   const router = useRouter();
 
   const { storesList, registrationList } = useStores();
-  const { data, isLoading } = storesList(true);
+  const { data, isLoading } = storesList();
   const { data: registerData } = registrationList();
   const firstStoreId = data?.stores?.[0].storeId;
 

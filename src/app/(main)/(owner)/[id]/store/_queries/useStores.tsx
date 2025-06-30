@@ -65,13 +65,12 @@ const useStores = () => {
       },
     });
 
-  const storesList = (enabled: boolean) =>
+  const storesList = () =>
     useQuery<{
       stores: { storeId: string; name: string }[];
     }>({
       queryKey: storeKeys.stores(),
       queryFn: getStoreList,
-      enabled,
     });
 
   const storesDetail = (storeId: string) =>
