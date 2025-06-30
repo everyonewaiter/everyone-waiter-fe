@@ -13,6 +13,7 @@ import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/common/Radio";
 import { MinusIcon } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface FormType {
@@ -25,9 +26,15 @@ interface IProps {
   close: () => void;
   total: number;
   onAction: (discountValue: number) => void;
+  initialValue: number;
 }
 
-export default function AddDiscountAlert({ close, total, onAction }: IProps) {
+export default function AddDiscountAlert({
+  close,
+  total,
+  onAction,
+  initialValue,
+}: IProps) {
   const form = useForm<FormType>({
     defaultValues: {
       discount: null,
@@ -35,6 +42,14 @@ export default function AddDiscountAlert({ close, total, onAction }: IProps) {
       discountType: "fixed",
     },
   });
+
+  useEffect(() => {
+    if (initialValue) {
+      form.setValue("discount", initialValue);
+      form.setValue("result", total - initialValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValue]);
 
   return (
     <Alert

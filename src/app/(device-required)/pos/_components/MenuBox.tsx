@@ -1,36 +1,42 @@
 import { PlusIcon } from "lucide-react";
 import Checkbox from "@/components/common/Checkbox";
-import { useState } from "react";
+import cn from "@/lib/utils";
 
-interface IProps {
-  orderMenus: TableOrderMenu[];
+interface IProps extends TableOrder {
   index: number;
-  orderId: string;
+  onSelect?: (menuid: TableOrderMenu) => void;
+  select?: string;
+  checked?: boolean;
+  onCheckedChange?: () => void;
 }
 
-export default function MenuBox({ orderId, orderMenus, index }: IProps) {
-  const [selectedOrder, setSelectedOrder] = useState<{ orderId: string }[]>([]);
-
+export default function MenuBox({
+  index,
+  onSelect,
+  select,
+  checked,
+  onCheckedChange,
+  ...props
+}: IProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-3">
         <Checkbox
           className="h-6 w-6"
-          checked={!!selectedOrder.find((v) => v.orderId === orderId)}
-          onCheckedChange={() =>
-            selectedOrder.find((v) => v.orderId === orderId)
-              ? setSelectedOrder(
-                  selectedOrder.filter((el) => el.orderId !== orderId)
-                )
-              : setSelectedOrder([...selectedOrder, { orderId }])
-          }
+          checked={checked}
+          onCheckedChange={onCheckedChange}
         />
         <strong className="text-2xl font-semibold">{index + 1}</strong>
       </div>
-      {orderMenus.map((menu) => (
-        <div
+      {props.orderMenus.map((menu) => (
+        <button
+          type="button"
           key={menu.orderMenuId}
-          className="rounded-[12px] border border-gray-600 p-4"
+          className={cn(
+            "rounded-[12px] border p-4",
+            select === menu.orderMenuId ? "border-primary" : "border-gray-600"
+          )}
+          onClick={() => onSelect?.(menu)}
         >
           <div className="flex items-center justify-between">
             <span className="text-lg font-medium">{menu.name}</span>
@@ -56,7 +62,7 @@ export default function MenuBox({ orderId, orderMenus, index }: IProps) {
               ))
             )}
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );

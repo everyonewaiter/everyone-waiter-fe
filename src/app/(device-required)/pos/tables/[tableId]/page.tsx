@@ -14,18 +14,23 @@ import usePos from "../../_queries/usePos";
 import MenuModal from "../../_components/modals/MenuModal";
 import { useMemoStore } from "../../_hooks/useMemoStore";
 import SideSection from "../../_components/SideSection/SideSection";
+import { useOrderStore } from "../../_hooks/useOrderStore";
+import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
 
 export default function DetailTableOrder() {
   const params = useParams();
   const tableNo = params?.tableId as string;
 
   const [isActive, setIsActive] = useState("전체");
-  const [orders, setOrders] = useState<CustomOrder[]>([]);
 
+  const { orders, addOrders } = useOrderStore();
   const { open, close } = useOverlay();
+  const { setOriginMemo } = useMemoStore();
+  const { resetCheckedMenu } = useCheckedMenuStore();
 
   const deviceInfo = useDeviceInfo();
   const { data: device } = deviceInfo;
+
   const { menuList, activity } = usePos();
   const { data: menus, isLoading } = menuList(device?.storeId as string);
   const allMenus = menus?.categories?.map((el) => el.menus).flat();
@@ -34,8 +39,6 @@ export default function DetailTableOrder() {
   )?.menus;
 
   const { data } = activity(Number(tableNo));
-
-  const { setOriginMemo } = useMemoStore();
 
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
@@ -53,9 +56,29 @@ export default function DetailTableOrder() {
         .join(", ");
       setOriginMemo(origin);
     }
-  }, [data]);
+  }, [data, setOriginMemo]);
 
   const list = isActive === "전체" ? allMenus : selectedCategory;
+
+  const isSameOrder = (a: CustomOrder, b: CustomOrder): boolean => {
+    if (a.menuId !== b.menuId) return false;
+    if (a.menuOptionGroups.length !== b.menuOptionGroups.length) return false;
+
+    return a.menuOptionGroups.every((groupA) => {
+      const groupB = b.menuOptionGroups.find(
+        (g) => g.orderOptionGroupId === groupA.orderOptionGroupId
+      );
+      if (!groupB) return false;
+      if (groupA.orderOptions.length !== groupB.orderOptions.length)
+        return false;
+
+      return groupA.orderOptions.every((optA) =>
+        groupB.orderOptions.some(
+          (optB) => optA.name === optB.name && optA.price === optB.price
+        )
+      );
+    });
+  };
 
   const handleOpenDetail = (menuId: string) => {
     open(() => (
@@ -64,14 +87,35 @@ export default function DetailTableOrder() {
         type="order"
         layoutClassName="!w-[1002px] !h-[650px]"
         close={close}
-        onAddOrderMenu={(item) => setOrders((prev) => [...prev, item])}
+        onAddOrderMenu={(item) => {
+          const exists = orders.find((order) => isSameOrder(order, item));
+
+          if (exists) {
+            // eslint-disable-next-line no-alert
+            alert("이미 같은 메뉴와 옵션이 있습니다.");
+            return;
+          }
+
+          addOrders(item);
+        }}
       />
     ));
   };
 
   return (
     <div className="flex min-h-screen flex-row">
-      <div className="relative flex flex-1 flex-col">
+      <div
+        className="relative flex flex-1 cursor-pointer flex-col"
+        onClick={resetCheckedMenu}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            resetCheckedMenu();
+          }
+        }}
+      >
         <POSHeader />
         {!hasLoadedOnce && (
           <div className="text-gray-0 center h-full text-center text-xl">
@@ -134,13 +178,9 @@ export default function DetailTableOrder() {
             )}
           </div>
         </div>
-        <Floating
-          hasData={data?.active!}
-          tableNo={Number(tableNo)}
-          hasOrder={!!orders.length}
-        />
+        <Floating hasData={data?.active!} tableNo={Number(tableNo)} />
       </div>
-      <SideSection orders={orders} resetOrder={() => setOrders([])} />
+      <SideSection />
     </div>
   );
 }

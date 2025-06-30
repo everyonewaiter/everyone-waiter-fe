@@ -1,8 +1,11 @@
 import { ScrollArea } from "@/components/common/ScrollArea";
 import { Fragment } from "react";
+import cn from "@/lib/utils";
 import OrderBox from "../OrderBox";
 import MenuBox from "../MenuBox";
-import useSelectedMenuStore from "../../_hooks/useSelectedMenu";
+import getOrderKey from "../../_utils/get-order-key";
+import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
+import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
 
 interface IProps {
   orders: {
@@ -13,70 +16,47 @@ interface IProps {
     menuOptionGroups: OrderOptionGroups[];
   }[];
   activityOrders: TableOrder[];
-  menuSelection: {
-    value: string;
-    setValue: (value: string) => void;
-  };
-  orderSelection: {
-    value: { orderId: string }[];
-    setValue: (value: { orderId: string }[]) => void;
-  };
 }
 
-export default function SideContents({
-  orders,
-  activityOrders,
-  menuSelection,
-  orderSelection,
-}: IProps) {
-  const { selectedMenus, addSelectedMenus, deleteSelectedMenus } =
-    useSelectedMenuStore();
+export default function SideContents({ orders, activityOrders }: IProps) {
+  const { checkedMenu, changeCheckedMenu } = useCheckedMenuStore();
+  const { selectedMenu, setSelectedMenu, selectedOrder, setSelectedOrder } =
+    useSelectItemStore();
 
   return (
-    <ScrollArea className="h-[calc(100dvh-602px)]">
+    <ScrollArea
+      className={cn(
+        "w-full",
+        orders?.length > 0 ? "h-[calc(100dvh-458px)]" : "h-[calc(100dvh-602px)]"
+      )}
+    >
       {orders?.length > 0
-        ? orders?.map((item, index, arr) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <Fragment key={item.menuId + index}>
+        ? orders?.map((item, index) => (
+            <div
+              key={getOrderKey(item)}
+              className={cn(index === 0 ? "" : "mt-3")}
+            >
               <OrderBox
-                index={index}
-                hasCheckbox
-                orderOptionGroups={item.menuOptionGroups}
-                onCheckedChange={() =>
-                  selectedMenus.find((v) => v.id === item.menuId)
-                    ? deleteSelectedMenus(item.menuId)
-                    : addSelectedMenus(item.menuId)
+                onSelect={() =>
+                  changeCheckedMenu(item.menuId, getOrderKey(item))
                 }
-                checked={!!selectedMenus.find((v) => v.id === item.menuId)}
-                menuName={item.menuName}
-                quantity={item.quantity}
+                select={checkedMenu.key === getOrderKey(item)}
+                {...item}
               />
-              {index < arr.length - 1 && (
-                <div className="my-8 h-[2px] w-full bg-gray-700" />
-              )}
-            </Fragment>
+            </div>
           ))
         : activityOrders?.map((item, index, arr) => (
             <Fragment key={item.orderId}>
               <MenuBox
                 index={index}
                 {...item}
-                onDeleteMenu={(id) => menuSelection.setValue(id)}
-                selectDeleteMenu={menuSelection.value}
-                checked={
-                  !!orderSelection.value.find((v) => v.orderId === item.orderId)
-                }
+                select={selectedMenu?.orderMenuId}
+                onSelect={setSelectedMenu}
+                checked={selectedOrder?.orderId === item.orderId}
                 onCheckedChange={() =>
-                  orderSelection.value.find((v) => v.orderId === item.orderId)
-                    ? orderSelection.setValue(
-                        orderSelection.value.filter(
-                          (el) => el.orderId !== item.orderId
-                        )
-                      )
-                    : orderSelection.setValue([
-                        ...orderSelection.value,
-                        { orderId: item.orderId },
-                      ])
+                  selectedOrder?.orderId === item.orderId
+                    ? setSelectedOrder(null)
+                    : setSelectedOrder(item)
                 }
               />
               {index < arr.length - 1 && (

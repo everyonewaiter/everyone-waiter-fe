@@ -4,9 +4,12 @@ import { useRouter } from "next/navigation";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import MemoAlert from "./modals/MemoAlert";
 import ResendAlert from "./modals/ResendAlert";
+import { useOrderStore } from "../_hooks/useOrderStore";
+import { useSelectItemStore } from "../_hooks/useSelectItemStore";
+import { useMemoStore } from "../_hooks/useMemoStore";
 
 const FLOATING_ITEMS = [
   {
@@ -25,10 +28,10 @@ const FLOATING_ITEMS = [
     label: "테이블 목록으로 이동",
     icon: "arrow-turn-right",
   },
-  {
-    label: "저장하기",
-    icon: "save",
-  },
+  // {
+  //   label: "저장하기",
+  //   icon: "save",
+  // },
 ];
 
 interface IProps {
@@ -39,6 +42,16 @@ interface IProps {
 export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
+
+  const { orders } = useOrderStore();
+  const { selectedOrder } = useSelectItemStore();
+  const { setMemo } = useMemoStore();
+
+  useEffect(() => {
+    if (selectedOrder) {
+      setMemo(selectedOrder.memo || "작성된 메모가 없습니다.");
+    }
+  }, [selectedOrder, setMemo]);
 
   const list = hasData
     ? FLOATING_ITEMS
@@ -53,7 +66,13 @@ export default function Floating({ hasData, tableNo }: IProps) {
     else {
       open(() => (
         <QueryProviders>
-          {type === "book" && <MemoAlert close={close} tableNo={tableNo} />}
+          {type === "book" && (
+            <MemoAlert
+              close={close}
+              tableNo={tableNo}
+              isOrder={orders.length > 0}
+            />
+          )}
           {type === "send" && <ResendAlert close={close} />}
         </QueryProviders>
       ));
