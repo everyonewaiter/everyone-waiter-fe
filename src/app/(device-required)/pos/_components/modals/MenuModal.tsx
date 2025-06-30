@@ -47,13 +47,23 @@ function MenuModal({
     }
   };
 
+  const defaultRequiredOptions: Omit<OrderOptionGroups, "printEnabled">[] =
+    data.menuOptionGroups
+      .filter((group) => group.type === "MANDATORY")
+      .map((group) => ({
+        orderOptionGroupId: group.menuOptionGroupId,
+        name: group.name,
+        type: group.type,
+        orderOptions: group.menuOptions.length ? [group.menuOptions[0]] : [],
+      }));
+
   const form = useForm<{
     required: Omit<OrderOptionGroups, "printEnabled">[];
     optional: Omit<OrderOptionGroups, "printEnabled">[];
   }>({
     mode: "onChange",
     defaultValues: {
-      required: [],
+      required: defaultRequiredOptions,
       optional: [],
     },
   });
