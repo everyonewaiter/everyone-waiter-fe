@@ -14,8 +14,8 @@ import {
 import cn from "@/lib/utils";
 import Button from "@/components/common/Button/Button";
 import Paginations from "@/components/common/Pagination/Paginations";
-import SideLayout from "../../_components/SideLayout";
 import SideSection2 from "../../_components/SideSection2";
+import SideLayout from "../../_components/SideSection/SideLayout";
 
 const itemWidth = {
   "No.": "flex-[5]",
