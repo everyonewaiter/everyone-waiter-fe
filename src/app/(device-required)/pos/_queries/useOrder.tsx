@@ -34,6 +34,9 @@ export default function useOrder() {
 
   const complete = useMutation({
     mutationFn: completeOrder,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+    },
   });
 
   const staffCalling = useMutation({
