@@ -25,6 +25,7 @@ export default function SideBottom({
           close={close}
           total={totalOrderPrice!}
           onAction={onAddDiscount}
+          initialValue={discount}
         />
       </QueryProviders>
     ));
