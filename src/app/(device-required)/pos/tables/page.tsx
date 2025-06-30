@@ -16,14 +16,14 @@ import useDeviceInfo from "../../device/_queries/useDeviceInfo";
 export default function PosTables() {
   const navigate = useRouter();
   const searchParams = useSearchParams();
-  const move = searchParams.get("move");
+  const moveSourceTableNo = searchParams.get("sourceTableNo");
 
   const deviceInfo = useDeviceInfo();
   const { data: device } = deviceInfo;
 
   const { open, close } = useOverlay();
-  const { list } = usePos();
-  const { data, isLoading } = list(!!device?.deviceId);
+  const { tableList, move } = usePos();
+  const { data, isLoading } = tableList(!!device?.deviceId);
 
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
@@ -34,19 +34,40 @@ export default function PosTables() {
   }, [data, isLoading]);
 
   const handleChangeTable = (tableNo: number) => {
-    // 원래 테이블이라면 액션 금지
+    if (tableNo === Number(moveSourceTableNo)) return;
+
+    const handleMove = () => {
+      move.mutate(
+        {
+          sourceTableNo: Number(moveSourceTableNo),
+          targetTableNo: tableNo,
+        },
+        {
+          onSuccess: () => {
+            close();
+            navigate.replace(window.location.pathname);
+          },
+        }
+      );
+    };
+
     // 모달
     open(() => (
       <QueryProviders>
-        <Alert onClose={close} buttonColor="black" buttonText="이동하기">
+        <Alert
+          onClose={close}
+          buttonColor="black"
+          buttonText="이동하기"
+          onAction={handleMove}
+        >
           <div className="flex flex-col gap-8">
             <div className="flex gap-3">
               <Button
                 variant="outline"
                 color="grey"
-                className="text-gray-0 h-20 w-full rounded-[16px] p-6"
+                className="text-gray-0 h-20 w-full rounded-[16px] !border-gray-600 p-6"
               >
-                2번 테이블
+                {moveSourceTableNo}번 테이블
               </Button>
               <ChevronsRight strokeWidth={1} />
               <Button
@@ -59,7 +80,7 @@ export default function PosTables() {
             </div>
             <div className="flex flex-col gap-3">
               <p className="text-lg font-medium text-gray-100">
-                2번 테이블에서{" "}
+                {moveSourceTableNo}번 테이블에서{" "}
                 <strong className="text-primary text-xl font-medium">
                   {tableNo}번 테이블
                 </strong>
@@ -79,11 +100,11 @@ export default function PosTables() {
     <div className="flex min-h-screen flex-col">
       <POSHeader />
       <div className="flex flex-1 flex-col px-[60px] pt-8">
-        {move && (
+        {!!moveSourceTableNo && (
           <Button
             variant="outline"
             color="black"
-            className="mb-6 flex h-[58px] gap-2 rounded-[24px] px-5 py-[15px]"
+            className="mb-6 flex h-[58px] !w-fit gap-2 rounded-[24px] px-5 py-[15px]"
             onClick={() => navigate.back()}
           >
             <Icon
@@ -92,7 +113,7 @@ export default function PosTables() {
               className="text-gray-0"
             />
             <span className="font-regular text-gray-0 text-xl">
-              테이블 목록으로 이동
+              테이블 상세로 이동
             </span>
           </Button>
         )}
@@ -101,9 +122,10 @@ export default function PosTables() {
             {data?.tables?.map((item) => (
               <TableBox
                 key={item.tableNo}
-                isMoving={!!move}
+                isMoving={!!moveSourceTableNo}
+                hasAnimation={Number(moveSourceTableNo) !== item.tableNo}
                 onClick={() =>
-                  move
+                  moveSourceTableNo
                     ? handleChangeTable(item.tableNo)
                     : navigate.push(
                         `/pos/tables/${item.tableNo}?storeId=${device?.storeId}`

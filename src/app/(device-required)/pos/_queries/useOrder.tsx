@@ -20,6 +20,9 @@ export default function useOrder() {
 
   const cancel = useMutation({
     mutationFn: cancelOrder,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+    },
   });
 
   const addDiscount = useMutation({

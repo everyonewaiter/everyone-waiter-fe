@@ -1,14 +1,18 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import getQueryClient from "@/app/get-query-client";
 import {
   closeStore,
   getPosMenuList,
   getStoreStatus,
   getTableActivity,
   getTables,
+  moveTables,
   openStore,
 } from "../_api/pos.api";
 
 export default function usePos() {
+  const queryClient = getQueryClient();
+
   const open = useMutation({
     mutationFn: openStore,
   });
@@ -30,7 +34,7 @@ export default function usePos() {
       enabled: menuId ? !!storeId && !!menuId : !!storeId,
     });
 
-  const list = (enabled: boolean) =>
+  const tableList = (enabled: boolean) =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useQuery({
       queryKey: ["table-list"],
@@ -46,11 +50,19 @@ export default function usePos() {
       enabled: !!tableNo,
     });
 
+  const move = useMutation({
+    mutationFn: moveTables,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["table-list"] });
+    },
+  });
+
   return {
     store: { open, close },
     menuList,
-    list,
+    tableList,
     activity,
     storeStatus,
+    move,
   };
 }

@@ -7,9 +7,15 @@ import useElapsedMinutes from "../../waiting/_hooks/useElapsedMinutes";
 type IProps = POSTableList & {
   isMoving?: boolean;
   onClick?: () => void;
+  hasAnimation?: boolean;
 };
 
-export default function TableBox({ isMoving, onClick, ...props }: IProps) {
+export default function TableBox({
+  isMoving,
+  onClick,
+  hasAnimation,
+  ...props
+}: IProps) {
   const elapsed = useElapsedMinutes(props.orderedAt);
 
   return (
@@ -19,7 +25,9 @@ export default function TableBox({ isMoving, onClick, ...props }: IProps) {
       className={cn(
         "flex h-[320px] w-[432px] flex-col justify-between rounded-[24px] border-[2px] p-7 text-left",
         props.orderMenuCount > 0 ? "border-primary" : "border-gray-500",
-        isMoving ? "animate-wiggle cursor-pointer" : "cursor-default"
+        isMoving && hasAnimation
+          ? "animate-wiggle cursor-pointer"
+          : "cursor-default"
       )}
       onClick={onClick}
       onKeyDown={(e) => {

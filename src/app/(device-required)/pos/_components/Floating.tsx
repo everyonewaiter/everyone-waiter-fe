@@ -48,7 +48,8 @@ export default function Floating({ hasData, tableNo }: IProps) {
 
   const handleAction = (type: string) => {
     if (type === "arrow-turn-right") navigate.push("/pos/tables");
-    else if (type === "rotate") navigate.push("/pos/tables?move=true");
+    else if (type === "rotate")
+      navigate.push(`/pos/tables?sourceTableNo=${tableNo}`);
     else {
       open(() => (
         <QueryProviders>

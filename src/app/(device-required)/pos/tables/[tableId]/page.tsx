@@ -13,7 +13,6 @@ import SideSection from "../../_components/SideSection";
 import POSHeader from "../../_components/POSHeader";
 import usePos from "../../_queries/usePos";
 import MenuModal from "../../_components/modals/MenuModal";
-import useOrder from "../../_queries/useOrder";
 
 export default function DetailTableOrder() {
   const params = useParams();
@@ -43,8 +42,6 @@ export default function DetailTableOrder() {
 
   const { data } = activity(Number(tableNo));
 
-  const { order } = useOrder();
-
   const list = isActive === "전체" ? allMenus : selectedCategory;
 
   const handleOpenDetail = (menuId: string) => {
@@ -57,30 +54,6 @@ export default function DetailTableOrder() {
         onAddOrderMenu={(item) => setOrders((prev) => [...prev, item])}
       />
     ));
-  };
-
-  const handleTest = () => {
-    order.mutate({
-      tableNo: 1,
-      memo: "",
-      orderMenus: [
-        {
-          menuId: "722810156599542759",
-          quantity: 1,
-          menuOptionGroups: [
-            {
-              menuOptionGroupId: "723104939523054747",
-              orderOptions: [
-                {
-                  name: "3",
-                  price: 3000,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    });
   };
 
   return (
@@ -130,11 +103,6 @@ export default function DetailTableOrder() {
                 </Fragment>
               ))}
             </div>
-
-            {/* TEST */}
-            <button type="button" onClick={handleTest}>
-              주문 추가하기
-            </button>
           </ScrollArea>
           <Floating hasData={data?.active!} tableNo={Number(tableNo)} />
         </div>
