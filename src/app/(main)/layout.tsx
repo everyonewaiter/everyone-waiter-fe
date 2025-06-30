@@ -1,10 +1,11 @@
 import MobileHeader from "@/app/(main)/_components/MobileHeader";
 import { PropsWithChildren, Suspense } from "react";
+import Loading from "@/components/Loading";
 import Sidebar from "./_components/Sidebar";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
-    <Suspense fallback={<div>페이지를 불s러오는 중입니다</div>}>
+    <Suspense fallback={<Loading />}>
       <div className="flex h-screen w-screen flex-col overflow-hidden bg-white md:flex-row md:bg-[#F5F5F5]">
         <Sidebar />
         <main className="flex flex-1 flex-col md:py-5 md:pr-5 md:pl-0 lg:py-8">
