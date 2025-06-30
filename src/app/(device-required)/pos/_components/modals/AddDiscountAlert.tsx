@@ -24,11 +24,7 @@ interface FormType {
 interface IProps {
   close: () => void;
   total: number;
-  onAction: (
-    discountAmount: number,
-    discountValue: number,
-    type: string
-  ) => void;
+  onAction: (discountValue: number) => void;
 }
 
 export default function AddDiscountAlert({ close, total, onAction }: IProps) {
@@ -43,13 +39,7 @@ export default function AddDiscountAlert({ close, total, onAction }: IProps) {
   return (
     <Alert
       onClose={close}
-      onAction={() =>
-        onAction(
-          form.watch("discount")!,
-          form.watch("result")!,
-          form.watch("discountType")
-        )
-      }
+      onAction={() => onAction(form.watch("discount")!)}
       buttonColor="black"
       buttonText="할인하기"
       noResponsive
