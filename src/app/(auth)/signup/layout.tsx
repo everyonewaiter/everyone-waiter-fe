@@ -10,20 +10,21 @@ export default function SignupLayout({ children }: { children: ReactNode }) {
 
   return (
     <Suspense fallback={<Loading />}>
-      <div className="relative flex min-h-screen w-screen flex-row items-center justify-center">
-        <div className="relative flex h-full justify-between md:w-[936px] lg:w-[1860px]">
+      <div className="relative flex h-screen w-screen flex-row items-center justify-center">
+        <div className="relative ml-15 flex h-full justify-between gap-6">
           <div
-            className={`flex flex-col items-center ${pathname === "/login" ? "justify-center" : "lg:justify-center"} py-[40px] md:w-[416px] ${pathname === "/login" ? "md:px-[62px] md:py-8" : "md:justify-start md:px-[62px] md:py-8"} lg:w-[660px] lg:px-[114px] lg:py-16`}
+            className={`flex h-full flex-col items-center ${pathname === "/login" ? "justify-center" : "lg:justify-center"} py-[40px] md:w-[416px] ${pathname === "/login" ? "md:px-[62px] md:py-8" : "md:justify-start md:px-[62px] md:py-8"} lg:w-[660px] lg:px-[114px] lg:py-16`}
           >
             {children}
           </div>
-          <div className="relative hidden h-screen w-full items-center justify-center md:block">
+          {/* <div className="relative hidden h-screen w-full flex-1 items-center justify-center md:block"> */}
+          <div className="h-[calc(100dvh-48px)] bg-blue-50">
             <Image
               src="/images/login-cover.svg"
               alt="onboarding"
-              className="rounded-[24px] object-cover md:fixed md:mt-4 md:h-[568px] md:w-[488px] lg:h-[1032px] lg:w-[1152px]"
-              width={488}
-              height={568}
+              className="h-full w-full rounded-[24px] object-cover md:mt-4"
+              width={1152}
+              height={1032}
               priority
             />
           </div>

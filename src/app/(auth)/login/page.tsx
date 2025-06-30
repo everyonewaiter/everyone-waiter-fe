@@ -10,11 +10,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 
+import { useState } from "react";
 import SignupLayout from "../signup/layout";
 import useLogin from "./_hooks/useLogin";
 
 export default function Login() {
-  const { mutate: login } = useLogin();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { mutate: login, isPending } = useLogin();
+
   const form = useForm<TypeLogin>({
     mode: "onChange",
     resolver: zodResolver(loginSchema),
@@ -25,6 +29,7 @@ export default function Login() {
   });
 
   const submitHandler = (formData: TypeLogin) => {
+    setIsLoading(true);
     login(formData);
   };
 
@@ -43,7 +48,7 @@ export default function Login() {
           className="mt-12 flex w-[320px] flex-col md:w-[292px] lg:w-[432px]"
           onSubmit={form.handleSubmit(submitHandler)}
         >
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-5">
             <LabeledInput
               form={form}
               name="email"
@@ -65,8 +70,8 @@ export default function Login() {
               md: { buttonSize: "sm" },
               lg: { buttonSize: "lg" },
             }}
+            disabled={isPending || isLoading}
             commonClassName="w-full mt-8"
-            disabled={!form.formState.isValid}
           >
             로그인
           </ResponsiveButton>
