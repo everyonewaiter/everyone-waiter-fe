@@ -11,14 +11,14 @@ export default function SignupLayout({ children }: { children: ReactNode }) {
   return (
     <Suspense fallback={<Loading />}>
       <div className="relative flex h-screen w-screen flex-row items-center justify-center">
-        <div className="relative ml-15 flex h-full justify-between gap-6">
+        <div className="relative flex h-full justify-between gap-6 lg:ml-15">
           <div
             className={`flex h-full flex-col items-center ${pathname === "/login" ? "justify-center" : "lg:justify-center"} py-[40px] md:w-[416px] ${pathname === "/login" ? "md:px-[62px] md:py-8" : "md:justify-start md:px-[62px] md:py-8"} lg:w-[660px] lg:px-[114px] lg:py-16`}
           >
             {children}
           </div>
           {/* <div className="relative hidden h-screen w-full flex-1 items-center justify-center md:block"> */}
-          <div className="h-[calc(100dvh-48px)] bg-blue-50">
+          <div className="h-[calc(100dvh-48px)] lg:pr-6">
             <Image
               src="/images/login-cover.svg"
               alt="onboarding"
