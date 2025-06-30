@@ -40,15 +40,36 @@ export const callStaff = async () => {
 export const orderMenus = async (body: {
   tableNo: number;
   memo: string;
-  orderMenus: {
-    menuId: string;
-    quantity: number;
-    menuOptionGroups: {
-      menuOptionGroupId: string;
-      orderOptions: MenuOptions[];
-    }[];
-  }[];
+  orderMenus: OrderBody[];
 }) => {
   const response = await signatureInstance.post(`${API_PATH.orders}`, body);
+  return response.data;
+};
+
+export const approvePayment = async ({
+  tableNo,
+  body,
+}: {
+  tableNo: number;
+  body: OrderPayments;
+}) => {
+  const response = await signatureInstance.post(
+    `${API_PATH.orders}/payments/${tableNo}/approve`,
+    body
+  );
+  return response.data;
+};
+
+export const cancelPayment = async ({
+  orderPaymentId,
+  body,
+}: {
+  orderPaymentId: string;
+  body: Pick<OrderPayments, "approvalNo" | "tradeTime" | "tradeUniqueNo">;
+}) => {
+  const response = await signatureInstance.post(
+    `${API_PATH.orders}/payments/${orderPaymentId}/cancel`,
+    body
+  );
   return response.data;
 };
