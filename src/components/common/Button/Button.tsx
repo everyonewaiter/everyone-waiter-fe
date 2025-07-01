@@ -40,8 +40,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({
             variant,
             color: disabled ? "grey" : color,
-            className,
-          })
+          }),
+          className
         )}
         ref={ref}
         disabled={disabled}

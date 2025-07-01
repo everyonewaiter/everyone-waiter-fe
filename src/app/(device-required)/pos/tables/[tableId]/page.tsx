@@ -43,10 +43,10 @@ export default function DetailTableOrder() {
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && data) {
+    if (!isLoading && (data || menus)) {
       setHasLoadedOnce(true);
     }
-  }, [data, isLoading]);
+  }, [data, menus, isLoading]);
 
   useEffect(() => {
     if (data) {
@@ -117,16 +117,6 @@ export default function DetailTableOrder() {
         }}
       >
         <POSHeader />
-        {!hasLoadedOnce && (
-          <div className="text-gray-0 center h-full text-center text-xl">
-            테이블 목록을 가져오는 중입니다.
-          </div>
-        )}
-        {hasLoadedOnce && list?.length! === 0 && (
-          <div className="text-gray-0 center h-full text-center text-xl">
-            등록된 테이블이 없습니다.
-          </div>
-        )}
         <div className="relative h-full px-[60px] pt-8">
           <div className="flex flex-row gap-3">
             {menus?.categories && (
@@ -161,6 +151,16 @@ export default function DetailTableOrder() {
               </Button>
             ))}
           </div>
+          {!hasLoadedOnce && list?.length === 0 && (
+            <div className="text-gray-0 center h-full pb-8 text-center text-xl">
+              메뉴 목록을 가져오는 중입니다.
+            </div>
+          )}
+          {hasLoadedOnce && list?.length! === 0 && !menus?.categories && (
+            <div className="text-gray-0 center flex flex-1 flex-col bg-green-50 pt-8 text-center text-xl">
+              등록된 메뉴가 없습니다.
+            </div>
+          )}
           <div>
             {hasLoadedOnce && list?.length! > 0 && (
               <ScrollArea className="h-[856px] w-full pt-9">
@@ -175,6 +175,16 @@ export default function DetailTableOrder() {
                   ))}
                 </div>
               </ScrollArea>
+            )}
+            {hasLoadedOnce && list?.length! === 0 && menus?.categories && (
+              <div className="text-gray-0 center h-[740px] pt-8 text-center text-xl">
+                등록된 메뉴가 없습니다.
+              </div>
+            )}
+            {!hasLoadedOnce && menus?.categories && (
+              <div className="text-gray-0 center h-full pt-8 text-center text-xl">
+                메뉴 목록을 가져오는 중입니다.
+              </div>
             )}
           </div>
         </div>
