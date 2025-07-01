@@ -1,4 +1,5 @@
 import getQueryClient from "@/app/get-query-client";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getPosMenuList, getTableActivity } from "../../_api/pos.api";
 
 export default async function Layout({
@@ -16,12 +17,18 @@ export default async function Layout({
   await queryClient.prefetchQuery({
     queryKey: ["pos-menu-list"],
     queryFn: () => getPosMenuList(storeId),
+    staleTime: 1000 * 60 * 5,
   });
 
   await queryClient.prefetchQuery({
     queryKey: ["table", params.tableNo],
     queryFn: () => getTableActivity({ tableNo: Number(params.tableNo) }),
+    staleTime: 1000 * 60 * 5,
   });
 
-  return children;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {children}
+    </HydrationBoundary>
+  );
 }
