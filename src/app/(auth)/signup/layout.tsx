@@ -17,7 +17,6 @@ export default function SignupLayout({ children }: { children: ReactNode }) {
           >
             {children}
           </div>
-          {/* <div className="relative hidden h-screen w-full flex-1 items-center justify-center md:block"> */}
           <div className="h-[calc(100dvh-48px)] lg:pr-6">
             <Image
               src="/images/login-cover.svg"
