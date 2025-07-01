@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import MemoAlert from "./modals/MemoAlert";
 import ResendAlert from "./modals/ResendAlert";
 import { useOrderStore } from "../_hooks/useOrderStore";
 import { useSelectItemStore } from "../_hooks/useSelectItemStore";
-import { useMemoStore } from "../_hooks/useMemoStore";
+import usePos from "../_queries/usePos";
 
 const FLOATING_ITEMS = [
   {
@@ -28,10 +28,6 @@ const FLOATING_ITEMS = [
     label: "테이블 목록으로 이동",
     icon: "arrow-turn-right",
   },
-  // {
-  //   label: "저장하기",
-  //   icon: "save",
-  // },
 ];
 
 interface IProps {
@@ -43,37 +39,46 @@ export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
 
+  const { activity } = usePos();
+  const { data } = activity(tableNo);
+
   const { orders } = useOrderStore();
   const { selectedOrder } = useSelectItemStore();
-  const { setMemo } = useMemoStore();
-
-  useEffect(() => {
-    if (selectedOrder) {
-      setMemo(selectedOrder.memo || "작성된 메모가 없습니다.");
-    }
-  }, [selectedOrder, setMemo]);
 
   const list = hasData
     ? FLOATING_ITEMS
-    : FLOATING_ITEMS.filter((el) =>
-        ["테이블 목록으로 이동", "메모"].includes(el.label)
-      );
+    : FLOATING_ITEMS.filter((el) => el.label.startsWith("테이블"));
 
   const handleAction = (type: string) => {
     if (type === "arrow-turn-right") navigate.push("/pos/tables");
     else if (type === "rotate")
       navigate.push(`/pos/tables?sourceTableNo=${tableNo}`);
-    else {
+    else if (type === "book") {
+      const orderNo = data?.orders.findIndex(
+        (el) => el.orderId === selectedOrder?.orderId
+      ) as number;
+
+      if (!selectedOrder || orderNo < 0) {
+        // eslint-disable-next-line  no-alert
+        alert("주문 선택 시 메모를 확인할 수 있습니다.");
+        return;
+      }
       open(() => (
         <QueryProviders>
-          {type === "book" && (
+          {type === "book" && selectedOrder && (
             <MemoAlert
               close={close}
-              tableNo={tableNo}
               isOrder={orders.length > 0}
+              orderNo={orderNo + 1}
+              tableNo={tableNo}
             />
           )}
-          {type === "send" && <ResendAlert close={close} />}
+        </QueryProviders>
+      ));
+    } else if (type === "send") {
+      open(() => (
+        <QueryProviders>
+          <ResendAlert close={close} />
         </QueryProviders>
       ));
     }
