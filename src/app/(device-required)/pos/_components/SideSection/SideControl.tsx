@@ -22,27 +22,25 @@ export default function SideControl({
     updateQuantity(checkedMenu.menuId, checkedMenu.key, type);
 
   return orders.length ? (
-    <div className="flex items-center justify-between pb-8">
-      <div className="flex gap-3">
-        {/* quantity - 1 */}
-        <Button
-          variant="outline"
-          color="grey"
-          className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
-          onClick={() => handleQuantity("sub")}
-        >
-          <MinusIcon size={24} />
-        </Button>
-        {/* quantity + 1 */}
-        <Button
-          variant="outline"
-          color="grey"
-          className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
-          onClick={() => handleQuantity("add")}
-        >
-          <PlusIcon size={24} />
-        </Button>
-      </div>
+    <div className="flex justify-end gap-3 pb-8">
+      {/* quantity - 1 */}
+      <Button
+        variant="outline"
+        color="grey"
+        className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
+        onClick={() => handleQuantity("sub")}
+      >
+        <MinusIcon size={24} />
+      </Button>
+      {/* quantity + 1 */}
+      <Button
+        variant="outline"
+        color="grey"
+        className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
+        onClick={() => handleQuantity("add")}
+      >
+        <PlusIcon size={24} />
+      </Button>
     </div>
   ) : (
     <div className="flex items-center justify-end gap-3 pb-8">
@@ -56,7 +54,7 @@ export default function SideControl({
         <MinusIcon size={24} />
       </Button>
       {/* 주문 하나 삭제 */}
-      {orders.length === 0 && orderType === "POSTPAID" && (
+      {orderType === "POSTPAID" && (
         <Button
           variant="outline"
           color="grey"
