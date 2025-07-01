@@ -59,7 +59,7 @@ export default function SideBottom({
               할인된 금액
             </span>
             <span className="text-primary text-xl">
-              - {discount.toLocaleString()}원
+              {discount ? `- ${discount.toLocaleString()}` : discount}원
             </span>
           </div>
         </div>
