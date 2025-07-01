@@ -4,7 +4,7 @@ import cn from "@/lib/utils";
 
 interface IProps extends TableOrder {
   index: number;
-  onSelect?: (menuid: TableOrderMenu) => void;
+  onSelect?: (menuid: TableOrderMenu | null) => void;
   select?: string;
   checked?: boolean;
   onCheckedChange?: () => void;
@@ -36,7 +36,9 @@ export default function MenuBox({
             "rounded-[12px] border p-4",
             select === menu.orderMenuId ? "border-primary" : "border-gray-600"
           )}
-          onClick={() => onSelect?.(menu)}
+          onClick={() =>
+            select === menu.orderMenuId ? onSelect?.(null) : onSelect?.(menu)
+          }
         >
           <div className="flex items-center justify-between">
             <span className="text-lg font-medium">{menu.name}</span>

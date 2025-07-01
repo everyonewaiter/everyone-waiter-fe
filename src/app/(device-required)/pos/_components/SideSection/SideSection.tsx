@@ -58,9 +58,9 @@ export default function SideSection() {
       <QueryProviders>
         <MemoAlert
           close={close}
-          tableNo={Number(tableNo)}
           isOrder
           onOrder={handleOrder}
+          tableNo={Number(tableNo)}
         />
       </QueryProviders>
     ));
@@ -87,57 +87,61 @@ export default function SideSection() {
         hasOrders={orders.length > 0}
         data={data!}
       />
-      <div className="">
-        <SideControl
-          orderType={data?.orderType!}
-          onCancelOrder={handleCancelOrder}
-          onCancelMenu={() => {}}
-        />
-        <SideContents orders={orders} activityOrders={data?.orders!} />
-      </div>
-      {orders.length > 0 && (
-        <div className="w-full">
-          <div className="mb-8 h-[2px] w-full bg-gray-600" />
-          <div className="flex items-center justify-between">
-            <strong className="text-2xl font-semibold">주문 금액</strong>
-            <strong className="text-4xl font-bold">
-              {orders
-                .map((el) => el.totalPrice)
-                .reduce((a, b) => a + b)
-                .toLocaleString()}
-              원
-            </strong>
-          </div>
-          <Button
-            color="primary"
-            className="mt-8 flex h-[64px] w-full flex-1 rounded-[12px] px-8 text-xl"
-            onClick={handleAddMenu}
-          >
-            주문 요청
-          </Button>
-        </div>
-      )}
-      {orders.length === 0 && data && (
-        <div className="flex flex-col">
-          <div className="mb-8 h-[2px] w-full bg-gray-600" />
-          <SideBottom
-            {...data}
-            onAddDiscount={(discount) => {
-              addDiscount.mutate({
-                body: {
-                  discountPrice: (data?.totalOrderPrice ?? 0) - discount,
-                },
-                tableNo: Number(tableNo),
-              });
-            }}
-          />
-          <SidePayment onTableComplete={handleTableComplete} {...data} />
-        </div>
-      )}
       {orders.length === 0 && !data && (
-        <div className="center flex-co w-full flex-1">
+        <div className="center w-full flex-1 flex-col">
           생성된 주문이 없습니다.
         </div>
+      )}
+      {(orders.length || data?.orders) && (
+        <>
+          <div className="">
+            <SideControl
+              orderType={data?.orderType!}
+              onCancelOrder={handleCancelOrder}
+              onCancelMenu={() => {}}
+            />
+            <SideContents orders={orders} activityOrders={data?.orders!} />
+          </div>
+          {orders.length > 0 && (
+            <div className="w-full">
+              <div className="mb-8 h-[2px] w-full bg-gray-600" />
+              <div className="flex items-center justify-between">
+                <strong className="text-2xl font-semibold">주문 금액</strong>
+                <strong className="text-4xl font-bold">
+                  {orders
+                    .map((el) => el.totalPrice)
+                    .reduce((a, b) => a + b)
+                    .toLocaleString()}
+                  원
+                </strong>
+              </div>
+              <Button
+                color="primary"
+                className="mt-8 flex h-[64px] w-full flex-1 rounded-[12px] px-8 text-xl"
+                onClick={handleAddMenu}
+              >
+                주문 요청
+              </Button>
+            </div>
+          )}
+          {orders.length === 0 && data?.orders && (
+            <div className="flex flex-col">
+              <div className="mb-8 h-[2px] w-full bg-gray-600" />
+              <SideBottom
+                {...data}
+                onAddDiscount={(discount) => {
+                  addDiscount.mutate({
+                    body: {
+                      discountPrice: discount,
+                    },
+                    tableNo: Number(tableNo),
+                  });
+                }}
+              />
+              <SidePayment onTableComplete={handleTableComplete} {...data} />
+            </div>
+          )}
+        </>
       )}
     </SideLayout>
   );

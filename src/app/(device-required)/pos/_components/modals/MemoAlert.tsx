@@ -4,16 +4,18 @@ import { useMemoStore } from "../../_hooks/useMemoStore";
 
 interface IProps {
   close: () => void;
-  tableNo: number;
   isOrder: boolean;
+  orderNo?: number;
   onOrder?: (memo: string) => void;
+  tableNo?: number;
 }
 
 export default function MemoAlert({
   close,
-  tableNo,
   isOrder,
   onOrder,
+  orderNo,
+  tableNo,
 }: IProps) {
   const { memo, setMemo } = useMemoStore();
 
@@ -32,12 +34,18 @@ export default function MemoAlert({
         ) : (
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-semibold">메모</h3>
-            <span className="text-lg font-semibold">{tableNo}번 테이블</span>
+            <span className="text-lg font-semibold">
+              {orderNo ? `${orderNo}번 주문` : `${tableNo}번 테이블`}
+            </span>
           </div>
         )}
         <Textarea
           className="h-[120px]"
-          placeholder="예약 관련 메모를 작성해주세요. (선택)"
+          placeholder={
+            isOrder
+              ? "예약 관련 메모를 작성해주세요. (선택)"
+              : "작성된 메모가 없습니다."
+          }
           value={memo}
           onChange={(e) => setMemo(e.target.value)}
           readOnly={!isOrder}
