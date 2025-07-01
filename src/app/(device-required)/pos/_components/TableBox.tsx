@@ -18,6 +18,16 @@ export default function TableBox({
 }: IProps) {
   const elapsed = useElapsedMinutes(props.orderedAt);
 
+  const getChipColor = () => {
+    if (props.hasOrder && props.orderType === "PREPAID") {
+      return "!border-none !bg-[#2E8CFF1A] !text-[#2E8CFF]";
+    }
+    if (props.hasOrder && props.orderType === "POSTPAID") {
+      return "!border-none !bg-[#F220201A] !text-[#F22020]";
+    }
+    return "";
+  };
+
   return (
     <div
       role="button"
@@ -40,13 +50,8 @@ export default function TableBox({
       <div className="flex items-center justify-between">
         {props.orderType ? (
           <Button
-            color={props.orderType === "PREPAID" ? "grey" : "primary"}
-            className={cn(
-              "button-sm !rounded-[24px]",
-              props.orderType === "PREPAID"
-                ? "bg-gray-700"
-                : "!text-primary bg-[#F2202010]"
-            )}
+            variant="default"
+            className={cn("button-sm !rounded-[24px]", getChipColor())}
           >
             {
               paymentTimeTranslate[
