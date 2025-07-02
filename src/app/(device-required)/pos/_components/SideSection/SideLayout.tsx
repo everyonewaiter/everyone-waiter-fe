@@ -1,9 +1,9 @@
 "use client";
 
 import cn from "@/lib/utils";
-import { HTMLAttributes, PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 
-interface IProps extends HTMLAttributes<HTMLDivElement> {
+interface IProps {
   className?: string;
 }
 

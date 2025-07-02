@@ -1,5 +1,3 @@
-"use client";
-
 import API_PATH from "@/lib/api/paths";
 import { signatureInstance } from "@/lib/axios/instance";
 

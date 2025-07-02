@@ -19,7 +19,7 @@ interface IProps {
   isEditing: boolean;
   onSetEditing: (value: boolean) => void;
   type: "create" | "update";
-  data: MenuDetail;
+  data?: MenuDetail;
 }
 
 export default function DetailMenuModal({

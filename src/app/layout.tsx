@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
-import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
-import QueryProviders from "./query-providers";
+import ClientLayout from "./(main)/_components/ClientRootLayout";
 
 export const metadata: Metadata = {
   title: "모두의 웨이터",
@@ -65,9 +64,7 @@ export default function RootLayout({
         src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
       />
       <body className="min-h-screen min-w-screen select-none">
-        <OverlayStoreProvider>
-          <QueryProviders>{children}</QueryProviders>
-        </OverlayStoreProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

@@ -1,6 +1,5 @@
-import Loading from "@/components/Loading";
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren } from "react";
 
 export default function Layout({ children }: PropsWithChildren) {
-  return <Suspense fallback={<Loading />}>{children}</Suspense>;
+  return children;
 }

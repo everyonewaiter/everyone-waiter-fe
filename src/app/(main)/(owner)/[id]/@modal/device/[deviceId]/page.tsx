@@ -1,13 +1,11 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   deviceTranslate,
   paymentTimeTranslate,
   stateTranslate,
 } from "@/constants/translates";
-import { useForm } from "react-hook-form";
-import getQueryClient from "@/app/get-query-client";
 import Dropdown from "@/components/common/Dropdown";
 import LabeledInput from "@/components/common/LabeledInput";
 import Label from "@/components/common/Label";
@@ -15,35 +13,17 @@ import { Form } from "@/components/common/Form";
 import { useEffect } from "react";
 import useDevice from "../../../device/_queries/useDevice";
 import ModalButton from "../../_components/ModalButton";
+import useDeviceForm from "../../_hooks/useDeviceForm";
 
 export default function DeviceInfoModal() {
   const params = useParams();
   const storeId = params?.id as string;
   const deviceId = params?.deviceId as string;
 
+  const { form, submitHandler } = useDeviceForm();
+
   const { detailQuery, update } = useDevice();
   const { data } = detailQuery(deviceId, storeId);
-
-  const queryClient = getQueryClient();
-  const navigate = useRouter();
-
-  const form = useForm<
-    Omit<Device, "updatedAt" | "storeId" | "deviceId"> & {
-      deviceNumber: string;
-      tableNo: number;
-      createdAt: string;
-    }
-  >({
-    defaultValues: {
-      name: "",
-      createdAt: "",
-      state: "",
-      purpose: "HALL",
-      paymentType: "POSTPAID",
-      tableNo: 0,
-      deviceNumber: "",
-    },
-  });
 
   useEffect(() => {
     if (data) {
@@ -57,39 +37,15 @@ export default function DeviceInfoModal() {
     }
   }, [form, data]);
 
-  const submitHandler = () => {
-    update.mutate(
-      {
-        name: form.watch("name"),
-        purpose: form.watch("purpose") as DevicePurpose,
-        paymentType: form.watch("paymentType") as DevicePayment,
-        tableNo: form.watch("tableNo") ?? 0,
-        ksnetDeviceNo: form.watch("deviceNumber"),
-        storeId,
-        deviceId,
-      },
-      {
-        onSuccess: () => {
-          navigate.back();
-          queryClient.invalidateQueries({ queryKey: ["get-devices"] });
-        },
-        onError: (e) => {
-          const res = (e as any).response.data;
-          if (
-            ["ALREADY_USE_DEVICE_NAME", "DEVICE_NOT_FOUND"].includes(res.code)
-          ) {
-            form.setError("name", res.message);
-          }
-        },
-      }
-    );
+  const handleSubmit = () => {
+    submitHandler(update, storeId, deviceId);
   };
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(submitHandler)}
+        onSubmit={form.handleSubmit(handleSubmit)}
       >
         <LabeledInput form={form} name="name" label="기기 이름" />
         <LabeledInput form={form} name="createdAt" label="등록일시" disabled />

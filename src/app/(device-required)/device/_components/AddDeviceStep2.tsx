@@ -6,10 +6,12 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { useMutation } from "@tanstack/react-query";
-import { addDevice } from "@/app/(device-required)/device/_api/device.api";
+// import { useMutation } from "@tanstack/react-query";
+// import { addDevice } from "@/app/(device-required)/device/_api/device.api";
 import { useRouter } from "next/navigation";
 import { setEncryptedItem } from "@/lib/auth/secureStorage";
+import useMakeDeviceName from "../_hooks/useMakeDeviceName";
+import useDeviceInfo from "../_queries/useDeviceInfo";
 
 type FormValues = {
   deviceName: string;
@@ -35,8 +37,7 @@ export default function AddDeviceStep2({
   const navigate = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const now = new Date();
-  const dn = `POS-${now.getFullYear().toString().slice(-2)}${(now.getMonth() + 1).toString().padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}${now.getHours().toString().padStart(2, "0")}${now.getMinutes().toString().padStart(2, "0")}${now.getSeconds().toString().padStart(2, "0")}${now.getMilliseconds().toString().padStart(3, "0")}`;
+  const dn = useMakeDeviceName();
 
   const form = useForm<FormValues>({
     mode: "onChange",
@@ -46,9 +47,8 @@ export default function AddDeviceStep2({
     },
   });
 
-  const { mutate } = useMutation({
-    mutationFn: addDevice,
-  });
+  const { add } = useDeviceInfo();
+  const { mutate } = add();
 
   const submitHandler = (data: FormValues) => {
     const submitData = {

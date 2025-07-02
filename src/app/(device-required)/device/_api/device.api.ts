@@ -4,7 +4,7 @@ import { authInstance, signatureInstance } from "@/lib/axios/instance";
 export const addDevice = async ({
   storeId,
   ...body
-}: Omit<Device, "state" | "updatedAt" | "deviceId"> & {
+}: Omit<Device, "state" | "updatedAt" | "deviceId" | "createdAt"> & {
   tableNo: number;
   ksnetDeviceNo: string;
   phoneNumber: string;

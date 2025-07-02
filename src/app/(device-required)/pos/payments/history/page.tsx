@@ -160,7 +160,7 @@ export default function PaymentHistory() {
       </div>
       <SideLayout
         className="h-[calc(100dvh-134px)]"
-        onClick={(e) => e.stopPropagation()}
+        // onClick={(e) => e.stopPropagation()}
       >
         <SideSection2 selectedRow={selectedRow} />
       </SideLayout>

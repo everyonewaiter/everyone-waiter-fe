@@ -2,9 +2,7 @@
 
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
-import cn from "@/lib/utils";
 import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import useOverlay from "@/hooks/use-overlay";
 import Floating from "../../_components/Floating";
@@ -16,22 +14,25 @@ import { useMemoStore } from "../../_hooks/useMemoStore";
 import SideSection from "../../_components/SideSection/SideSection";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
+import CategoriesButton from "../../_components/CategoriesButton";
 
 export default function DetailTableOrder() {
   const params = useParams();
   const tableNo = params?.tableId as string;
 
   const [isActive, setIsActive] = useState("전체");
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const { orders, addOrders } = useOrderStore();
   const { open, close } = useOverlay();
   const { setOriginMemo } = useMemoStore();
   const { resetCheckedMenu } = useCheckedMenuStore();
 
-  const deviceInfo = useDeviceInfo();
-  const { data: device } = deviceInfo;
+  const { detail } = useDeviceInfo();
+  const { data: device } = detail();
 
   const { menuList, activity } = usePos();
+
   const { data: menus, isLoading } = menuList(device?.storeId as string);
   const allMenus = menus?.categories?.map((el) => el.menus).flat();
   const selectedCategory = menus?.categories?.find(
@@ -39,8 +40,6 @@ export default function DetailTableOrder() {
   )?.menus;
 
   const { data } = activity(Number(tableNo));
-
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   useEffect(() => {
     if (!isLoading && (data || menus)) {
@@ -118,39 +117,11 @@ export default function DetailTableOrder() {
       >
         <POSHeader />
         <div className="relative h-full px-[60px] pt-8">
-          <div className="flex flex-row gap-3">
-            {menus?.categories && (
-              <Button
-                variant={isActive === "전체" ? "default" : "outline"}
-                color={isActive === "전체" ? "primary" : "black"}
-                className={cn(
-                  "button-sm text-s px-5",
-                  isActive === "전체" ? "text-white" : "text-gray-0"
-                )}
-                onClick={() => setIsActive("전체")}
-              >
-                전체
-              </Button>
-            )}
-            {menus?.categories?.map((category) => (
-              <Button
-                key={category.categoryId}
-                variant={
-                  isActive === category.categoryId ? "default" : "outline"
-                }
-                color={isActive === category.categoryId ? "primary" : "black"}
-                className={cn(
-                  "button-sm text-s px-5",
-                  isActive === category.categoryId
-                    ? "text-white"
-                    : "text-gray-0"
-                )}
-                onClick={() => setIsActive(category.categoryId)}
-              >
-                {category.name}
-              </Button>
-            ))}
-          </div>
+          <CategoriesButton
+            categories={menus?.categories!}
+            isActive={isActive}
+            onSetIsActive={setIsActive}
+          />
           {!hasLoadedOnce && list?.length === 0 && (
             <div className="text-gray-0 center h-full pb-8 text-center text-xl">
               메뉴 목록을 가져오는 중입니다.

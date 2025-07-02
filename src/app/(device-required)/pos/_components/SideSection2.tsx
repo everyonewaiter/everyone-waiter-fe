@@ -7,7 +7,6 @@ import { Fragment } from "react";
 import QueryProviders from "@/app/query-providers";
 import Alert from "@/components/common/Alert/Alert";
 import cn from "@/lib/utils";
-import MenuBox from "./MenuBox";
 import { DUMMY } from "../payments/history/page";
 
 interface IProps {
@@ -87,7 +86,7 @@ export default function SideSection2({ selectedRow }: IProps) {
           {selectedRow &&
             [1, 2].map((item, index, arr) => (
               <Fragment key={item}>
-                <MenuBox key={item} index={index} />
+                {/* <MenuBox key={item} index={index} /> */}
                 {index < arr.length - 1 && (
                   <div className="my-8 h-[2px] w-full bg-gray-700" />
                 )}
