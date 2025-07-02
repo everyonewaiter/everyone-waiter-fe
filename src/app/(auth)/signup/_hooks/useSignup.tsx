@@ -10,15 +10,11 @@ import { UseFormReturn } from "react-hook-form";
 
 interface IUseSignup {
   form: UseFormReturn<TypeSignup>;
-  setIsPhoneAuthenticated: (value: boolean) => void;
+  setCodeSubmited: (value: boolean) => void;
   setAuthTime: (value: number) => void;
 }
 
-const useSignup = ({
-  form,
-  setIsPhoneAuthenticated,
-  setAuthTime,
-}: IUseSignup) => {
+const useSignup = ({ form, setCodeSubmited, setAuthTime }: IUseSignup) => {
   const { mutate: mutateSendPhoneAuthCode } = useMutation({
     mutationFn: sendAuthCode,
     onError: (error) => {
@@ -28,7 +24,7 @@ const useSignup = ({
           form.setError("authNumber", { message });
         } else if (code === "ALREADY_VERIFIED_PHONE_NUMBER") {
           alert(message);
-          setIsPhoneAuthenticated(true);
+          setCodeSubmited(true);
         } else if (code === "EXPIRED_VERIFICATION_CODE") {
           alert(message);
           setAuthTime(0);
