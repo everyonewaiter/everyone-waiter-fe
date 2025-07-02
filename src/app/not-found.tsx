@@ -1,10 +1,8 @@
-import Loading from "@/components/Loading";
 import Image from "next/image";
 
 export default function NotFound() {
   return (
     <div className="center h-screen w-screen flex-col gap-8">
-      <Loading />
       <Image
         src="/images/not-found.svg"
         alt="존재하지 않는 페이지"
