@@ -1,5 +1,5 @@
-import cn from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
+import cn from "@/lib/utils";
 
 interface IProps extends CustomOrder {
   onSelect: (checked: boolean) => void;

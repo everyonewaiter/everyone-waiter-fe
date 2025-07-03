@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import getQueryClient from "@/app/get-query-client";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   deleteMenu,
   deleteMultipleMenus,
@@ -10,7 +10,7 @@ import {
   updateMenuWithImage,
   updateMenuWithoutImage,
 } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import getQueryClient from "@/app/get-query-client";
 import { useOptimisticReorderMutation } from "@/hooks/useOptimisticReorder";
 import { menuKeys } from "./keys";
 

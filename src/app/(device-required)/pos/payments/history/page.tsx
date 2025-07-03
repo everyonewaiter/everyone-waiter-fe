@@ -2,7 +2,9 @@
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState } from "react";
+import Button from "@/components/common/Button/Button";
 import DatePicker from "@/components/common/DatePicker";
+import Paginations from "@/components/common/Pagination/Paginations";
 import {
   Table,
   TableBody,
@@ -12,8 +14,6 @@ import {
   TableRow,
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
-import Button from "@/components/common/Button/Button";
-import Paginations from "@/components/common/Pagination/Paginations";
 import SideSection2 from "../../_components/SideSection2";
 import SideLayout from "../../_components/SideSection/SideLayout";
 

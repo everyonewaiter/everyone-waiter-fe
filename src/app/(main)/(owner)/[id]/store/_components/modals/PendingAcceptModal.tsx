@@ -1,5 +1,5 @@
-import ModalWithTitle from "@/components/modal/largeModalLayout";
 import Image from "next/image";
+import ModalWithTitle from "@/components/modal/largeModalLayout";
 
 interface IProps {
   close: () => void;

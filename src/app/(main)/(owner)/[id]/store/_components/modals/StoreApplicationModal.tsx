@@ -1,20 +1,20 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { ChangeEvent, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import getQueryClient from "@/app/get-query-client";
+import Input from "@/components/common/Input";
+import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
+import ModalWithTitle from "@/components/modal/largeModalLayout";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import formatDate from "@/lib/formatting/formatDate";
-import Label from "@/components/common/Label";
-import Input from "@/components/common/Input";
-import getQueryClient from "@/app/get-query-client";
 import { useStoreContext } from "@/providers/storeProvider";
+import useStores from "../../_queries/useStores";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
-import useStores from "../../_queries/useStores";
 
 type FormState = Omit<StoreDetail, "updatedAt" | "accountId"> & {
   image: string;

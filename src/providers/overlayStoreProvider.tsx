@@ -1,8 +1,8 @@
 "use client";
 
-import { createOverlayStore, OverlayStore } from "@/stores/overlayStore";
 import { Fragment, ReactNode, createContext, useContext, useRef } from "react";
 import { useStore } from "zustand";
+import { OverlayStore, createOverlayStore } from "@/stores/overlayStore";
 
 export type OverlayStoreApi = ReturnType<typeof createOverlayStore>;
 

@@ -1,8 +1,8 @@
-import { signupSchema, TypeSignup } from "@/schema/signup.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { TypeSignup, signupSchema } from "@/schema/signup.schema";
 
 export default function useSignupForm() {
   const [formButtonDisabled, setFormButtonDisabled] = useState(false);

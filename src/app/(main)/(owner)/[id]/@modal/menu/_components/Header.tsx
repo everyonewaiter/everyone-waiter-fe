@@ -1,5 +1,5 @@
-import Icon from "@/components/common/Icon";
 import { useRouter } from "next/navigation";
+import Icon from "@/components/common/Icon";
 
 export default function Header() {
   const navigate = useRouter();

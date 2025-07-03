@@ -1,11 +1,11 @@
 "use client";
 
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useRouter } from "next/navigation";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import WaitingSection from "./_components/WaitingSection";
-import useWaiting from "./_queries/useWaiting";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
+import useWaiting from "./_queries/useWaiting";
 
 export default function Waiting() {
   const navigate = useRouter();

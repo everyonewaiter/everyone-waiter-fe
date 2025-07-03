@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Button from "@/components/common/Button/Button";
-import Icon from "@/components/common/Icon";
+import { ChevronsRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import useOverlay from "@/hooks/use-overlay";
+import { useEffect, useState } from "react";
+import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import QueryProviders from "@/app/query-providers";
 import Alert from "@/components/common/Alert/Alert";
-import { ChevronsRight } from "lucide-react";
-import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
+import Button from "@/components/common/Button/Button";
+import Icon from "@/components/common/Icon";
+import useOverlay from "@/hooks/use-overlay";
 import usePos from "../../_queries/usePos";
 import POSHeader from "../POSHeader";
 import TableBox from "../TableBox";

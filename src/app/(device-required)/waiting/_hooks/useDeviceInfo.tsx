@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { getDecryptedItem } from "@/lib/auth/secureStorage";
-import { useState, useEffect } from "react";
 
 export default function useDeviceInfo() {
   const [deviceInfo, setDeviceInfo] = useState<Pick<

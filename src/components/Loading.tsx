@@ -1,7 +1,7 @@
 "use client";
 
-import Lottie from "react-lottie";
 import { useEffect, useState } from "react";
+import Lottie from "react-lottie";
 
 export default function Loading() {
   const [data, setData] = useState<any>(null);

@@ -1,8 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import cn from "@/lib/utils";
-import { useRouter } from "next/navigation";
 
 interface IProps {
   buttonText: string;

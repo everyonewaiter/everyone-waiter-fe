@@ -1,5 +1,5 @@
-import { getCdn } from "@/utils/getCdn";
 import Image from "next/image";
+import { getCdn } from "@/utils/getCdn";
 
 interface IProps {
   image: string;

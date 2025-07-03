@@ -1,16 +1,16 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import Dropdown from "@/components/common/Dropdown";
+import { Form } from "@/components/common/Form";
+import Label from "@/components/common/Label";
+import LabeledInput from "@/components/common/LabeledInput";
 import {
   deviceTranslate,
   paymentTimeTranslate,
   stateTranslate,
 } from "@/constants/translates";
-import Dropdown from "@/components/common/Dropdown";
-import LabeledInput from "@/components/common/LabeledInput";
-import Label from "@/components/common/Label";
-import { Form } from "@/components/common/Form";
-import { useEffect } from "react";
 import useDevice from "../../../device/_queries/useDevice";
 import ModalButton from "../../_components/ModalButton";
 import useDeviceForm from "../../_hooks/useDeviceForm";

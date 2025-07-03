@@ -1,6 +1,6 @@
+import { ArrowDownUp } from "lucide-react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
-import { ArrowDownUp } from "lucide-react";
 
 interface IProps {
   onSetPopupAction: (value: string) => void;

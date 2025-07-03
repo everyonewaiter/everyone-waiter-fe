@@ -2,15 +2,19 @@
 
 "use client";
 
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import cn from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
-import OptionComponent from "./OptionComponent";
-import OptionBox from "./OptionBox";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import Icon from "@/components/common/Icon";
+import cn from "@/lib/utils";
 import { MenuFormType } from "../_types/menuForm.type";
+import OptionBox from "./OptionBox";
+import OptionComponent from "./OptionComponent";
+
+/* eslint-disable react/no-array-index-key */
+
+/* eslint-disable react/no-array-index-key */
 
 interface IProps {
   title: string;

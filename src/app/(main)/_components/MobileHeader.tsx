@@ -1,5 +1,5 @@
-import SideBarButton from "@/app/(main)/_components/SideBarButton";
 import Image from "next/image";
+import SideBarButton from "@/app/(main)/_components/SideBarButton";
 
 export default function MobileHeader() {
   return (

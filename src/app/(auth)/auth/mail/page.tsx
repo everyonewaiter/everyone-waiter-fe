@@ -2,11 +2,11 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-alert */
-import { verifyEmail } from "@/lib/api/auth.api";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { verifyEmail } from "@/lib/api/auth.api";
 
 export default function EmailError() {
   const navigate = useRouter();

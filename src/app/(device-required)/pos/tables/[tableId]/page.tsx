@@ -1,20 +1,20 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { ScrollArea } from "@/components/common/ScrollArea";
+import { Fragment, useEffect, useState } from "react";
 import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
+import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
-import Floating from "../../_components/Floating";
-import POSMenuCard from "../../_components/POSMenuCard";
-import POSHeader from "../../_components/POSHeader";
-import usePos from "../../_queries/usePos";
-import MenuModal from "../../_components/modals/MenuModal";
-import { useMemoStore } from "../../_hooks/useMemoStore";
-import SideSection from "../../_components/SideSection/SideSection";
-import { useOrderStore } from "../../_hooks/useOrderStore";
-import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
 import CategoriesButton from "../../_components/CategoriesButton";
+import Floating from "../../_components/Floating";
+import POSHeader from "../../_components/POSHeader";
+import POSMenuCard from "../../_components/POSMenuCard";
+import SideSection from "../../_components/SideSection/SideSection";
+import MenuModal from "../../_components/modals/MenuModal";
+import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
+import { useMemoStore } from "../../_hooks/useMemoStore";
+import { useOrderStore } from "../../_hooks/useOrderStore";
+import usePos from "../../_queries/usePos";
 
 export default function DetailTableOrder() {
   const params = useParams();

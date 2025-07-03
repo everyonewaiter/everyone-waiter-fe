@@ -1,22 +1,21 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-
-import Alert from "@/components/common/Alert/Alert";
-import Dropdown from "@/components/common/Dropdown";
-import { Form } from "@/components/common/Form";
-import Input from "@/components/common/Input";
-import Label from "@/components/common/Label";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import useOverlay from "@/hooks/use-overlay";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   sendAuthCodeInDevice,
   verifyPhoneInDevice,
 } from "@/app/(device-required)/device/_api/device.api";
+import Alert from "@/components/common/Alert/Alert";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import Dropdown from "@/components/common/Dropdown";
+import { Form } from "@/components/common/Form";
+import Input from "@/components/common/Input";
+import Label from "@/components/common/Label";
+import useOverlay from "@/hooks/use-overlay";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
-import { useMutation } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 
 interface FormValues {
   phone: string;

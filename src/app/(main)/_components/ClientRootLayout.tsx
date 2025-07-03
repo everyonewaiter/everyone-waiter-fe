@@ -1,11 +1,11 @@
 "use client";
 
-import { useLoadingStore } from "@/stores/useNeedLoadingStore";
-import Loading from "@/components/Loading";
+import { PropsWithChildren } from "react";
 import QueryProviders from "@/app/query-providers";
+import Loading from "@/components/Loading";
 import useRouteChangeLoading from "@/hooks/useRouteChangeLoading";
 import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
-import { PropsWithChildren } from "react";
+import { useLoadingStore } from "@/stores/useNeedLoadingStore";
 
 export default function ClientLayout({ children }: PropsWithChildren) {
   const { needLoading, setNeedLoading } = useLoadingStore();

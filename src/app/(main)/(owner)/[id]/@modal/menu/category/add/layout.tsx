@@ -1,7 +1,7 @@
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
-import getQueryClient from "@/app/get-query-client";
 import { getCategories } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import getQueryClient from "@/app/get-query-client";
 import RefLayout from "@/components/modal/RefLayout";
 import { categoryKeys } from "../../../../menu/_queries/keys";
 

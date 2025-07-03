@@ -1,8 +1,8 @@
+import { MinusIcon, PlusIcon } from "lucide-react";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
-import { MinusIcon, PlusIcon } from "lucide-react";
-import { useOrderStore } from "../../_hooks/useOrderStore";
 import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
+import { useOrderStore } from "../../_hooks/useOrderStore";
 
 interface IProps {
   orderType: DevicePayment;

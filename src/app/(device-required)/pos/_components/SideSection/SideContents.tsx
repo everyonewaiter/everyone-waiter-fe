@@ -1,11 +1,11 @@
-import { ScrollArea } from "@/components/common/ScrollArea";
 import { Fragment } from "react";
+import { ScrollArea } from "@/components/common/ScrollArea";
 import cn from "@/lib/utils";
-import OrderBox from "../OrderBox";
-import MenuBox from "../MenuBox";
-import getOrderKey from "../../_utils/get-order-key";
-import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
+import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
+import getOrderKey from "../../_utils/get-order-key";
+import MenuBox from "../MenuBox";
+import OrderBox from "../OrderBox";
 
 interface IProps {
   orders: {

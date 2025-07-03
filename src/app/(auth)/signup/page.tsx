@@ -2,17 +2,17 @@
 
 /* eslint-disable no-alert */
 /* eslint-disable react/no-unstable-nested-components */
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import ButtonCheckbox from "@/components/common/CheckboxButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { TypeSignup } from "@/schema/signup.schema";
-import { useRouter } from "next/navigation";
-import ButtonCheckbox from "@/components/common/CheckboxButton";
-import { useMediaQuery } from "react-responsive";
-import useSignupForm from "./_hooks/useSignupForm";
 import useSignup from "./_hooks/useSignup";
+import useSignupForm from "./_hooks/useSignupForm";
 
 export default function Signup() {
   const navigate = useRouter();

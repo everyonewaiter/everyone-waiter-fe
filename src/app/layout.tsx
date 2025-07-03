@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import Script from "next/script";
 import ClientLayout from "./(main)/_components/ClientRootLayout";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "모두의 웨이터",

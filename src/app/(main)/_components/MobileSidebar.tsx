@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useRef } from "react";
 import { X as CloseIcon } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import MobileSidebarSection from "./MobileSidebarSection";
 

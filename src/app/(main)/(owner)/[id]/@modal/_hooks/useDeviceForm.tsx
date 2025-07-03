@@ -1,7 +1,7 @@
-import getQueryClient from "@/app/get-query-client";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import getQueryClient from "@/app/get-query-client";
 
 export default function useDeviceForm() {
   const navigate = useRouter();

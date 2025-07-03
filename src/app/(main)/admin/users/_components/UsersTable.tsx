@@ -1,19 +1,19 @@
 "use client";
 
+import QueryProviders from "@/app/query-providers";
+import Checkbox from "@/components/common/Checkbox";
 import {
   MobileTable,
   MobileTableCell,
   MobileTableHead,
   MobileTableRow,
+  Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-  Table,
 } from "@/components/common/Table/Tables";
-import Checkbox from "@/components/common/Checkbox";
 import { permissionTranslate, stateTranslate } from "@/constants/translates";
-import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/use-overlay";
 import UserInfoModal from "../../_components/UserInfoModal";
 import UsersTableRow from "./UsersTableRow";

@@ -1,14 +1,13 @@
 "use client";
 
-import useAuthStore from "@/stores/useAuthStore";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useStore } from "zustand";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { useStore } from "zustand";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { useQuery } from "@tanstack/react-query";
+import Icon from "@/components/common/Icon";
 import {
   Select,
   SelectContent,
@@ -17,8 +16,8 @@ import {
   SelectValue,
 } from "@/components/common/select";
 import MENU_ITEMS from "@/constants/sidebarMenus";
+import useAuthStore from "@/stores/useAuthStore";
 import { getComparePath } from "@/utils/getPathname";
-import Icon from "@/components/common/Icon";
 
 export default function Sidebar() {
   const { prefetch } = useRouter();

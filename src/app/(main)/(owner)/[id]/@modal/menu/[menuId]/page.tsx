@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { useStoreContext } from "@/providers/storeProvider";
-import DetailMenuModal from "../_components/DetailMenuModal";
 import useMenu from "../../../menu/_queries/useMenu";
+import DetailMenuModal from "../_components/DetailMenuModal";
 
 export default function Page() {
   const params = useParams();

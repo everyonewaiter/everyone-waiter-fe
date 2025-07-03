@@ -1,4 +1,4 @@
-import React, { forwardRef, PropsWithChildren } from "react";
+import React, { PropsWithChildren, forwardRef } from "react";
 
 const FloatingInfo = forwardRef<HTMLDivElement, PropsWithChildren>(
   ({ children }, ref) => (

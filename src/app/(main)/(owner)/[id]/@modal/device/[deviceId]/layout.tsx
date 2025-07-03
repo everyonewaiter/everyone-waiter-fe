@@ -1,9 +1,9 @@
 import { PropsWithChildren } from "react";
-import getQueryClient from "@/app/get-query-client";
 import { getDevices } from "@/app/(main)/(owner)/[id]/device/_api/device.api";
+import getQueryClient from "@/app/get-query-client";
 import RefLayout from "@/components/modal/RefLayout";
-import ModalTitle from "../../_components/ModalTitle";
 import { deviceKeys } from "../../../device/_queries/keys";
+import ModalTitle from "../../_components/ModalTitle";
 
 export default async function Layout({
   children,

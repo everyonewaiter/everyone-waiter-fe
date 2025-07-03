@@ -1,12 +1,12 @@
 /* eslint-disable no-alert */
+import { useMutation } from "@tanstack/react-query";
+import { UseFormReturn } from "react-hook-form";
 import {
   createAccount,
   sendAuthCode,
   verifyAuthCode,
 } from "@/lib/api/auth.api";
 import { TypeSignup } from "@/schema/signup.schema";
-import { useMutation } from "@tanstack/react-query";
-import { UseFormReturn } from "react-hook-form";
 
 interface IUseSignup {
   form: UseFormReturn<TypeSignup>;

@@ -2,10 +2,10 @@
 
 import Button from "@/components/common/Button/Button";
 import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
-import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
-import OrderCard from "./OrderCard";
+import cn from "@/lib/utils";
 import CompleteAllModal from "./CompleteAllModal";
+import OrderCard from "./OrderCard";
 
 interface IProps {
   completed?: boolean;

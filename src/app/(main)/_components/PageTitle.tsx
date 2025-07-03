@@ -1,11 +1,11 @@
 "use client";
 
+import { useRef } from "react";
 import QueryProviders from "@/app/query-providers";
-import Icon from "@/components/common/Icon";
 import InfoPopup from "@/components/InfoPopup";
+import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
-import { useRef } from "react";
 
 export default function PageTitle({ title }: { title: string }) {
   const ref = useRef<HTMLButtonElement>(null);

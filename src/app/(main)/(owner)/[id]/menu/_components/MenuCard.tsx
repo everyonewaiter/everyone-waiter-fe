@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
-import Image from "next/image";
 
 interface IProps extends Menu {
   onToggle?: (value: Menu) => void;

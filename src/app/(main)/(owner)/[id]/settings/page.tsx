@@ -1,14 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { arrayMove } from "@dnd-kit/sortable";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Switch from "@/components/common/Switch";
-import { useEffect, useState } from "react";
-import { Form } from "@/components/common/Form";
 import { useStoreContext } from "@/providers/storeProvider";
-import dynamic from "next/dynamic";
 import useSettings from "./_queries/useSettings";
 
 const Sortable = dynamic(() => import("@/components/Sortable"), {

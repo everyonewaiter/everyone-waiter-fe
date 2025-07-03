@@ -1,9 +1,9 @@
 "use client";
 
-import cn from "@/lib/utils";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import cn from "@/lib/utils";
 
 export default function SignupLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();

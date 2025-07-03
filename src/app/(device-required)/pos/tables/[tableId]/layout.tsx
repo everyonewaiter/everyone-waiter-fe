@@ -1,5 +1,5 @@
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getPosMenuList, getTableActivity } from "../../_api/pos.api";
 
 export default async function Layout({

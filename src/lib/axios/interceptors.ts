@@ -1,13 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
-
 import { Mutex } from "async-mutex";
 import { AxiosInstance } from "axios";
 import makeSignature from "@/utils/make-signature";
-import { deleteCookie, getToken, setCookie } from "../cookies";
 import { renewToken } from "../api/auth.api";
 import { getDecryptedItem } from "../auth/secureStorage";
+import { deleteCookie, getToken, setCookie } from "../cookies";
 
 let isRefreshing = false;
 let refreshPromise: Promise<any> | null = null;

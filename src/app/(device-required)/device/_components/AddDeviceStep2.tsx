@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import cn from "@/lib/utils";
-import { useForm } from "react-hook-form";
-import { Form } from "@/components/common/Form";
-import LabeledInput from "@/components/common/LabeledInput";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 // import { useMutation } from "@tanstack/react-query";
 // import { addDevice } from "@/app/(device-required)/device/_api/device.api";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { Form } from "@/components/common/Form";
+import LabeledInput from "@/components/common/LabeledInput";
 import { setEncryptedItem } from "@/lib/auth/secureStorage";
+import cn from "@/lib/utils";
 import useMakeDeviceName from "../_hooks/useMakeDeviceName";
 import useDeviceInfo from "../_queries/useDeviceInfo";
 

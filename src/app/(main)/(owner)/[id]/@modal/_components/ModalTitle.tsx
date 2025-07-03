@@ -1,5 +1,5 @@
+import { ReactNode, forwardRef } from "react";
 import cn from "@/lib/utils";
-import { forwardRef, ReactNode } from "react";
 
 interface IProps {
   title: string;

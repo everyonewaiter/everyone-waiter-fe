@@ -1,14 +1,14 @@
 "use client";
 
 import {
+  Pagination,
   PaginationContent,
+  PaginationFastNext,
+  PaginationFastPrev,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-  Pagination,
-  PaginationFastNext,
-  PaginationFastPrev,
 } from "./Component";
 
 interface Move {

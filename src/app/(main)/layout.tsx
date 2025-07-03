@@ -1,5 +1,5 @@
-import MobileHeader from "@/app/(main)/_components/MobileHeader";
 import { PropsWithChildren } from "react";
+import MobileHeader from "@/app/(main)/_components/MobileHeader";
 import Sidebar from "./_components/Sidebar";
 
 export default function Layout({ children }: PropsWithChildren) {

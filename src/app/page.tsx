@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import useAuthStore from "@/stores/useAuthStore";
+import { useEffect } from "react";
 import GuideComponent from "@/components/GuideComponent";
+import useAuthStore from "@/stores/useAuthStore";
 import useStores from "./(main)/(owner)/[id]/store/_queries/useStores";
 
 export default function Home() {
