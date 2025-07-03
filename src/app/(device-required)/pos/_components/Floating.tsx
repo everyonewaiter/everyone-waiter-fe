@@ -1,17 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Fragment } from "react";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
-import { Fragment } from "react";
-import MemoAlert from "./modals/MemoAlert";
-import ResendAlert from "./modals/ResendAlert";
+import { useMemoStore } from "../_hooks/useMemoStore";
 import { useOrderStore } from "../_hooks/useOrderStore";
 import { useSelectItemStore } from "../_hooks/useSelectItemStore";
 import usePos from "../_queries/usePos";
-import { useMemoStore } from "../_hooks/useMemoStore";
-import useOrder from "../_queries/useOrder";
+import MemoAlert from "./modals/MemoAlert";
+import ResendAlert from "./modals/ResendAlert";
 
 const FLOATING_ITEMS = [
   {
@@ -41,14 +40,13 @@ export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
 
-  const { activity } = usePos();
+  const { activity, resendReceipt } = usePos();
   const { data } = activity(tableNo);
-  const { memoUpdate } = useOrder();
 
   const { orders } = useOrderStore();
-  const { selectedOrder, setSelectedOrder } = useSelectItemStore();
+  const { selectedOrder } = useSelectItemStore();
 
-  const { setMemo, memo, resetMemo } = useMemoStore();
+  const { setMemo } = useMemoStore();
 
   const list = hasData
     ? FLOATING_ITEMS
@@ -79,22 +77,6 @@ export default function Floating({ hasData, tableNo }: IProps) {
               isOrder={orders.length > 0}
               orderNo={orderNo + 1}
               tableNo={tableNo}
-              onUpdate={() => {
-                memoUpdate.mutate(
-                  {
-                    tableNo: Number(tableNo),
-                    orderId: selectedOrder?.orderId as string,
-                    body: { memo },
-                  },
-                  {
-                    onSuccess: () => {
-                      setSelectedOrder(null);
-                      resetMemo();
-                      close();
-                    },
-                  }
-                );
-              }}
             />
           )}
         </QueryProviders>
@@ -102,7 +84,16 @@ export default function Floating({ hasData, tableNo }: IProps) {
     } else if (type === "send") {
       open(() => (
         <QueryProviders>
-          <ResendAlert close={close} />
+          <ResendAlert
+            close={close}
+            tableNo={Number(tableNo)}
+            onResend={() => {
+              resendReceipt.mutate(
+                { tableNo: Number(tableNo) },
+                { onSuccess: () => close() }
+              );
+            }}
+          />
         </QueryProviders>
       ));
     }

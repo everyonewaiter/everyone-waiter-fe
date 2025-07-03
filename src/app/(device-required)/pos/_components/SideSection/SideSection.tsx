@@ -1,19 +1,18 @@
 import { useParams, useRouter } from "next/navigation";
+import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
-import QueryProviders from "@/app/query-providers";
-import SideLayout from "./SideLayout";
-import usePos from "../../_queries/usePos";
-import useOrder from "../../_queries/useOrder";
-import { useMemoStore } from "../../_hooks/useMemoStore";
-import SideHeader from "./SideHeader";
-import SideBottom from "./SideBottom";
-import SidePayment from "./SidePayment";
-import SideContents from "./SideContents";
 import { useOrderStore } from "../../_hooks/useOrderStore";
-import SideControl from "./SideControl";
-import MemoAlert from "../modals/MemoAlert";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
+import useOrder from "../../_queries/useOrder";
+import usePos from "../../_queries/usePos";
+import MemoAlert from "../modals/MemoAlert";
+import SideBottom from "./SideBottom";
+import SideContents from "./SideContents";
+import SideControl from "./SideControl";
+import SideHeader from "./SideHeader";
+import SideLayout from "./SideLayout";
+import SidePayment from "./SidePayment";
 
 export default function SideSection() {
   const navigate = useRouter();
@@ -21,48 +20,18 @@ export default function SideSection() {
   const tableNo = params?.tableId as string;
 
   const { selectedOrder } = useSelectItemStore();
-  const { resetMemo } = useMemoStore();
-  const { orders, resetOrders } = useOrderStore();
+  const { orders } = useOrderStore();
 
   const { open, close } = useOverlay();
 
   const { activity } = usePos();
   const { data } = activity(Number(tableNo));
-  const { order, addDiscount, complete, cancel } = useOrder();
-
-  const handleOrder = (memo: string) => {
-    order.mutate(
-      {
-        tableNo: Number(tableNo),
-        memo,
-        orderMenus: orders.map((el) => ({
-          menuId: el.menuId,
-          quantity: el.quantity,
-          menuOptionGroups: el.menuOptionGroups.map((g) => ({
-            menuOptionGroupId: g.orderOptionGroupId,
-            orderOptions: g.orderOptions,
-          })),
-        })),
-      },
-      {
-        onSuccess: () => {
-          resetOrders();
-          resetMemo();
-          close();
-        },
-      }
-    );
-  };
+  const { addDiscount, complete, cancel } = useOrder();
 
   const handleAddMenu = () => {
     open(() => (
       <QueryProviders>
-        <MemoAlert
-          close={close}
-          isOrder
-          onOrder={handleOrder}
-          tableNo={Number(tableNo)}
-        />
+        <MemoAlert close={close} isOrder tableNo={Number(tableNo)} />
       </QueryProviders>
     ));
   };

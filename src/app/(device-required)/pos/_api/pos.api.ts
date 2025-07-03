@@ -57,3 +57,10 @@ export const getPosMenuList = async (
   );
   return response.data;
 };
+
+export const resendReceiptKitchen = async ({ tableNo }: PropsWithTableNo) => {
+  const response = await signatureInstance.post(
+    `${API_PATH.pos}/tables/${tableNo}/resend-receipt`
+  );
+  return response.data;
+};

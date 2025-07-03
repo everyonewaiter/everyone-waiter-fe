@@ -8,6 +8,7 @@ import {
   getTables,
   moveTables,
   openStore,
+  resendReceiptKitchen,
 } from "../_api/pos.api";
 
 export default function usePos() {
@@ -57,6 +58,10 @@ export default function usePos() {
     },
   });
 
+  const resendReceipt = useMutation({
+    mutationFn: resendReceiptKitchen,
+  });
+
   return {
     store: { open, close },
     menuList,
@@ -64,5 +69,6 @@ export default function usePos() {
     activity,
     storeStatus,
     move,
+    resendReceipt,
   };
 }
