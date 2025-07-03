@@ -8,11 +8,13 @@ export default async function Layout({
   params,
 }: {
   children: React.ReactNode;
-  params: { tableNo: string };
+  params: Promise<{ id: string }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const queryClient = getQueryClient();
   const storeId = searchParams?.storeId as string;
+  const { id } = await params;
+  const tableNo = id;
 
   await queryClient.prefetchQuery({
     queryKey: ["pos-menu-list"],
@@ -21,8 +23,8 @@ export default async function Layout({
   });
 
   await queryClient.prefetchQuery({
-    queryKey: ["table", params.tableNo],
-    queryFn: () => getTableActivity({ tableNo: Number(params.tableNo) }),
+    queryKey: ["table", tableNo],
+    queryFn: () => getTableActivity({ tableNo: Number(tableNo) }),
     staleTime: 1000 * 60 * 5,
   });
 
