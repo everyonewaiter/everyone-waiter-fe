@@ -10,6 +10,8 @@ import ResendAlert from "./modals/ResendAlert";
 import { useOrderStore } from "../_hooks/useOrderStore";
 import { useSelectItemStore } from "../_hooks/useSelectItemStore";
 import usePos from "../_queries/usePos";
+import { useMemoStore } from "../_hooks/useMemoStore";
+import useOrder from "../_queries/useOrder";
 
 const FLOATING_ITEMS = [
   {
@@ -41,9 +43,12 @@ export default function Floating({ hasData, tableNo }: IProps) {
 
   const { activity } = usePos();
   const { data } = activity(tableNo);
+  const { memoUpdate } = useOrder();
 
   const { orders } = useOrderStore();
-  const { selectedOrder } = useSelectItemStore();
+  const { selectedOrder, setSelectedOrder } = useSelectItemStore();
+
+  const { setMemo, memo, resetMemo } = useMemoStore();
 
   const list = hasData
     ? FLOATING_ITEMS
@@ -63,6 +68,9 @@ export default function Floating({ hasData, tableNo }: IProps) {
         alert("주문 선택 시 메모를 확인할 수 있습니다.");
         return;
       }
+
+      setMemo(selectedOrder.memo);
+
       open(() => (
         <QueryProviders>
           {type === "book" && selectedOrder && (
@@ -71,6 +79,22 @@ export default function Floating({ hasData, tableNo }: IProps) {
               isOrder={orders.length > 0}
               orderNo={orderNo + 1}
               tableNo={tableNo}
+              onUpdate={() => {
+                memoUpdate.mutate(
+                  {
+                    tableNo: Number(tableNo),
+                    orderId: selectedOrder?.orderId as string,
+                    body: { memo },
+                  },
+                  {
+                    onSuccess: () => {
+                      setSelectedOrder(null);
+                      resetMemo();
+                      close();
+                    },
+                  }
+                );
+              }}
             />
           )}
         </QueryProviders>

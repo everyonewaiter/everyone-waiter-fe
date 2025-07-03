@@ -1,5 +1,6 @@
 import Alert from "@/components/common/Alert/Alert";
 import Textarea from "@/components/common/TextArea";
+import { useRef, useState } from "react";
 import { useMemoStore } from "../../_hooks/useMemoStore";
 
 interface IProps {
@@ -8,6 +9,7 @@ interface IProps {
   orderNo?: number;
   onOrder?: (memo: string) => void;
   tableNo?: number;
+  onUpdate?: () => void;
 }
 
 export default function MemoAlert({
@@ -16,17 +18,44 @@ export default function MemoAlert({
   onOrder,
   orderNo,
   tableNo,
+  onUpdate,
 }: IProps) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
+
   const { memo, setMemo } = useMemoStore();
+
+  const isReadonly = !isOrder && !isEditing;
+  const placeholder =
+    isOrder || isEditing
+      ? "예약 관련 메모를 작성해주세요. (선택)"
+      : "작성된 메모가 없습니다.";
+
+  const handleAction = () => {
+    if (isOrder) {
+      onOrder?.(memo);
+    } else if (isEditing) {
+      onUpdate?.();
+    } else {
+      setIsEditing(true);
+      ref.current?.focus();
+      ref.current?.setSelectionRange(memo.length, memo.length);
+    }
+  };
+
+  const getButtonText = () => {
+    if (isOrder) return "주문하기";
+    return isEditing ? "저장하기" : "수정하기";
+  };
 
   return (
     <Alert
       onClose={close}
-      buttonColor="black"
+      buttonColor={isOrder || isEditing ? "black" : "primary"}
       noResponsive
-      buttonText="주문하기"
-      hasNoAction={!isOrder}
-      onAction={() => onOrder?.(memo)}
+      buttonText={getButtonText()}
+      onAction={handleAction}
+      hasNoCancel={isEditing}
     >
       <div className="-mt-4 flex w-full flex-col gap-5">
         {isOrder ? (
@@ -40,15 +69,12 @@ export default function MemoAlert({
           </div>
         )}
         <Textarea
+          ref={ref}
           className="h-[120px]"
-          placeholder={
-            isOrder
-              ? "예약 관련 메모를 작성해주세요. (선택)"
-              : "작성된 메모가 없습니다."
-          }
+          placeholder={placeholder}
           value={memo}
           onChange={(e) => setMemo(e.target.value)}
-          readOnly={!isOrder}
+          readOnly={isReadonly}
         />
       </div>
     </Alert>

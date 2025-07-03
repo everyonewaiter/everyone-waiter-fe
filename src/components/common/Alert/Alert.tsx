@@ -49,11 +49,10 @@ function Alert({
 
   const handleAction = () => {
     onAction?.();
-    setOpen(false);
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog open={open}>
       <AlertDialogContent ref={ref} className={layoutClassName}>
         <AlertDialogHeader>
           <AlertDialogTitle>

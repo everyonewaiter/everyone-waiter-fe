@@ -37,11 +37,9 @@ export const callStaff = async () => {
   return response.data;
 };
 
-export const orderMenus = async (body: {
-  tableNo: number;
-  memo: string;
-  orderMenus: OrderBody[];
-}) => {
+export const orderMenus = async (
+  body: PropsWithTableNo<{ memo: string; orderMenus: OrderBody[] }>
+) => {
   const response = await signatureInstance.post(`${API_PATH.orders}`, body);
   return response.data;
 };
@@ -49,10 +47,7 @@ export const orderMenus = async (body: {
 export const approvePayment = async ({
   tableNo,
   body,
-}: {
-  tableNo: number;
-  body: OrderPayments;
-}) => {
+}: PropsWithTableNo<{ body: OrderPayments }>) => {
   const response = await signatureInstance.post(
     `${API_PATH.orders}/payments/${tableNo}/approve`,
     body
@@ -69,6 +64,18 @@ export const cancelPayment = async ({
 }) => {
   const response = await signatureInstance.post(
     `${API_PATH.orders}/payments/${orderPaymentId}/cancel`,
+    body
+  );
+  return response.data;
+};
+
+export const updateMemo = async ({
+  tableNo,
+  orderId,
+  body,
+}: PropsWithTableNo<{ orderId: string; body: { memo: string } }>) => {
+  const response = await signatureInstance.put(
+    `${API_PATH.pos}/tables/${tableNo}/orders/${orderId}/memo`,
     body
   );
   return response.data;

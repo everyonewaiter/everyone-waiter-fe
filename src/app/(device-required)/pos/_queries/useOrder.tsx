@@ -6,6 +6,7 @@ import {
   completeOrder,
   discountOrder,
   orderMenus,
+  updateMemo,
 } from "../_api/order.api";
 
 export default function useOrder() {
@@ -43,5 +44,12 @@ export default function useOrder() {
     mutationFn: callStaff,
   });
 
-  return { order, cancel, addDiscount, complete, staffCalling };
+  const memoUpdate = useMutation({
+    mutationFn: updateMemo,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+    },
+  });
+
+  return { order, cancel, addDiscount, complete, staffCalling, memoUpdate };
 }
