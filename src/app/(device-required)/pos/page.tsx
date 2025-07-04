@@ -63,8 +63,7 @@ export default function Pos() {
     <div className="h-screen w-screen">
       <Image
         src="/images/pos-main.png"
-        width={1920}
-        height={1080}
+        fill
         alt="pos main image"
         className="object-cover"
       />
