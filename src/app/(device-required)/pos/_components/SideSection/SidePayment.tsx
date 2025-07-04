@@ -3,7 +3,7 @@ import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
 import PayAlert from "../modals/PayAlert";
 
-interface IProps {
+interface IProps extends PosTableActivity {
   orderType: DevicePayment;
   remainingPaymentPrice: number;
   onTableComplete: () => void;
@@ -13,13 +13,14 @@ export default function SidePayment({
   orderType,
   remainingPaymentPrice,
   onTableComplete,
+  ...props
 }: IProps) {
   const { open, close } = useOverlay();
 
   const handlePay = (type: "cash" | "credit-card") => {
     open(() => (
       <QueryProviders>
-        <PayAlert close={close} type={type} />
+        <PayAlert close={close} type={type} amount={props?.totalPaymentPrice} />
       </QueryProviders>
     ));
   };

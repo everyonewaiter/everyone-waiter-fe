@@ -1,15 +1,19 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
 import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
+import { authInstance } from "@/lib/axios/instance";
 
 interface IProps {
   close: () => void;
   type: "credit-card" | "cash";
+  amount: number;
 }
 
 interface FormType {
@@ -18,7 +22,7 @@ interface FormType {
   monthlyPlan: string;
 }
 
-export default function PayAlert({ close, type }: IProps) {
+export default function PayAlert({ close, type, amount }: IProps) {
   const form = useForm<FormType>({
     defaultValues: {
       receiptType: "개인소득공제용",
@@ -27,13 +31,34 @@ export default function PayAlert({ close, type }: IProps) {
     },
   });
 
-  const monthlyPlan = new Array(12).fill(0).map((_, i) => `${i + 1}개월`);
+  const monthlyPlan = new Array(12)
+    .fill(0)
+    .map((_, i) => (i + 1).toString().padStart(2, "0"));
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      const response = await authInstance.post(
+        "http://localhost:27098/WebApproval",
+        {
+          Callback: uuidv4(),
+          Amount: amount,
+          Tax: Math.floor(amount / 10),
+          NonTax: amount - Math.floor(amount / 10),
+          Installment: form.watch("monthlyPlan"),
+          Msg: "테이블 결제",
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    },
+    onError: (e) => console.error(e),
+  });
 
   return (
     <Alert
       onClose={close}
       hasNoCancel
-      onAction={() => {}}
+      onAction={() => mutate()}
       buttonText={type === "cash" ? "현금 결제하기" : "카드 결제하기"}
       buttonColor="black"
       layoutClassName="!w-[648px]"
@@ -60,7 +85,7 @@ export default function PayAlert({ close, type }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제할 금액</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {(141000).toLocaleString()}원
+              {amount.toLocaleString()}원
             </strong>
           </div>
           {type === "cash" ? (
