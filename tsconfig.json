@@ -36,5 +36,5 @@
     "next.config.ts",
     "jest.config.js"
   ],
-  "exclude": ["node_modules", "scr/scripts"]
+  "exclude": ["node_modules", "public/scripts"]
 }

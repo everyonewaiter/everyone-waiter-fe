@@ -32,5 +32,5 @@
     }
   },
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": ["src/scripts/**"]
+  "ignorePatterns": ["public/scripts/**"]
 }
