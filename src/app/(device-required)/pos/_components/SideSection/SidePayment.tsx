@@ -20,7 +20,15 @@ export default function SidePayment({
   const handlePay = (type: "cash" | "credit-card") => {
     open(() => (
       <QueryProviders>
-        <PayAlert close={close} type={type} amount={props?.totalPaymentPrice} />
+        <PayAlert
+          close={close}
+          type={type}
+          amount={props?.totalOrderPrice}
+          menus={props?.orders
+            .map((el) => el.orderMenus.map((v) => v.name))
+            .flat()}
+          tableNo={props?.tableNo}
+        />
       </QueryProviders>
     ));
   };

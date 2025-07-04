@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable no-unsafe-optional-chaining */
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
@@ -14,6 +15,8 @@ interface IProps {
   close: () => void;
   type: "credit-card" | "cash";
   amount: number;
+  menus: string[];
+  tableNo: number;
 }
 
 interface FormType {
@@ -22,7 +25,13 @@ interface FormType {
   monthlyPlan: string;
 }
 
-export default function PayAlert({ close, type, amount }: IProps) {
+export default function PayAlert({
+  close,
+  type,
+  amount,
+  menus,
+  tableNo,
+}: IProps) {
   const form = useForm<FormType>({
     defaultValues: {
       receiptType: "개인소득공제용",
@@ -31,9 +40,10 @@ export default function PayAlert({ close, type, amount }: IProps) {
     },
   });
 
-  const monthlyPlan = new Array(12)
-    .fill(0)
-    .map((_, i) => (i + 1).toString().padStart(2, "0"));
+  const monthlyPlan = [
+    "일시불",
+    ...new Array(11).fill(0).map((_, i) => (i + 2).toString().padStart(2, "0")),
+  ];
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -44,14 +54,16 @@ export default function PayAlert({ close, type, amount }: IProps) {
           Amount: amount,
           Tax: Math.floor(amount / 10),
           NonTax: amount - Math.floor(amount / 10),
-          Installment: form.watch("monthlyPlan"),
+          Installment:
+            form.watch("monthlyPlan") === "일시불"
+              ? "01"
+              : form.watch("monthlyPlan"),
+          OrderNo: `TABLE-${tableNo}-${Date.now()}`,
           Msg: "테이블 결제",
         }
       );
-      console.log(response.data);
       return response.data;
     },
-    onError: (e) => console.error(e),
   });
 
   return (
@@ -79,7 +91,9 @@ export default function PayAlert({ close, type, amount }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제 정보</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              바질 알리오올리오 외 3개
+              {menus?.length === 1
+                ? menus?.[0]
+                : `${menus?.[0]} 외 ${menus?.length - 1}개`}
             </strong>
           </div>
           <div className="flex flex-col items-start">
