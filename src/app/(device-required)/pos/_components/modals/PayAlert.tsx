@@ -1,15 +1,19 @@
 "use client";
 
 /* eslint-disable no-unsafe-optional-chaining */
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { v4 as uuidv4 } from "uuid";
 import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
-import { authInstance } from "@/lib/axios/instance";
+import { makeKSCATApprovalREQ } from "../../_utils/make-approval-req";
+
+declare global {
+  interface Window {
+    $: any;
+  }
+}
 
 interface IProps {
   close: () => void;
@@ -45,32 +49,47 @@ export default function PayAlert({
     ...new Array(11).fill(0).map((_, i) => (i + 2).toString().padStart(2, "0")),
   ];
 
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      const response = await authInstance.post(
-        "http://localhost:27098/WebApproval",
-        {
-          Callback: uuidv4(),
-          Amount: amount,
-          Tax: Math.floor(amount / 10),
-          NonTax: amount - Math.floor(amount / 10),
-          Installment:
-            form.watch("monthlyPlan") === "일시불"
-              ? "01"
-              : form.watch("monthlyPlan"),
-          OrderNo: `TABLE-${tableNo}-${Date.now()}`,
-          Msg: "테이블 결제",
-        }
-      );
-      return response.data;
-    },
-  });
+  const handlePayment = () => {
+    const callbackKey = `jsonp${Date.now()}`;
+
+    const taxValue = Math.floor(amount / 10);
+    const nonTaxValue = amount - taxValue;
+    const installment =
+      form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan"); // "00"은 일시불
+
+    const req = makeKSCATApprovalREQ({
+      orderNo: `TABLE-${tableNo}-${Date.now()}`,
+      amount,
+      tax: taxValue,
+      nonTax: nonTaxValue,
+      installment,
+      msg: `${tableNo}번 테이블 결제`,
+    });
+
+    window.$.ajax({
+      url: "http://localhost:27097/WebApproval",
+      dataType: "jsonp",
+      jsonp: "callback",
+      data: {
+        callback: callbackKey,
+        REQ: req,
+      },
+      success: (res: any) => {
+        // eslint-disable-next-line no-console
+        console.log("✅ 결제 성공", res);
+      },
+      error: (err: any) => {
+        // eslint-disable-next-line no-console
+        console.error("❌ 결제 실패", err);
+      },
+    });
+  };
 
   return (
     <Alert
       onClose={close}
       hasNoCancel
-      onAction={() => mutate()}
+      onAction={handlePayment}
       buttonText={type === "cash" ? "현금 결제하기" : "카드 결제하기"}
       buttonColor="black"
       layoutClassName="!w-[648px]"

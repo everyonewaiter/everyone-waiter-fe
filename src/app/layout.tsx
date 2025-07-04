@@ -63,6 +63,11 @@ export default function RootLayout({
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
       />
+      {/* jQuery KSNET 스크립트 */}
+      <Script
+        src="/scripts/jquery-1.10.1.min.js"
+        strategy="beforeInteractive"
+      />
       <body className="min-h-screen min-w-screen select-none">
         <ClientLayout>{children}</ClientLayout>
       </body>
