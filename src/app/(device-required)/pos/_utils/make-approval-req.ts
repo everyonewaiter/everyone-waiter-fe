@@ -39,15 +39,13 @@ export default function makeKSCATApprovalREQ({
   resultText += fillZero(12);
 
   // NOTE: 포스 엔드티 모드
-  resultText += "";
+  resultText += fillBlank(1);
   // NOTE: 거래 고유 번호
   resultText += fillBlank(20);
-  // NOTE: 암호화 여부
-  resultText += "";
   // NOTE: 암호화하지 않은 카드 번호
   resultText += fillBlank(20);
   // NOTE: 암호화 여부
-  resultText += " ";
+  resultText += fillBlank(1);
   // NOTE: SW 모델번호
   resultText += fillBlank(16);
   // NOTE: CAT or Reader 모델 번호
@@ -56,7 +54,7 @@ export default function makeKSCATApprovalREQ({
   // NOTE: 암호화 정보
   resultText += fillBlank(40);
   // NOTE: Track II
-  resultText += " ";
+  resultText += fillBlank(37);
   // NOTE: FS
   resultText += String.fromCharCode(28);
 
@@ -78,34 +76,16 @@ export default function makeKSCATApprovalREQ({
   // NOTE: 비밀번호
   resultText += fillBlank(16);
   // NOTE: 원거래승인번호
-  resultText += "000000000000";
+  resultText += fillBlank(12);
   // NOTE: 원거래승인일자 (6자)
   resultText += `${new Date().toISOString().split("T")[0].replaceAll("-", "")}`;
-  // NOTE: 사용자 정보
-  resultText += fillBlank(13);
-  // NOTE: 가맹점ID
-  resultText += fillBlank(2);
-  // NOTE: 가맹점사용필드
-  resultText += fillBlank(30);
-  // NOTE: Reserved
-  resultText += fillBlank(4);
-  // NOTE: KSNET Reserved
-  resultText += fillBlank(20);
-  // NOTE: 동글구분
-  resultText += fillBlank(1);
-  // NOTE: 매체구분
-  resultText += fillBlank(1);
-  // NOTE: 이통사구분
-  resultText += fillBlank(1);
-  // NOTE: 신용카드종류
-  resultText += fillBlank(1);
-  // NOTE: filter
-  resultText += fillBlank(30);
-  // NOTE: DCC
-  resultText += fillBlank(60);
+  for (let i = 0; i < 163; i += 1) {
+    resultText += " ";
+  } // NOTE: 사용자정보~DCC
 
   // NOTE: 전자서명 유뮤
-  resultText += amount < 50000 ? "X" : "F";
+  // resultText += amount < 50000 ? "X" : "F";
+  resultText += "X";
   // NOTE: 전자서명 암호화
   // resultText += fillBlank(2);
   // NOTE: 전자 서명 길이
