@@ -1,17 +1,11 @@
 export default function makeKSCATApprovalREQ({
-  orderNo,
   amount,
   tax,
-  nonTax,
   installment,
-  msg,
 }: {
-  orderNo: string;
   amount: number;
   tax: number;
-  nonTax: number;
-  installment: string;
-  msg: string;
+  installment: string; // "00", "06" 같은 문자열
 }) {
   const pad = (value: string | number, length: number, alignRight = true) => {
     const str = String(value);
@@ -19,32 +13,41 @@ export default function makeKSCATApprovalREQ({
   };
 
   const prefix = "AP";
-  const formatVersion = "C";
-  const type = "0100";
-  const bizType = "20";
-  const merchantId = pad("NOPTOTESTO3", 15, false); // 왼쪽 정렬
-  const paddedOrderNo = pad(orderNo, 40, false);
-  const totalAmount = pad(amount, 9);
-  const taxAmount = pad(tax, 9);
-  const nonTaxAmount = pad(nonTax, 9);
-  const installmentTerm = pad(installment, 2);
-  const message = pad(msg, 40, false);
+  const stx = "0452";
+  const transactionType = "IC";
+  const workType = "01";
+  const messageType = "0200";
+  const transactionFlag = "N";
+  const terminalId = pad("DPT0TEST03", 15, false);
+  const companyId = "0000";
+  const serialNo = "000000000000"; // TODO: 필요 시 고유값 생성
+  const installmentTerm = installment; // 2자리
+  const taxAmount = pad(tax, 12);
+  const supplyAmount = pad(amount - tax, 12); // 공급가 = 총액 - 세금
+  const totalAmount = pad(amount, 12);
+  const serviceCharge = "000000000000";
+  const filler = "00000000"; // filler (미사용 8자리)
+  const noSignFlag = "X";
 
   const body = [
-    formatVersion,
-    type,
-    bizType,
-    merchantId,
-    paddedOrderNo,
-    totalAmount,
-    taxAmount,
-    nonTaxAmount,
+    stx,
+    transactionType,
+    workType,
+    messageType,
+    transactionFlag,
+    terminalId,
+    companyId,
+    serialNo,
     installmentTerm,
-    message,
+    totalAmount,
+    serviceCharge,
+    taxAmount,
+    supplyAmount,
+    filler,
+    noSignFlag,
   ].join("");
 
-  // 길이 계산: AP (2) + length (5) 제외한 body의 길이
-  const length = pad(prefix.length + 5 + body.length, 5); // total length
+  const length = pad(prefix.length + 5 + body.length, 5); // 전체 전문 길이
 
   return `${prefix}${length}${body}`;
 }

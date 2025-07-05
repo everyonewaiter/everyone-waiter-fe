@@ -20,7 +20,6 @@ interface IProps {
   type: "credit-card" | "cash";
   amount: number;
   menus: string[];
-  tableNo: number;
 }
 
 interface FormType {
@@ -29,13 +28,7 @@ interface FormType {
   monthlyPlan: string;
 }
 
-export default function PayAlert({
-  close,
-  type,
-  amount,
-  menus,
-  tableNo,
-}: IProps) {
+export default function PayAlert({ close, type, amount, menus }: IProps) {
   const form = useForm<FormType>({
     defaultValues: {
       receiptType: "개인소득공제용",
@@ -53,17 +46,13 @@ export default function PayAlert({
     const callbackKey = `jsonp${Date.now()}`;
 
     const taxValue = Math.floor(amount / 10);
-    const nonTaxValue = amount - taxValue;
     const installment =
-      form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan"); // "00"은 일시불
+      form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
 
     const req = makeKSCATApprovalREQ({
-      orderNo: `TBL${tableNo}${Date.now()}`.slice(0, 20).padEnd(20, " "),
       amount,
       tax: taxValue,
-      nonTax: nonTaxValue,
       installment,
-      msg: `TABLE${tableNo}PAYMENT`.padEnd(40, " "),
     });
 
     window.$.ajax({
