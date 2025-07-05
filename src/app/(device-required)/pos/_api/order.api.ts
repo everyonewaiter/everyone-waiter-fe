@@ -44,31 +44,6 @@ export const orderMenus = async (
   return response.data;
 };
 
-export const approvePayment = async ({
-  tableNo,
-  body,
-}: PropsWithTableNo<{ body: OrderPayments }>) => {
-  const response = await signatureInstance.post(
-    `${API_PATH.orders}/payments/${tableNo}/approve`,
-    body
-  );
-  return response.data;
-};
-
-export const cancelPayment = async ({
-  orderPaymentId,
-  body,
-}: {
-  orderPaymentId: string;
-  body: Pick<OrderPayments, "approvalNo" | "tradeTime" | "tradeUniqueNo">;
-}) => {
-  const response = await signatureInstance.post(
-    `${API_PATH.orders}/payments/${orderPaymentId}/cancel`,
-    body
-  );
-  return response.data;
-};
-
 export const updateMemo = async ({
   tableNo,
   orderId,

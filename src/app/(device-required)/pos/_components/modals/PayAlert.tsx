@@ -8,6 +8,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import makeKSCATApprovalREQ from "../../_utils/make-approval-req";
+import usePayment from "../../_queries/usePayment";
 
 declare global {
   interface Window {
@@ -20,6 +21,7 @@ interface IProps {
   type: "credit-card" | "cash";
   amount: number;
   menus: string[];
+  tableNo: number;
 }
 
 interface FormType {
@@ -28,7 +30,13 @@ interface FormType {
   monthlyPlan: string;
 }
 
-export default function PayAlert({ close, type, amount, menus }: IProps) {
+export default function PayAlert({
+  close,
+  type,
+  amount,
+  menus,
+  tableNo,
+}: IProps) {
   const form = useForm<FormType>({
     defaultValues: {
       receiptType: "개인소득공제용",
@@ -36,6 +44,8 @@ export default function PayAlert({ close, type, amount, menus }: IProps) {
       monthlyPlan: "",
     },
   });
+
+  const { approvePay } = usePayment();
 
   const monthlyPlan = [
     "일시불",
@@ -63,7 +73,27 @@ export default function PayAlert({ close, type, amount, menus }: IProps) {
         REQ: req,
       },
       // eslint-disable-next-line no-console
-      success: (res: any) => console.log(res),
+      success: (res: PaymentResponse) => {
+        approvePay.mutate({
+          tableNo,
+          body: {
+            method: "CARD",
+            amount,
+            vat: taxValue,
+            supplyAmount: amount - taxValue,
+            approvalNo: res.APPROVALNO,
+            installment,
+            cardNo: res.FILLER,
+            purchaseName: res.PURCHASENAME,
+            merchantNo: res.MERCHANTNUMBER,
+            tradeTime: res.TRADETIME,
+            tradeUniqueNo: res.TRADEUNIQUENO,
+            issuerName: res.CARDNAME,
+            cashReceiptNo: "",
+            cashReceiptType: "NONE",
+          },
+        });
+      },
       // eslint-disable-next-line no-console
       error: (e: any) => console.log(e),
     });

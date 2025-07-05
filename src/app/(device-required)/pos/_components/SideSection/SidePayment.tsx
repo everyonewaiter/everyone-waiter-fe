@@ -27,6 +27,7 @@ export default function SidePayment({
           menus={props?.orders
             .map((el) => el.orderMenus.map((v) => v.name))
             .flat()}
+          tableNo={props?.tableNo}
         />
       </QueryProviders>
     ));
