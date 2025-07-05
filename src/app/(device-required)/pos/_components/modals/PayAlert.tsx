@@ -52,7 +52,9 @@ export default function PayAlert({ close, type, amount, menus }: IProps) {
     const req = makeKSCATApprovalREQ({
       amount,
       tax: taxValue,
+      nonTax: amount - taxValue,
       installment,
+      type: "1",
     });
 
     window.$.ajax({

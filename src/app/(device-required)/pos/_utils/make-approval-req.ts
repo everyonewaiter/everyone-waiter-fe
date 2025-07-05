@@ -3,53 +3,113 @@ export default function makeKSCATApprovalREQ({
   tax,
   nonTax,
   installment,
+  type,
 }: {
   amount: number;
   tax: number;
   nonTax: number;
   installment: string; // "00", "02", ...
+  type: "0" | "1"; // 1 승인, 0 취소
 }) {
-  const pad = (val: string | number, len: number) =>
-    String(val).padStart(len, "0");
+  function fillZero(num: number) {
+    return "0".repeat(num);
+  }
 
-  const fixedFields = {
-    prefix: "AP",
-    stx: "0452", // 전문길이 포함해서 고정
-    transType: "IC",
-    businessCode: "01", // 승인
-    messageCode: "0200", // 승인
-    tradeType: "N",
-    terminalId: "DPT0TEST03", // 실제 등록된 단말기 번호
-    merchantId: "0000",
-    serialNo: "000000000000",
-    serviceFee: "000000000000",
-    dutyFree: "000000000000",
-    noSign: "X", // 무서명 거래
-  };
+  let resultText = "";
 
-  const totalAmount = pad(amount, 12);
-  const taxAmount = pad(tax, 12);
-  const supplyAmount = pad(nonTax, 12);
-  const installmentTerm = pad(installment, 2);
+  // NOTE: STX
+  resultText += String.fromCharCode(2);
+  // NOTE: 거래 구분 (신용IC: IC, 현금: HK)
+  resultText += "IC";
+  // NOTE: 업무 구분 (승인취소: 01)
+  resultText += "01";
+  // NOTE: 전무 구분 (승인조회 0200, 취소 0420)
+  resultText += type === "1" ? "0200" : "0420";
+  // NOTE: 거래 형태 (일반 N)
+  resultText += "N";
+  // NOTE: 단말이 번호 (10자)
+  resultText += "DPTOTEST01";
+  // NOTE: 업체 정보
+  resultText += fillZero(4);
+  // NOTE: 전문일련번호 (12자)
+  resultText += fillZero(12);
 
-  const body = [
-    fixedFields.transType,
-    fixedFields.businessCode,
-    fixedFields.messageCode,
-    fixedFields.tradeType,
-    fixedFields.terminalId,
-    fixedFields.merchantId,
-    fixedFields.serialNo,
-    installmentTerm,
-    totalAmount,
-    fixedFields.serviceFee,
-    taxAmount,
-    supplyAmount,
-    fixedFields.dutyFree,
-    fixedFields.noSign,
-  ].join("");
+  // NOTE: 포스 엔드티 모드
+  resultText += " ";
+  // NOTE: 거래 고유 번호
+  resultText += " ";
+  // NOTE: 암호화 여부
+  resultText += " ";
+  // NOTE: 암호화하지 않은 카드 번호
+  resultText += " ";
+  // NOTE: 암호화 여부
+  resultText += " ";
+  // NOTE: SW 모델번호
+  resultText += " ";
+  // NOTE: CAT or Reader 모델 번호
+  resultText += "KSR02U";
+  // NOTE: 암호화 정보
+  resultText += " ";
+  // NOTE: Track II
+  resultText += " ";
+  // NOTE: FS
+  resultText += String.fromCharCode(28);
 
-  const totalLength = fixedFields.prefix + fixedFields.stx + body;
+  // NOTE: 할부개월 (00 ~ 12)
+  resultText += installment.padStart(2, "0");
+  // NOTE: 총 금액
+  resultText += String(amount).padStart(12, "0");
+  // NOTE: 봉사료
+  resultText += fillZero(12);
+  // NOTE: 세금
+  resultText += String(tax).padStart(12, "0");
+  // NOTE: 공급금액
+  resultText += String(nonTax).padStart(12, "0");
+  // NOTE: 면세금액
+  resultText += fillZero(12);
 
-  return totalLength;
+  // NOTE: Working Key Index
+  resultText += " ";
+  // NOTE: 비밀번호
+  resultText += " ";
+  // NOTE: 원거래승인번호
+  // NOTE: 원거래승인일자
+  // NOTE: 사용자 정보
+  resultText += " ";
+  // NOTE: 가맹점ID
+  resultText += " ";
+  // NOTE: 가맹점사용필드
+  resultText += " ";
+  // NOTE: Reserved
+  resultText += " ";
+  // NOTE: KSNET Reserved
+  resultText += " ";
+  // NOTE: 동글구분
+  resultText += " ";
+  // NOTE: 매체구분
+  resultText += " ";
+  // NOTE: 이통사구분
+  resultText += " ";
+  // NOTE: 신용카드종류
+  resultText += " ";
+  // NOTE: filter
+  resultText += " ";
+  // NOTE: DCC
+  resultText += " ";
+
+  // NOTE: 전자서명 유뮤
+  resultText += amount < 50000 ? "X" : "F";
+  // NOTE: 전자서명 암호화
+  resultText += "00";
+  // NOTE: 전자 서명 길이
+  resultText += "    ";
+  // NOTE: ETX
+  resultText += String.fromCharCode(3);
+  // NOTE: CR
+  resultText += String.fromCharCode(13);
+
+  const header = `AP${resultText.length.toString().padStart(4, "0")}`;
+  const body = resultText;
+
+  return `${header}${body}`;
 }
