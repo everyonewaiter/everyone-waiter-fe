@@ -42,9 +42,7 @@ export default function PayAlert({ close, type, amount, menus }: IProps) {
     ...new Array(11).fill(0).map((_, i) => (i + 2).toString().padStart(2, "0")),
   ];
 
-  const handlePayment = () => {
-    const callbackKey = `jsonp${Date.now()}`;
-
+  const handlePayment = async () => {
     const taxValue = Math.floor(amount / 10);
     const installment =
       form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
@@ -56,15 +54,18 @@ export default function PayAlert({ close, type, amount, menus }: IProps) {
       installment,
       type: "1",
     });
-
-    window.$.ajax({
-      url: "http://localhost:27098/WebApproval",
+    await window.$.ajax({
+      url: "http://127.0.0.1:27098/",
       dataType: "jsonp",
       jsonp: "callback",
+      jsonpCallback: `jsonp${Date.now()}`,
       data: {
-        callback: callbackKey,
         REQ: req,
       },
+      // eslint-disable-next-line no-console
+      success: (res: any) => console.log(res),
+      // eslint-disable-next-line no-console
+      error: (e: any) => console.log(e),
     });
   };
 
