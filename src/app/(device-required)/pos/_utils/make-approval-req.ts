@@ -15,6 +15,10 @@ export default function makeKSCATApprovalREQ({
     return "0".repeat(num);
   }
 
+  function fillBlank(num: number) {
+    return " ".repeat(num);
+  }
+
   let resultText = "";
 
   // NOTE: STX
@@ -28,28 +32,29 @@ export default function makeKSCATApprovalREQ({
   // NOTE: 거래 형태 (일반 N)
   resultText += "N";
   // NOTE: 단말이 번호 (10자)
-  resultText += "DPTOTEST01";
+  resultText += "DPTOTEST03";
   // NOTE: 업체 정보
-  resultText += fillZero(4);
+  resultText += fillBlank(4);
   // NOTE: 전문일련번호 (12자)
   resultText += fillZero(12);
 
   // NOTE: 포스 엔드티 모드
-  resultText += " ";
+  resultText += "";
   // NOTE: 거래 고유 번호
-  resultText += " ";
+  resultText += fillBlank(20);
   // NOTE: 암호화 여부
-  resultText += " ";
+  resultText += "";
   // NOTE: 암호화하지 않은 카드 번호
-  resultText += " ";
+  resultText += fillBlank(20);
   // NOTE: 암호화 여부
   resultText += " ";
   // NOTE: SW 모델번호
-  resultText += " ";
+  resultText += fillBlank(16);
   // NOTE: CAT or Reader 모델 번호
-  resultText += "KSR02U";
+  // resultText += "KSR02U";
+  resultText += fillBlank(16);
   // NOTE: 암호화 정보
-  resultText += " ";
+  resultText += fillBlank(40);
   // NOTE: Track II
   resultText += " ";
   // NOTE: FS
@@ -69,40 +74,42 @@ export default function makeKSCATApprovalREQ({
   resultText += fillZero(12);
 
   // NOTE: Working Key Index
-  resultText += " ";
+  resultText += fillBlank(2);
   // NOTE: 비밀번호
-  resultText += " ";
+  resultText += fillBlank(16);
   // NOTE: 원거래승인번호
-  // NOTE: 원거래승인일자
+  resultText += "000000000000";
+  // NOTE: 원거래승인일자 (6자)
+  resultText += `${new Date().toISOString().split("T")[0].replaceAll("-", "")}`;
   // NOTE: 사용자 정보
-  resultText += " ";
+  resultText += fillBlank(13);
   // NOTE: 가맹점ID
-  resultText += " ";
+  resultText += fillBlank(2);
   // NOTE: 가맹점사용필드
-  resultText += " ";
+  resultText += fillBlank(30);
   // NOTE: Reserved
-  resultText += " ";
+  resultText += fillBlank(4);
   // NOTE: KSNET Reserved
-  resultText += " ";
+  resultText += fillBlank(20);
   // NOTE: 동글구분
-  resultText += " ";
+  resultText += fillBlank(1);
   // NOTE: 매체구분
-  resultText += " ";
+  resultText += fillBlank(1);
   // NOTE: 이통사구분
-  resultText += " ";
+  resultText += fillBlank(1);
   // NOTE: 신용카드종류
-  resultText += " ";
+  resultText += fillBlank(1);
   // NOTE: filter
-  resultText += " ";
+  resultText += fillBlank(30);
   // NOTE: DCC
-  resultText += " ";
+  resultText += fillBlank(60);
 
   // NOTE: 전자서명 유뮤
   resultText += amount < 50000 ? "X" : "F";
   // NOTE: 전자서명 암호화
-  resultText += "00";
+  // resultText += fillBlank(2);
   // NOTE: 전자 서명 길이
-  resultText += "    ";
+  // resultText += "    ";
   // NOTE: ETX
   resultText += String.fromCharCode(3);
   // NOTE: CR
