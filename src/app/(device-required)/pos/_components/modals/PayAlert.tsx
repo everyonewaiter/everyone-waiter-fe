@@ -7,7 +7,7 @@ import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
-import { makeKSCATApprovalREQ } from "../../_utils/make-approval-req";
+import makeKSCATApprovalREQ from "../../_utils/make-approval-req";
 
 declare global {
   interface Window {
