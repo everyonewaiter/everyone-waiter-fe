@@ -1,53 +1,55 @@
 export default function makeKSCATApprovalREQ({
   amount,
   tax,
+  nonTax,
   installment,
 }: {
   amount: number;
   tax: number;
-  installment: string; // "00", "06" 같은 문자열
+  nonTax: number;
+  installment: string; // "00", "02", ...
 }) {
-  const pad = (value: string | number, length: number, alignRight = true) => {
-    const str = String(value);
-    return alignRight ? str.padStart(length, "0") : str.padEnd(length, " ");
+  const pad = (val: string | number, len: number) =>
+    String(val).padStart(len, "0");
+
+  const fixedFields = {
+    prefix: "AP",
+    stx: "0452", // 전문길이 포함해서 고정
+    transType: "IC",
+    businessCode: "01", // 승인
+    messageCode: "0200", // 승인
+    tradeType: "N",
+    terminalId: "DPT0TEST03", // 실제 등록된 단말기 번호
+    merchantId: "0000",
+    serialNo: "000000000000",
+    serviceFee: "000000000000",
+    dutyFree: "000000000000",
+    noSign: "X", // 무서명 거래
   };
 
-  const prefix = "AP";
-  const stx = "0452";
-  const transactionType = "IC";
-  const workType = "01";
-  const messageType = "0200";
-  const transactionFlag = "N";
-  const terminalId = pad("DPT0TEST03", 15, false);
-  const companyId = "0000";
-  const serialNo = "000000000000"; // TODO: 필요 시 고유값 생성
-  const installmentTerm = installment; // 2자리
-  const taxAmount = pad(tax, 12);
-  const supplyAmount = pad(amount - tax, 12); // 공급가 = 총액 - 세금
   const totalAmount = pad(amount, 12);
-  const serviceCharge = "000000000000";
-  const filler = "00000000"; // filler (미사용 8자리)
-  const noSignFlag = "X";
+  const taxAmount = pad(tax, 12);
+  const supplyAmount = pad(nonTax, 12);
+  const installmentTerm = pad(installment, 2);
 
   const body = [
-    stx,
-    transactionType,
-    workType,
-    messageType,
-    transactionFlag,
-    terminalId,
-    companyId,
-    serialNo,
+    fixedFields.transType,
+    fixedFields.businessCode,
+    fixedFields.messageCode,
+    fixedFields.tradeType,
+    fixedFields.terminalId,
+    fixedFields.merchantId,
+    fixedFields.serialNo,
     installmentTerm,
     totalAmount,
-    serviceCharge,
+    fixedFields.serviceFee,
     taxAmount,
     supplyAmount,
-    filler,
-    noSignFlag,
+    fixedFields.dutyFree,
+    fixedFields.noSign,
   ].join("");
 
-  const length = pad(prefix.length + 5 + body.length, 5); // 전체 전문 길이
+  const totalLength = fixedFields.prefix + fixedFields.stx + body;
 
-  return `${prefix}${length}${body}`;
+  return totalLength;
 }
