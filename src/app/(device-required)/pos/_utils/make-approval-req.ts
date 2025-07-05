@@ -84,8 +84,8 @@ export default function makeKSCATApprovalREQ({
   } // NOTE: 사용자정보~DCC
 
   // NOTE: 전자서명 유뮤
-  // resultText += amount < 50000 ? "X" : "F";
-  resultText += "X";
+  resultText += amount < 50000 ? "X" : "T";
+  // resultText += "X";
   // NOTE: 전자서명 암호화
   // resultText += fillBlank(2);
   // NOTE: 전자 서명 길이

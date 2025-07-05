@@ -54,7 +54,10 @@ export default function AddDiscountAlert({
   return (
     <Alert
       onClose={close}
-      onAction={() => onAction(form.watch("discount")!)}
+      onAction={() => {
+        onAction(total - form.watch("result")!);
+        close();
+      }}
       buttonColor="black"
       buttonText="할인하기"
       noResponsive

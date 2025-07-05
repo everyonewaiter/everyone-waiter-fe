@@ -7,6 +7,7 @@ import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
+import { useRouter } from "next/navigation";
 import makeKSCATApprovalREQ from "../../_utils/make-approval-req";
 import usePayment from "../../_queries/usePayment";
 
@@ -37,6 +38,8 @@ export default function PayAlert({
   menus,
   tableNo,
 }: IProps) {
+  const navigate = useRouter();
+
   const form = useForm<FormType>({
     defaultValues: {
       receiptType: "개인소득공제용",
@@ -72,27 +75,36 @@ export default function PayAlert({
       data: {
         REQ: req,
       },
-      // eslint-disable-next-line no-console
       success: (res: PaymentResponse) => {
-        approvePay.mutate({
-          tableNo,
-          body: {
-            method: "CARD",
-            amount,
-            vat: taxValue,
-            supplyAmount: amount - taxValue,
-            approvalNo: res.APPROVALNO,
-            installment,
-            cardNo: res.FILLER,
-            purchaseName: res.PURCHASENAME,
-            merchantNo: res.MERCHANTNUMBER,
-            tradeTime: res.TRADETIME,
-            tradeUniqueNo: res.TRADEUNIQUENO,
-            issuerName: res.CARDNAME,
-            cashReceiptNo: "",
-            cashReceiptType: "NONE",
+        // eslint-disable-next-line no-console
+        console.log(res);
+        approvePay.mutate(
+          {
+            tableNo,
+            body: {
+              method: "CARD",
+              amount,
+              vat: taxValue,
+              supplyAmount: amount - taxValue,
+              approvalNo: res.APPROVALNO,
+              installment,
+              cardNo: res.FILLER,
+              purchaseName: res.PURCHASENAME,
+              merchantNo: res.MERCHANTNUMBER,
+              tradeTime: res.TRADETIME,
+              tradeUniqueNo: res.TRADEUNIQUENO,
+              issuerName: res.CARDNAME,
+              cashReceiptNo: "",
+              cashReceiptType: "NONE",
+            },
           },
-        });
+          {
+            onSuccess: () => {
+              navigate.push("/pos/tables");
+              close();
+            },
+          }
+        );
       },
       // eslint-disable-next-line no-console
       error: (e: any) => console.log(e),
