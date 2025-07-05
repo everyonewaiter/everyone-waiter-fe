@@ -58,29 +58,21 @@ export default function PayAlert({
       form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan"); // "00"은 일시불
 
     const req = makeKSCATApprovalREQ({
-      orderNo: `TABLE-${tableNo}-${Date.now()}`,
+      orderNo: `TBL${tableNo}${Date.now()}`.slice(0, 20).padEnd(20, " "),
       amount,
       tax: taxValue,
       nonTax: nonTaxValue,
       installment,
-      msg: `${tableNo}번 테이블 결제`,
+      msg: `TABLE${tableNo}PAYMENT`.padEnd(40, " "),
     });
 
     window.$.ajax({
-      url: "http://localhost:27097/WebApproval",
+      url: "http://localhost:27098/WebApproval",
       dataType: "jsonp",
       jsonp: "callback",
       data: {
         callback: callbackKey,
         REQ: req,
-      },
-      success: (res: any) => {
-        // eslint-disable-next-line no-console
-        console.log("✅ 결제 성공", res);
-      },
-      error: (err: any) => {
-        // eslint-disable-next-line no-console
-        console.error("❌ 결제 실패", err);
       },
     });
   };
