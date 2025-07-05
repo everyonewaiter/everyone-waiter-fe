@@ -30,7 +30,6 @@ export default function makeKSCATApprovalREQ({
   const installmentTerm = pad(installment, 2);
   const message = pad(msg, 40, false);
 
-  // 전문 길이 계산
   const body = [
     formatVersion,
     type,
@@ -44,7 +43,8 @@ export default function makeKSCATApprovalREQ({
     message,
   ].join("");
 
-  const length = pad(body.length + 7, 5); // 전체 전문 길이 (prefix + length 제외하고 나머지 길이)
+  // 길이 계산: AP (2) + length (5) 제외한 body의 길이
+  const length = pad(prefix.length + 5 + body.length, 5); // total length
 
   return `${prefix}${length}${body}`;
 }
