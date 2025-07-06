@@ -8,7 +8,6 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { useRouter } from "next/navigation";
-import makeKSCATApprovalREQ from "../../_utils/make-approval-req";
 import usePayment from "../../_queries/usePayment";
 
 declare global {
@@ -48,67 +47,44 @@ export default function PayAlert({
     },
   });
 
-  const { approvePay } = usePayment();
+  const { handlePayWithCard, handlePayWithCash } = usePayment();
 
   const monthlyPlan = [
     "일시불",
     ...new Array(11).fill(0).map((_, i) => (i + 2).toString().padStart(2, "0")),
   ];
 
-  const handlePayment = async () => {
-    const taxValue = Math.floor(amount / 10);
-    const installment =
-      form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
+  const handlePayment = () => {
+    if (type === "credit-card") {
+      handlePayWithCard({
+        tableNo,
+        form,
+        amount,
+        successHandler: () => {
+          navigate.push("/pos/tables");
+          close();
+        },
+      });
+    } else {
+      let cashReceiptType = "";
+      if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";
+      else if (form.watch("receiptType") === "사업자증빙용")
+        cashReceiptType = "PROOF";
+      else cashReceiptType = "DEDUCTION";
 
-    const req = makeKSCATApprovalREQ({
-      amount,
-      tax: taxValue,
-      nonTax: amount - taxValue,
-      installment,
-      type: "1",
-    });
-    await window.$.ajax({
-      url: "http://127.0.0.1:27098/",
-      dataType: "jsonp",
-      jsonp: "callback",
-      jsonpCallback: `jsonp${Date.now()}`,
-      data: {
-        REQ: req,
-      },
-      success: (res: PaymentResponse) => {
-        // eslint-disable-next-line no-console
-        console.log(res);
-        approvePay.mutate(
-          {
-            tableNo,
-            body: {
-              method: "CARD",
-              amount,
-              vat: taxValue,
-              supplyAmount: amount - taxValue,
-              approvalNo: res.APPROVALNO,
-              installment,
-              cardNo: res.FILLER,
-              purchaseName: res.PURCHASENAME,
-              merchantNo: res.MERCHANTNUMBER,
-              tradeTime: res.TRADETIME,
-              tradeUniqueNo: res.TRADEUNIQUENO,
-              issuerName: res.CARDNAME,
-              cashReceiptNo: "",
-              cashReceiptType: "NONE",
-            },
-          },
-          {
-            onSuccess: () => {
-              navigate.push("/pos/tables");
-              close();
-            },
-          }
-        );
-      },
-      // eslint-disable-next-line no-console
-      error: (e: any) => console.log(e),
-    });
+      handlePayWithCash({
+        tableNo,
+        body: {
+          amount,
+          cashReceiptNo: form.watch("phoneNumber"),
+          cashReceiptType: cashReceiptType as OrderReceiptType,
+        },
+        successHandler: () => {
+          navigate.push("/pos/tables");
+          close();
+        },
+      });
+    }
   };
 
   return (
