@@ -8,6 +8,7 @@ import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { useRouter } from "next/navigation";
+import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import usePayment from "../../_queries/usePayment";
 
 declare global {
@@ -149,9 +150,15 @@ export default function PayAlert({
                 <div className="flex flex-col items-start gap-2">
                   <Label className="text-[15px] font-medium">휴대폰 번호</Label>
                   <Input
-                    {...form.register("phoneNumber")}
                     placeholder={`${form.watch("receiptType") === "개인소득공제용" ? "휴대폰 번호" : "사업자 번호"}를 입력해주세요.`}
                     className="placeholder:font-medium placeholder:text-gray-300"
+                    autoFocus
+                    value={form.watch("phoneNumber")}
+                    onChange={(e) => {
+                      const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                      const formatted = phoneNumberPattern(onlyNums);
+                      form.setValue("phoneNumber", formatted);
+                    }}
                   />
                 </div>
               )}

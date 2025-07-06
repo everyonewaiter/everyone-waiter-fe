@@ -59,7 +59,7 @@ export default function usePayment() {
           vat: Math.floor(body.amount / 10),
           supplyAmount: body.amount - Math.floor(body.amount / 10),
           approvalNo: "",
-          installment: "",
+          installment: "00",
           cardNo: "",
           issuerName: "",
           purchaseName: "",
