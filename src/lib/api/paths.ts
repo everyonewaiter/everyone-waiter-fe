@@ -4,6 +4,7 @@ const API_PATH = {
   stores: "/stores",
   devices: "/devices",
   waitings: "/waitings",
+  orders: "/orders",
 };
 
 export default API_PATH;

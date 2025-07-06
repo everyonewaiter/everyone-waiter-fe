@@ -23,6 +23,7 @@ interface IProps {
   layoutClassName?: string;
   noResponsive?: boolean;
   disabled?: boolean;
+  customButtonStyle?: string;
 }
 
 function Alert({
@@ -36,6 +37,7 @@ function Alert({
   buttonColor = "primary",
   noResponsive,
   disabled,
+  customButtonStyle = "",
 }: PropsWithChildren<IProps>) {
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(true);
@@ -68,6 +70,7 @@ function Alert({
               className="flex-[0.6]"
               hasNoAction={hasNoAction}
               noResponsive={noResponsive}
+              customButtonStyle={customButtonStyle}
             >
               <span>닫기</span>
             </AlertDialogCancel>
@@ -79,6 +82,7 @@ function Alert({
               noResponsive={noResponsive}
               className="flex-1"
               disabled={disabled}
+              customButtonStyle={customButtonStyle}
             >
               <span>{buttonText}</span>
             </AlertDialogAction>

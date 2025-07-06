@@ -83,6 +83,9 @@ dependencies:
   immer:
     specifier: ^10.1.1
     version: 10.1.1
+  input-otp:
+    specifier: ^1.4.2
+    version: 1.4.2(react-dom@19.1.0)(react@19.1.0)
   lucide-react:
     specifier: ^0.487.0
     version: 0.487.0(react@19.1.0)
@@ -6317,6 +6320,16 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dev: true
 
+  /input-otp@1.4.2(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-l3jWwYNvrEa6NTCt7BECfCm48GvwuZzkoeG3gBL2w4CHeOXW3eKFmf9UNYkNfYc3mxMrthMnxjIE07MT0zLBQA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    dev: false
+
   /internal-slot@1.1.0:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
@@ -9597,7 +9610,6 @@ packages:
     name: '@trivago/prettier-plugin-sort-imports'
     version: 5.2.2
     engines: {node: '>18.12'}
-    prepare: true
     requiresBuild: true
     peerDependencies:
       '@vue/compiler-sfc': 3.x

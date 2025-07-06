@@ -15,33 +15,12 @@ export default function Waiting() {
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
   const { list } = useWaiting(waitingEnabled);
 
-  // const handleAddWaiting = () => {
-  //   mutateWaiting({
-  //     phoneNumber: '01036833426',
-  //     adult: 1,
-  //     infant: 3
-  //   })
-  // }
-
   return (
     <div className="min-h-screen w-screen bg-gray-700">
       <header className="fixed flex w-full flex-col gap-6 bg-gray-700 px-15 pt-10">
         <div className="flex w-full flex-row items-center justify-between">
           <strong className="text-3xl font-bold">웨이팅 관리</strong>
           <div className="relative flex">
-            {/* Test */}
-            {/* <ResponsiveButton
-              color="grey"
-              responsiveButtons={{
-                lg: {
-                  buttonSize: "xl",
-                  className: "bg-gray-300 text-white text-lg font-semibold",
-                },
-              }}
-              onClick={handleAddWaiting}
-            >
-              웨이팅 추가
-            </ResponsiveButton> */}
             <ResponsiveButton
               color="grey"
               responsiveButtons={{
