@@ -68,6 +68,11 @@ export default function RootLayout({
         src="/scripts/jquery-1.10.1.min.js"
         strategy="beforeInteractive"
       />
+      {/* BXL 스크립트 */}
+      <Script src="/scripts/bxlcommon.js" strategy="beforeInteractive" />
+      <Script src="/scripts/bxlpos.js" strategy="beforeInteractive" />
+      <Script src="/scripts/bxllabel.js" strategy="beforeInteractive" />
+
       <body className="min-h-screen min-w-screen select-none">
         <ClientLayout>{children}</ClientLayout>
       </body>
