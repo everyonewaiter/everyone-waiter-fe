@@ -70,7 +70,7 @@ export const print = (
       0
     );
     window.printText(
-      "품명             수량\n",
+      `${formatReceiptRow("품명", "", "", "수량")}\n`,
       0,
       0,
       false,
@@ -93,7 +93,7 @@ export const print = (
     activity.orders.forEach((order) => {
       order.orderMenus.forEach((menu) => {
         window.printText(
-          `${menu?.name}         ${menu?.quantity}    \n`,
+          `${formatReceiptRow(menu.name, "", "", String(menu.quantity))}\n`,
           0,
           0,
           false,
@@ -105,7 +105,7 @@ export const print = (
         menu.orderOptionGroups.forEach((option: OrderOptionGroups) => {
           option.orderOptions.forEach((o) => {
             window.printText(
-              `  └ ${option.name} ${o.name}               \n`,
+              `${formatReceiptRow(`└ ${option.name}`, o.name, "", "")}\n`,
               0,
               0,
               false,
@@ -160,7 +160,7 @@ export const print = (
       0,
       0
     );
-    window.printText(`영수증 번호: 12\n`, 0, 1, true, false, false, 0, 0);
+    window.printText(`영수증 번호: #12\n`, 0, 1, true, false, false, 0, 0);
     window.printText(
       `테이블번호: ${activity.tableNo}\n`,
       0,
@@ -454,7 +454,7 @@ export const print = (
 
   const strSubmit = window.getPosData();
   console.log("Print data:", strSubmit);
-  window.requestPrint("BIXOLON SRP-S300II", strSubmit, (result: unknown) =>
+  window.requestPrint("BIXOLON SRP-330II", strSubmit, (result: unknown) =>
     console.log("Print result:", result)
   );
 };
