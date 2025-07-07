@@ -50,8 +50,6 @@ export default function SideSection() {
     });
   };
 
-  console.log(data);
-
   return (
     <SideLayout>
       <SideHeader
