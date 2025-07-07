@@ -6,14 +6,16 @@ import { useRouter } from "next/navigation";
 import QueryProviders from "@/app/query-providers";
 import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
+import { useNowContext } from "@/providers/nowProvider";
 import useOverlay from "@/hooks/use-overlay";
 import useGetDate from "@/hooks/useGetDate";
 import OpenSwitch from "./_components/OpenSwitch";
 import usePos from "./_queries/usePos";
 
 export default function Pos() {
-  const now = new Date();
   const navigate = useRouter();
+
+  const now = useNowContext();
 
   const { store, storeStatus } = usePos();
   const { data, isLoading } = storeStatus;
@@ -74,7 +76,7 @@ export default function Pos() {
         <div className="flex flex-col gap-4">
           <span className="font-regular text-center text-2xl text-white">{`${date.year}년 ${date.month}월 ${date.date}일 ${day}요일`}</span>
           <h1 className="h-18 text-center text-[48px] font-bold text-white">
-            {isLoading ? "안녕하세요." : `안녕하세요, ${data?.name} 입니다.`}
+            {isLoading ? "안녕하세요" : `안녕하세요, ${data?.name} 입니다.`}
           </h1>
         </div>
         <div className="flex flex-col gap-4">

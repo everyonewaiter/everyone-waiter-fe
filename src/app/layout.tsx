@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="preload"
@@ -58,22 +58,24 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/dynamic-subset-variable.css"
           rel="stylesheet"
         />
+
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
+        />
       </head>
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
-      />
-      {/* jQuery KSNET 스크립트 */}
-      <Script
-        src="/scripts/jquery-1.10.1.min.js"
-        strategy="beforeInteractive"
-      />
-      {/* BXL 스크립트 */}
-      <Script src="/scripts/bxlcommon.js" strategy="beforeInteractive" />
-      <Script src="/scripts/bxlpos.js" strategy="beforeInteractive" />
-      <Script src="/scripts/bxllabel.js" strategy="beforeInteractive" />
 
       <body className="min-h-screen min-w-screen select-none">
+        {/* jQuery KSNET 스크립트 */}
+        <Script
+          src="/scripts/jquery-1.10.1.min.js"
+          strategy="beforeInteractive"
+        />
+        {/* BXL 스크립트 */}
+        <Script src="/scripts/bxlcommon.js" strategy="beforeInteractive" />
+        <Script src="/scripts/bxlpos.js" strategy="beforeInteractive" />
+        <Script src="/scripts/bxllabel.js" strategy="beforeInteractive" />
+
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

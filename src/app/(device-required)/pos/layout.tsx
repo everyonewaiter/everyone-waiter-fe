@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 import getQueryClient from "@/app/get-query-client";
 import { getStoreStatus } from "./_api/pos.api";
+import ClientLayout from "./_components/ClientLayout";
 
 export default async function Layout({ children }: PropsWithChildren) {
   const queryClient = getQueryClient();
@@ -10,5 +11,7 @@ export default async function Layout({ children }: PropsWithChildren) {
     queryFn: getStoreStatus,
   });
 
-  return children;
+  const now = new Date().toISOString();
+
+  return <ClientLayout now={now}>{children}</ClientLayout>;
 }

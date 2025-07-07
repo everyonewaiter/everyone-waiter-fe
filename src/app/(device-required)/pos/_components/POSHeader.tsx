@@ -5,10 +5,11 @@ import Link from "next/link";
 import { PropsWithChildren } from "react";
 import Icon from "@/components/common/Icon";
 import useGetDate from "@/hooks/useGetDate";
+import { useNowContext } from "@/providers/nowProvider";
 import OpenStore from "./OpenStore";
 
 export default function POSHeader({ children }: PropsWithChildren) {
-  const now = new Date();
+  const now = useNowContext();
   const { fullDate, day, time } = useGetDate(now);
 
   return (
