@@ -10,6 +10,7 @@ import Label from "@/components/common/Label";
 import { useRouter } from "next/navigation";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import usePayment from "../../_queries/usePayment";
+import { print } from "../../_utils/print-receipt";
 
 declare global {
   interface Window {
@@ -17,12 +18,9 @@ declare global {
   }
 }
 
-interface IProps {
+interface IProps extends PosTableActivity {
   close: () => void;
   type: "credit-card" | "cash";
-  amount: number;
-  menus: string[];
-  tableNo: number;
 }
 
 interface FormType {
@@ -31,14 +29,12 @@ interface FormType {
   monthlyPlan: string;
 }
 
-export default function PayAlert({
-  close,
-  type,
-  amount,
-  menus,
-  tableNo,
-}: IProps) {
+export default function PayAlert({ close, type, ...props }: IProps) {
   const navigate = useRouter();
+
+  const menus = props?.orders
+    .map((el) => el.orderMenus.map((v) => v.name))
+    .flat();
 
   const form = useForm<FormType>({
     defaultValues: {
@@ -58,11 +54,12 @@ export default function PayAlert({
   const handlePayment = () => {
     if (type === "credit-card") {
       handlePayWithCard({
-        tableNo,
+        tableNo: props.tableNo,
         form,
-        amount,
+        amount: props.totalOrderPrice,
         successHandler: () => {
           navigate.push("/pos/tables");
+          print("card-receipt", props);
           close();
         },
       });
@@ -74,14 +71,15 @@ export default function PayAlert({
       else cashReceiptType = "DEDUCTION";
 
       handlePayWithCash({
-        tableNo,
+        tableNo: props.tableNo,
         body: {
-          amount,
+          amount: props.totalOrderPrice,
           cashReceiptNo: form.watch("phoneNumber"),
           cashReceiptType: cashReceiptType as OrderReceiptType,
         },
         successHandler: () => {
           navigate.push("/pos/tables");
+          print("cash-receipt", props);
           close();
         },
       });
@@ -121,7 +119,7 @@ export default function PayAlert({
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제할 금액</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {amount.toLocaleString()}원
+              {props.totalOrderPrice.toLocaleString()}원
             </strong>
           </div>
           {type === "cash" ? (

@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
 import { DUMMY } from "../payments/history/page";
+// import { print } from "../_utils/print-receipt";
 
 interface IProps {
   selectedRow: DUMMY | null;
@@ -24,7 +25,11 @@ export default function SideSection2({ selectedRow }: IProps) {
 
     openReceipt.open(() => (
       <QueryProviders>
-        <Alert onClose={openReceipt.close} buttonText="출력하기">
+        <Alert
+          onClose={openReceipt.close}
+          buttonText="출력하기"
+          // onAction={}
+        >
           <div className="flex flex-col gap-[6px] py-3">
             <span className="text-gray-0 text-xl font-semibold">
               영수증을 출력하시겠습니까?

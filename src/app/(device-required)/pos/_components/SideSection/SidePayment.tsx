@@ -23,11 +23,9 @@ export default function SidePayment({
         <PayAlert
           close={close}
           type={type}
-          amount={props?.totalOrderPrice}
-          menus={props?.orders
-            .map((el) => el.orderMenus.map((v) => v.name))
-            .flat()}
-          tableNo={props?.tableNo}
+          {...props}
+          orderType={orderType}
+          remainingPaymentPrice={remainingPaymentPrice}
         />
       </QueryProviders>
     ));
