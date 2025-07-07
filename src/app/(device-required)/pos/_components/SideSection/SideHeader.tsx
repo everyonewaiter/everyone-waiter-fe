@@ -1,7 +1,11 @@
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
-import CancelAlert from "../modals/CancelAlert";
+
+const CancelAlert = dynamic(() => import("../modals/CancelAlert"), {
+  ssr: false,
+});
 
 interface IProps {
   tableNo: number;

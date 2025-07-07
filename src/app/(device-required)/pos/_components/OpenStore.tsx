@@ -1,11 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
-import Alert from "@/components/common/Alert/Alert";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
 import usePos from "../_queries/usePos";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 export default function OpenStore() {
   const navigate = useRouter();

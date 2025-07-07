@@ -1,4 +1,8 @@
-import Alert from "@/components/common/Alert/Alert";
+import dynamic from "next/dynamic";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 interface IProps {
   close: () => void;

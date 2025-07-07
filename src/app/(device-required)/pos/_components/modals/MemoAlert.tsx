@@ -1,10 +1,14 @@
 import { useRef, useState } from "react";
-import Alert from "@/components/common/Alert/Alert";
+import dynamic from "next/dynamic";
 import Textarea from "@/components/common/TextArea";
 import { useMemoStore } from "../../_hooks/useMemoStore";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import useOrder from "../../_queries/useOrder";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 interface IProps {
   close: () => void;

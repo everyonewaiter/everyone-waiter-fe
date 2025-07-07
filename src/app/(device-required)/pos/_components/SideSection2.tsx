@@ -1,14 +1,18 @@
 "use client";
 
 import { Fragment } from "react";
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
-import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
 import { DUMMY } from "../payments/history/page";
 // import { print } from "../_utils/print-receipt";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 interface IProps {
   selectedRow: DUMMY | null;

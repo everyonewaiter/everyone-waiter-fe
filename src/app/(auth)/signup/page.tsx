@@ -6,13 +6,26 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import ButtonCheckbox from "@/components/common/CheckboxButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { TypeSignup } from "@/schema/signup.schema";
+import dynamic from "next/dynamic";
 import useSignup from "./_hooks/useSignup";
 import useSignupForm from "./_hooks/useSignupForm";
+
+const ResponsiveButton = dynamic(
+  () => import("@/components/common/Button/ResponsiveButton"),
+  {
+    ssr: false,
+  }
+);
+
+const ButtonCheckbox = dynamic(
+  () => import("@/components/common/CheckboxButton"),
+  {
+    ssr: false,
+  }
+);
 
 export default function Signup() {
   const navigate = useRouter();

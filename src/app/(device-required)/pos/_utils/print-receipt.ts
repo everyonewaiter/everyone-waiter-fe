@@ -453,8 +453,10 @@ export const print = (
   window.cutPaper(1);
 
   const strSubmit = window.getPosData();
+  // eslint-disable-next-line no-console
   console.log("Print data:", strSubmit);
   window.requestPrint("BIXOLON SRP-330II", strSubmit, (result: unknown) =>
+    // eslint-disable-next-line no-console
     console.log("Print result:", result)
   );
 };

@@ -1,26 +1,19 @@
+"use server";
+
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
-import { getPosMenuList, getTableActivity } from "../../_api/pos.api";
+import { getTableActivity } from "../../_api/pos.api";
 
 export default async function Layout({
   children,
-  searchParams,
   params,
 }: {
   children: React.ReactNode;
   params: Promise<{ id: string }>;
-  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const queryClient = getQueryClient();
-  const storeId = searchParams?.storeId as string;
   const { id } = await params;
   const tableNo = id;
-
-  await queryClient.prefetchQuery({
-    queryKey: ["pos-menu-list"],
-    queryFn: () => getPosMenuList(storeId),
-    staleTime: 1000 * 60 * 5,
-  });
 
   await queryClient.prefetchQuery({
     queryKey: ["table", tableNo],

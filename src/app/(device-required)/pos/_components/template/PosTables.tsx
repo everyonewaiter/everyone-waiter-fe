@@ -3,15 +3,19 @@
 import { ChevronsRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import QueryProviders from "@/app/query-providers";
-import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
 import usePos from "../../_queries/usePos";
 import POSHeader from "../POSHeader";
 import TableBox from "../TableBox";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 export default function PosTables() {
   const navigate = useRouter();

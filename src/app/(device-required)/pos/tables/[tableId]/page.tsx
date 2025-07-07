@@ -5,16 +5,29 @@ import { Fragment, useEffect, useState } from "react";
 import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
+import dynamic from "next/dynamic";
 import CategoriesButton from "../../_components/CategoriesButton";
-import Floating from "../../_components/Floating";
 import POSHeader from "../../_components/POSHeader";
 import POSMenuCard from "../../_components/POSMenuCard";
-import SideSection from "../../_components/SideSection/SideSection";
-import MenuModal from "../../_components/modals/MenuModal";
 import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
 import { useMemoStore } from "../../_hooks/useMemoStore";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import usePos from "../../_queries/usePos";
+
+const MenuModal = dynamic(() => import("../../_components/modals/MenuModal"), {
+  ssr: false,
+});
+
+const Floating = dynamic(() => import("../../_components/Floating"), {
+  ssr: false,
+});
+
+const SideSection = dynamic(
+  () => import("../../_components/SideSection/SideSection"),
+  {
+    ssr: false,
+  }
+);
 
 export default function DetailTableOrder() {
   const params = useParams();

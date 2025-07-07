@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { verifyEmail } from "@/lib/api/auth.api";
 
-export default function EmailError() {
+export default function Page() {
   const navigate = useRouter();
   const searchParams = useSearchParams();
   const accessToken = searchParams.get("token");

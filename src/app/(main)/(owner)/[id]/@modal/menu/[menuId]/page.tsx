@@ -2,9 +2,16 @@
 
 import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useStoreContext } from "@/providers/storeProvider";
 import useMenu from "../../../menu/_queries/useMenu";
-import DetailMenuModal from "../_components/DetailMenuModal";
+
+const DetailMenuModal = dynamic(
+  () => import("../_components/DetailMenuModal"),
+  {
+    ssr: false,
+  }
+);
 
 export default function Page() {
   const params = useParams();

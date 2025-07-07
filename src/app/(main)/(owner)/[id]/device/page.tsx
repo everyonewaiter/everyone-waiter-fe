@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import Alert from "@/components/common/Alert/Alert";
+import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
@@ -30,6 +30,10 @@ import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
 import useControlCheck from "../../../../../hooks/useControlCheck";
 import useDevice from "./_queries/useDevice";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 const itemWidth = {
   이름: "flex flex-1",

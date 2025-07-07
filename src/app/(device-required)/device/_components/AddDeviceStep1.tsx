@@ -4,11 +4,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import dynamic from "next/dynamic";
 import {
   sendAuthCodeInDevice,
   verifyPhoneInDevice,
 } from "@/app/(device-required)/device/_api/device.api";
-import Alert from "@/components/common/Alert/Alert";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Dropdown from "@/components/common/Dropdown";
 import { Form } from "@/components/common/Form";
@@ -16,6 +16,10 @@ import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import useOverlay from "@/hooks/use-overlay";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 interface FormValues {
   phone: string;

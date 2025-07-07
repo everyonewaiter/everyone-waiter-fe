@@ -1,8 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
-import CompleteAllModal from "./CompleteAllModal";
+
+const CompleteAllModal = dynamic(() => import("./CompleteAllModal"), {
+  ssr: false,
+});
 
 export default function CallingCardUi() {
   const { open, close } = useOverlay();

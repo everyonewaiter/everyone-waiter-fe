@@ -1,4 +1,5 @@
 import { useParams, useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
@@ -6,13 +7,16 @@ import { useOrderStore } from "../../_hooks/useOrderStore";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import useOrder from "../../_queries/useOrder";
 import usePos from "../../_queries/usePos";
-import MemoAlert from "../modals/MemoAlert";
 import SideBottom from "./SideBottom";
 import SideContents from "./SideContents";
 import SideControl from "./SideControl";
 import SideHeader from "./SideHeader";
 import SideLayout from "./SideLayout";
 import SidePayment from "./SidePayment";
+
+const MemoAlert = dynamic(() => import("../modals/MemoAlert"), {
+  ssr: false,
+});
 
 export default function SideSection() {
   const navigate = useRouter();

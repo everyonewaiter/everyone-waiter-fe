@@ -3,7 +3,7 @@
 import { MinusIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Alert from "@/components/common/Alert/Alert";
+import dynamic from "next/dynamic";
 import {
   Form,
   FormControl,
@@ -15,6 +15,10 @@ import {
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/common/Radio";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 interface FormType {
   discount: number | null;

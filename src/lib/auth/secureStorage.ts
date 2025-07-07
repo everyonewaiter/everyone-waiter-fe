@@ -67,6 +67,7 @@ export async function getDecryptedItem<T>({
     );
     return JSON.parse(new TextDecoder().decode(decrypted));
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.warn("복호화 실패", e);
     return null;
   }

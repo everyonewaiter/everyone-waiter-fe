@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
@@ -9,8 +10,14 @@ import { useMemoStore } from "../_hooks/useMemoStore";
 import { useOrderStore } from "../_hooks/useOrderStore";
 import { useSelectItemStore } from "../_hooks/useSelectItemStore";
 import usePos from "../_queries/usePos";
-import MemoAlert from "./modals/MemoAlert";
-import ResendAlert from "./modals/ResendAlert";
+
+const MemoAlert = dynamic(() => import("./modals/MemoAlert"), {
+  ssr: false,
+});
+
+const ResendAlert = dynamic(() => import("./modals/ResendAlert"), {
+  ssr: false,
+});
 
 const FLOATING_ITEMS = [
   {

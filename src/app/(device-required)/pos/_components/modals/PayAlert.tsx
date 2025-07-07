@@ -2,7 +2,7 @@
 
 /* eslint-disable no-unsafe-optional-chaining */
 import { useForm } from "react-hook-form";
-import Alert from "@/components/common/Alert/Alert";
+import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
@@ -11,6 +11,10 @@ import { useRouter } from "next/navigation";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 declare global {
   interface Window {

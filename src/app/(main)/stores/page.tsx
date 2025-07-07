@@ -3,6 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import QueryProviders from "@/app/query-providers";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -23,9 +24,22 @@ import { registerStateTranslate } from "@/constants/translates";
 import useOverlay from "@/hooks/use-overlay";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
-import PendingAcceptModal from "../(owner)/[id]/store/_components/modals/PendingAcceptModal";
-import StoreApplicationModal from "../(owner)/[id]/store/_components/modals/StoreApplicationModal";
 import useStores from "../(owner)/[id]/store/_queries/useStores";
+
+const PendingAcceptModal = dynamic(
+  () => import("../(owner)/[id]/store/_components/modals/PendingAcceptModal"),
+  {
+    ssr: false,
+  }
+);
+
+const StoreApplicationModal = dynamic(
+  () =>
+    import("../(owner)/[id]/store/_components/modals/StoreApplicationModal"),
+  {
+    ssr: false,
+  }
+);
 
 const itemWidths = {
   "No.": {

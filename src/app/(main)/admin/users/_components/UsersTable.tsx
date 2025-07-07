@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Checkbox from "@/components/common/Checkbox";
 import {
@@ -15,8 +16,11 @@ import {
 } from "@/components/common/Table/Tables";
 import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import useOverlay from "@/hooks/use-overlay";
-import UserInfoModal from "../../_components/UserInfoModal";
 import UsersTableRow from "./UsersTableRow";
+
+const UserInfoModal = dynamic(() => import("../../_components/UserInfoModal"), {
+  ssr: false,
+});
 
 interface IProps {
   data: AdminAccount[];

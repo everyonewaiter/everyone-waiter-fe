@@ -1,7 +1,11 @@
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
-import AddDiscountAlert from "../modals/AddDiscountAlert";
+
+const AddDiscountAlert = dynamic(() => import("../modals/AddDiscountAlert"), {
+  ssr: false,
+});
 
 interface IProps {
   totalOrderPrice: number;

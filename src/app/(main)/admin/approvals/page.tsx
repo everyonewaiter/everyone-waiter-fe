@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Searchbar from "@/components/Searchbar";
 import Button from "@/components/common/Button/Button";
@@ -25,8 +26,11 @@ import useOverlay from "@/hooks/use-overlay";
 import useDebounce from "@/hooks/useDebounce";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
-import StoreModal from "../_components/StoreModal";
 import useAdmin from "../_hooks/useAdmin";
+
+const StoreModal = dynamic(() => import("../_components/StoreModal"), {
+  ssr: false,
+});
 
 const itemWidths = {
   "No.": {

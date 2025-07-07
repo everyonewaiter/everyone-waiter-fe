@@ -4,13 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QueryProviders from "@/app/query-providers";
-import Alert from "@/components/common/Alert/Alert";
 import Button from "@/components/common/Button/Button";
 import { useNowContext } from "@/providers/nowProvider";
 import useOverlay from "@/hooks/use-overlay";
 import useGetDate from "@/hooks/useGetDate";
-import OpenSwitch from "./_components/OpenSwitch";
+import dynamic from "next/dynamic";
 import usePos from "./_queries/usePos";
+
+const OpenSwitch = dynamic(() => import("./_components/OpenSwitch"), {
+  ssr: false,
+});
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 export default function Pos() {
   const navigate = useRouter();

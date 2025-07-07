@@ -1,11 +1,11 @@
 "use client";
 
 import { PropsWithChildren } from "react";
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import useRouteChangeLoading from "@/hooks/useRouteChangeLoading";
 import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
 import { useLoadingStore } from "@/stores/useNeedLoadingStore";
-import dynamic from "next/dynamic";
 
 const Loading = dynamic(() => import("@/components/Loading"), {
   ssr: false,
