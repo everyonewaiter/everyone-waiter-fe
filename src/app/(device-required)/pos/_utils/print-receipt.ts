@@ -49,8 +49,8 @@ export const print = async (
 
     return (
       padString(name, nameWidth, "left") +
-      padString(qty, qtyWidth, "center") +
-      padString(price, priceWidth, "center") +
+      padString(qty, qtyWidth, "right") +
+      padString(price, priceWidth, "right") +
       padString(total, totalWidth, "right")
     );
   }
@@ -62,22 +62,24 @@ export const print = async (
     const blob = new Blob([svgText], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
 
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0);
+    return new Promise<void>((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(img, 0, 0);
 
-      const base64 = canvas.toDataURL("image/png");
-      window.printBitmap(base64, 100, 1, 0);
-    };
-    img.src = url;
+        const base64 = canvas.toDataURL("image/png");
+        window.printBitmap(base64, 300, 1, 0); // 중간 정렬
+        resolve();
+      };
+      img.src = url;
+    });
   }
 
-  // NOTE: 영수증 코드
-  if (type === "kitchen") {
+  const printKitchen = () => {
     window.printText(`주문번호: ${orderNo}\n`, 0, 1, true, false, false, 0, 0);
     window.printText(
       `테이블번호: ${tableNo}\n`,
@@ -90,7 +92,7 @@ export const print = async (
       0
     );
     window.printText(
-      `주문시간: ${formatDate}\n\n`,
+      `주문시간: ${formatDate}\n`,
       0,
       0,
       false,
@@ -179,7 +181,9 @@ export const print = async (
       0,
       0
     );
-  } else {
+  };
+
+  const printReceipt = () => {
     window.printText(
       `${storeName}\n1234 Food St, Seoul, Korea\nTel: 02-1234-5678\n`,
       0,
@@ -212,7 +216,7 @@ export const print = async (
       0
     );
     window.printText(
-      `발행일시: ${formatDate}\n\n`,
+      `발행일시: ${formatDate}\n`,
       0,
       0,
       false,
@@ -255,7 +259,7 @@ export const print = async (
     activity.orders.forEach((order) => {
       order.orderMenus.forEach((menu) => {
         window.printText(
-          `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}원`, `${(menu.price * menu.quantity).toLocaleString()}원`)}\n`,
+          `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${(menu.price * menu.quantity).toLocaleString()}`)}\n`,
           0,
           0,
           false,
@@ -267,7 +271,7 @@ export const print = async (
         menu.orderOptionGroups.forEach((option: OrderOptionGroups) => {
           option.orderOptions.forEach((o) => {
             window.printText(
-              `${formatReceiptRow(`└ ${option.name}`, o.name, "", o.price ? `${o.price.toLocaleString()}원` : "")}\n`,
+              `${formatReceiptRow(`└ ${option.name} ${o.name}`, "", "", o.price ? `${o.price.toLocaleString()}` : "")}\n`,
               0,
               0,
               false,
@@ -335,7 +339,9 @@ export const print = async (
       0,
       0
     );
+  };
 
+  const printAddition = async () => {
     if (type === "card-receipt") {
       window.printText(
         "------------------------------------------\n",
@@ -419,7 +425,7 @@ export const print = async (
         0
       );
       window.printText(
-        `${formatReceiptRow("받을 금액", "", "", "17,500")}\n`,
+        `${formatReceiptRow("받을 금액", "", "", "17,500원")}\n`,
         0,
         0,
         false,
@@ -429,7 +435,7 @@ export const print = async (
         0
       );
       window.printText(
-        `${formatReceiptRow("받은 금액", "", "", "20,000")}\n`,
+        `${formatReceiptRow("받은 금액", "", "", "20,000원")}\n`,
         0,
         0,
         false,
@@ -439,7 +445,7 @@ export const print = async (
         0
       );
       window.printText(
-        `${formatReceiptRow("거스름돈", "", "", "2,500")}\n`,
+        `${formatReceiptRow("거스름돈", "", "", "2,500원")}\n`,
         0,
         0,
         false,
@@ -468,8 +474,16 @@ export const print = async (
         0,
         0
       );
-      printSvgAsBitmap("/logo/logo-text.svg");
+      await printSvgAsBitmap("/logo/logo-text.svg");
     }
+  };
+
+  // NOTE: 영수증 코드
+  if (type === "kitchen") {
+    printKitchen();
+  } else {
+    printReceipt();
+    printAddition();
   }
 
   window.cutPaper(1);
