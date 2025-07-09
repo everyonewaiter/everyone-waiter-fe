@@ -1,4 +1,4 @@
-export const print = (
+export const print = async (
   type: "kitchen" | "cash-receipt" | "card-receipt",
   activity: PosTableActivity,
   storeName: string,
@@ -55,6 +55,28 @@ export const print = (
     );
   }
 
+  async function printSvgAsBitmap(svgUrl: string) {
+    const res = await fetch(svgUrl);
+    const svgText = await res.text();
+
+    const blob = new Blob([svgText], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+
+      const base64 = canvas.toDataURL("image/png");
+      window.printBitmap(base64, 100, 1, 0);
+    };
+    img.src = url;
+  }
+
+  // NOTE: 영수증 코드
   if (type === "kitchen") {
     window.printText(`주문번호: ${orderNo}\n`, 0, 1, true, false, false, 0, 0);
     window.printText(
@@ -159,7 +181,7 @@ export const print = (
     );
   } else {
     window.printText(
-      `${storeName}\n1234 Food St, Seoul, Korea\nTel: 02-1234-5678\n\n`,
+      `${storeName}\n1234 Food St, Seoul, Korea\nTel: 02-1234-5678\n`,
       0,
       0,
       false,
@@ -233,7 +255,7 @@ export const print = (
     activity.orders.forEach((order) => {
       order.orderMenus.forEach((menu) => {
         window.printText(
-          `${formatReceiptRow(menu.name, String(menu.quantity), String(menu.price), String(menu.price * menu.quantity))}\n`,
+          `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}원`, `${(menu.price * menu.quantity).toLocaleString()}원`)}\n`,
           0,
           0,
           false,
@@ -245,7 +267,7 @@ export const print = (
         menu.orderOptionGroups.forEach((option: OrderOptionGroups) => {
           option.orderOptions.forEach((o) => {
             window.printText(
-              `${formatReceiptRow(`└ ${option.name}`, o.name, "", o.price ? String(o.price) : "")}\n`,
+              `${formatReceiptRow(`└ ${option.name}`, o.name, "", o.price ? `${o.price.toLocaleString()}원` : "")}\n`,
               0,
               0,
               false,
@@ -270,20 +292,20 @@ export const print = (
       0
     );
     window.printText(
-      `${formatReceiptRow("공급가", "", "", "16,650")}\n`,
+      `${formatReceiptRow("공급가", "", "", `${(activity.totalOrderPrice * 0.9).toLocaleString()}원`)}\n`,
       0,
-      0,
-      false,
+      1,
+      true,
       false,
       false,
       0,
       0
     );
     window.printText(
-      `${formatReceiptRow("부가세", "", "", "1,850")}\n`,
+      `${formatReceiptRow("부가세", "", "", `${(activity.totalOrderPrice * 0.1).toLocaleString()}원`)}\n`,
       0,
-      0,
-      false,
+      1,
+      true,
       false,
       false,
       0,
@@ -292,10 +314,10 @@ export const print = (
 
     if (activity.discount) {
       window.printText(
-        `${formatReceiptRow("할인", "", "", "1000")}\n`,
+        `${formatReceiptRow("할인", "", "", `${activity.discount.toLocaleString()}원`)}\n`,
         0,
-        0,
-        false,
+        1,
+        true,
         false,
         false,
         0,
@@ -304,7 +326,7 @@ export const print = (
     }
 
     window.printText(
-      `${formatReceiptRow("합계", "", "", "₩ 17,500")}\n`,
+      `${formatReceiptRow("합계", "", "", `${activity.totalOrderPrice.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -437,7 +459,7 @@ export const print = (
         0
       );
       window.printText(
-        `${formatReceiptRow("결제방법", "", "", "현금")}\n`,
+        `${formatReceiptRow("결제방법", "", "", "현금\n\n\n")}\n`,
         0,
         0,
         false,
@@ -446,6 +468,7 @@ export const print = (
         0,
         0
       );
+      printSvgAsBitmap("/logo/logo-text.svg");
     }
   }
 

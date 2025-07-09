@@ -19,7 +19,12 @@ declare global {
       data: string,
       callback: (result: unknown) => void
     ) => void;
-    // 필요한 다른 함수도 추가 가능
+    printBitmap: (
+      imageData: string, // base64 encoding
+      width: number, // 이미지 원본 width - 2
+      alignment: number, // 0 좌측, 1 중앙, 2 우측
+      dither: number | boolean // 0 or false, 1 or true
+    ) => void;
   }
 }
 export {};
