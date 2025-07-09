@@ -18,7 +18,7 @@ export const cancelPayment = async ({
   body,
 }: {
   orderPaymentId: string;
-  body: Pick<OrderPayments, "approvalNo" | "tradeTime" | "tradeUniqueNo">;
+  body: { approvalNo: string; tradeTime: string; tradeUniqueNo: string };
 }) => {
   const response = await signatureInstance.post(
     `${API_PATH.orders}/payments/${orderPaymentId}/cancel`,
