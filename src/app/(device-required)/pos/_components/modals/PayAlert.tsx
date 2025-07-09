@@ -11,8 +11,8 @@ import { useRouter } from "next/navigation";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
-import usePos from "../../_queries/usePos";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
+import usePos from "../../_queries/usePos";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -75,9 +75,10 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     },
   });
 
-  const { storeStatus } = usePos();
-  const { data } = storeStatus;
-  const { payCard } = usePayment();
+  const { payCard, payCash } = usePayment();
+  const { activity, storeStatus } = usePos();
+  const { data: activityData } = activity(props.tableNo);
+  const { data: stores } = storeStatus;
 
   const monthlyPlan = [
     "일시불",
@@ -100,8 +101,8 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         successHandler: (res) => {
           print({
             type: "card-receipt",
-            activity: props,
-            storeName: data?.name as string,
+            activity: activityData!,
+            stores: stores!,
             payment: { ...res, installment: form.watch("monthlyPlan") },
             successHandler:
               props.orders.length > 0
@@ -114,37 +115,34 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         },
       });
     } else {
-      print({
-        type: "cash-receipt",
-        activity: props,
-        storeName: data?.name as string,
-        successHandler:
-          props.orders.length > 0
-            ? () => close()
-            : () => {
-                close();
-                navigate.push("/pos/tables");
-              },
+      let cashReceiptType = "";
+      if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";
+      else if (form.watch("receiptType") === "사업자증빙용")
+        cashReceiptType = "PROOF";
+      else cashReceiptType = "DEDUCTION";
+
+      payCash({
+        tableNo: props.tableNo,
+        body: {
+          amount,
+          cashReceiptNo: form.watch("phoneNumber"),
+          cashReceiptType: cashReceiptType as OrderReceiptType,
+        },
+        successHandler: () => {
+          print({
+            type: "cash-receipt",
+            activity: activityData!,
+            stores: stores!,
+            successHandler:
+              props.orders.length > 0
+                ? () => close()
+                : () => {
+                    close();
+                    navigate.push("/pos/tables");
+                  },
+          });
+        },
       });
-
-      // let cashReceiptType = "";
-      // if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";
-      // else if (form.watch("receiptType") === "사업자증빙용")
-      //   cashReceiptType = "PROOF";
-      // else cashReceiptType = "DEDUCTION";
-
-      // handlePayWithCash({
-      //   tableNo: props.tableNo,
-      //   body: {
-      //     amount,
-      //     cashReceiptNo: form.watch("phoneNumber"),
-      //     cashReceiptType: cashReceiptType as OrderReceiptType,
-      //   },
-      //   successHandler: () => {
-      //     navigate.push("/pos/tables");
-      //     print("cash-receipt", props, () => close());
-      //   },
-      // });
     }
   };
 

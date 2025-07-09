@@ -90,3 +90,11 @@ interface CreateOrder {
     menuOptionGroups: OrderOptionGruops[];
   }[];
 }
+
+interface PosStore extends Omit<StoreForm, "file"> {
+  storeId: string;
+  image: string;
+  status: StoreStatus;
+  lastOpenedAt: string;
+  lastClosedAt: string;
+}

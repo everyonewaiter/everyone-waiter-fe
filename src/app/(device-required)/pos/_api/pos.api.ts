@@ -13,11 +13,7 @@ export const closeStore = async () => {
   return response;
 };
 
-export const getStoreStatus = async (): Promise<{
-  storeId: string;
-  name: string;
-  status: StoreStatus;
-}> => {
+export const getStoreStatus = async (): Promise<PosStore> => {
   const response = await signatureInstance.get(`${API_PATH.stores}/status`);
   return response.data;
 };

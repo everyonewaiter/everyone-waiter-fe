@@ -1,19 +1,16 @@
 export const print = ({
   type,
   activity,
-  storeName,
   payment,
+  stores,
   successHandler,
 }: {
   type: "kitchen" | "cash-receipt" | "card-receipt";
   activity: PosTableActivity;
-  storeName: string;
   payment?: PaymentResponse & { installment: string };
+  stores: PosStore;
   successHandler?: () => void;
 }) => {
-  const tableNo = 1;
-  const orderNo = 11;
-
   window.setPosId(1);
   window.checkPrinterStatus();
 
@@ -73,9 +70,18 @@ export const print = ({
   }
 
   const printKitchen = () => {
-    window.printText(`주문번호: ${orderNo}\n`, 0, 1, true, false, false, 0, 0);
     window.printText(
-      `테이블번호: ${tableNo}\n`,
+      `주문번호: ${activity?.posTableActivityId}\n`,
+      0,
+      1,
+      true,
+      false,
+      false,
+      0,
+      0
+    );
+    window.printText(
+      `테이블번호: ${activity?.tableNo}\n`,
       0,
       1,
       true,
@@ -125,7 +131,7 @@ export const print = ({
       0
     );
 
-    activity.orders.forEach((order) => {
+    activity?.orders.forEach((order) => {
       order.orderMenus.forEach((menu) => {
         window.printText(
           `${formatReceiptRow(menu.name, "", "", String(menu.quantity))}\n`,
@@ -177,8 +183,9 @@ export const print = ({
   };
 
   const printReceipt = () => {
+    window.printText(`영  수  증\n`, 0, 2, true, false, false, 0, 1);
     window.printText(
-      `${storeName}\n1234 Food St, Seoul, Korea\nTel: 02-1234-5678\n`,
+      `${stores?.name}\n${stores?.address}\n사업자: ${stores?.license}\n전화번호: ${stores?.landline}\n`,
       0,
       0,
       false,
@@ -198,7 +205,7 @@ export const print = ({
       0
     );
     window.printText(
-      `영수증 번호: #${activity.posTableActivityId}\n`,
+      `영수증 번호: #${activity?.posTableActivityId}\n`,
       0,
       1,
       true,
@@ -208,7 +215,7 @@ export const print = ({
       0
     );
     window.printText(
-      `테이블번호: ${activity.tableNo}\n`,
+      `테이블번호: ${activity?.tableNo}\n`,
       0,
       0,
       false,
@@ -258,7 +265,7 @@ export const print = ({
       0
     );
 
-    activity.orders.forEach((order) => {
+    activity?.orders.forEach((order) => {
       order.orderMenus.forEach((menu) => {
         window.printText(
           `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${(menu.price * menu.quantity).toLocaleString()}`)}\n`,
@@ -273,7 +280,7 @@ export const print = ({
         menu.orderOptionGroups.forEach((option: OrderOptionGroups) => {
           option.orderOptions.forEach((o) => {
             window.printText(
-              `${formatReceiptRow(`└ ${option.name} ${o.name}`, "", "", o.price ? `${o.price.toLocaleString()}` : "")}\n`,
+              `${formatReceiptRow(`└ ${o.name}`, "", "", o.price ? `${o.price.toLocaleString()}` : "")}\n`,
               0,
               0,
               false,
@@ -298,8 +305,8 @@ export const print = ({
       0
     );
 
-    const supplyAmount = Math.floor(activity.totalOrderPrice / 1.1); // 공급가
-    const vatAmount = activity.totalOrderPrice - supplyAmount; // 부가세
+    const supplyAmount = Math.floor(Number(activity?.totalOrderPrice) / 1.1);
+    const vatAmount = Number(activity?.totalOrderPrice) - supplyAmount;
 
     window.printText(
       `${formatReceiptRow("공급가", "", "", `${supplyAmount.toLocaleString()}원`)}\n`,
@@ -322,9 +329,9 @@ export const print = ({
       0
     );
 
-    if (activity.discount) {
+    if (activity?.discount) {
       window.printText(
-        `${formatReceiptRow("할인", "", "", `${activity.discount.toLocaleString()}원`)}\n`,
+        `${formatReceiptRow("할인", "", "", `${activity?.discount.toLocaleString()}원`)}\n`,
         0,
         1,
         true,
@@ -336,7 +343,7 @@ export const print = ({
     }
 
     window.printText(
-      `${formatReceiptRow("합계", "", "", `${activity.totalOrderPrice.toLocaleString()}원`)}\n`,
+      `${formatReceiptRow("합계", "", "", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -363,7 +370,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("결제방법", `${payment?.CARDNAME}(${payment?.PURCHASENAME})`)}\n`,
+        `${formatAlignLeftRight("결제방법", `${payment?.CARDNAME}`)}\n`,
         0,
         0,
         false,
@@ -383,7 +390,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("결제금액", `${activity.totalOrderPrice.toLocaleString()}원`)}\n`,
+        `${formatAlignLeftRight("결제금액", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
         0,
         0,
         false,
@@ -412,8 +419,9 @@ export const print = ({
         0,
         0
       );
+
       window.printText(
-        `${formatAlignLeftRight("승인일시", payment?.TRADETIME as string)}\n\n\n`,
+        `${formatAlignLeftRight("승인일시", payment?.TRADETIME!)}\n\n\n`,
         0,
         0,
         false,
@@ -434,7 +442,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("받을 금액", `${activity.totalOrderPrice.toLocaleString()}원`)}\n`,
+        `${formatAlignLeftRight("받을 금액", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
         0,
         0,
         false,
