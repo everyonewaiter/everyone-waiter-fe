@@ -52,12 +52,11 @@ export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
 
-  const { activity, resendReceipt } = usePos();
+  const { activity } = usePos();
   const { data } = activity(tableNo);
 
   const { orders } = useOrderStore();
   const { selectedOrder } = useSelectItemStore();
-
   const { setMemo } = useMemoStore();
 
   const list = hasData
@@ -96,16 +95,7 @@ export default function Floating({ hasData, tableNo }: IProps) {
     } else if (type === "send") {
       open(() => (
         <QueryProviders>
-          <ResendAlert
-            close={close}
-            tableNo={tableNo}
-            onResend={() => {
-              resendReceipt.mutate(
-                { tableNo: Number(tableNo) },
-                { onSuccess: () => close() }
-              );
-            }}
-          />
+          <ResendAlert close={close} tableNo={tableNo} />
         </QueryProviders>
       ));
     } else {

@@ -19,7 +19,6 @@ export default function ReceiptModal({ close, tableNo }: IProps) {
 
   const handleAction = () => {
     printReceipt({
-      amount: activityData?.totalOrderPrice!,
       activity: activityData!,
       stores: stores!,
       successHandler: () => close(),

@@ -92,6 +92,20 @@ export default function usePayment() {
     });
   };
 
+  const handlePrintOrder = async ({
+    activity,
+    successHandler,
+  }: {
+    activity: PosTableActivity;
+    successHandler?: () => void;
+  }) => {
+    print({
+      type: "kitchen",
+      activity,
+      successHandler,
+    });
+  };
+
   const handleCard = async ({
     form,
     amount,
@@ -195,5 +209,6 @@ export default function usePayment() {
     payCash: handlePayWithCash,
     cancelCard: handleCancelCard,
     printReceipt: handlePrintCashReceipt,
+    printOrder: handlePrintOrder,
   };
 }

@@ -1,4 +1,6 @@
 import dynamic from "next/dynamic";
+import usePos from "../../_queries/usePos";
+import usePayment from "../../_queries/usePayment";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -7,13 +9,30 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 interface IProps {
   close: () => void;
   tableNo: number;
-  onResend: () => void;
 }
 
-export default function ResendAlert({ close, tableNo, onResend }: IProps) {
+export default function ResendAlert({ close, tableNo }: IProps) {
+  const { resendReceipt, activity } = usePos();
+  const { data: activityData } = activity(tableNo);
+  const { printOrder } = usePayment();
+
+  const handleResend = () => {
+    resendReceipt.mutate(
+      { tableNo: Number(tableNo) },
+      {
+        onSuccess: () => {
+          printOrder({
+            activity: activityData!,
+            successHandler: () => close(),
+          });
+        },
+      }
+    );
+  };
+
   return (
     <Alert
-      onAction={onResend}
+      onAction={handleResend}
       onClose={close}
       buttonText="재전송하기"
       buttonColor="black"

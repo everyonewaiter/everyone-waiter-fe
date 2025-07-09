@@ -8,7 +8,7 @@ export const print = ({
   type: "kitchen" | "cash-receipt" | "card-receipt";
   activity: PosTableActivity;
   payment?: PaymentResponse & { installment: string };
-  stores: PosStore;
+  stores?: PosStore;
   successHandler?: () => void;
 }) => {
   window.setPosId(1);
@@ -70,6 +70,7 @@ export const print = ({
   }
 
   const printKitchen = () => {
+    window.printText(`주  문  서\n`, 0, 2, true, false, false, 0, 1);
     window.printText(
       `주문번호: ${activity?.posTableActivityId}\n`,
       0,
@@ -85,16 +86,6 @@ export const print = ({
       0,
       1,
       true,
-      false,
-      false,
-      0,
-      0
-    );
-    window.printText(
-      `주문시간: ${formatDate}\n`,
-      0,
-      0,
-      false,
       false,
       false,
       0,
@@ -135,9 +126,9 @@ export const print = ({
       order.orderMenus.forEach((menu) => {
         window.printText(
           `${formatReceiptRow(menu.name, "", "", String(menu.quantity))}\n`,
+          1,
           0,
-          0,
-          false,
+          true,
           false,
           false,
           0,
@@ -147,9 +138,9 @@ export const print = ({
           option.orderOptions.forEach((o) => {
             window.printText(
               `${formatReceiptRow(`└ ${option.name}`, o.name, "", "")}\n`,
+              1,
               0,
-              0,
-              false,
+              true,
               false,
               false,
               0,
@@ -159,12 +150,12 @@ export const print = ({
         });
       });
       window.printText(
-        `[메모] ${order.memo}\n`,
+        `[메모] ${order.memo}\n\n`,
         0,
         0,
         false,
         false,
-        false,
+        true,
         0,
         0
       );
