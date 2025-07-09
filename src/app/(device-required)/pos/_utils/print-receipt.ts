@@ -312,8 +312,12 @@ export const print = async ({
       0,
       0
     );
+
+    const supplyAmount = Math.floor(activity.totalOrderPrice / 1.1); // 공급가
+    const vatAmount = activity.totalOrderPrice - supplyAmount; // 부가세
+
     window.printText(
-      `${formatReceiptRow("공급가", "", "", `${(activity.totalOrderPrice * 0.9).toLocaleString()}원`)}\n`,
+      `${formatReceiptRow("공급가", "", "", `${supplyAmount.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -323,7 +327,7 @@ export const print = async ({
       0
     );
     window.printText(
-      `${formatReceiptRow("부가세", "", "", `${(activity.totalOrderPrice * 0.1).toLocaleString()}원`)}\n`,
+      `${formatReceiptRow("부가세", "", "", `${vatAmount.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -384,7 +388,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("카드번호", payment?.FILLER as string)}\n`,
+        `${formatAlignLeftRight("카드번호", payment?.FILLER.trim() as string)}\n`,
         0,
         0,
         false,
