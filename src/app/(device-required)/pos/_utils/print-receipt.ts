@@ -1,6 +1,7 @@
 export const print = (
   type: "kitchen" | "cash-receipt" | "card-receipt",
   activity: PosTableActivity,
+  storeName: string,
   successHandler?: () => void
 ) => {
   const tableNo = 1;
@@ -42,8 +43,8 @@ export const print = (
     total: string
   ) {
     const nameWidth = 20;
-    const qtyWidth = 6;
-    const priceWidth = 10;
+    const qtyWidth = 5;
+    const priceWidth = 7;
     const totalWidth = 10;
 
     return (
@@ -77,7 +78,7 @@ export const print = (
       0
     );
     window.printText(
-      "--------------------------------------------\n",
+      "------------------------------------------\n",
       0,
       0,
       false,
@@ -97,7 +98,7 @@ export const print = (
       0
     );
     window.printText(
-      "--------------------------------------\n",
+      "------------------------------------------\n",
       0,
       0,
       false,
@@ -147,7 +148,7 @@ export const print = (
     });
 
     window.printText(
-      "--------------------------------------------\n",
+      "------------------------------------------\n",
       0,
       0,
       false,
@@ -158,7 +159,7 @@ export const print = (
     );
   } else {
     window.printText(
-      `${activity.name}\n1234 Food St, Seoul, Korea\nTel: 02-1234-5678\n\n`,
+      `${storeName}\n1234 Food St, Seoul, Korea\nTel: 02-1234-5678\n\n`,
       0,
       0,
       false,
@@ -168,7 +169,7 @@ export const print = (
       0
     );
     window.printText(
-      "--------------------------------------------\n",
+      "------------------------------------------\n",
       0,
       0,
       false,
@@ -199,7 +200,7 @@ export const print = (
       0
     );
     window.printText(
-      "--------------------------------------------\n",
+      "------------------------------------------\n",
       0,
       0,
       false,
@@ -219,7 +220,7 @@ export const print = (
       0
     );
     window.printText(
-      "--------------------------------------------\n",
+      "------------------------------------------\n",
       0,
       0,
       false,
@@ -229,59 +230,37 @@ export const print = (
       0
     );
 
-    window.printText(
-      `${formatReceiptRow("불고기덮밥", "2", "6,000", "12,000")}\n`,
-      0,
-      0,
-      false,
-      false,
-      false,
-      0,
-      0
-    );
-    window.printText(
-      `${formatReceiptRow("└ 곱빼기", "", "1,000", "1,000")}\n`,
-      0,
-      0,
-      false,
-      false,
-      false,
-      0,
-      0
-    );
-    window.printText(
-      `${formatReceiptRow("└ 맵기 보통", "", "", "")}\n`,
-      0,
-      0,
-      false,
-      false,
-      false,
-      0,
-      0
-    );
-    window.printText(
-      `${formatReceiptRow("된장찌개", "1", "5,000", "5,000")}\n`,
-      0,
-      0,
-      false,
-      false,
-      false,
-      0,
-      0
-    );
-    window.printText(
-      `${formatReceiptRow("└ 밥 추가", "", "500", "500")}\n`,
-      0,
-      0,
-      false,
-      false,
-      false,
-      0,
-      0
-    );
+    activity.orders.forEach((order) => {
+      order.orderMenus.forEach((menu) => {
+        window.printText(
+          `${formatReceiptRow(menu.name, String(menu.quantity), String(menu.price), String(menu.price * menu.quantity))}\n`,
+          0,
+          0,
+          false,
+          false,
+          false,
+          0,
+          0
+        );
+        menu.orderOptionGroups.forEach((option: OrderOptionGroups) => {
+          option.orderOptions.forEach((o) => {
+            window.printText(
+              `${formatReceiptRow(`└ ${option.name}`, o.name, "", o.price ? String(o.price) : "")}\n`,
+              0,
+              0,
+              false,
+              false,
+              false,
+              0,
+              0
+            );
+          });
+        });
+      });
+    });
 
     window.printText(
-      "--------------------------------------------\n",
+      "------------------------------------------\n",
       0,
       0,
       false,
@@ -337,7 +316,7 @@ export const print = (
 
     if (type === "card-receipt") {
       window.printText(
-        "--------------------------------------------\n",
+        "------------------------------------------\n",
         0,
         0,
         false,
@@ -408,6 +387,16 @@ export const print = (
       );
     } else {
       window.printText(
+        "------------------------------------------\n",
+        0,
+        0,
+        false,
+        false,
+        false,
+        0,
+        0
+      );
+      window.printText(
         `${formatReceiptRow("받을 금액", "", "", "17,500")}\n`,
         0,
         0,
@@ -420,8 +409,8 @@ export const print = (
       window.printText(
         `${formatReceiptRow("받은 금액", "", "", "20,000")}\n`,
         0,
-        1,
-        true,
+        0,
+        false,
         false,
         false,
         0,
@@ -430,15 +419,15 @@ export const print = (
       window.printText(
         `${formatReceiptRow("거스름돈", "", "", "2,500")}\n`,
         0,
-        1,
-        true,
+        0,
+        false,
         false,
         false,
         0,
         0
       );
       window.printText(
-        "--------------------------------------------\n",
+        "------------------------------------------\n",
         0,
         0,
         false,
@@ -457,29 +446,6 @@ export const print = (
         0,
         0
       );
-      window.printText(
-        `${formatReceiptRow("승인번호", "", "", "12345678")}\n`,
-        0,
-        0,
-        false,
-        false,
-        false,
-        0,
-        0
-      );
-
-      const date = new Date().toISOString().split("T").join(" ");
-
-      window.printText(
-        `${formatReceiptRow("승인일시", "", "", date)}\n`,
-        0,
-        0,
-        false,
-        false,
-        false,
-        0,
-        0
-      );
     }
   }
 
@@ -487,6 +453,7 @@ export const print = (
 
   const strSubmit = window.getPosData();
   window.requestPrint("Printer1", strSubmit, (result: unknown) => {
+    // eslint-disable-next-line no-console
     console.log(result);
     if ((result as string).endsWith("success")) {
       successHandler?.();

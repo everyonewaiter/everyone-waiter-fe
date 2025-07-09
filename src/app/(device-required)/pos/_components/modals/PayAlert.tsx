@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
+import usePos from "../../_queries/usePos";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -48,7 +49,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     },
   });
 
-  const { handlePayWithCard, handlePayWithCash } = usePayment();
+  const { storeStatus } = usePos();
+  const { data } = storeStatus;
+  const { handlePayWithCard } = usePayment();
 
   const monthlyPlan = [
     "일시불",
@@ -63,28 +66,30 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         amount: props.totalOrderPrice,
         successHandler: () => {
           navigate.push("/pos/tables");
-          print("card-receipt", props, () => close());
+          print("card-receipt", props, data?.name as string, () => close());
         },
       });
     } else {
-      let cashReceiptType = "";
-      if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";
-      else if (form.watch("receiptType") === "사업자증빙용")
-        cashReceiptType = "PROOF";
-      else cashReceiptType = "DEDUCTION";
+      print("cash-receipt", props, data?.name as string, () => close());
 
-      handlePayWithCash({
-        tableNo: props.tableNo,
-        body: {
-          amount: props.totalOrderPrice,
-          cashReceiptNo: form.watch("phoneNumber"),
-          cashReceiptType: cashReceiptType as OrderReceiptType,
-        },
-        successHandler: () => {
-          navigate.push("/pos/tables");
-          print("cash-receipt", props, () => close());
-        },
-      });
+      // let cashReceiptType = "";
+      // if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";
+      // else if (form.watch("receiptType") === "사업자증빙용")
+      //   cashReceiptType = "PROOF";
+      // else cashReceiptType = "DEDUCTION";
+
+      // handlePayWithCash({
+      //   tableNo: props.tableNo,
+      //   body: {
+      //     amount: props.totalOrderPrice,
+      //     cashReceiptNo: form.watch("phoneNumber"),
+      //     cashReceiptType: cashReceiptType as OrderReceiptType,
+      //   },
+      //   successHandler: () => {
+      //     navigate.push("/pos/tables");
+      //     print("cash-receipt", props, () => close());
+      //   },
+      // });
     }
   };
 
