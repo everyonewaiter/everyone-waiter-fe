@@ -21,14 +21,14 @@ const MemoAlert = dynamic(() => import("../modals/MemoAlert"), {
 export default function SideSection() {
   const navigate = useRouter();
   const params = useParams();
-  const tableNo = params?.tableId as string;
+  const tableNo = Number(params?.tableId as string);
 
-  const { selectedOrder } = useSelectItemStore();
+  const { selectedOrder, selectedMenu } = useSelectItemStore();
   const { orders } = useOrderStore();
 
   const { open, close } = useOverlay();
 
-  const { activity } = usePos();
+  const { activity, updateOrder } = usePos();
   const { data } = activity(Number(tableNo));
   const { addDiscount, complete, cancel } = useOrder();
 
@@ -42,15 +42,47 @@ export default function SideSection() {
 
   const handleTableComplete = () => {
     complete.mutate(
-      { tableNo: Number(tableNo) },
+      { tableNo },
       { onSuccess: () => navigate.push("/pos/tables") }
     );
   };
 
   const handleCancelOrder = () => {
+    if (!selectedOrder?.orderId) {
+      alert("삭제할 주문을 선택해주세요.");
+      return;
+    }
+
     cancel.mutate({
-      tableNo: Number(tableNo),
+      tableNo,
       orderId: selectedOrder?.orderId as string,
+    });
+  };
+
+  const handleUpdateOrderedMenu = (type: "add" | "sub") => {
+    if (!selectedMenu?.orderId) {
+      alert("수정할 메뉴를 선택해주세요.");
+      return;
+    }
+
+    updateOrder.mutate({
+      tableNo,
+      body: {
+        orders: [
+          {
+            orderId: selectedMenu?.orderId as string,
+            orderMenus: [
+              {
+                orderMenuId: selectedMenu?.orderMenuId as string,
+                quantity:
+                  type === "add"
+                    ? (selectedMenu?.quantity ?? 0) + 1
+                    : (selectedMenu?.quantity ?? 0) - 1,
+              },
+            ],
+          },
+        ],
+      },
     });
   };
 
@@ -72,7 +104,7 @@ export default function SideSection() {
             <SideControl
               orderType={data?.orderType!}
               onCancelOrder={handleCancelOrder}
-              onCancelMenu={() => {}}
+              onUpdateOrder={handleUpdateOrderedMenu}
             />
             <SideContents orders={orders} activityOrders={data?.orders!} />
           </div>

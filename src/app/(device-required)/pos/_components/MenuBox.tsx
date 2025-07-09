@@ -4,7 +4,7 @@ import cn from "@/lib/utils";
 
 interface IProps extends TableOrder {
   index: number;
-  onSelect?: (menuid: TableOrderMenu | null) => void;
+  onSelect?: (menuid: (TableOrderMenu & { orderId: string }) | null) => void;
   select?: string;
   checked?: boolean;
   onCheckedChange?: () => void;
@@ -37,7 +37,9 @@ export default function MenuBox({
             select === menu.orderMenuId ? "border-primary" : "border-gray-600"
           )}
           onClick={() =>
-            select === menu.orderMenuId ? onSelect?.(null) : onSelect?.(menu)
+            select === menu.orderMenuId
+              ? onSelect?.(null)
+              : onSelect?.({ ...menu, orderId: props.orderId })
           }
         >
           <div className="flex items-center justify-between">

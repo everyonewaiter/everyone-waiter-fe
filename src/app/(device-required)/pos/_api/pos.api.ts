@@ -64,3 +64,21 @@ export const resendReceiptKitchen = async ({ tableNo }: PropsWithTableNo) => {
   );
   return response.data;
 };
+
+export const updateMenus = async ({
+  tableNo,
+  body,
+}: PropsWithTableNo<{
+  body: {
+    orders: {
+      orderId: string;
+      orderMenus: { orderMenuId: string; quantity: number }[];
+    }[];
+  };
+}>) => {
+  const response = await signatureInstance.put(
+    `${API_PATH.pos}/tables/${tableNo}/orders`,
+    body
+  );
+  return response.data;
+};

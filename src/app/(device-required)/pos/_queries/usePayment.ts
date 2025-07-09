@@ -103,8 +103,6 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
-        // eslint-disable-next-line no-console
-        console.log(res);
         handlePayWithCard({
           tableNo,
           body: {
@@ -128,10 +126,53 @@ export default function usePayment() {
     });
   };
 
+  const handleCancelCard = async ({
+    activity,
+    successHandler,
+  }: {
+    activity: PosTableActivity;
+    successHandler?: () => void;
+  }) => {
+    const payedPrice = activity.totalPaymentPrice;
+    const tax = Math.floor(payedPrice / 10);
+    const nonTax = payedPrice - tax;
+
+    const req = makeKSCATApprovalREQ({
+      amount: payedPrice,
+      tax,
+      nonTax,
+      installment: "",
+      type: "0",
+    });
+    await window.$.ajax({
+      url: "http://127.0.0.1:27098/",
+      dataType: "jsonp",
+      jsonp: "callback",
+      jsonpCallback: `jsonp${Date.now()}`,
+      data: {
+        REQ: req,
+      },
+      success: (res: PaymentResponse) => {
+        cancelPay.mutate({
+          orderPaymentId: "",
+          body: {
+            approvalNo: res.APPROVALNO,
+            tradeTime: res.TRADETIME,
+            tradeUniqueNo: res.TRADEUNIQUENO,
+          },
+        });
+        successHandler?.();
+      },
+      // eslint-disable-next-line no-console
+      error: (e: any) => console.log(e),
+    });
+  };
+
   return {
     approvePay,
     cancelPay,
     handlePayWithCard: handleCard,
     handlePayWithCash,
+    handleCancelCard,
   };
 }

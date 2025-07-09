@@ -9,6 +9,7 @@ import {
   moveTables,
   openStore,
   resendReceiptKitchen,
+  updateMenus,
 } from "../_api/pos.api";
 
 export default function usePos() {
@@ -62,6 +63,13 @@ export default function usePos() {
     mutationFn: resendReceiptKitchen,
   });
 
+  const updateOrder = useMutation({
+    mutationFn: updateMenus,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+    },
+  });
+
   return {
     store: { open, close },
     menuList,
@@ -70,5 +78,6 @@ export default function usePos() {
     storeStatus,
     move,
     resendReceipt,
+    updateOrder,
   };
 }
