@@ -20,7 +20,7 @@ export default function CancelAlert({ close, tableNo, type }: IProps) {
 
   const { cancel } = useOrder();
   const { activity } = usePos();
-  const { handleCancelCard } = usePayment();
+  const { cancelCard } = usePayment();
   const { data } = activity(tableNo);
 
   return (
@@ -29,7 +29,7 @@ export default function CancelAlert({ close, tableNo, type }: IProps) {
       buttonColor="primary"
       onAction={async () => {
         if (type === "pay-cancel") {
-          handleCancelCard({ activity: data! });
+          cancelCard({ activity: data! });
         } else if (type === "order-cancel") {
           const deletePromises = data?.orders.map((order) =>
             cancel.mutateAsync({

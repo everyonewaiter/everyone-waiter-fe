@@ -62,6 +62,16 @@ export const print = async ({
     );
   }
 
+  function formatAlignLeftRight(left: string, right: string, totalWidth = 42) {
+    const leftWidth = getDisplayWidth(left);
+    const rightWidth = getDisplayWidth(right);
+    const spacing = totalWidth - leftWidth - rightWidth;
+
+    if (spacing <= 0) return left + right;
+
+    return left + " ".repeat(spacing) + right;
+  }
+
   async function printSvgAsBitmap(svgUrl: string) {
     const res = await fetch(svgUrl);
     const svgText = await res.text();
@@ -348,6 +358,7 @@ export const print = async ({
     );
   };
 
+  // eslint-disable-next-line no-console
   console.log(payment);
 
   const printAddition = async () => {
@@ -363,7 +374,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("결제방법", "", "", payment?.CARDNAME as string)}\n`,
+        `${formatAlignLeftRight("결제방법", `${payment?.CARDNAME}(${payment?.PURCHASENAME})`)}\n`,
         0,
         0,
         false,
@@ -373,7 +384,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("카드번호", "", "", payment?.FILLER as string)}\n`,
+        `${formatAlignLeftRight("카드번호", payment?.FILLER as string)}\n`,
         0,
         0,
         false,
@@ -383,7 +394,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("결제금액", "", "", "20,350")}\n`,
+        `${formatAlignLeftRight("결제금액", `${activity.totalOrderPrice.toLocaleString()}원`)}\n`,
         0,
         0,
         false,
@@ -393,7 +404,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("할부기간", "", "", "일시불")}\n`,
+        `${formatAlignLeftRight("할부기간", "일시불")}\n`,
         0,
         0,
         false,
@@ -403,7 +414,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("승인번호", "", "", payment?.APPROVALNO as string)}\n`,
+        `${formatAlignLeftRight("승인번호", payment?.APPROVALNO as string)}\n`,
         0,
         0,
         false,
@@ -413,7 +424,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("승인일시", "", "", payment?.TRADETIME as string)}\n`,
+        `${formatAlignLeftRight("승인일시", payment?.TRADETIME as string)}\n\n\n`,
         0,
         0,
         false,
@@ -434,7 +445,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("받을 금액", "", "", `${activity.totalOrderPrice.toLocaleString()}원`)}\n`,
+        `${formatAlignLeftRight("받을 금액", `${activity.totalOrderPrice.toLocaleString()}원`)}\n`,
         0,
         0,
         false,
@@ -444,7 +455,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("받은 금액", "", "", "0원")}\n`,
+        `${formatAlignLeftRight("받은 금액", "0원")}\n`,
         0,
         0,
         false,
@@ -454,7 +465,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("거스름돈", "", "", "0원")}\n`,
+        `${formatAlignLeftRight("거스름돈", "0원")}\n`,
         0,
         0,
         false,
@@ -474,7 +485,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatReceiptRow("결제방법", "", "", "현금\n\n\n")}\n`,
+        `${formatAlignLeftRight("결제방법", "현금\n\n\n")}\n`,
         0,
         0,
         false,
@@ -483,9 +494,9 @@ export const print = async ({
         0,
         0
       );
-      await printSvgAsBitmap("/logo/logo-text.svg");
-      window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
     }
+    await printSvgAsBitmap("/logo/logo-text-light.svg");
+    window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
   };
 
   // NOTE: 영수증 코드
