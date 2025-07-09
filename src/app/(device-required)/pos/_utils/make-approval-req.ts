@@ -78,7 +78,7 @@ export default function makeKSCATApprovalREQ({
   resultText += fillBlank(163);
 
   // NOTE: 전자서명 유뮤
-  resultText += "X";
+  resultText += amount < 50000 ? "X" : "F";
   // NOTE: ETX
   resultText += String.fromCharCode(3);
   // NOTE: CR

@@ -1,4 +1,4 @@
-export const print = async ({
+export const print = ({
   type,
   activity,
   storeName,
@@ -70,30 +70,6 @@ export const print = async ({
     if (spacing <= 0) return left + right;
 
     return left + " ".repeat(spacing) + right;
-  }
-
-  async function printSvgAsBitmap(svgUrl: string) {
-    const res = await fetch(svgUrl);
-    const svgText = await res.text();
-
-    const blob = new Blob([svgText], { type: "image/svg+xml" });
-    const url = URL.createObjectURL(blob);
-
-    return new Promise<void>((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d")!;
-        ctx.drawImage(img, 0, 0);
-
-        const base64 = canvas.toDataURL("image/png");
-        window.printBitmap(base64, 300, 1, 0); // 중간 정렬
-        resolve();
-      };
-      img.src = url;
-    });
   }
 
   const printKitchen = () => {
@@ -374,7 +350,7 @@ export const print = async ({
   // eslint-disable-next-line no-console
   console.log(payment);
 
-  const printAddition = async () => {
+  const printAddition = () => {
     if (type === "card-receipt") {
       window.printText(
         "------------------------------------------\n",
@@ -508,8 +484,6 @@ export const print = async ({
         0
       );
     }
-    await printSvgAsBitmap("/logo/logo-text-light.svg");
-    window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
   };
 
   // NOTE: 영수증 코드
@@ -517,7 +491,7 @@ export const print = async ({
     printKitchen();
   } else {
     printReceipt();
-    await printAddition();
+    printAddition();
   }
 
   window.cutPaper(1);
