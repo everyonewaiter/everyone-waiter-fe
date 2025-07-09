@@ -102,7 +102,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             type: "card-receipt",
             activity: props,
             storeName: data?.name as string,
-            payment: res,
+            payment: { ...res, installment: form.watch("monthlyPlan") },
             successHandler:
               props.orders.length > 0
                 ? () => null

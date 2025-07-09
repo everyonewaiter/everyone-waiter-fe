@@ -8,7 +8,7 @@ export const print = async ({
   type: "kitchen" | "cash-receipt" | "card-receipt";
   activity: PosTableActivity;
   storeName: string;
-  payment?: PaymentResponse;
+  payment?: PaymentResponse & { installment: string };
   successHandler?: () => void;
 }) => {
   const tableNo = 1;
@@ -404,7 +404,7 @@ export const print = async ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("할부기간", "일시불")}\n`,
+        `${formatAlignLeftRight("할부기간", payment?.installment === "일시불" ? payment?.installment : `${payment?.installment}개월`)}\n`,
         0,
         0,
         false,
