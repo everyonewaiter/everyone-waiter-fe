@@ -221,7 +221,16 @@ export const print = async ({
       0,
       0
     );
-    window.printText(`영수증 번호: #12\n`, 0, 1, true, false, false, 0, 0);
+    window.printText(
+      `영수증 번호: #${activity.posTableActivityId}\n`,
+      0,
+      1,
+      true,
+      false,
+      false,
+      0,
+      0
+    );
     window.printText(
       `테이블번호: ${activity.tableNo}\n`,
       0,
