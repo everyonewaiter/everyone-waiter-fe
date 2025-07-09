@@ -63,8 +63,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         amount: props.totalOrderPrice,
         successHandler: () => {
           navigate.push("/pos/tables");
-          print("card-receipt", props);
-          close();
+          print("card-receipt", props, () => close());
         },
       });
     } else {
@@ -83,8 +82,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         },
         successHandler: () => {
           navigate.push("/pos/tables");
-          print("cash-receipt", props);
-          close();
+          print("cash-receipt", props, () => close());
         },
       });
     }

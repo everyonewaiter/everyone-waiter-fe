@@ -1,6 +1,7 @@
 export const print = (
   type: "kitchen" | "cash-receipt" | "card-receipt",
-  activity: PosTableActivity
+  activity: PosTableActivity,
+  successHandler?: () => void
 ) => {
   const tableNo = 1;
   const orderNo = 11;
@@ -11,29 +12,45 @@ export const print = (
   const now = new Date();
   const formatDate = now.toLocaleString();
 
+  function getDisplayWidth(str: string) {
+    return str
+      .split("")
+      .reduce((sum, char) => sum + (char.charCodeAt(0) > 255 ? 2 : 1), 0);
+  }
+
+  function padString(
+    str: string,
+    width: number,
+    align: "left" | "right" | "center"
+  ) {
+    const displayWidth = getDisplayWidth(str);
+    const padding = width - displayWidth;
+
+    if (padding <= 0) return str;
+
+    if (align === "left") return str + " ".repeat(padding);
+    if (align === "right") return " ".repeat(padding) + str;
+    const left = Math.floor(padding / 2);
+    const right = padding - left;
+    return " ".repeat(left) + str + " ".repeat(right);
+  }
+
   function formatReceiptRow(
     name: string,
     qty: string,
     price: string,
     total: string
   ) {
-    const nameWidth = 16;
+    const nameWidth = 20;
     const qtyWidth = 6;
     const priceWidth = 10;
     const totalWidth = 10;
 
-    const centerAlign = (text: string, width: number) => {
-      const space = width - text.length;
-      const left = Math.floor(space / 2);
-      const right = space - left;
-      return " ".repeat(left) + text + " ".repeat(right);
-    };
-
     return (
-      name.padEnd(nameWidth, " ") +
-      centerAlign(qty, qtyWidth) +
-      centerAlign(price, priceWidth) +
-      total.padStart(totalWidth, " ")
+      padString(name, nameWidth, "left") +
+      padString(qty, qtyWidth, "center") +
+      padString(price, priceWidth, "center") +
+      padString(total, totalWidth, "right")
     );
   }
 
@@ -164,8 +181,8 @@ export const print = (
     window.printText(
       `테이블번호: ${activity.tableNo}\n`,
       0,
-      1,
-      true,
+      0,
+      false,
       false,
       false,
       0,
@@ -276,8 +293,8 @@ export const print = (
     window.printText(
       `${formatReceiptRow("공급가", "", "", "16,650")}\n`,
       0,
-      1,
-      true,
+      0,
+      false,
       false,
       false,
       0,
@@ -286,26 +303,29 @@ export const print = (
     window.printText(
       `${formatReceiptRow("부가세", "", "", "1,850")}\n`,
       0,
-      1,
-      true,
+      0,
       false,
       false,
-      0,
-      0
-    );
-    // NOTE: discount가 있으면
-    window.printText(
-      `${formatReceiptRow("할인", "", "", "1000")}\n`,
-      0,
-      1,
-      true,
-      true,
       false,
       0,
       0
     );
+
+    if (activity.discount) {
+      window.printText(
+        `${formatReceiptRow("할인", "", "", "1000")}\n`,
+        0,
+        0,
+        false,
+        false,
+        false,
+        0,
+        0
+      );
+    }
+
     window.printText(
-      `${formatReceiptRow("합계", "", "", "17,500")}\n`,
+      `${formatReceiptRow("합계", "", "", "₩ 17,500")}\n`,
       0,
       1,
       true,
@@ -316,6 +336,16 @@ export const print = (
     );
 
     if (type === "card-receipt") {
+      window.printText(
+        "--------------------------------------------\n",
+        0,
+        0,
+        false,
+        false,
+        false,
+        0,
+        0
+      );
       window.printText(
         `${formatReceiptRow("결제방법", "", "", "신용카드(신한)")}\n`,
         0,
@@ -390,8 +420,8 @@ export const print = (
       window.printText(
         `${formatReceiptRow("받은 금액", "", "", "20,000")}\n`,
         0,
-        0,
-        false,
+        1,
+        true,
         false,
         false,
         0,
@@ -400,8 +430,8 @@ export const print = (
       window.printText(
         `${formatReceiptRow("거스름돈", "", "", "2,500")}\n`,
         0,
-        0,
-        false,
+        1,
+        true,
         false,
         false,
         0,
@@ -437,8 +467,11 @@ export const print = (
         0,
         0
       );
+
+      const date = new Date().toISOString().split("T").join(" ");
+
       window.printText(
-        `${formatReceiptRow("승인일시", "", "", "2025-07-04 16:30:12")}\n`,
+        `${formatReceiptRow("승인일시", "", "", date)}\n`,
         0,
         0,
         false,
@@ -453,10 +486,10 @@ export const print = (
   window.cutPaper(1);
 
   const strSubmit = window.getPosData();
-  // eslint-disable-next-line no-console
-  console.log("Print data:", strSubmit);
-  window.requestPrint("BIXOLON SRP-330II", strSubmit, (result: unknown) =>
-    // eslint-disable-next-line no-console
-    console.log("Print result:", result)
-  );
+  window.requestPrint("Printer1", strSubmit, (result: unknown) => {
+    console.log(result);
+    if ((result as string).endsWith("success")) {
+      successHandler?.();
+    }
+  });
 };
