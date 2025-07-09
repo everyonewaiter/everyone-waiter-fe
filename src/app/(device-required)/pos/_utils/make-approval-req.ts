@@ -11,13 +11,8 @@ export default function makeKSCATApprovalREQ({
   installment: string; // "00", "02", ...
   type: "0" | "1"; // 1 승인, 0 취소
 }) {
-  function fillZero(num: number) {
-    return "0".repeat(num);
-  }
-
-  function fillBlank(num: number) {
-    return " ".repeat(num);
-  }
+  const fillZero = (num: number) => "0".repeat(num);
+  const fillBlank = (num: number) => " ".repeat(num);
 
   let resultText = "";
 
@@ -25,7 +20,7 @@ export default function makeKSCATApprovalREQ({
   resultText += String.fromCharCode(2);
   // NOTE: 거래 구분 (신용IC: IC, 현금: HK)
   resultText += "IC";
-  // NOTE: 업무 구분 (승인취소: 01)
+  // NOTE: 업무 구분 (승인/취소: 01)
   resultText += "01";
   // NOTE: 전무 구분 (승인조회 0200, 취소 0420)
   resultText += type === "1" ? "0200" : "0420";
@@ -59,7 +54,7 @@ export default function makeKSCATApprovalREQ({
   resultText += String.fromCharCode(28);
 
   // NOTE: 할부개월 (00 ~ 12)
-  resultText += installment.padStart(2, "0");
+  resultText += installment === "일시불" ? "00" : installment;
   // NOTE: 총 금액
   resultText += String(amount).padStart(12, "0");
   // NOTE: 봉사료
@@ -78,14 +73,12 @@ export default function makeKSCATApprovalREQ({
   // NOTE: 원거래승인번호
   resultText += fillBlank(12);
   // NOTE: 원거래승인일자 (6자)
-  const now = new Date();
-  resultText += `${String(now.getFullYear()).slice(2)}${now.getMonth() + 1}${now.getDate()}`;
+  resultText += fillBlank(6);
   // NOTE: 사용자정보~DCC
   resultText += fillBlank(163);
 
   // NOTE: 전자서명 유뮤
-  // resultText += amount < 50000 ? "X" : "T";
-  resultText += " ";
+  resultText += "X";
   // NOTE: ETX
   resultText += String.fromCharCode(3);
   // NOTE: CR

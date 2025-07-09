@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { useMutation } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import { approvePayment, cancelPayment } from "../_api/payment.api";
@@ -105,23 +107,25 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
-        handlePayWithCard({
-          tableNo,
-          body: {
-            amount,
-            vat: taxValue,
-            supplyAmount: amount - taxValue,
-            approvalNo: res.APPROVALNO,
-            installment,
-            cardNo: res.FILLER,
-            purchaseName: res.PURCHASENAME,
-            merchantNo: res.MERCHANTNUMBER,
-            tradeTime: res.TRADETIME,
-            tradeUniqueNo: res.TRADEUNIQUENO,
-            issuerName: res.CARDNAME,
-          },
-          successHandler: () => successHandler(res),
-        });
+        // handlePayWithCard({
+        //   tableNo,
+        //   body: {
+        //     amount,
+        //     vat: taxValue,
+        //     supplyAmount: amount - taxValue,
+        //     approvalNo: res.APPROVALNO,
+        //     installment,
+        //     cardNo: res.FILLER,
+        //     purchaseName: res.PURCHASENAME,
+        //     merchantNo: res.MERCHANTNUMBER,
+        //     tradeTime: res.TRADETIME,
+        //     tradeUniqueNo: res.TRADEUNIQUENO,
+        //     issuerName: res.CARDNAME,
+        //   },
+        //   successHandler: () => successHandler(res),
+        // });
+        // eslint-disable-next-line no-console
+        console.log(res);
       },
       // eslint-disable-next-line no-console
       error: (e: any) => console.log(e),

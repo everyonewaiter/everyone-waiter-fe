@@ -71,7 +71,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     defaultValues: {
       receiptType: "개인소득공제용",
       phoneNumber: "",
-      monthlyPlan: "",
+      monthlyPlan: "일시불",
     },
   });
 
@@ -105,7 +105,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             payment: { ...res, installment: form.watch("monthlyPlan") },
             successHandler:
               props.orders.length > 0
-                ? () => null
+                ? () => close()
                 : () => {
                     close();
                     navigate.push("/pos/tables");
@@ -120,7 +120,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         storeName: data?.name as string,
         successHandler:
           props.orders.length > 0
-            ? () => null
+            ? () => close()
             : () => {
                 close();
                 navigate.push("/pos/tables");
