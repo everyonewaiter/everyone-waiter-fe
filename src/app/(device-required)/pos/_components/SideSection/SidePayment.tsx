@@ -37,16 +37,20 @@ export default function SidePayment({
 
   return (
     <>
-      {orderType === "PREPAID" && (
-        <Button
-          color="primary"
-          className="mt-8 flex h-[64px] flex-1 rounded-[12px] px-8 text-xl"
-          onClick={onTableComplete}
-        >
-          테이블 완료
-        </Button>
-      )}
-      {(orderType === "POSTPAID" || remainingPaymentPrice === 0) && (
+      <div className="w-full">
+        {(orderType === "PREPAID" ||
+          (orderType === "POSTPAID" && remainingPaymentPrice === 0)) && (
+          <Button
+            color="primary"
+            className="mt-8 flex !h-[64px] w-full flex-1 items-center justify-center rounded-[12px] !px-8 !text-xl"
+            onClick={onTableComplete}
+          >
+            테이블 완료
+          </Button>
+        )}
+      </div>
+
+      {orderType === "POSTPAID" && remainingPaymentPrice > 0 && (
         <div className="mt-8 flex gap-3">
           <Button
             variant="outline"
