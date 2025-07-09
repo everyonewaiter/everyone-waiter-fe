@@ -65,7 +65,7 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="min-h-screen min-w-screen select-none">
+      <body>
         {/* jQuery KSNET 스크립트 */}
         <Script
           src="/scripts/jquery-1.10.1.min.js"
@@ -76,7 +76,11 @@ export default function RootLayout({
         <Script src="/scripts/bxlpos.js" strategy="beforeInteractive" />
         <Script src="/scripts/bxllabel.js" strategy="beforeInteractive" />
 
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout>
+          <div className="min-h-screen min-w-screen select-none">
+            {children}
+          </div>
+        </ClientLayout>
       </body>
     </html>
   );
