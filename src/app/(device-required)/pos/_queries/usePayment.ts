@@ -38,7 +38,9 @@ export default function usePayment() {
           cashReceiptType: "NONE",
         },
       },
-      { onSuccess: successHandler }
+      {
+        onSuccess: successHandler,
+      }
     );
   };
 
@@ -81,7 +83,7 @@ export default function usePayment() {
     form: UseFormReturn<FormType, any, FormType>;
     amount: number;
     tableNo: number;
-    successHandler: () => void;
+    successHandler: (res: PaymentResponse) => void;
   }) => {
     const taxValue = Math.floor(amount / 10);
     const installment =
@@ -118,7 +120,7 @@ export default function usePayment() {
             tradeUniqueNo: res.TRADEUNIQUENO,
             issuerName: res.CARDNAME,
           },
-          successHandler,
+          successHandler: () => successHandler(res),
         });
       },
       // eslint-disable-next-line no-console
@@ -171,8 +173,8 @@ export default function usePayment() {
   return {
     approvePay,
     cancelPay,
-    handlePayWithCard: handleCard,
-    handlePayWithCash,
-    handleCancelCard,
+    payCard: handleCard,
+    payCash: handlePayWithCash,
+    cancelCard: handleCancelCard,
   };
 }

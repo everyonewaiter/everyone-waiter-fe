@@ -18,6 +18,12 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
 
+interface FormType {
+  receiptType: string;
+  phoneNumber: string;
+  monthlyPlan: string;
+}
+
 declare global {
   interface Window {
     $: any;
@@ -27,12 +33,7 @@ declare global {
 interface IProps extends PosTableActivity {
   close: () => void;
   type: "credit-card" | "cash";
-}
-
-interface FormType {
-  receiptType: string;
-  phoneNumber: string;
-  monthlyPlan: string;
+  payment?: PaymentResponse;
 }
 
 export default function PayAlert({ close, type, ...props }: IProps) {
@@ -76,7 +77,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
 
   const { storeStatus } = usePos();
   const { data } = storeStatus;
-  const { handlePayWithCard } = usePayment();
+  const { payCard } = usePayment();
 
   const monthlyPlan = [
     "일시불",
@@ -92,21 +93,39 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     }
 
     if (type === "credit-card") {
-      handlePayWithCard({
+      payCard({
         tableNo: props.tableNo,
         form,
         amount,
-        successHandler: () => {
-          navigate.push("/pos/tables");
-          print("card-receipt", props, data?.name as string, () =>
-            hasOrderId ? null : close()
-          );
+        successHandler: (res) => {
+          print({
+            type: "card-receipt",
+            activity: props,
+            storeName: data?.name as string,
+            payment: res,
+            successHandler:
+              props.orders.length > 0
+                ? () => null
+                : () => {
+                    close();
+                    navigate.push("/pos/tables");
+                  },
+          });
         },
       });
     } else {
-      print("cash-receipt", props, data?.name as string, () =>
-        hasOrderId ? null : close()
-      );
+      print({
+        type: "cash-receipt",
+        activity: props,
+        storeName: data?.name as string,
+        successHandler:
+          props.orders.length > 0
+            ? () => null
+            : () => {
+                close();
+                navigate.push("/pos/tables");
+              },
+      });
 
       // let cashReceiptType = "";
       // if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";

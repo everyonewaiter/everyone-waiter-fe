@@ -27,9 +27,10 @@ export default function SidePayment({
         <PayAlert
           close={close}
           type={type}
-          {...props}
           orderType={orderType}
           remainingPaymentPrice={remainingPaymentPrice}
+          // payment={payment}
+          {...props}
         />
       </QueryProviders>
     ));
