@@ -3,6 +3,7 @@ import { UseFormReturn } from "react-hook-form";
 import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
 import makeKSCATApprovalREQ from "../_utils/make-approval-req";
+import { print } from "../_utils/print-receipt";
 
 interface FormType {
   receiptType: string;
@@ -72,6 +73,23 @@ export default function usePayment() {
       },
       { onSuccess: successHandler }
     );
+  };
+
+  const handlePrintCashReceipt = async ({
+    activity,
+    stores,
+    successHandler,
+  }: {
+    activity: PosTableActivity;
+    stores: PosStore;
+    successHandler?: () => void;
+  }) => {
+    print({
+      type: "cash-receipt",
+      activity,
+      stores,
+      successHandler,
+    });
   };
 
   const handleCard = async ({
@@ -176,5 +194,6 @@ export default function usePayment() {
     payCard: handleCard,
     payCash: handlePayWithCash,
     cancelCard: handleCancelCard,
+    printReceipt: handlePrintCashReceipt,
   };
 }

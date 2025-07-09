@@ -10,6 +10,7 @@ import { useMemoStore } from "../_hooks/useMemoStore";
 import { useOrderStore } from "../_hooks/useOrderStore";
 import { useSelectItemStore } from "../_hooks/useSelectItemStore";
 import usePos from "../_queries/usePos";
+import ReceiptModal from "./modals/ReceiptModal";
 
 const MemoAlert = dynamic(() => import("./modals/MemoAlert"), {
   ssr: false,
@@ -31,6 +32,10 @@ const FLOATING_ITEMS = [
   {
     label: "주방 재전송",
     icon: "send",
+  },
+  {
+    label: "영수증 출력",
+    icon: "receipt",
   },
   {
     label: "테이블 목록으로 이동",
@@ -93,7 +98,7 @@ export default function Floating({ hasData, tableNo }: IProps) {
         <QueryProviders>
           <ResendAlert
             close={close}
-            tableNo={Number(tableNo)}
+            tableNo={tableNo}
             onResend={() => {
               resendReceipt.mutate(
                 { tableNo: Number(tableNo) },
@@ -101,6 +106,12 @@ export default function Floating({ hasData, tableNo }: IProps) {
               );
             }}
           />
+        </QueryProviders>
+      ));
+    } else {
+      open(() => (
+        <QueryProviders>
+          <ReceiptModal close={close} tableNo={tableNo} />
         </QueryProviders>
       ));
     }
