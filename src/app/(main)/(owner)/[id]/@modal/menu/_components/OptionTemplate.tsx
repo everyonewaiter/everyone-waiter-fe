@@ -75,7 +75,7 @@ export default function OptionTemplate({
             {form.watch(type)?.length > 0 ? (
               form.watch(type)?.map((option, i) => (
                 <div
-                  key={`${type}-${i}-${option.name || "unnamed"}`}
+                  key={i}
                   className={cn(
                     "flex gap-3",
                     i > 0 ? "mt-3 lg:mt-4" : "",

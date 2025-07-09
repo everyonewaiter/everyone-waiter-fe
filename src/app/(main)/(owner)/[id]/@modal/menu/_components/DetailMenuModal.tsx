@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -31,6 +31,8 @@ export default function DetailMenuModal({
   const navigate = useRouter();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("categoryId");
 
   const { storeId } = useStoreContext();
 
@@ -40,7 +42,7 @@ export default function DetailMenuModal({
     mode: "onChange",
     defaultValues: {
       image: null,
-      category: "",
+      category: categoryId as string,
       name: "",
       description: "",
       price: 0,

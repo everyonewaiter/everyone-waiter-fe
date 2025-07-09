@@ -53,7 +53,9 @@ export default function RenderMenu({
             type="button"
             className="h-full"
             onClick={() =>
-              navigate.push(`/${storeId}/menu/create?hideModal=${isMobile}`)
+              navigate.push(
+                `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
+              )
             }
           >
             <DashedBorder

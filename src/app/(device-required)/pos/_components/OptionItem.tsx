@@ -9,7 +9,10 @@ interface IProps {
 export default function OptionItem({ name, price }: IProps) {
   return (
     <div className="flex w-full items-center justify-between">
-      <Label htmlFor={name} className="text-s font-medium lg:text-base">
+      <Label
+        htmlFor={name}
+        className="text-s text-gray-0 font-medium lg:text-base"
+      >
         {name}
       </Label>
       <div className="text-s flex items-center gap-1 text-gray-100 lg:text-base">

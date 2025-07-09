@@ -38,6 +38,8 @@ export default function useMenu(storeId: string) {
         queryKey: menuKeys.category(storeId, variables.categoryId),
       });
     },
+    // eslint-disable-next-line no-alert
+    onError: (e) => alert((e as any).response.data.message),
   });
 
   const update = useMutation({

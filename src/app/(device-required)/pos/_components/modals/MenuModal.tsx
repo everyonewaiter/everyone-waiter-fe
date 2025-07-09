@@ -95,6 +95,14 @@ function MenuModal({
     .flat()
     .reduce((sum, price) => sum + price, 0);
 
+  const MandatoryOptions = data.menuOptionGroups.filter(
+    (el) => el.type === "MANDATORY"
+  );
+
+  const OptionalOptions = data.menuOptionGroups.filter(
+    (el) => el.type === "OPTIONAL"
+  );
+
   return (
     <div
       className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center"
@@ -172,8 +180,7 @@ function MenuModal({
             {data?.menuOptionGroups?.length > 0 ? (
               <FormProvider {...form}>
                 <div className="flex flex-col">
-                  {data.menuOptionGroups.filter((el) => el.type === "MANDATORY")
-                    ?.length > 0 && (
+                  {MandatoryOptions?.length > 0 && (
                     <OptionGroupSection
                       data={data.menuOptionGroups.filter(
                         (el) => el.type === "MANDATORY"
@@ -185,10 +192,11 @@ function MenuModal({
                     </OptionGroupSection>
                   )}
 
-                  {data.menuOptionGroups.filter((el) => el.type === "OPTIONAL")
-                    ?.length > 0 && (
+                  {OptionalOptions?.length > 0 && (
                     <>
-                      <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
+                      {MandatoryOptions && (
+                        <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
+                      )}
                       <OptionGroupSection
                         data={data.menuOptionGroups.filter(
                           (el) => el.type === "OPTIONAL"

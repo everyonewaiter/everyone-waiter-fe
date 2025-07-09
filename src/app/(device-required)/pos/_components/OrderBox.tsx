@@ -38,10 +38,10 @@ export default function OrderBox({ onSelect, select, ...props }: IProps) {
                   >
                     <span className="flex items-center gap-1 text-base font-medium text-[#2E7BB3]">
                       <PlusIcon size={18} color="#2E7BB3" strokeWidth={1} />
-                      {el.name}
+                      {option.name}
                     </span>
                     <span className="text-right text-base font-medium text-[#2E7BB3]">
-                      {option.name}
+                      {option.price ? `₩ ${option.price.toLocaleString()}` : ""}
                     </span>
                   </div>
                 ))
