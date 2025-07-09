@@ -12,6 +12,7 @@ import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
 import usePos from "../../_queries/usePos";
+import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -37,9 +38,33 @@ interface FormType {
 export default function PayAlert({ close, type, ...props }: IProps) {
   const navigate = useRouter();
 
-  const menus = props?.orders
-    .map((el) => el.orderMenus.map((v) => v.name))
-    .flat();
+  // 분할 계산
+  const { selectedOrder } = useSelectItemStore();
+  const hasOrderId = selectedOrder?.orderId;
+
+  const menus = hasOrderId
+    ? selectedOrder?.orderMenus.map((el) => el.name)
+    : props?.orders.map((el) => el.orderMenus.map((v) => v.name)).flat();
+
+  const selectedOrdersTotal = (selectedOrder?.orderMenus ?? []).reduce(
+    (acc, menu) => {
+      const menuBasePrice = menu.price;
+
+      const optionPrice =
+        menu.orderOptionGroups?.reduce(
+          (groupSum, group) =>
+            groupSum +
+            (group.orderOptions?.reduce(
+              (optSum: any, o: { price: any }) => optSum + (o.price || 0),
+              0
+            ) ?? 0),
+          0
+        ) ?? 0;
+
+      return acc + (menuBasePrice + optionPrice);
+    },
+    0
+  );
 
   const form = useForm<FormType>({
     defaultValues: {
@@ -59,18 +84,29 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   ];
 
   const handlePayment = () => {
+    let amount = 0;
+    if (hasOrderId) {
+      amount = selectedOrdersTotal;
+    } else {
+      amount = props.totalOrderPrice;
+    }
+
     if (type === "credit-card") {
       handlePayWithCard({
         tableNo: props.tableNo,
         form,
-        amount: props.totalOrderPrice,
+        amount,
         successHandler: () => {
           navigate.push("/pos/tables");
-          print("card-receipt", props, data?.name as string, () => close());
+          print("card-receipt", props, data?.name as string, () =>
+            hasOrderId ? null : close()
+          );
         },
       });
     } else {
-      print("cash-receipt", props, data?.name as string, () => close());
+      print("cash-receipt", props, data?.name as string, () =>
+        hasOrderId ? null : close()
+      );
 
       // let cashReceiptType = "";
       // if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";
@@ -81,7 +117,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       // handlePayWithCash({
       //   tableNo: props.tableNo,
       //   body: {
-      //     amount: props.totalOrderPrice,
+      //     amount,
       //     cashReceiptNo: form.watch("phoneNumber"),
       //     cashReceiptType: cashReceiptType as OrderReceiptType,
       //   },
@@ -118,7 +154,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제 정보</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {menus?.length === 1
+              {menus && menus?.length === 1
                 ? menus?.[0]
                 : `${menus?.[0]} 외 ${menus?.length - 1}개`}
             </strong>
@@ -126,7 +162,11 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제할 금액</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {props.totalOrderPrice.toLocaleString()}원
+              {(hasOrderId
+                ? selectedOrdersTotal
+                : props.totalOrderPrice
+              ).toLocaleString()}
+              원
             </strong>
           </div>
           {type === "cash" ? (
