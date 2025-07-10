@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ClientModalWrapper from "../(main)/_components/ClientModalWrapper";
 
 export default function Layout({
@@ -10,7 +11,9 @@ export default function Layout({
   return (
     <>
       {children}
-      <ClientModalWrapper>{modal}</ClientModalWrapper>
+      <Suspense fallback={<div>로드 중...</div>}>
+        <ClientModalWrapper>{modal}</ClientModalWrapper>
+      </Suspense>
     </>
   );
 }

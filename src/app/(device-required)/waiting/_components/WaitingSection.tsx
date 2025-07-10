@@ -2,8 +2,8 @@
 
 import Icon from "@/components/common/Icon";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
-import ActionButton from "./ActionButton";
 import useElapsedMinutes from "../_hooks/useElapsedMinutes";
+import ActionButton from "./ActionButton";
 
 interface IProps extends Waiting {
   onCall: () => void;

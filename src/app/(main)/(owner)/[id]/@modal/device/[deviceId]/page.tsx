@@ -1,47 +1,29 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import Dropdown from "@/components/common/Dropdown";
+import { Form } from "@/components/common/Form";
+import Label from "@/components/common/Label";
+import LabeledInput from "@/components/common/LabeledInput";
 import {
   deviceTranslate,
   paymentTimeTranslate,
   stateTranslate,
 } from "@/constants/translates";
-import { useForm } from "react-hook-form";
-import getQueryClient from "@/app/get-query-client";
-import Dropdown from "@/components/common/Dropdown";
-import LabeledInput from "@/components/common/LabeledInput";
-import Label from "@/components/common/Label";
-import { Form } from "@/components/common/Form";
-import { useEffect } from "react";
 import useDevice from "../../../device/_queries/useDevice";
+import ModalButton from "../../_components/ModalButton";
+import useDeviceForm from "../../_hooks/useDeviceForm";
 
 export default function DeviceInfoModal() {
   const params = useParams();
   const storeId = params?.id as string;
   const deviceId = params?.deviceId as string;
 
+  const { form, submitHandler } = useDeviceForm();
+
   const { detailQuery, update } = useDevice();
   const { data } = detailQuery(deviceId, storeId);
-
-  const queryClient = getQueryClient();
-
-  const form = useForm<
-    Omit<Device, "updatedAt" | "storeId" | "deviceId"> & {
-      deviceNumber: string;
-      tableNo: number;
-      createdAt: string;
-    }
-  >({
-    defaultValues: {
-      name: "",
-      createdAt: "",
-      state: "",
-      purpose: "HALL",
-      paymentType: "POSTPAID",
-      tableNo: 0,
-      deviceNumber: "",
-    },
-  });
 
   useEffect(() => {
     if (data) {
@@ -55,54 +37,19 @@ export default function DeviceInfoModal() {
     }
   }, [form, data]);
 
-  const submitHandler = () => {
-    update.mutate(
-      {
-        name: form.watch("name"),
-        purpose: form.watch("purpose") as DevicePurpose,
-        paymentType: form.watch("paymentType") as DevicePayment,
-        tableNo: form.watch("tableNo") ?? 0,
-        ksnetDeviceNo: form.watch("deviceNumber"),
-        storeId,
-        deviceId,
-      },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["get-devices"] });
-        },
-        onError: (e) => {
-          const res = (e as any).response.data;
-          if (
-            ["ALREADY_USE_DEVICE_NAME", "DEVICE_NOT_FOUND"].includes(res.code)
-          ) {
-            form.setError("name", res.message);
-          }
-        },
-      }
-    );
+  const handleSubmit = () => {
+    submitHandler(update, storeId, deviceId);
   };
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(submitHandler)}
+        onSubmit={form.handleSubmit(handleSubmit)}
       >
         <LabeledInput form={form} name="name" label="기기 이름" />
-        <LabeledInput
-          form={form}
-          name="createdAt"
-          label="등록일시"
-          disabled
-          labelDisabled
-        />
-        <LabeledInput
-          form={form}
-          name="state"
-          label="상태"
-          disabled
-          labelDisabled
-        />
+        <LabeledInput form={form} name="createdAt" label="등록일시" disabled />
+        <LabeledInput form={form} name="state" label="상태" disabled />
         <div className="flex flex-col gap-2">
           <Label>권한</Label>
           <Dropdown
@@ -125,9 +72,13 @@ export default function DeviceInfoModal() {
             className="md:!w-[348px] lg:!w-[476px]"
           />
         </div>
-        {data?.purpose === "HALL" && (
+        {["HALL", "TABLE"].includes(form.watch("purpose")) && (
+          <LabeledInput form={form} name="tableNo" label="테이블 번호" />
+        )}
+
+        {(form.watch("purpose") === "HALL" ||
+          form.watch("purpose") === "TABLE") && (
           <>
-            <LabeledInput form={form} name="tableNo" label="테이블 번호" />
             <div className="flex flex-col gap-2">
               <Label>결제 방식</Label>
               <Dropdown
@@ -155,6 +106,7 @@ export default function DeviceInfoModal() {
             <LabeledInput form={form} name="deviceNumber" label="단말기 번호" />
           </>
         )}
+        <ModalButton buttonText="확인" type="submit" />
       </form>
     </Form>
   );

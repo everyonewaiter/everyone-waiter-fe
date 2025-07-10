@@ -1,8 +1,8 @@
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { PropsWithChildren } from "react";
+import { getStoreInfoDetail } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import PageTitle from "@/app/(main)/_components/PageTitle";
 import getQueryClient from "@/app/get-query-client";
-import { getStoreInfoDetail } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { PropsWithChildren } from "react";
 import { settingsKeys } from "./_queries/keys";
 
 export default async function Layout({

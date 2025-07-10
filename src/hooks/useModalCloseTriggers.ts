@@ -1,6 +1,6 @@
 import { RefObject } from "react";
-import useOutsideClick from "./useOutSideClick";
 import useEscapeKey from "./useEscapeKey";
+import useOutsideClick from "./useOutSideClick";
 
 interface Props<T extends HTMLElement> {
   ref: RefObject<T | null>;

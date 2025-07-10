@@ -14,8 +14,8 @@ export default function POSMenuCard({ onClick, ...props }: IProps) {
       <Image
         src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${props.image}`}
         alt="menu"
-        width={270}
-        height={340}
+        fill
+        className="object-cover"
       />
       <div className="absolute bottom-0 flex h-[101px] w-full flex-col items-center justify-center gap-2 bg-white">
         <span className="text-gray-0 text-lg font-medium">{props.name}</span>

@@ -1,10 +1,10 @@
-import getQueryClient from "@/app/get-query-client";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   addWaiting,
   waitingAction,
   waitingList,
 } from "@/app/(device-required)/waiting/_api/waiting.api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import getQueryClient from "@/app/get-query-client";
 import { waitingKeys } from "./keys";
 
 const queryClient = getQueryClient();

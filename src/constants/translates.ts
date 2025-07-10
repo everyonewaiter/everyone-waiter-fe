@@ -1,4 +1,4 @@
-export const permissionTranslate: Record<Permission, string> = {
+export const permissionTranslate: Record<AccountPermission, string> = {
   ADMIN: "관리자",
   USER: "사용자",
   OWNER: "사장님",
@@ -20,6 +20,7 @@ export const registerStateTranslate: Record<RegisterStatus, string> = {
 export const paymentTimeTranslate = {
   PREPAID: "선결제",
   POSTPAID: "후결제",
+  null: "대기",
 } as const;
 
 export const deviceTranslate = {

@@ -5,7 +5,7 @@ interface MenuItem {
 }
 
 // 권한별 메뉴 구성
-const MENU_ITEMS: Record<Permission, MenuItem[]> = {
+const MENU_ITEMS: Record<AccountPermission, MenuItem[]> = {
   ADMIN: [
     { icon: "home", label: "HOME", href: "/" },
     { icon: "people", label: "회원 관리", href: "/admin/users" },

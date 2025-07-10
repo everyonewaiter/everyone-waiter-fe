@@ -1,3 +1,5 @@
+import { Info } from "lucide-react";
+import { InputHTMLAttributes, ReactNode } from "react";
 import {
   ControllerRenderProps,
   FieldError,
@@ -5,8 +7,6 @@ import {
   Path,
   UseFormReturn,
 } from "react-hook-form";
-import { Info } from "lucide-react";
-import { InputHTMLAttributes, ReactNode } from "react";
 import cn from "@/lib/utils";
 import {
   FormControl,
@@ -28,7 +28,6 @@ interface IProps<T extends FieldValues>
   defaultMessage?: string;
   rightComponent?: (field: ControllerRenderProps<T, Path<T>>) => ReactNode;
   inputClassname?: string;
-  labelDisabled?: boolean;
   containerClassName?: string;
 }
 

@@ -1,16 +1,22 @@
 "use client";
 
-import Alert from "@/components/common/Alert/Alert";
+/* eslint-disable no-unsafe-optional-chaining */
+import { useForm } from "react-hook-form";
+import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
-import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import usePayment from "../../_queries/usePayment";
+import { print } from "../../_utils/print-receipt";
+import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
+import usePos from "../../_queries/usePos";
 
-interface IProps {
-  close: () => void;
-  type: "credit-card" | "cash";
-}
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 interface FormType {
   receiptType: string;
@@ -18,22 +24,133 @@ interface FormType {
   monthlyPlan: string;
 }
 
-export default function PayAlert({ close, type }: IProps) {
+declare global {
+  interface Window {
+    $: any;
+  }
+}
+
+interface IProps extends PosTableActivity {
+  close: () => void;
+  type: "credit-card" | "cash";
+  payment?: PaymentResponse;
+}
+
+export default function PayAlert({ close, type, ...props }: IProps) {
+  const navigate = useRouter();
+
+  // 분할 계산
+  const { selectedOrder } = useSelectItemStore();
+  const hasOrderId = selectedOrder?.orderId;
+
+  const menus = hasOrderId
+    ? selectedOrder?.orderMenus.map((el) => el.name)
+    : props?.orders.map((el) => el.orderMenus.map((v) => v.name)).flat();
+
+  const selectedOrdersTotal = (selectedOrder?.orderMenus ?? []).reduce(
+    (acc, menu) => {
+      const menuBasePrice = menu.price;
+
+      const optionPrice =
+        menu.orderOptionGroups?.reduce(
+          (groupSum, group) =>
+            groupSum +
+            (group.orderOptions?.reduce(
+              (optSum: any, o: { price: any }) => optSum + (o.price || 0),
+              0
+            ) ?? 0),
+          0
+        ) ?? 0;
+
+      return acc + (menuBasePrice + optionPrice);
+    },
+    0
+  );
+
   const form = useForm<FormType>({
     defaultValues: {
       receiptType: "개인소득공제용",
       phoneNumber: "",
-      monthlyPlan: "",
+      monthlyPlan: "일시불",
     },
   });
 
-  const monthlyPlan = new Array(12).fill(0).map((_, i) => `${i + 1}개월`);
+  const { payCard, payCash } = usePayment();
+  const { activity, storeStatus } = usePos();
+  const { data: activityData } = activity(props.tableNo);
+  const { data: stores } = storeStatus;
+
+  const monthlyPlan = [
+    "일시불",
+    ...new Array(11).fill(0).map((_, i) => (i + 2).toString().padStart(2, "0")),
+  ];
+
+  const handlePayment = () => {
+    let amount = 0;
+    if (hasOrderId) {
+      amount = selectedOrdersTotal;
+    } else {
+      amount = props.totalOrderPrice;
+    }
+
+    if (type === "credit-card") {
+      payCard({
+        tableNo: props.tableNo,
+        form,
+        amount,
+        successHandler: (res) => {
+          print({
+            type: "card-receipt",
+            activity: activityData!,
+            stores: stores!,
+            payment: { ...res, installment: form.watch("monthlyPlan") },
+            successHandler:
+              props.orders.length > 0
+                ? () => close()
+                : () => {
+                    close();
+                    navigate.push("/pos/tables");
+                  },
+          });
+        },
+      });
+    } else {
+      let cashReceiptType = "";
+      if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";
+      else if (form.watch("receiptType") === "사업자증빙용")
+        cashReceiptType = "PROOF";
+      else cashReceiptType = "DEDUCTION";
+
+      payCash({
+        tableNo: props.tableNo,
+        body: {
+          amount,
+          cashReceiptNo: form.watch("phoneNumber"),
+          cashReceiptType: cashReceiptType as OrderReceiptType,
+        },
+        successHandler: () => {
+          print({
+            type: "cash-receipt",
+            activity: activityData!,
+            stores: stores!,
+            successHandler:
+              props.orders.length > 0
+                ? () => close()
+                : () => {
+                    close();
+                    navigate.push("/pos/tables");
+                  },
+          });
+        },
+      });
+    }
+  };
 
   return (
     <Alert
       onClose={close}
       hasNoCancel
-      onAction={() => {}}
+      onAction={handlePayment}
       buttonText={type === "cash" ? "현금 결제하기" : "카드 결제하기"}
       buttonColor="black"
       layoutClassName="!w-[648px]"
@@ -54,13 +171,19 @@ export default function PayAlert({ close, type }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제 정보</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              바질 알리오올리오 외 3개
+              {menus && menus?.length === 1
+                ? menus?.[0]
+                : `${menus?.[0]} 외 ${menus?.length - 1}개`}
             </strong>
           </div>
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제할 금액</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {(141000).toLocaleString()}원
+              {(hasOrderId
+                ? selectedOrdersTotal
+                : props.totalOrderPrice
+              ).toLocaleString()}
+              원
             </strong>
           </div>
           {type === "cash" ? (
@@ -89,9 +212,15 @@ export default function PayAlert({ close, type }: IProps) {
                 <div className="flex flex-col items-start gap-2">
                   <Label className="text-[15px] font-medium">휴대폰 번호</Label>
                   <Input
-                    {...form.register("phoneNumber")}
                     placeholder={`${form.watch("receiptType") === "개인소득공제용" ? "휴대폰 번호" : "사업자 번호"}를 입력해주세요.`}
                     className="placeholder:font-medium placeholder:text-gray-300"
+                    autoFocus
+                    value={form.watch("phoneNumber")}
+                    onChange={(e) => {
+                      const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                      const formatted = phoneNumberPattern(onlyNums);
+                      form.setValue("phoneNumber", formatted);
+                    }}
                   />
                 </div>
               )}

@@ -2,41 +2,53 @@
 
 /* eslint-disable no-alert */
 /* eslint-disable react/no-unstable-nested-components */
-import Checkbox from "@/components/common/Checkbox";
-import { Form } from "@/components/common/Form";
-import LabeledInput from "@/components/common/LabeledInput";
-import { TypeSignup, signupSchema } from "@/schema/signup.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { useMediaQuery } from "react-responsive";
+import { Form } from "@/components/common/Form";
+import LabeledInput from "@/components/common/LabeledInput";
+import { TypeSignup } from "@/schema/signup.schema";
+import dynamic from "next/dynamic";
 import useSignup from "./_hooks/useSignup";
+import useSignupForm from "./_hooks/useSignupForm";
+
+const ResponsiveButton = dynamic(
+  () => import("@/components/common/Button/ResponsiveButton"),
+  {
+    ssr: false,
+  }
+);
+
+const ButtonCheckbox = dynamic(
+  () => import("@/components/common/CheckboxButton"),
+  {
+    ssr: false,
+  }
+);
 
 export default function Signup() {
   const navigate = useRouter();
-  const [isAuthSubmitted, setIsAuthSubmitted] = useState(false);
-  const [isPhoneAuthenticated, setIsPhoneAuthenticated] = useState(false);
-  const [isConsentGiven, setIsConsentGiven] = useState(false);
+
+  const [checked, setChecked] = useState(false);
   const [authTime, setAuthTime] = useState(300);
-  const [makeDisabled, setMakeDisabled] = useState({
-    formButton: false,
-  });
-  const form = useForm<TypeSignup>({
-    mode: "onChange",
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      email: "",
-      phone: "",
-      authNumber: "",
-      password: "",
-      confirm: "",
-    },
-  });
+
+  const isPC = useMediaQuery({ query: "(max-width: 1920px)" });
+
+  const {
+    form,
+    submitHandler,
+    disableFormButton,
+    isSubmitted,
+    handleSubmitValue,
+  } = useSignupForm();
 
   const { mutateSendPhoneAuthCode, mutateVerifyAuthCode, mutateSignup } =
-    useSignup({ form, setIsPhoneAuthenticated, setAuthTime });
+    useSignup({
+      form,
+      setCodeSubmited: (value) => handleSubmitValue("codeAuth", value),
+      setAuthTime,
+    });
 
   // NOTE - 타이머
   useEffect(() => {
@@ -44,7 +56,7 @@ export default function Signup() {
       setAuthTime((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          setIsAuthSubmitted(false);
+          handleSubmitValue("phoneAuth", false);
           return 0;
         }
         return prev - 1;
@@ -52,30 +64,12 @@ export default function Signup() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isAuthSubmitted]);
-
-  const submitHandler = (data: TypeSignup) => {
-    setMakeDisabled((prev) => ({ ...prev, formButton: true }));
-
-    mutateSignup(
-      {
-        email: data.email,
-        password: data.password,
-        phoneNumber: data.phone,
-      },
-      {
-        onSuccess: () => {
-          navigate.push(`/signup/completed?email=${data.email}`);
-        },
-        onError: () =>
-          setMakeDisabled((prev) => ({ ...prev, formButton: false })),
-      }
-    );
-  };
+  }, [isSubmitted.phoneAuth, handleSubmitValue]);
 
   // NOTE - 인증 요청
   const handleAuthentication = (phoneNumber: string) => {
-    setIsAuthSubmitted(true);
+    handleSubmitValue("phoneAuth", true);
+
     const phoneRegex = /^\d{10,11}$/;
     if (!phoneRegex.test(phoneNumber)) {
       alert("올바른 전화번호를 입력해주세요. (숫자만 10-11자리)");
@@ -88,7 +82,7 @@ export default function Signup() {
 
   // NOTE - 인증 확인
   const handleCheckAuth = (value: string) => {
-    setIsPhoneAuthenticated(true);
+    handleSubmitValue("codeAuth", true);
 
     mutateVerifyAuthCode(
       {
@@ -99,25 +93,33 @@ export default function Signup() {
         onSuccess: () => {
           alert("인증되었습니다.");
           setAuthTime(0);
-          setIsAuthSubmitted(false);
+          handleSubmitValue("phoneAuth", true);
         },
       }
     );
   };
 
+  const handleSubmmit = (data: TypeSignup) => {
+    submitHandler(data, mutateSignup, () =>
+      navigate.push(`/signup/completed?email=${data.email}`)
+    );
+  };
+
   return (
     <>
-      <Image
-        src="/logo/logo-with-text.svg"
-        alt="logo with text"
-        className="mb-5 md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
-        width={154}
-        height={94}
-      />
+      <div className="flex w-full justify-center">
+        <Image
+          src="/logo/logo-with-text.svg"
+          alt="logo with text"
+          className="mb-5 md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
+          width={154}
+          height={94}
+        />
+      </div>
       <Form {...form}>
         <form
-          className="flex w-[320px] gap-4 not-only:flex-col md:mt-10 md:w-[292px] lg:mt-12 lg:w-[432px]"
-          onSubmit={form.handleSubmit(submitHandler)}
+          className="flex w-[320px] flex-col gap-4 md:mt-10 md:w-[292px] lg:mt-12 lg:w-[432px]"
+          onSubmit={form.handleSubmit(handleSubmmit)}
         >
           <LabeledInput
             form={form}
@@ -130,7 +132,7 @@ export default function Signup() {
             form={form}
             name="phone"
             label="휴대폰 번호"
-            placeholder="휴대폰 번호를 입력해주세요. (-없이 숫자만 입력)"
+            placeholder={`휴대폰 번호를 입력해주세요.${isPC ? "" : " (-없이 숫자만 입력)"}`}
             rightComponent={(field) => (
               <ResponsiveButton
                 type="button"
@@ -142,12 +144,12 @@ export default function Signup() {
                   lg: { buttonSize: "lg", className: "w-[120px]" },
                 }}
                 disabled={
-                  (!isAuthSubmitted && !form.watch("phone")?.length) ||
-                  isPhoneAuthenticated
+                  (!isSubmitted.phoneAuth && !form.watch("phone")?.length) ||
+                  isSubmitted.codeAuth
                 }
                 onClick={() => handleAuthentication(field.value!)}
               >
-                {isAuthSubmitted ? "재인증" : "인증요청"}
+                {isSubmitted.phoneAuth ? "재인증" : "인증요청"}
               </ResponsiveButton>
             )}
           />
@@ -158,7 +160,7 @@ export default function Signup() {
             placeholder="인증 번호를 입력해주세요."
             rightComponent={(field) => (
               <>
-                {isAuthSubmitted && !authTime && (
+                {isSubmitted.phoneAuth && !authTime && (
                   <div className="font-regular absolute top-1/2 right-0 -translate-y-1/2 transform text-[15px] text-gray-200 transition-all duration-300 ease-in-out sm:right-25 sm:mt-[-2px]">
                     {" "}
                     {`${String(Math.floor(authTime / 60)).padStart(2, "0")}:${String(authTime % 60).padStart(2, "0")}`}
@@ -167,7 +169,7 @@ export default function Signup() {
                 <ResponsiveButton
                   type="button"
                   color="black"
-                  disabled={!isAuthSubmitted || isPhoneAuthenticated}
+                  disabled={!isSubmitted.phoneAuth || isSubmitted.codeAuth}
                   onClick={() => handleCheckAuth(field.value!)}
                   responsiveButtons={{
                     sm: { buttonSize: "sm", className: "w-[120px]" },
@@ -195,7 +197,7 @@ export default function Signup() {
             label="비밀번호 확인"
             placeholder="비밀번호를 다시 입력해주세요."
           />
-          <div className="flex w-full flex-col gap-6 rounded-[10px] border border-gray-600 p-4 md:h-[212px] lg:h-[177px]">
+          <div className="flex h-auto w-full flex-col gap-6 rounded-[10px] border border-gray-600 p-4">
             <span className="text-s font-regular text-[#767676]">
               회원가입을 통해 수집한 회원의 정보는 서비스 제공에 관한 계약 성립
               및 이행(회원 및 본인식 및 본인의사 확인 등), 새로운 기능 정보
@@ -204,13 +206,14 @@ export default function Signup() {
               제공되지 않으며, 수집 및 이용목적이 달성된 후에는 지체 없이
               파기됩니다.
             </span>
+
             <div className="flex items-center gap-2">
-              <Checkbox
-                checked={isConsentGiven}
-                onCheckedChange={() => setIsConsentGiven((prev) => !prev)}
-                aria-label="개인정보 수집 동의"
+              <ButtonCheckbox
+                aria-label="개인정보 수집 동의 체크박스"
+                checked={checked}
+                onChange={() => setChecked((prev) => !prev)}
               />
-              <span className="font-regular text-gray-0 text-s lg:text-sm">
+              <span className="font-regular text-gray-0 text-s leading-snug lg:text-sm">
                 개인정보 수집을 동의합니다 (필수)
               </span>
             </div>
@@ -218,7 +221,7 @@ export default function Signup() {
           <ResponsiveButton
             type="submit"
             color="primary"
-            disabled={!isConsentGiven || makeDisabled.formButton}
+            disabled={!checked || disableFormButton}
             responsiveButtons={{
               lg: { buttonSize: "lg" },
               md: { buttonSize: "md", className: "my-6" },

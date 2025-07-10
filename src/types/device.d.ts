@@ -1,4 +1,4 @@
-type DevicePurpose = "POS" | "HALL" | "WAITING";
+type DevicePurpose = "POS" | "HALL" | "WAITING" | "TABLE";
 type DevicePayment = "POSTPAID" | "PREPAID";
 
 interface Device {
@@ -9,4 +9,5 @@ interface Device {
   state: Omit<Status, "DELETE">;
   paymentType: DevicePayment;
   updatedAt: string;
+  createdAt: string;
 }

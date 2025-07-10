@@ -9,8 +9,7 @@
   "useTabs": false,
   "trailingComma": "es5",
 
-  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
-  "importOrderSeparation": true,
+  "importOrder": ["^[a-zA-Z]", "^@/.*", "^[.]{1,2}/.*"],
   "importOrderSortSpecifiers": true,
 
   "plugins": [

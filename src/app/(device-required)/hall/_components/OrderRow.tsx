@@ -2,10 +2,14 @@
 
 import Button from "@/components/common/Button/Button";
 import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
-import cn from "@/lib/utils";
 import useOverlay from "@/hooks/use-overlay";
+import cn from "@/lib/utils";
+import dynamic from "next/dynamic";
 import OrderCard from "./OrderCard";
-import CompleteAllModal from "./CompleteAllModal";
+
+const CompleteAllModal = dynamic(() => import("./CompleteAllModal"), {
+  ssr: false,
+});
 
 interface IProps {
   completed?: boolean;

@@ -1,57 +1,89 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import Button from "@/components/common/Button/Button";
-import useGetDate from "@/hooks/useGetDate";
 import Image from "next/image";
-import useOverlay from "@/hooks/use-overlay";
-import Alert from "@/components/common/Alert/Alert";
-import QueryProviders from "@/app/query-providers";
 import Link from "next/link";
-import OpenSwitch from "./_components/OpenSwitch";
+import { useRouter } from "next/navigation";
+import QueryProviders from "@/app/query-providers";
+import Button from "@/components/common/Button/Button";
+import { useNowContext } from "@/providers/nowProvider";
+import useOverlay from "@/hooks/use-overlay";
+import useGetDate from "@/hooks/useGetDate";
+import dynamic from "next/dynamic";
+import usePos from "./_queries/usePos";
+
+const OpenSwitch = dynamic(() => import("./_components/OpenSwitch"), {
+  ssr: false,
+});
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 export default function Pos() {
-  const now = new Date();
   const navigate = useRouter();
+
+  const now = useNowContext();
+
+  const { store, storeStatus } = usePos();
+  const { data, isLoading } = storeStatus;
 
   const { date, day } = useGetDate(now);
   const { open, close } = useOverlay();
 
   const handleOpenPos = () => {
-    open(() => (
-      <QueryProviders>
-        <Alert
-          onClose={close}
-          buttonText="오픈하기"
-          onAction={() => {
-            // 스토어 오픈 api
-            close();
-            navigate.push("/pos/tables");
-          }}
-        >
-          매장을 오픈하시겠습니까?
-        </Alert>
-      </QueryProviders>
-    ));
+    const successHandler = () => {
+      close();
+      navigate.push("/pos/tables");
+    };
+
+    if (data?.status === "OPEN") {
+      successHandler();
+    } else {
+      open(() => (
+        <QueryProviders>
+          <Alert
+            onClose={close}
+            buttonText="오픈하기"
+            noResponsive
+            onAction={() => {
+              store.open.mutate(undefined, {
+                onSuccess: successHandler,
+                onError: (e) => {
+                  if (
+                    (e as any).response.data.code === "ALREADY_STORE_OPENED"
+                  ) {
+                    // eslint-disable-next-line no-alert
+                    alert((e as any).response.data.message);
+                    close();
+                    navigate.push("/pos/tables");
+                  }
+                },
+              });
+            }}
+          >
+            매장을 오픈하시겠습니까?
+          </Alert>
+        </QueryProviders>
+      ));
+    }
   };
 
   return (
     <div className="h-screen w-screen">
       <Image
         src="/images/pos-main.png"
-        width={1920}
-        height={1080}
+        fill
         alt="pos main image"
         className="object-cover"
       />
       <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center gap-[80px]">
         <div className="absolute top-0 right-0 px-[60px] py-10 text-[40px] text-red-500">
-          <OpenSwitch />
+          <OpenSwitch isStoreOpen={data?.status === "OPEN"} />
         </div>
         <div className="flex flex-col gap-4">
           <span className="font-regular text-center text-2xl text-white">{`${date.year}년 ${date.month}월 ${date.date}일 ${day}요일`}</span>
-          <h1 className="text-[48px] font-bold text-white">
-            안녕하세요, [매장명] 입니다.
+          <h1 className="h-18 text-center text-[48px] font-bold text-white">
+            {isLoading ? "안녕하세요" : `안녕하세요, ${data?.name} 입니다.`}
           </h1>
         </div>
         <div className="flex flex-col gap-4">

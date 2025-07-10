@@ -1,11 +1,12 @@
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import { useFormContext } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Dropdown from "@/components/common/Dropdown";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import Switch from "@/components/common/Switch";
-import cn from "@/lib/utils";
-import { useFormContext } from "react-hook-form";
 import { menuLabelTranslate, menuStateTranslate } from "@/constants/translates";
+import cn from "@/lib/utils";
 import useCategories from "../../../menu/_queries/useCategories";
 import { MenuFormType } from "../_types/menuForm.type";
 
@@ -111,8 +112,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
               </ResponsiveButton>
             ))}
           </div>
-          {/* TODO: 확인 필요 */}
-          {/* {type === "update" && (
+          {type === "update" && (
             <>
               <Separator className="my-2 h-[2px] bg-gray-600" />
               <div className="flex items-center gap-2">
@@ -149,7 +149,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 ))}
               </div>
             </>
-          )} */}
+          )}
         </div>
         <div className={cn("flex flex-col gap-2", marginTop)}>
           <Label>상태</Label>

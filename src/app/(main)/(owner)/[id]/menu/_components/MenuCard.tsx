@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
-import Image from "next/image";
 
 interface IProps extends Menu {
   onToggle?: (value: Menu) => void;
@@ -58,7 +58,7 @@ export default function MenuCard({
           />
         )}
         <div className="mt-auto flex flex-col gap-1 rounded-[12px] bg-white p-2 lg:gap-2 lg:rounded-[20px] lg:px-5 lg:py-4">
-          {menu.label && (
+          {menu.label !== "DEFAULT" && (
             <ResponsiveButton
               responsiveButtons={{
                 lg: {

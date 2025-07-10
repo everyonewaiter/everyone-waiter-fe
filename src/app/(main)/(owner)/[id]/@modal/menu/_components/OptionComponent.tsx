@@ -1,9 +1,9 @@
 "use client";
 
+import { useRef, useState } from "react";
+import FloatingInfo from "@/components/FloatingInfo";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
-import FloatingInfo from "@/components/FloatingInfo";
-import { useRef, useState } from "react";
 import useOutsideClick from "@/hooks/useOutSideClick";
 import Popup from "./Popup";
 

@@ -1,9 +1,9 @@
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { PropsWithChildren } from "react";
 import PageTitle from "@/app/(main)/_components/PageTitle";
 import getQueryClient from "@/app/get-query-client";
-import { PropsWithChildren } from "react";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { storeKeys } from "./_queries/keys";
 import { getStoreInfoDetail } from "./_api/stores.api";
+import { storeKeys } from "./_queries/keys";
 
 export const metadata = {
   title: "모두의 웨이터 - 매장 정보",

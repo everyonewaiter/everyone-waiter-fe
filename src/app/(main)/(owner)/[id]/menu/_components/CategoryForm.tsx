@@ -1,6 +1,6 @@
-import { Form } from "@/components/common/Form";
-import { useFormContext } from "react-hook-form";
 import dynamic from "next/dynamic";
+import { useFormContext } from "react-hook-form";
+import { Form } from "@/components/common/Form";
 
 const CategoryFormField = dynamic(() => import("./CategoryFormField"), {
   ssr: false,
@@ -22,15 +22,13 @@ export default function CategoryForm({ changeMove }: IProps) {
         onSubmit={form.handleSubmit(submitHandler)}
         className="flex flex-col md:gap-3 lg:gap-4"
       >
-        {form
-          .watch("categories")
-          ?.map((field) => (
-            <CategoryFormField
-              key={field.categoryId}
-              changeMove={changeMove}
-              fields={field}
-            />
-          ))}
+        {form.watch("categories")?.map((field) => (
+          <CategoryFormField
+            key={field.categoryId}
+            changeMove={changeMove}
+            fields={field}
+          />
+        ))}
       </form>
     </Form>
   );

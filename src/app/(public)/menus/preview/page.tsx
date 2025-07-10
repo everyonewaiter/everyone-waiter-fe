@@ -1,15 +1,26 @@
 "use client";
 
-import MenuCard from "@/app/(main)/(owner)/[id]/menu/_components/MenuCard";
-import Button from "@/components/common/Button/Button";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import cn from "@/lib/utils";
-import useOverlay from "@/hooks/use-overlay";
 import { useRouter } from "next/navigation";
 // import { useSearchParams } from 'next/navigation';
 import { Fragment, useState } from "react";
-import MobileMenuCard from "../_components/MobileMenuCard";
-import OriginModal from "../_components/OriginModal";
+import dynamic from "next/dynamic";
+import Button from "@/components/common/Button/Button";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import useOverlay from "@/hooks/use-overlay";
+import cn from "@/lib/utils";
+
+const MenuCard = dynamic(
+  () => import("@/app/(main)/(owner)/[id]/menu/_components/MenuCard"),
+  { ssr: false }
+);
+
+const MobileMenuCard = dynamic(() => import("../_components/MobileMenuCard"), {
+  ssr: false,
+});
+
+const OriginModal = dynamic(() => import("../_components/OriginModal"), {
+  ssr: false,
+});
 
 const categories = ["전체", "스테이크", "파스타", "라멘", "볶음밥"];
 

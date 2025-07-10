@@ -1,0 +1,72 @@
+import dynamic from "next/dynamic";
+import QueryProviders from "@/app/query-providers";
+import Button from "@/components/common/Button/Button";
+import useOverlay from "@/hooks/use-overlay";
+
+const CancelAlert = dynamic(() => import("../modals/CancelAlert"), {
+  ssr: false,
+});
+
+interface IProps {
+  tableNo: number;
+  hasOrders: boolean;
+  data: PosTableActivity;
+}
+
+export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
+  const { open, close } = useOverlay();
+
+  const handleCancel = (
+    type: "order-cancel" | "pay-cancel" | "order-reset"
+  ) => {
+    open(() => (
+      <QueryProviders>
+        <CancelAlert close={close} tableNo={data?.tableNo!} type={type} />
+      </QueryProviders>
+    ));
+  };
+
+  return (
+    <header className="flex items-center justify-between">
+      <strong className="text-gray-0 text-[28px] font-semibold">
+        {tableNo}번 테이블 {hasOrders && "추가 주문 내역"}
+      </strong>
+      {!hasOrders && data && data.orderType === "PREPAID" && (
+        <Button
+          asChild={false}
+          variant="outline"
+          color="primary"
+          className="button-lg !rounded-[8px] text-base !font-medium"
+          onClick={() => handleCancel("pay-cancel")}
+        >
+          결제 취소
+        </Button>
+      )}
+      {hasOrders && (
+        <Button
+          asChild={false}
+          variant="outline"
+          color="primary"
+          className="button-lg !rounded-[8px] text-base !font-medium"
+          onClick={() => handleCancel("order-reset")}
+        >
+          주문 초기화
+        </Button>
+      )}
+      {!hasOrders &&
+        data &&
+        data.orderType === "POSTPAID" &&
+        !data.totalPaymentPrice && (
+          <Button
+            asChild={false}
+            variant="outline"
+            color="primary"
+            className="button-lg !rounded-[8px] text-base !font-medium"
+            onClick={() => handleCancel("order-cancel")}
+          >
+            전체 주문 취소
+          </Button>
+        )}
+    </header>
+  );
+}

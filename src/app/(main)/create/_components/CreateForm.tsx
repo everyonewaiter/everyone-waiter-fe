@@ -1,20 +1,20 @@
 "use client";
 
 /* eslint-disable no-nested-ternary */
-import LabeledInput from "@/components/common/LabeledInput";
-import { storeSchema, TypeStore } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import Label from "@/components/common/Label";
+import useStores from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Input from "@/components/common/Input";
-import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import Label from "@/components/common/Label";
+import LabeledInput from "@/components/common/LabeledInput";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import dynamic from "next/dynamic";
-import useStores from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
+import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import { TypeStore, storeSchema } from "@/schema/store.schema";
 
 const UploadPhoto = dynamic(
   () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),

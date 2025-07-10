@@ -1,27 +1,40 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import useAuthStore from "@/stores/useAuthStore";
+import { useEffect, useState } from "react";
 import GuideComponent from "@/components/GuideComponent";
+import useAuthStore from "@/stores/useAuthStore";
+import { getToken } from "@/lib/cookies";
 import useStores from "./(main)/(owner)/[id]/store/_queries/useStores";
 
 export default function Home() {
   const { user } = useAuthStore();
-  const router = useRouter();
+  const navigate = useRouter();
+
+  const [hasToken, setHasToken] = useState<boolean | null>(null);
 
   const { storesList, registrationList } = useStores();
-  const { data, isLoading } = storesList(true);
+  const { data, isLoading } = storesList();
   const { data: registerData } = registrationList();
+
   const firstStoreId = data?.stores?.[0].storeId;
 
   useEffect(() => {
-    if (!isLoading && firstStoreId) {
-      router.push(`/${firstStoreId}`);
-    }
-  }, [isLoading, firstStoreId, router]);
+    const checkToken = async () => {
+      const token = await getToken("accessToken");
+      if (!token) navigate.push("/login");
+      setHasToken(!!token);
+    };
+    checkToken();
+  }, []);
 
-  if (isLoading) return null;
+  useEffect(() => {
+    if (hasToken && !isLoading && firstStoreId) {
+      navigate.push(`/${firstStoreId}`);
+    }
+  }, [hasToken, isLoading, firstStoreId, navigate]);
+
+  if (hasToken === null || isLoading) return null;
 
   return (
     <div>

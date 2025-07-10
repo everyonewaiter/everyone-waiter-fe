@@ -1,7 +1,8 @@
 "use client";
 
-import { PropsWithChildren, useState, useRef } from "react";
+import { PropsWithChildren, useRef, useState } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
+import { ButtonColors } from "../Button/Button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +12,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./Components";
-import { ButtonColors } from "../Button/Button";
 
 interface IProps {
   onAction?: () => void;
@@ -49,11 +49,10 @@ function Alert({
 
   const handleAction = () => {
     onAction?.();
-    setOpen(false);
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog open={open}>
       <AlertDialogContent ref={ref} className={layoutClassName}>
         <AlertDialogHeader>
           <AlertDialogTitle>

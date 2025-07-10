@@ -2,17 +2,17 @@
 
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react/no-unstable-nested-components */
-import { Form } from "@/components/common/Form";
-import Label from "@/components/common/Label";
-import LabeledInput from "@/components/common/LabeledInput";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus } from "lucide-react";
 import { PropsWithChildren, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Plus } from "lucide-react";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { Form } from "@/components/common/Form";
 import Icon from "@/components/common/Icon";
+import Label from "@/components/common/Label";
+import LabeledInput from "@/components/common/LabeledInput";
 import { useStoreContext } from "@/providers/storeProvider";
+import { TypeStoreInfo, storeInfoSchema } from "@/schema/store.schema";
 import useStores from "./_queries/useStores";
 
 export default function StoreInfo() {

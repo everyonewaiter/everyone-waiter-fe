@@ -1,11 +1,13 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import Paginations from "@/components/common/Pagination/Paginations";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import QueryProviders from "@/app/query-providers";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import Paginations from "@/components/common/Pagination/Paginations";
 import {
   MobileTable,
   MobileTableCell,
@@ -18,14 +20,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/common/Table/Tables";
-import cn from "@/lib/utils";
-import useOverlay from "@/hooks/use-overlay";
 import { registerStateTranslate } from "@/constants/translates";
+import useOverlay from "@/hooks/use-overlay";
 import transformDate from "@/lib/formatting/transformDate";
-import QueryProviders from "@/app/query-providers";
+import cn from "@/lib/utils";
 import useStores from "../(owner)/[id]/store/_queries/useStores";
-import StoreApplicationModal from "../(owner)/[id]/store/_components/modals/StoreApplicationModal";
-import PendingAcceptModal from "../(owner)/[id]/store/_components/modals/PendingAcceptModal";
+
+const PendingAcceptModal = dynamic(
+  () => import("../(owner)/[id]/store/_components/modals/PendingAcceptModal"),
+  {
+    ssr: false,
+  }
+);
+
+const StoreApplicationModal = dynamic(
+  () =>
+    import("../(owner)/[id]/store/_components/modals/StoreApplicationModal"),
+  {
+    ssr: false,
+  }
+);
 
 const itemWidths = {
   "No.": {

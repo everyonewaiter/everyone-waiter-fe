@@ -1,0 +1,214 @@
+import { useMutation } from "@tanstack/react-query";
+import { UseFormReturn } from "react-hook-form";
+import { approvePayment, cancelPayment } from "../_api/payment.api";
+import { PropsWithTableNo } from "../_api/pos.api";
+import makeKSCATApprovalREQ from "../_utils/make-approval-req";
+import { print } from "../_utils/print-receipt";
+
+interface FormType {
+  receiptType: string;
+  phoneNumber: string;
+  monthlyPlan: string;
+}
+
+export default function usePayment() {
+  const approvePay = useMutation({
+    mutationFn: approvePayment,
+  });
+
+  const cancelPay = useMutation({
+    mutationFn: cancelPayment,
+  });
+
+  const handlePayWithCard = ({
+    tableNo,
+    body,
+    successHandler,
+  }: {
+    tableNo: number;
+    body: Omit<OrderPayments, "cashReceiptNo" | "cashReceiptType" | "method">;
+    successHandler: () => void;
+  }) => {
+    approvePay.mutate(
+      {
+        tableNo,
+        body: {
+          ...body,
+          method: "CARD",
+          cashReceiptNo: "",
+          cashReceiptType: "NONE",
+        },
+      },
+      {
+        onSuccess: successHandler,
+      }
+    );
+  };
+
+  const handlePayWithCash = ({
+    tableNo,
+    body,
+    successHandler,
+  }: PropsWithTableNo<{
+    body: Pick<OrderPayments, "cashReceiptNo" | "cashReceiptType" | "amount">;
+    successHandler: () => void;
+  }>) => {
+    approvePay.mutate(
+      {
+        tableNo,
+        body: {
+          ...body,
+          method: "CARD",
+          vat: Math.floor(body.amount / 10),
+          supplyAmount: body.amount - Math.floor(body.amount / 10),
+          approvalNo: "",
+          installment: "00",
+          cardNo: "",
+          issuerName: "",
+          purchaseName: "",
+          merchantNo: "",
+          tradeTime: "",
+          tradeUniqueNo: "",
+        },
+      },
+      { onSuccess: successHandler }
+    );
+  };
+
+  const handlePrintCashReceipt = async ({
+    activity,
+    stores,
+    successHandler,
+  }: {
+    activity: PosTableActivity;
+    stores: PosStore;
+    successHandler?: () => void;
+  }) => {
+    print({
+      type: "cash-receipt",
+      activity,
+      stores,
+      successHandler,
+    });
+  };
+
+  const handlePrintOrder = async ({
+    activity,
+    successHandler,
+  }: {
+    activity: PosTableActivity;
+    successHandler?: () => void;
+  }) => {
+    print({
+      type: "kitchen",
+      activity,
+      successHandler,
+    });
+  };
+
+  const handleCard = async ({
+    form,
+    amount,
+    tableNo,
+    successHandler,
+  }: {
+    form: UseFormReturn<FormType, any, FormType>;
+    amount: number;
+    tableNo: number;
+    successHandler: (res: PaymentResponse) => void;
+  }) => {
+    const taxValue = Math.floor(amount / 10);
+    const installment =
+      form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
+
+    const req = makeKSCATApprovalREQ({
+      amount,
+      tax: taxValue,
+      nonTax: amount - taxValue,
+      installment,
+      type: "1",
+    });
+    await window.$.ajax({
+      url: "http://127.0.0.1:27098/",
+      dataType: "jsonp",
+      jsonp: "callback",
+      jsonpCallback: `jsonp${Date.now()}`,
+      data: {
+        REQ: req,
+      },
+      success: (res: PaymentResponse) => {
+        handlePayWithCard({
+          tableNo,
+          body: {
+            amount,
+            vat: taxValue,
+            supplyAmount: amount - taxValue,
+            approvalNo: res.APPROVALNO,
+            installment,
+            cardNo: res.FILLER,
+            purchaseName: res.PURCHASENAME,
+            merchantNo: res.MERCHANTNUMBER,
+            tradeTime: res.TRADETIME,
+            tradeUniqueNo: res.TRADEUNIQUENO,
+            issuerName: res.CARDNAME,
+          },
+          successHandler: () => successHandler(res),
+        });
+      },
+      // eslint-disable-next-line no-console
+      error: (e: any) => console.log(e),
+    });
+  };
+
+  const handleCancelCard = async ({
+    activity,
+    successHandler,
+  }: {
+    activity: PosTableActivity;
+    successHandler?: () => void;
+  }) => {
+    const payedPrice = activity.totalPaymentPrice;
+    const tax = Math.floor(payedPrice / 10);
+    const nonTax = payedPrice - tax;
+
+    const req = makeKSCATApprovalREQ({
+      amount: payedPrice,
+      tax,
+      nonTax,
+      installment: "",
+      type: "0",
+    });
+    await window.$.ajax({
+      url: "http://127.0.0.1:27098/",
+      dataType: "jsonp",
+      jsonp: "callback",
+      jsonpCallback: `jsonp${Date.now()}`,
+      data: {
+        REQ: req,
+      },
+      success: (res: PaymentResponse) => {
+        cancelPay.mutate({
+          orderPaymentId: "",
+          body: {
+            approvalNo: res.APPROVALNO,
+            tradeTime: res.TRADETIME,
+            tradeUniqueNo: res.TRADEUNIQUENO,
+          },
+        });
+        successHandler?.();
+      },
+      // eslint-disable-next-line no-console
+      error: (e: any) => console.log(e),
+    });
+  };
+
+  return {
+    approvePay,
+    cancelPay,
+    payCard: handleCard,
+    payCash: handlePayWithCash,
+    cancelCard: handleCancelCard,
+    printReceipt: handlePrintCashReceipt,
+    printOrder: handlePrintOrder,
+  };
+}

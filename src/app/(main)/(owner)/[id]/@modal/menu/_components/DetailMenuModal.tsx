@@ -1,25 +1,25 @@
 "use client";
 
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { getPathnameWithoutStoreId } from "@/utils/getPathname";
-import { useStoreContext } from "@/providers/storeProvider";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import cn from "@/lib/utils";
-import FormSection from "./FormSection";
-import OptionTemplate from "./OptionTemplate";
-import Header from "./Header";
+import { useStoreContext } from "@/providers/storeProvider";
+import { getPathnameWithoutStoreId } from "@/utils/getPathname";
 import useMenu from "../../../menu/_queries/useMenu";
-import { MenuFormType } from "../_types/menuForm.type";
 import { formToRequest } from "../_hooks/useMenuForm";
+import { MenuFormType } from "../_types/menuForm.type";
+import FormSection from "./FormSection";
+import Header from "./Header";
+import OptionTemplate from "./OptionTemplate";
 
 interface IProps {
   isEditing: boolean;
   onSetEditing: (value: boolean) => void;
   type: "create" | "update";
-  data: MenuDetail;
+  data?: MenuDetail;
 }
 
 export default function DetailMenuModal({
@@ -31,6 +31,8 @@ export default function DetailMenuModal({
   const navigate = useRouter();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("categoryId");
 
   const { storeId } = useStoreContext();
 
@@ -40,7 +42,7 @@ export default function DetailMenuModal({
     mode: "onChange",
     defaultValues: {
       image: null,
-      category: "",
+      category: categoryId as string,
       name: "",
       description: "",
       price: 0,

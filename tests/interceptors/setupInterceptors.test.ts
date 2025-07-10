@@ -1,8 +1,8 @@
-import { setupInterceptors } from "@/lib/axios/interceptors";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { getToken, setCookie } from "@/lib/cookies";
 import { renewToken } from "@/lib/api/auth.api";
+import { setupInterceptors } from "@/lib/axios/interceptors";
+import { getToken, setCookie } from "@/lib/cookies";
 
 jest.mock("react-secure-storage", () => ({
   __esModule: true,

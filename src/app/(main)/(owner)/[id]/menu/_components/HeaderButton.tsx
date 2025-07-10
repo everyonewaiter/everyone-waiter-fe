@@ -1,10 +1,14 @@
+import { ArrowDownUp } from "lucide-react";
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
-import { ArrowDownUp } from "lucide-react";
 import { useStoreContext } from "@/providers/storeProvider";
-import DeleteAlert from "./DeleteAlert";
+
+const DeleteAlert = dynamic(() => import("./DeleteAlert"), {
+  ssr: false,
+});
 
 interface IProps {
   selectedCards: { menuId: string }[];

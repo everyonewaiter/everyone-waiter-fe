@@ -1,8 +1,8 @@
 "use client";
 
 import { useStoreContext } from "@/providers/storeProvider";
-import MenuList from "./_components/MenuList";
 import GuideAddCategory from "./_components/GuideAddCategory";
+import MenuList from "./_components/MenuList";
 import useCategories from "./_queries/useCategories";
 
 export default function Page() {
