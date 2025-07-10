@@ -12,8 +12,8 @@ import Icon from "@/components/common/Icon";
 import Input from "@/components/common/Input";
 import cn from "@/lib/utils";
 import { useStoreContext } from "@/providers/storeProvider";
-import useCategoryForm from "../../@modal/menu/_hooks/useCategoryForm";
 import useCategories from "../_queries/useCategories";
+import useCategoryForm from "../../@modal/(.)menu/_hooks/useCategoryForm";
 
 interface IProps {
   changeMove: boolean;
