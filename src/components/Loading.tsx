@@ -13,7 +13,7 @@ export default function Loading() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50">
+    <div className="fixed inset-0 z-100 bg-black/50">
       <div className="flex h-screen w-screen flex-col items-center justify-center gap-3">
         <Lottie
           options={{

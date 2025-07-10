@@ -7,7 +7,7 @@ import { useStoreContext } from "@/providers/storeProvider";
 import useMenu from "../../../menu/_queries/useMenu";
 
 const DetailMenuModal = dynamic(
-  () => import("../_components/DetailMenuModal"),
+  () => import("../_components/DetailMenuModal/index"),
   {
     ssr: false,
   }

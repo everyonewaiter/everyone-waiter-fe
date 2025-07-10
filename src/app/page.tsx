@@ -22,11 +22,11 @@ export default function Home() {
   useEffect(() => {
     const checkToken = async () => {
       const token = await getToken("accessToken");
-      if (!token) navigate.push("/login");
       setHasToken(!!token);
+      if (!token) navigate.push("/login");
     };
     checkToken();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (hasToken && !isLoading && firstStoreId) {

@@ -22,8 +22,6 @@ export default function OptionGroupSection({
     optional: Omit<OrderOptionGroups, "printEnabled">[];
   }>();
 
-  console.log(form.watch("optional"));
-
   const handleValueChange = (item: MenuOptionGroups, value: string) => {
     const selected = [...form.watch("required")];
 

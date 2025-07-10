@@ -26,6 +26,7 @@ export default function SideBottom({
 
   const handleDiscount = () => {
     if (!selectedOrder?.orderId) {
+      // eslint-disable-next-line no-alert
       alert("전체 금액을 결제합니다.");
     }
 

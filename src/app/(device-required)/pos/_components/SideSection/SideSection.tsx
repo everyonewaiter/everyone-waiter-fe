@@ -49,6 +49,7 @@ export default function SideSection() {
 
   const handleCancelOrder = () => {
     if (!selectedOrder?.orderId) {
+      // eslint-disable-next-line no-alert
       alert("삭제할 주문을 선택해주세요.");
       return;
     }
@@ -61,6 +62,7 @@ export default function SideSection() {
 
   const handleUpdateOrderedMenu = (type: "add" | "sub") => {
     if (!selectedMenu?.orderId) {
+      // eslint-disable-next-line no-alert
       alert("수정할 메뉴를 선택해주세요.");
       return;
     }
