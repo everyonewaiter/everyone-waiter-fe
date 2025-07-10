@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import ClientLayout from "./(main)/_components/ClientRootLayout";
 import "./globals.css";
+import JQueryScripts from "./(main)/_components/Scripts";
 
 export const metadata: Metadata = {
   title: "모두의 웨이터",
@@ -58,28 +58,14 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/dynamic-subset-variable.css"
           rel="stylesheet"
         />
-
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
-        />
       </head>
 
       <body>
-        {/* jQuery KSNET 스크립트 */}
-        <Script
-          src="/scripts/jquery-1.10.1.min.js"
-          strategy="beforeInteractive"
-        />
-        {/* BXL 스크립트 */}
-        <Script src="/scripts/bxlcommon.js" strategy="beforeInteractive" />
-        <Script src="/scripts/bxlpos.js" strategy="beforeInteractive" />
-        <Script src="/scripts/bxllabel.js" strategy="beforeInteractive" />
-
         <ClientLayout>
-          <div className="min-h-screen min-w-screen select-none">
+          <JQueryScripts />
+          <main className="min-h-screen min-w-screen select-none">
             {children}
-          </div>
+          </main>
         </ClientLayout>
       </body>
     </html>

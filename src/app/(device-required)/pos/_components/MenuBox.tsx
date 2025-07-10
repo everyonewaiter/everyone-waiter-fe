@@ -53,7 +53,7 @@ export default function MenuBox({
               el.orderOptions.map((option: OrderOptions) => (
                 <div
                   className="flex items-center justify-between"
-                  key={`${el.orderOptionGroupId}-${el.name}`}
+                  key={`${menu.name}-${el.orderOptionGroupId}-${option.name}`}
                 >
                   <span className="flex items-center gap-1 text-base font-medium text-[#2E7BB3]">
                     <PlusIcon size={18} color="#2E7BB3" strokeWidth={1} />
