@@ -16,43 +16,25 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.request.use(
     async (config) => {
       const token = await getToken("accessToken");
-      // NOTE - 토큰이 있으면 모든 요청에 토큰 추가
       if (token) {
-        // eslint-disable-next-line no-param-reassign
         config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     },
-    // 요청 오류가 있는 작업 수행
     (error) => Promise.reject(error)
   );
 
   // NOTE - 응답 인터셉터
   axiosInstance.interceptors.response.use(
-    //  2xx 범위 상태 코드(성공)
     (response) => response,
-    // 2xx 외의 범위 상태 코드(실패)
     async (error) => {
       const originalRequest = error.config as any;
 
       if (error.response?.status === 403) {
-        // 필요한 경우 리다이렉트 설정 추가 필요
         return Promise.reject(error);
       }
 
-      if (
-        error.response?.status === 401 &&
-        !originalRequest._retry
-        // ![
-        //   "/auth",
-        //   "/device",
-        //   "/hall",
-        //   "/login",
-        //   "/pos",
-        //   "/signup",
-        //   "/waiting",
-        // ].some((path) => window.location.pathname.startsWith(path))
-      ) {
+      if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
         // 갱신 중이면 기다림

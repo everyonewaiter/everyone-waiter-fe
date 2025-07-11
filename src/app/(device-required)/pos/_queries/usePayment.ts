@@ -126,7 +126,7 @@ export default function usePayment() {
       tax: taxValue,
       nonTax: amount - taxValue,
       installment,
-      type: "1",
+      // type: "1",
     });
     await window.$.ajax({
       url: "http://127.0.0.1:27098/",
@@ -176,7 +176,7 @@ export default function usePayment() {
       tax,
       nonTax,
       installment: "",
-      type: "0",
+      // type: "0",
     });
     await window.$.ajax({
       url: "http://127.0.0.1:27098/",
