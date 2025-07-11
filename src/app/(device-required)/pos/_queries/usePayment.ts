@@ -117,16 +117,16 @@ export default function usePayment() {
     tableNo: number;
     successHandler: (res: PaymentResponse) => void;
   }) => {
-    const taxValue = Math.floor(amount / 10);
+    const nonTax = Math.floor(amount / 1.1);
     const installment =
       form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
 
     const req = makeKSCATApprovalREQ({
       amount,
-      tax: taxValue,
-      nonTax: amount - taxValue,
+      tax: amount - nonTax,
+      nonTax,
       installment,
-      // type: "1",
+      type: "1",
     });
     await window.$.ajax({
       url: "http://127.0.0.1:27098/",
@@ -141,8 +141,8 @@ export default function usePayment() {
           tableNo,
           body: {
             amount,
-            vat: taxValue,
-            supplyAmount: amount - taxValue,
+            vat: amount - nonTax,
+            supplyAmount: nonTax,
             approvalNo: res.APPROVALNO,
             installment,
             cardNo: res.FILLER,
@@ -167,16 +167,15 @@ export default function usePayment() {
     activity: PosTableActivity;
     successHandler?: () => void;
   }) => {
-    const payedPrice = activity.totalPaymentPrice;
-    const tax = Math.floor(payedPrice / 10);
-    const nonTax = payedPrice - tax;
+    const amount = activity.totalPaymentPrice;
+    const nonTax = Math.floor(amount / 1.1);
 
     const req = makeKSCATApprovalREQ({
-      amount: payedPrice,
-      tax,
+      amount,
+      tax: amount - nonTax,
       nonTax,
       installment: "",
-      // type: "0",
+      type: "0",
     });
     await window.$.ajax({
       url: "http://127.0.0.1:27098/",

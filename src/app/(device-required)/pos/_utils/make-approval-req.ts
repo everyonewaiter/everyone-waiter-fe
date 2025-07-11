@@ -3,24 +3,22 @@ export default function makeKSCATApprovalREQ({
   tax,
   nonTax,
   installment,
-  // type,
+  type,
 }: {
   amount: number;
   tax: number;
   nonTax: number;
   installment: string; // "00", "02", ...
-  // type: "0" | "1"; // 1 승인, 0 취소
+  type: "0" | "1"; // 1 승인, 0 취소
 }) {
-  // const fillZero = (num: number) => "0".repeat(num);
-  // const fillBlank = (num: number) => " ".repeat(num);
-
   const data = {
     stx: String.fromCharCode(2),
     transactionType: "IC",
     businessType: "01",
-    messageType: "0200",
+    messageType: type === "1" ? "0200" : "0420",
     transactionForm: "N",
-    terminalId: "DPT0TEST03",
+    terminalId:
+      process.env.NODE_ENV === "production" ? "AT0378821A" : "DPT0TEST03",
     companyInfo: "    ",
     seqNo: "000000000000",
     posEntryMode: " ",
