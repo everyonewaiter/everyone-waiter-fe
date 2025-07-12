@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { cancelWaiting, getTeamsFrontOfMe } from "../_api/public.api";
 
 export default function usePublic(storeId: string, accessKey: string) {
-  const previosList = useQuery({
+  const waiting = useQuery({
     queryKey: ["front-of-my-turn"],
     queryFn: () => getTeamsFrontOfMe({ storeId, accessKey }),
   });
@@ -12,7 +12,7 @@ export default function usePublic(storeId: string, accessKey: string) {
   });
 
   return {
-    previosList,
+    waiting,
     cancelMyTurn,
   };
 }

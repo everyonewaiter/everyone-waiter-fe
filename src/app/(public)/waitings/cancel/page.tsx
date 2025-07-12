@@ -7,16 +7,33 @@ import {
 } from "@/components/common/InputOtp";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PublicComponent from "../_components/PublicComponent";
+import usePublic from "../../_queries/usePublic";
 
 export default function Page() {
   const navigate = useRouter();
+  const searchParams = useSearchParams();
+  const storeId = searchParams.get("storeId") as string;
+  const accessKey = searchParams.get("accessKey") as string;
+
+  const { cancelMyTurn } = usePublic(storeId, accessKey);
 
   const [otpValue, setOtpValue] = useState("");
 
   const handleCancel = () => {
-    navigate.push("/result?type=cancel");
+    // NOTE: optValue를 안 보냄
+    cancelMyTurn.mutate(
+      {
+        storeId,
+        accessKey,
+      },
+      {
+        onSuccess: () => {
+          navigate.push("/result?type=cancel");
+        },
+      }
+    );
   };
 
   return (

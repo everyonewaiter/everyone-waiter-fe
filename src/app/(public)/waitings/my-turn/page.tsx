@@ -3,12 +3,23 @@
 import cn from "@/lib/utils";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
+import { useSearchParams } from "next/navigation";
 import PublicComponent from "../_components/PublicComponent";
 import WaitingCancelModal from "../_components/WaitingCancelModal";
+import usePublic from "../../_queries/usePublic";
 
 export default function Page() {
-  const initNumber = 32;
-  const currentNumber = 1;
+  const searchParams = useSearchParams();
+  const storeId = searchParams.get("storeId") as string;
+  const accessKey = searchParams.get("accessKey") as string;
+
+  // TODO: 이미 예약 취소, 이미 입장 완료에 대한 값 확인 api 없음
+
+  const { waiting } = usePublic(storeId, accessKey);
+  const { data } = waiting;
+
+  const initNumber = data?.initWaitingTeamCount!;
+  const currentNumber = data?.currentWaitingTeamCount!;
   const barWidth = 320;
   const progress = (initNumber - currentNumber) / initNumber;
   const positionPx = progress * barWidth;
@@ -16,7 +27,9 @@ export default function Page() {
   const { open, close } = useOverlay();
 
   const handleCancel = () => {
-    open(() => <WaitingCancelModal close={close} />);
+    open(() => (
+      <WaitingCancelModal close={close} storeId={storeId} key={accessKey} />
+    ));
   };
 
   return (
@@ -99,7 +112,7 @@ export default function Page() {
           </div>
           <div className="flex w-full items-center justify-between rounded-[16px] bg-gray-700 px-4 py-3 text-[15px] font-medium">
             내 대기번호
-            <strong className="text-lg font-semibold">78번</strong>
+            <strong className="text-lg font-semibold">{data?.number}번</strong>
           </div>
         </div>
       </PublicComponent>
