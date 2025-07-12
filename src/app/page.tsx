@@ -29,10 +29,13 @@ export default function Home() {
   }, [navigate]);
 
   useEffect(() => {
-    if (hasToken && !isLoading && firstStoreId) {
+    if (hasToken && user?.permission === "ADMIN") {
+      navigate.push("/admin/users");
+    }
+    if (hasToken && !isLoading && firstStoreId && user?.permission === "USER") {
       navigate.push(`/${firstStoreId}`);
     }
-  }, [hasToken, isLoading, firstStoreId, navigate]);
+  }, [hasToken, isLoading, firstStoreId, navigate, user?.permission]);
 
   if (hasToken === null || isLoading) return null;
 

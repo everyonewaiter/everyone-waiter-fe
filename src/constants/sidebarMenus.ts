@@ -7,12 +7,9 @@ interface MenuItem {
 // 권한별 메뉴 구성
 const MENU_ITEMS: Record<AccountPermission, MenuItem[]> = {
   ADMIN: [
-    { icon: "home", label: "HOME", href: "/" },
+    // { icon: "home", label: "HOME", href: "/admin" },
     { icon: "people", label: "회원 관리", href: "/admin/users" },
-    { icon: "shop", label: "매장 관리", href: "/admin/stores" },
-    { icon: "check", label: "매장 등록 승인", href: "/admin/approvals" },
-    { icon: "subscribe", label: "구독 관리", href: "/admin/subscriptions" },
-    { icon: "write", label: "게시글 관리", href: "/admin/posts" },
+    { icon: "check-square", label: "매장 등록 승인", href: "/admin/stores" },
   ],
   OWNER: [
     { icon: "home", label: "HOME", href: "/" },

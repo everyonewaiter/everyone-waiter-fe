@@ -25,7 +25,11 @@ export default function useLogin() {
       // 3. 유저 정보 저장
       saveUser(profileData);
       // 4. 리다이렉트
-      router.push("/");
+      if (profileData.permission === "ADMIN") {
+        router.push("/admin/users");
+      } else {
+        router.push("/");
+      }
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       throw new Error(error.message);

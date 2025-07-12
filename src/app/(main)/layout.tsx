@@ -4,7 +4,7 @@ import Sidebar from "./_components/Sidebar";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-white md:flex-row md:bg-[#F5F5F5]">
+    <div className="flex min-h-screen w-screen flex-col bg-white md:flex-row md:bg-[#F5F5F5]">
       <Sidebar />
       <main className="flex flex-1 flex-col md:py-5 md:pr-5 md:pl-0 lg:py-8">
         <MobileHeader />

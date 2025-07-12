@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useMutation, useQuery } from "@tanstack/react-query";
+import getQueryClient from "@/app/get-query-client";
 import {
   approveRegistration,
   getAccounts,
@@ -11,6 +12,8 @@ import {
 } from "../_api/admin.api";
 
 const useAdmin = () => {
+  const queryClient = getQueryClient();
+
   const accountList = (
     searchEmail: string,
     searchPermission: AccountPermission | "",
@@ -27,17 +30,23 @@ const useAdmin = () => {
       placeholderData: (previousData) => previousData,
     });
 
-  const detailAccountQuery = (accountId: bigint) =>
+  const detailAccount = (accountId: string) =>
     useQuery({
       queryKey: ["detail-account", accountId],
       queryFn: () => getDetailAccount(accountId),
     });
 
-  const { mutate: mutateUpdateDetail } = useMutation({
+  const updateDetail = useMutation({
     mutationFn: updateDetailAccount,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["get-account"] });
+      queryClient.invalidateQueries({
+        queryKey: ["detail-account", variables.accountId],
+      });
+    },
   });
 
-  const adminStoresListQuery = (
+  const storesList = (
     email: string,
     name: string,
     status?: RegisterStatus | null,
@@ -50,28 +59,40 @@ const useAdmin = () => {
       placeholderData: (previousData) => previousData,
     });
 
-  const detailStoreQuery = (registrationId: bigint) =>
+  const detailStore = (registrationId: string) =>
     useQuery({
       queryKey: ["admin-stores-detail", registrationId],
       queryFn: () => getDetailAdminRegistrations(registrationId),
     });
 
-  const { mutate: mutateRejectStore } = useMutation({
+  const rejectStore = useMutation({
     mutationFn: rejectResigtration,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["stores-to-approve"] });
+      queryClient.invalidateQueries({
+        queryKey: ["admin-stores-detail", variables.id],
+      });
+    },
   });
 
-  const { mutate: mutateApproveStore } = useMutation({
+  const approveStore = useMutation({
     mutationFn: approveRegistration,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["stores-to-approve"] });
+      queryClient.invalidateQueries({
+        queryKey: ["admin-stores-detail", variables.id],
+      });
+    },
   });
 
   return {
     accountList,
-    detailAccountQuery,
-    mutateUpdateDetail,
-    adminStoresListQuery,
-    detailStoreQuery,
-    mutateRejectStore,
-    mutateApproveStore,
+    detailAccount,
+    updateDetail,
+    storesList,
+    detailStore,
+    rejectStore,
+    approveStore,
   };
 };
 

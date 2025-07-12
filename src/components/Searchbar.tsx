@@ -5,7 +5,7 @@ interface IProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "placeholder"> {
   searchWord: string;
   setSearchWord: (value: string) => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   placeholder?: string;
 }
 
@@ -26,7 +26,7 @@ export default function Searchbar({
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
-            onSubmit();
+            // onSubmit();
           }
         }}
         {...props}

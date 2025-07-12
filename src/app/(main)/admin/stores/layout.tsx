@@ -5,9 +5,9 @@ export default function Layout({
   modal,
 }: PropsWithChildren<{ modal: ReactNode }>) {
   return (
-    <div className="h-full">
+    <>
       {children}
       {modal}
-    </div>
+    </>
   );
 }

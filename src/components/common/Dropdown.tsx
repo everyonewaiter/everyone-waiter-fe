@@ -54,7 +54,7 @@ export default function Dropdown({
         >
           <div
             className={cn(
-              "font-regular text-gray-0 !text-s flex h-9 w-full flex-row items-center justify-between gap-[6px] rounded-[8px] border border-gray-600 px-3 md:pr-4 md:pl-4 lg:h-[48px] lg:rounded-[12px] lg:py-3 lg:pr-3 lg:pl-4 lg:text-sm",
+              "font-regular text-gray-0 !text-s flex h-9 flex-row items-center justify-between gap-[6px] rounded-[8px] border border-gray-600 px-3 md:pr-4 md:pl-4 lg:h-[48px] lg:rounded-[12px] lg:py-3 lg:pr-3 lg:pl-4 lg:text-sm",
               disabled
                 ? "pointer-events-none cursor-not-allowed bg-[#F5F5F5] text-gray-300 placeholder:text-gray-400"
                 : "",
@@ -72,13 +72,13 @@ export default function Dropdown({
               <ChevronUp
                 size={16}
                 strokeWidth={1}
-                className="mt-1 h-3 w-3 lg:h-4 lg:w-4"
+                className="h-3 w-3 lg:h-4 lg:w-4"
               />
             ) : (
               <ChevronDown
                 size={16}
                 strokeWidth={1}
-                className="mt-1 h-3 w-3 lg:h-4 lg:w-4"
+                className="h-3 w-3 lg:h-4 lg:w-4"
               />
             )}
           </div>

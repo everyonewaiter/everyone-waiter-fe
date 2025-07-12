@@ -98,11 +98,14 @@ export default function Sidebar() {
             )}
             <ul>
               {MENU_ITEMS[permission].map((item) => {
-                const isActive =
-                  item.href === "/"
-                    ? comparePath === "/"
-                    : comparePath === item.href ||
-                      comparePath.startsWith(`${item.href}/`);
+                const isActive = () => {
+                  if (item.href === "/") return comparePath === "/";
+                  if (item.href === "/admin") return comparePath === "/admin";
+                  return (
+                    comparePath === item.href ||
+                    comparePath.startsWith(`${item.href}/`)
+                  );
+                };
                 return (
                   <li key={item.href}>
                     <Link
@@ -119,18 +122,18 @@ export default function Sidebar() {
                         }
                       }}
                       className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
-                        isActive ? "text-primary" : "text-gray-300"
+                        isActive() ? "text-primary" : "text-gray-300"
                       }`}
                     >
                       {/* 빨간 점 (활성 메뉴만) */}
                       <div
                         className={`z-1 size-2 rounded-full ${
-                          isActive ? "bg-primary" : "bg-gray-600"
+                          isActive() ? "bg-primary" : "bg-gray-600"
                         }`}
                       />
                       <Icon
                         iconKey={item.icon as string}
-                        className={`size-6 ${isActive ? "text-primary" : "text-gray-300"}`}
+                        className={`size-6 ${isActive() ? "text-primary" : "text-gray-300"}`}
                       />
                       <span className="font-medium">{item.label}</span>
                     </Link>

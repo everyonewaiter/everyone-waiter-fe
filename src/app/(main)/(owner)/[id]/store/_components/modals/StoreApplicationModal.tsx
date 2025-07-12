@@ -11,7 +11,7 @@ import ModalWithTitle from "@/components/modal/largeModalLayout";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import formatDate from "@/lib/formatting/formatDate";
-import { useStoreContext } from "@/providers/storeProvider";
+// import { useStoreContext } from "@/providers/storeProvider";
 import useStores from "../../_queries/useStores";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
@@ -33,7 +33,9 @@ export default function StoreApplicationModal({
   item,
   isAccepted,
 }: IProps) {
-  const { storeId } = useStoreContext();
+  // const { storeId } = useStoreContext();
+  //  TODO: 수정
+  const storeId = "1";
 
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
