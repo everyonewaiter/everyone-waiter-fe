@@ -33,13 +33,10 @@ export default function Home() {
   }, [navigate, prevent]);
 
   useEffect(() => {
-    if (hasToken && user?.permission === "ADMIN") {
-      navigate.push("/admin/users");
-    }
-    if (hasToken && !isLoading && firstStoreId && user?.permission === "USER") {
+    if (hasToken && firstStoreId) {
       navigate.push(`/${firstStoreId}`);
     }
-  }, [hasToken, isLoading, firstStoreId, navigate, user?.permission]);
+  }, [hasToken, firstStoreId]);
 
   if (hasToken === null || isLoading) return null;
 

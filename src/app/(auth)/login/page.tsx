@@ -90,7 +90,7 @@ export default function Login() {
               <SyncLoader
                 color="#fff"
                 loading={isLoading}
-                size={20}
+                size={24}
                 aria-label="Loading Spinner"
                 data-testid="loader"
               />
