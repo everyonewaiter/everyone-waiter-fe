@@ -1,87 +1,99 @@
 "use client";
 
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable react/no-unstable-nested-components */
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
-import { PropsWithChildren, useState } from "react";
-import { useForm } from "react-hook-form";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import Icon from "@/components/common/Icon";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import { useStoreContext } from "@/providers/storeProvider";
-import { TypeStoreInfo, storeInfoSchema } from "@/schema/store.schema";
+import { useMediaQuery } from "react-responsive";
 import useStores from "./_queries/useStores";
+
+interface FormType {
+  name: string;
+  license: string;
+  address: string;
+  origins: CountryOfOriginItem[];
+}
+
+function TableRow({
+  children,
+  className,
+}: PropsWithChildren<{ className?: string }>) {
+  return (
+    <div className={`center h-full w-full text-center ${className}`}>
+      {children}
+    </div>
+  );
+}
 
 export default function StoreInfo() {
   const { storeId } = useStoreContext();
+  const isLargeScreen = useMediaQuery({ query: "(min-width: 961px)" });
 
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { storesDetail } = useStores();
+  const { storesDetail, updateInfo } = useStores();
   const { data } = storesDetail(storeId);
 
-  const form = useForm<TypeStoreInfo>({
+  const form = useForm<FormType>({
     mode: "onChange",
-    resolver: zodResolver(storeInfoSchema),
     defaultValues: {
-      name: data?.name,
-      license: data?.license,
-      address: data?.address,
+      name: "",
+      license: "",
+      address: "",
+      origins: [],
     },
   });
 
-  const [countryOfOrigins, setCountryOfOrigins] = useState<
-    CountryOfOriginItem[]
-  >(data?.setting.countryOfOrigin!);
-  const newItem = {
+  useEffect(() => {
+    if (!data) return;
+
+    form.reset({
+      name: data.name,
+      license: data.license,
+      address: data.address,
+      origins: data.setting.countryOfOrigins ?? [],
+    });
+  }, [data, form]);
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "origins",
+  });
+
+  const createNewItem = {
     item: "",
     origin: "",
-    menu: "",
   };
 
-  function TableRow({
-    children,
-    className,
-  }: PropsWithChildren<{ className?: string }>) {
-    return (
-      <div className={`center h-full w-full text-center ${className}`}>
-        {children}
-      </div>
-    );
-  }
-
-  // const handleDeleteItem = () => {
-  //   // delete item: OriginItem
-  // };
-
-  // // const handle
-
-  // const handleChangeItem = (
-  //   index: number,
-  //   field: keyof OriginItem,
-  //   value: string
-  // ) => {
-  //   const newOrigins = countryOfOrigins.map((origin, i) => {
-  //     if (i === index) {
-  //       return { ...origin, [field]: value };
-  //     }
-  //     return origin;
-  //   });
-  //   setCountryOfOrigins(newOrigins);
-  // };
-
   const submitHandler = () => {
-    setMakeDisabled(true);
-    // submit data: TypeStoreinfo
+    updateInfo.mutate(
+      {
+        storeId,
+        body: {
+          ...data,
+          landline: data?.landline!,
+          setting: {
+            ...data?.setting!,
+            countryOfOrigins: fields,
+          },
+        },
+      },
+      {
+        onSuccess: () => setMakeDisabled(true),
+      }
+    );
   };
 
   return (
-    <div className="flex h-full w-full flex-1 flex-col justify-center">
-      <div className="mt-10 flex w-full flex-col items-center overflow-y-scroll md:mt-6 md:h-[calc(100%-45px)] lg:mt-10 lg:h-[calc(100%-100px)]">
+    <div className="h-full justify-center">
+      <div className="mt-10 flex w-full flex-col items-center md:mt-6 md:h-[calc(100%-45px)] lg:mt-10 lg:h-[calc(100%-100px)]">
         <div className="w-80 md:w-[272px] lg:w-120">
           <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
             매장 정보
@@ -90,7 +102,7 @@ export default function StoreInfo() {
             <span>등록된 매장 정보를 확인할 수 있습니다.</span>
             <span>변경된 정보가 있다면 언제든지 수정해 주세요.</span>
           </div>
-          <div className="my-8 flex flex-col md:my-6 lg:my-10">
+          <div className="my-8 flex flex-col overflow-y-auto md:my-6 lg:my-10">
             <Form {...form}>
               <form
                 className="flex flex-col gap-3 lg:gap-4"
@@ -115,79 +127,66 @@ export default function StoreInfo() {
                   disabled={!isEditing}
                 />
                 <Label>원산지</Label>
-                {isEditing || countryOfOrigins?.length > 0 ? (
+                {isEditing || fields?.length > 0 ? (
                   <div className="text-s flex flex-col overflow-hidden rounded-[12px] border border-gray-600 font-medium">
                     <div className="flex h-10 w-full bg-gray-700">
-                      <TableRow>품목</TableRow>
-                      <TableRow>원산지</TableRow>
-                      <TableRow>음식명</TableRow>
+                      <TableRow className="w-full">품목</TableRow>
+                      <TableRow className="w-full">원산지</TableRow>
                       {isEditing && (
-                        <TableRow className="text-primary w-full">
+                        <TableRow className="text-primary w-full text-center lg:w-20 lg:flex-shrink-0">
                           삭제
                         </TableRow>
                       )}
                     </div>
-                    {countryOfOrigins.map((item, idx) => (
+                    {fields?.map((item, idx) => (
                       <div
-                        // TODO - 추후 API 연결 시 아이템으로 변경
-                        key={idx}
+                        key={item.id}
                         className={`flex h-10 w-full ${
-                          idx !== countryOfOrigins.length - 1 &&
+                          idx !== fields.length - 1 &&
                           "border-b border-b-gray-600"
                         }`}
                       >
-                        {/* {item.isAdded ? (
-                          <input
-                            className="w-full text-center outline-none md:px-2 lg:px-4"
-                            placeholder="품목 입력"
-                            value={item.item}
-                            onChange={(e) =>
-                              handleChangeItem(idx, "item", e.target.value)
-                            }
-                          />
-                        ) : (
-                          <TableRow>{item.item}</TableRow>
-                        )}
-                        {item.isAdded ? (
-                          <input
-                            className="w-full text-center outline-none md:px-2 lg:px-4"
-                            placeholder="원산지 입력"
-                            value={item.origin}
-                            onChange={(e) =>
-                              handleChangeItem(idx, "origin", e.target.value)
-                            }
-                          />
-                        ) : (
-                          <TableRow>{item.origin}</TableRow>
-                        )}
-                        {item.isAdded ? (
-                          <input
-                            className="mr-1 w-full text-center outline-none md:px-2 lg:px-4"
-                            placeholder="음식명 입력"
-                            value={item.menu}
-                            onChange={(e) =>
-                              handleChangeItem(idx, "menu", e.target.value)
-                            }
-                          />
-                        ) : (
-                          <TableRow className="pr-1">{item.menu}</TableRow>
-                        )}
-                        {isEditing && (
-                          <button
-                            type="button"
-                            className={
-                              item.isAdded
-                                ? "mr-1/2 flex w-full items-center justify-center md:px-2 lg:px-4"
-                                : "flex w-full items-center justify-center"
-                            }
-                            onClick={handleDeleteItem}
-                          >
-                            <DeleteIcon
-                              color="#F22020"
-                              className="h-[18px] w-[16px]"
+                        <TableRow className="w-full">
+                          {isEditing ? (
+                            <input
+                              placeholder={
+                                isLargeScreen
+                                  ? "품목을 입력해주세요"
+                                  : "품목 입력"
+                              }
+                              {...form.register(`origins.${idx}.item`)}
+                              className="w-full text-center outline-none"
                             />
-                          </button>
-                        )} */}
+                          ) : (
+                            item.item
+                          )}
+                        </TableRow>
+                        <TableRow className="w-full">
+                          {isEditing ? (
+                            <input
+                              placeholder={
+                                isLargeScreen
+                                  ? "원산지를 입력해주세요"
+                                  : "원산지 입력"
+                              }
+                              {...form.register(`origins.${idx}.origin`)}
+                              className="w-full text-center outline-none"
+                            />
+                          ) : (
+                            item.origin
+                          )}
+                        </TableRow>
+                        {isEditing && (
+                          <TableRow className="w-full text-center lg:w-20 lg:flex-shrink-0">
+                            <button type="button" onClick={() => remove(idx)}>
+                              <Icon
+                                iconKey="trash"
+                                size={16}
+                                className="text-primary"
+                              />
+                            </button>
+                          </TableRow>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -208,18 +207,16 @@ export default function StoreInfo() {
                       variant="outline"
                       color="gray"
                       responsiveButtons={{
-                        sm: { buttonSize: "sm", className: "!flex md:hidden" },
+                        sm: { buttonSize: "sm" },
                         md: {
                           buttonSize: "sm",
-                          className: "md-4 md:!flex",
+                          className: "md-4 flex",
                         },
                         lg: { buttonSize: "lg", className: "!h-10" },
                       }}
                       disabled={makeDisabled}
                       commonClassName="border-dashed mt-3"
-                      onClick={() =>
-                        setCountryOfOrigins([...countryOfOrigins, newItem])
-                      }
+                      onClick={() => append(createNewItem)}
                     >
                       <Plus className="h-5 w-5 text-gray-400" />
                     </ResponsiveButton>
@@ -228,17 +225,15 @@ export default function StoreInfo() {
                       responsiveButtons={{
                         sm: {
                           buttonSize: "sm",
-                          className:
-                            "!flex md:!hidden mt-6 !h-[34px] !gap-2 items-center",
+                          className: "flex mt-6 !h-[34px] !gap-2 items-center",
                         },
                         md: {
                           buttonSize: "sm",
-                          className:
-                            "!h-[34px] md:!flex items-center hidden lg:hidden !gap-1",
+                          className: "!h-[34px] flex items-center !gap-1",
                         },
                         lg: {
                           buttonSize: "lg",
-                          className: "hidden lg:!flex mt-8",
+                          className: "mt-8",
                         },
                       }}
                     >
@@ -265,12 +260,12 @@ export default function StoreInfo() {
                   },
                   lg: {
                     buttonSize: "lg",
-                    className: "mt-8",
+                    className: "mt-8 !font-medium border-gray-0",
                   },
                 }}
                 onClick={isEditing ? undefined : () => setIsEditing(true)}
               >
-                <Icon iconKey="edit" size={20} />
+                <Icon iconKey="edit" size={20} className="text-gray-0" />
                 <span>수정하기</span>
               </ResponsiveButton>
             )}

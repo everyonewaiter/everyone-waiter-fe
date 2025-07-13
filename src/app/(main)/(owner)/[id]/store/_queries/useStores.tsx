@@ -7,6 +7,7 @@ import {
   getRegisters,
   getStoreInfoDetail,
   getStoreList,
+  putUpdateStore,
   reapplyRegistration,
   reapplyRegistrationWithImage,
   registerDetails,
@@ -80,6 +81,15 @@ const useStores = () => {
       enabled: !!storeId,
     });
 
+  const updateInfo = useMutation({
+    mutationFn: putUpdateStore,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: storeKeys.detail(variables.storeId),
+      });
+    },
+  });
+
   return {
     registrationList,
     registrationDetail,
@@ -88,6 +98,7 @@ const useStores = () => {
     reapplyWithImg,
     storesList,
     storesDetail,
+    updateInfo,
   };
 };
 
