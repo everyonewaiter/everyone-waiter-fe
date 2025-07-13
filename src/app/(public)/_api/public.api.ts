@@ -31,3 +31,12 @@ export const cancelWaiting = async ({
   );
   return response.data;
 };
+
+export const getMenuPreview = async (
+  storeId: string
+): Promise<{ categories: PosMenuData[] }> => {
+  const response = await authInstance.get(
+    `${API_PATH.stores}/${storeId}/menus`
+  );
+  return response.data;
+};

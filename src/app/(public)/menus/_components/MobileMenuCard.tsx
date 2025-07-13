@@ -17,8 +17,14 @@ export default function MobileMenuCard({
   return (
     <button type="button" className="py-4" onClick={onClick}>
       <div className="flex items-center gap-5">
-        <div className="h-24 w-24 overflow-hidden rounded-[12px]">
-          <Image src={getCdn(image)} alt="menu" width={96} height={96} />
+        <div className="relative h-[96px] w-[96px] overflow-hidden rounded-[12px]">
+          <Image
+            src={getCdn(image)}
+            alt="menu"
+            width={96}
+            height={96}
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="flex flex-col items-start gap-[6px]">
           <h3 className="text-gray-0 text-base font-medium">{name}</h3>

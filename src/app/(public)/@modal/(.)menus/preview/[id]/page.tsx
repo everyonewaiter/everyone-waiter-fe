@@ -1,7 +1,8 @@
 "use client";
 
+import usePublic from "@/app/(public)/_queries/usePublic";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 
 const MenuModal = dynamic(
   () => import("@/app/(device-required)/pos/_components/modals/MenuModal"),
@@ -10,49 +11,31 @@ const MenuModal = dynamic(
   }
 );
 
-const dummy: MenuDetail | undefined = {
-  menuId: "694865267482835533",
-  categoryId: "694865267482835533",
-  name: "안심 스테이크",
-  description: "1++ 한우 안심을 사용합니다.",
-  price: 34900,
-  spicy: 0,
-  state: "DEFAULT",
-  label: "BEST",
-  image: "license/202504/0KA652ZFZ26DG.webp",
-  printEnabled: true,
-  menuOptionGroups: [
-    {
-      menuOptionGroupId: "694865267482835533",
-      name: "굽기 정도",
-      type: "MANDATORY",
-      printEnabled: true,
-      menuOptions: [
-        {
-          name: "미디움",
-          price: 0,
-        },
-      ],
-    },
-  ],
-};
-
 export default function Page() {
-  useEffect(() => {
-    const original = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+  const params = useParams();
+  const menuId = params?.id;
+  const searchParams = useSearchParams();
+  const storeId = searchParams.get("storeId");
+  const categoryId = searchParams.get("categoryId");
 
-    return () => {
-      document.body.style.overflow = original;
-    };
-  }, []);
+  const { menus } = usePublic(storeId!);
+  const { data } = menus;
+  const menu = data?.categories
+    .flatMap((el) => el.menus)
+    .find(
+      (el) =>
+        el.categoryId === categoryId &&
+        el.menuId === (Array.isArray(menuId) ? menuId[0] : menuId)
+    );
+
+  // TODO: 원산지 표기 데이터 없음.
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <MenuModal
-        data={dummy!}
+        data={menu as MenuDetail}
         type="preview"
-        layoutClassName="!w-[320px] min-!h-[580px] md:!w-[664px] lg:!h-[746px] lg:!w-[1148px]"
+        layoutClassName="!w-[320px]  md:!w-[664px]  lg:!w-[1148px] h-fit pb-6"
       />
     </div>
   );
