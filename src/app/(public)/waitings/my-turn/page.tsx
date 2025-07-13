@@ -3,20 +3,36 @@
 import cn from "@/lib/utils";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { AxiosError } from "axios";
 import PublicComponent from "../_components/PublicComponent";
 import WaitingCancelModal from "../_components/WaitingCancelModal";
 import usePublic from "../../_queries/usePublic";
 
 export default function Page() {
+  const navigate = useRouter();
   const searchParams = useSearchParams();
   const storeId = searchParams.get("storeId") as string;
   const accessKey = searchParams.get("accessKey") as string;
 
-  // TODO: 이미 예약 취소, 이미 입장 완료에 대한 값 확인 api 없음
-
   const { waiting } = usePublic(storeId, accessKey);
-  const { data } = waiting;
+  const { data, isError, error } = waiting;
+
+  useEffect(() => {
+    if (isError && error instanceof AxiosError) {
+      if (error.response?.data?.code === "WAITING_NOT_FOUND") {
+        navigate.replace("/waitings/result?type=error");
+      }
+      return;
+    }
+
+    if (data?.state === "CANCEL") {
+      navigate.replace("/waitings/result?type=cancel");
+    } else if (data?.state === "COMPLETE") {
+      navigate.replace("/waitings/result?type=enter");
+    }
+  }, [data, isError]);
 
   const initNumber = data?.initWaitingTeamCount!;
   const currentNumber = data?.currentWaitingTeamCount!;

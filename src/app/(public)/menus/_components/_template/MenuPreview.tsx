@@ -49,7 +49,6 @@ export default function MenuPreview() {
   return (
     <div className="min-h-full w-full bg-white px-5 pb-5 md:rounded-[20px] md:px-6 md:pb-6 lg:rounded-[32px] lg:px-8 lg:pb-8">
       <div className="flex items-end justify-between pb-6 md:items-start md:justify-start md:gap-2 md:pb-7 lg:pb-12">
-        {/* TODO: 이 부분은 직접 작성하는 부분인가? 어디서? 어떻게? */}
         <button
           type="button"
           className="bg-primary font-hakgyo center rounded-br-[12px] rounded-bl-[12px] px-4 pt-5 pb-4 text-base text-white lg:rounded-br-[20px] lg:rounded-bl-[20px] lg:px-6 lg:pt-7 lg:pb-6 lg:text-2xl"
