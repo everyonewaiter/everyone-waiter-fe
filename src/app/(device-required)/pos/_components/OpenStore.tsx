@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import usePos from "../_queries/usePos";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
@@ -15,13 +16,14 @@ export default function OpenStore() {
   const navigate = useRouter();
 
   const { open, close } = useOverlay();
+  const { storeId } = useDeviceContext();
 
   const {
     store: { open: storeOpen, close: storeClose },
-    storeStatus,
+    storeInfo,
   } = usePos();
-  const { data: status } = storeStatus;
-  const isStoreOpen = status?.status === "OPEN";
+  const { data } = storeInfo(storeId!);
+  const isStoreOpen = data?.status === "OPEN";
 
   const handleOpenStore = () => {
     const successHandler = () => {

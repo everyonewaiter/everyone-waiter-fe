@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { useMemoStore } from "../_hooks/useMemoStore";
 import { useOrderStore } from "../_hooks/useOrderStore";
 import { useSelectItemStore } from "../_hooks/useSelectItemStore";
@@ -58,6 +59,7 @@ export default function Floating({ hasData, tableNo }: IProps) {
   const { orders } = useOrderStore();
   const { selectedOrder } = useSelectItemStore();
   const { setMemo } = useMemoStore();
+  const { storeId } = useDeviceContext();
 
   const list = hasData
     ? FLOATING_ITEMS
@@ -101,7 +103,7 @@ export default function Floating({ hasData, tableNo }: IProps) {
     } else {
       open(() => (
         <QueryProviders>
-          <ReceiptModal close={close} tableNo={tableNo} />
+          <ReceiptModal close={close} tableNo={tableNo} storeId={storeId!} />
         </QueryProviders>
       ));
     }

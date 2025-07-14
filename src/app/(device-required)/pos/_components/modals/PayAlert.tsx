@@ -9,6 +9,7 @@ import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { useRouter } from "next/navigation";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
@@ -41,6 +42,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
 
   // 분할 계산
   const { selectedOrder } = useSelectItemStore();
+  const { storeId } = useDeviceContext();
   const hasOrderId = selectedOrder?.orderId;
 
   const menus = hasOrderId
@@ -76,9 +78,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   });
 
   const { payCard, payCash } = usePayment();
-  const { activity, storeStatus } = usePos();
+  const { activity, storeInfo } = usePos();
   const { data: activityData } = activity(props.tableNo);
-  const { data: stores } = storeStatus;
+  const { data: stores } = storeInfo(storeId!);
 
   const monthlyPlan = [
     "일시불",

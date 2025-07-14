@@ -9,6 +9,7 @@ import { useNowContext } from "@/providers/nowProvider";
 import useOverlay from "@/hooks/use-overlay";
 import useGetDate from "@/hooks/useGetDate";
 import dynamic from "next/dynamic";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import usePos from "./_queries/usePos";
 
 const OpenSwitch = dynamic(() => import("./_components/OpenSwitch"), {
@@ -23,10 +24,10 @@ export default function Pos() {
   const navigate = useRouter();
 
   const now = useNowContext();
+  const { storeId } = useDeviceContext();
 
-  const { store, storeStatus } = usePos();
-  const { data, isLoading } = storeStatus;
-
+  const { store, storeInfo } = usePos();
+  const { data, isLoading } = storeInfo(storeId as string);
   const { date, day } = useGetDate(now);
   const { open, close } = useOverlay();
 
