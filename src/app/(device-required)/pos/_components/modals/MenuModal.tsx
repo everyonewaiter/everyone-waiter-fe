@@ -125,7 +125,7 @@ function MenuModal({
           if (e.key === "Escape") e.stopPropagation();
         }}
       >
-        <div className="flex h-[160px] overflow-hidden rounded-[16px] bg-green-50 md:h-full md:flex-1 lg:h-full lg:flex-1 lg:rounded-[28px]">
+        <div className="flex h-[160px] overflow-hidden rounded-[16px] md:h-full md:flex-1 lg:h-full lg:flex-1 lg:rounded-[28px]">
           {data?.image && (
             <Image
               src={getCdn(data?.image)}

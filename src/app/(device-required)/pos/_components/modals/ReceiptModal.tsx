@@ -9,13 +9,14 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 interface IProps {
   close: () => void;
   tableNo: number;
+  storeId: string;
 }
 
-export default function ReceiptModal({ close, tableNo }: IProps) {
+export default function ReceiptModal({ close, tableNo, storeId }: IProps) {
   const { printReceipt } = usePayment();
-  const { activity, storeStatus } = usePos();
+  const { activity, storeInfo } = usePos();
   const { data: activityData } = activity(tableNo);
-  const { data: stores } = storeStatus;
+  const { data: stores } = storeInfo(storeId);
 
   const handleAction = () => {
     printReceipt({

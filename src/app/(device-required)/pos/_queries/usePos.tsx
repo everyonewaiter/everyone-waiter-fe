@@ -3,7 +3,7 @@ import getQueryClient from "@/app/get-query-client";
 import {
   closeStore,
   getPosMenuList,
-  getStoreStatus,
+  getStoreInfo,
   getTableActivity,
   getTables,
   moveTables,
@@ -23,10 +23,13 @@ export default function usePos() {
     mutationFn: closeStore,
   });
 
-  const storeStatus = useQuery({
-    queryKey: ["store-status"],
-    queryFn: getStoreStatus,
-  });
+  const store = (storeId: string) =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useQuery({
+      queryKey: ["stores"],
+      queryFn: () => getStoreInfo({ storeId }),
+      enabled: !!storeId,
+    });
 
   const menuList = (storeId: string, menuId?: string) =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -75,7 +78,7 @@ export default function usePos() {
     menuList,
     tableList,
     activity,
-    storeStatus,
+    storeInfo: store,
     move,
     resendReceipt,
     updateOrder,

@@ -1,5 +1,5 @@
 import API_PATH from "@/lib/api/paths";
-import { signatureInstance } from "@/lib/axios/instance";
+import { authInstance, signatureInstance } from "@/lib/axios/instance";
 
 export type PropsWithTableNo<T extends object = {}> = T & { tableNo: number };
 
@@ -13,8 +13,12 @@ export const closeStore = async () => {
   return response;
 };
 
-export const getStoreStatus = async (): Promise<PosStore> => {
-  const response = await signatureInstance.get(`${API_PATH.stores}/status`);
+export const getStoreInfo = async ({
+  storeId,
+}: {
+  storeId: string;
+}): Promise<PosStore> => {
+  const response = await authInstance.get(`${API_PATH.stores}/${storeId}`);
   return response.data;
 };
 

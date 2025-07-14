@@ -1,5 +1,5 @@
 import API_PATH from "@/lib/api/paths";
-import { formInstance, instance } from "@/lib/axios/instance";
+import { authInstance, formInstance, instance } from "@/lib/axios/instance";
 
 export const registerStore = async (body: FormData) => {
   const response = await formInstance.post(
@@ -62,7 +62,7 @@ export const getStoreList = async (): Promise<{
 export const getStoreInfoDetail = async (
   storeId: string
 ): Promise<StoreInfoDetail> => {
-  const response = await instance.get(`${API_PATH.stores}/${storeId}`);
+  const response = await authInstance.get(`${API_PATH.stores}/${storeId}`);
   return response.data;
 };
 

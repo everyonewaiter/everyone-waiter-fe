@@ -141,7 +141,7 @@ export default function DetailTableOrder() {
             </div>
           )}
           {hasLoadedOnce && list?.length! === 0 && !menus?.categories && (
-            <div className="text-gray-0 center flex flex-1 flex-col bg-green-50 pt-8 text-center text-xl">
+            <div className="text-gray-0 center flex flex-1 flex-col pt-8 text-center text-xl">
               등록된 메뉴가 없습니다.
             </div>
           )}
