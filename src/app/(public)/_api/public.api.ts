@@ -12,6 +12,7 @@ export const getTeamsFrontOfMe = async ({
   initWaitingTeamCount: number;
   currentWaitingTeamCount: number;
   state: "REGISTRATION" | "COMPLETE" | "CANCEL";
+  createdAt: string;
 }> => {
   const response = await authInstance.get(
     `${API_PATH.stores}/${storeId}/waitings/${accessKey}/my-turn`
