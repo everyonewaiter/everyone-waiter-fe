@@ -1,5 +1,4 @@
 import StoreList from "@/app/(main)/stores/page";
-import PageTitle from "../../_components/PageTitle";
 
 export const metadata = {
   title: "모두의 웨이터 - 매장 등록 신청 현황",
@@ -8,9 +7,8 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <>
-      <PageTitle title="매장 등록 신청 현황" />
+    <div className="h-full">
       <StoreList />
-    </>
+    </div>
   );
 }

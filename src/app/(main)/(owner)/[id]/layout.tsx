@@ -11,8 +11,8 @@ export default async function OwnerLayout({
 
   return (
     <StoreProvider storeId={id}>
-      <div className="relative">
-        {children}
+      <div className="relative flex h-full flex-col overflow-hidden">
+        <div className="flex-1">{children}</div>
         <Suspense fallback={<div>로드 중...</div>}>
           <ClientModalWrapper>{modal}</ClientModalWrapper>
         </Suspense>

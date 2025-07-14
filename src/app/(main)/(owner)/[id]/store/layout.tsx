@@ -24,8 +24,12 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PageTitle title="매장 정보" />
-      {children}
+      <div className="flex h-full flex-col overflow-hidden">
+        <PageTitle title="매장 정보" />
+        <div className="flex-1 md:overflow-y-auto lg:overflow-hidden">
+          {children}
+        </div>
+      </div>
     </HydrationBoundary>
   );
 }
