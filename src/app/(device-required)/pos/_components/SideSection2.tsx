@@ -74,7 +74,7 @@ export default function SideSection2({ selectedRow }: IProps) {
   };
 
   return (
-    <>
+    <aside className="w-full">
       <div className="flex items-center gap-4">
         <div
           className={cn(
@@ -102,7 +102,7 @@ export default function SideSection2({ selectedRow }: IProps) {
               </Fragment>
             ))}
         </ScrollArea>
-        <div className="mt-8 flex gap-3">
+        <div className="mt-8 flex w-full gap-3">
           <Button
             variant="outline"
             color="black"
@@ -122,6 +122,6 @@ export default function SideSection2({ selectedRow }: IProps) {
           </Button>
         </div>
       </div>
-    </>
+    </aside>
   );
 }

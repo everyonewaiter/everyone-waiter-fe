@@ -17,10 +17,16 @@ export default function usePos() {
 
   const open = useMutation({
     mutationFn: openStore,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stores"] });
+    },
   });
 
   const close = useMutation({
     mutationFn: closeStore,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stores"] });
+    },
   });
 
   const store = (storeId: string) =>

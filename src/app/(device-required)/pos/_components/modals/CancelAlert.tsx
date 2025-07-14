@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import cn from "@/lib/utils";
+import getQueryClient from "@/app/get-query-client";
 import useOrder from "../../_queries/useOrder";
 import usePos from "../../_queries/usePos";
 import usePayment from "../../_queries/usePayment";
@@ -16,6 +17,8 @@ interface IProps {
 }
 
 export default function CancelAlert({ close, tableNo, type }: IProps) {
+  const queryClient = getQueryClient();
+
   const { resetOrders } = useOrderStore();
 
   const { cancel } = useOrder();
@@ -39,7 +42,10 @@ export default function CancelAlert({ close, tableNo, type }: IProps) {
           );
 
           if (deletePromises) {
-            await Promise.all(deletePromises).then(() => close());
+            await Promise.all(deletePromises).then(() => {
+              queryClient.invalidateQueries({ queryKey: ["table-list"] });
+              close();
+            });
           }
         } else {
           resetOrders();

@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import POSHeader2 from "../_components/POSHeader2";
+import POSHeader2 from "../../_components/POSHeader2";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (

@@ -4,7 +4,6 @@
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import DatePicker from "@/components/common/DatePicker";
-import Paginations from "@/components/common/Pagination/Paginations";
 import {
   Table,
   TableBody,
@@ -63,22 +62,13 @@ const dummy: DUMMY[] = [
 ];
 
 export default function PaymentHistory() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedRow, setSelectedRow] = useState<DUMMY | null>(null);
 
-  const handleOutsideClose = () => selectedRow && setSelectedRow(null);
+  // const handleOutsideClose = () => selectedRow && setSelectedRow(null);
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      className="flex w-full cursor-pointer"
-      onClick={handleOutsideClose}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") handleOutsideClose();
-      }}
-    >
-      <div className="flex w-full flex-1 flex-col px-[60px] pt-8 pb-6">
+    <div className="flex h-[calc(100dvh-133px)] w-full">
+      <div className="relative flex w-full flex-1 flex-col px-[60px] pt-8 pb-6">
         <DatePicker />
         <div className="h-[704px]">
           <Table className="mt-6 w-full">
@@ -146,22 +136,8 @@ export default function PaymentHistory() {
             </TableBody>
           </Table>
         </div>
-        <Paginations
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-          move={{
-            fastforward: { hasMore: false },
-            forward: { hasMore: false },
-            backward: { hasMore: false },
-            fastbackward: { hasMore: false },
-          }}
-        />
       </div>
-      <SideLayout
-        className="h-[calc(100dvh-134px)]"
-        // onClick={(e) => e.stopPropagation()}
-      >
+      <SideLayout>
         <SideSection2 selectedRow={selectedRow} />
       </SideLayout>
     </div>
