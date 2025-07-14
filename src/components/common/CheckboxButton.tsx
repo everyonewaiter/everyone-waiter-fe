@@ -1,7 +1,7 @@
 "use client";
 
 import { cva } from "class-variance-authority";
-import { useState } from "react";
+import { useState, type ButtonHTMLAttributes } from "react";
 import cn from "@/lib/utils";
 
 const buttonCheckboxVariants = cva(
@@ -30,8 +30,8 @@ const buttonCheckboxVariants = cva(
     },
   }
 );
-
-interface ButtonCheckboxProps {
+interface ButtonCheckboxProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
   checked?: boolean;
   onChange?: (value: boolean) => void;
   disabled?: boolean;
@@ -45,6 +45,7 @@ export default function ButtonCheckbox({
   checked: checkedProp,
   onChange,
   disabled = false,
+  ...props
 }: ButtonCheckboxProps) {
   const [internalChecked, setInternalChecked] = useState(false);
   const isControlled = typeof checkedProp === "boolean";
@@ -64,6 +65,7 @@ export default function ButtonCheckbox({
       disabled={disabled}
       aria-pressed={checked}
       className={cn(buttonCheckboxVariants({ checked, disabled }))}
+      {...props}
     >
       <div className="flex items-center justify-center text-current">
         {checked && (
