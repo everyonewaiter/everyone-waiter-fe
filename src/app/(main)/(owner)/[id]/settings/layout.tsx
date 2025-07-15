@@ -21,7 +21,7 @@ export default async function Layout({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <PageTitle title="설정" />
       <div className="h-full w-full overflow-y-auto">
-        <div className="flex h-full w-full items-start justify-center py-6 md:items-center lg:py-10">
+        <div className="flex h-full w-full items-start justify-center py-6 md:items-center lg:items-start lg:py-10">
           {children}
         </div>
       </div>
