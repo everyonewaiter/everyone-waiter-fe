@@ -39,4 +39,5 @@ export default function Page() {
   }
 
   if (!isLoading && !firstStoreId) redirect("/user");
+  if (!isLoading && firstStoreId) redirect(`/${firstStoreId}`);
 }
