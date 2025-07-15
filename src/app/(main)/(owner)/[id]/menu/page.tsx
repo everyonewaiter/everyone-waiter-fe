@@ -8,12 +8,12 @@ import useCategories from "./_queries/useCategories";
 export default function Page() {
   const { storeId } = useStoreContext();
 
-  const { query } = useCategories(storeId);
-  const data = query.data?.categories;
+  const { categories } = useCategories(storeId);
+  const { data } = categories(storeId);
 
   return (
     <div className="flex flex-1">
-      {data?.length! > 0 ? (
+      {data?.categories?.length! > 0 ? (
         <MenuList />
       ) : (
         <div className="flex flex-1 items-center justify-center">

@@ -33,35 +33,35 @@ export default function Page() {
     { sourceId: string; targetId: string; where: "NEXT" | "PREVIOUS" }[]
   >([]);
 
-  const { query, move } = useCategories(storeId);
-  const data = query.data?.categories;
+  const { categories, move } = useCategories(storeId);
+  const { data } = categories(storeId);
 
   const { form, setInitialCategories } = useCategoryForm();
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (data) {
-      setInitialCategories(data);
+      setInitialCategories(data?.categories);
     }
   }, [data, form]);
 
   const handleDrag = ({ active, over }: any) => {
     if (!over) return;
 
-    const categories = form.watch("categories");
-    const oldIndex = categories?.findIndex((c) => c.categoryId === active.id);
-    const newIndex = categories?.findIndex((c) => c.categoryId === over.id);
+    const categoryData = form.watch("categories");
+    const oldIndex = categoryData?.findIndex((c) => c.categoryId === active.id);
+    const newIndex = categoryData?.findIndex((c) => c.categoryId === over.id);
 
     if (oldIndex === -1 || newIndex === -1) return;
 
-    const sorted = arrayMove(categories, oldIndex, newIndex);
+    const sorted = arrayMove(categoryData, oldIndex, newIndex);
 
     form.setValue("categories", sorted);
     setPendingMoves((prev) => [
       ...prev,
       {
-        sourceId: categories[oldIndex].categoryId,
-        targetId: categories[newIndex].categoryId,
+        sourceId: categoryData[oldIndex].categoryId,
+        targetId: categoryData[newIndex].categoryId,
         where: oldIndex < newIndex ? "NEXT" : "PREVIOUS",
       },
     ]);

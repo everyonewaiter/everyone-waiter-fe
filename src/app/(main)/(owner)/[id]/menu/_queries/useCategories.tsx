@@ -13,10 +13,14 @@ import { categoryKeys } from "./keys";
 export default function useCategories(storeId: string) {
   const queryClient = getQueryClient();
 
-  const query = useQuery({
-    queryKey: categoryKeys.all(storeId),
-    queryFn: () => getCategories({ storeId }),
-  });
+  const categories = (_storeId: string) =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useQuery({
+      queryKey: categoryKeys.all(_storeId),
+      queryFn: () => getCategories({ storeId: _storeId }),
+      enabled: !!_storeId,
+      staleTime: 1000 * 60 * 5,
+    });
 
   const add = useMutation({
     mutationFn: makeCategory,
@@ -43,5 +47,5 @@ export default function useCategories(storeId: string) {
     },
   });
 
-  return { query, add, move, update, remove };
+  return { categories, add, move, update, remove };
 }

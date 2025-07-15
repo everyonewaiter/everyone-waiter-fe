@@ -17,8 +17,8 @@ interface IProps {
 }
 
 export default function FormSection({ isEditing, storeId, type }: IProps) {
-  const { query } = useCategories(storeId);
-  const categories = query.data?.categories;
+  const { categories } = useCategories(storeId);
+  const { data } = categories(storeId);
 
   const form = useFormContext<
     Omit<MenuFormType, "image"> & { image: File | string | null }
@@ -28,7 +28,8 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
   const marginTop = "mt-2 lg:mt-4";
 
   const getCategoryName = () =>
-    categories?.find((el) => el.categoryId === form.watch("category"))?.name;
+    data?.categories?.find((el) => el.categoryId === form.watch("category"))
+      ?.name;
 
   return (
     <section className="flex h-fit basis-[32.81%] rounded-[12px] border border-gray-600 p-4 lg:rounded-[24px] lg:p-6">
@@ -39,15 +40,17 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
         <div className={cn("flex flex-col", inputGap)}>
           <Label disabled={!isEditing}>카테고리</Label>
           <Dropdown
-            data={categories?.map((el) => el.name) ?? []}
+            data={data?.categories?.map((el) => el.name) ?? []}
             defaultText={
               getCategoryName() ??
-              categories?.[0]?.name ??
+              data?.categories?.[0]?.name ??
               "카테고리를 선택하세요"
             }
             active={getCategoryName() ?? ""}
             setActive={(name: string) => {
-              const id = categories?.find((el) => el.name === name)?.categoryId;
+              const id = data?.categories?.find(
+                (el) => el.name === name
+              )?.categoryId;
               if (id) {
                 form.setValue("category", id);
               }

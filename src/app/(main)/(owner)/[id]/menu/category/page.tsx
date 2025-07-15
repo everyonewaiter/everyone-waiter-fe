@@ -14,16 +14,16 @@ export default function Page() {
   const navigate = useRouter();
   const { storeId } = useStoreContext();
 
-  const { query } = useCategories(storeId);
-  const { categories } = query.data!;
+  const { categories } = useCategories(storeId);
+  const { data } = categories(storeId);
 
   const form = useForm<{ categories: { name: string }[] }>({
-    defaultValues: { categories },
+    defaultValues: { categories: [] },
   });
 
   useEffect(() => {
-    form.reset({ categories });
-  }, [categories, form]);
+    form.reset({ categories: data?.categories });
+  }, [data?.categories, form]);
 
   const { fields } = useFieldArray({
     control: form.control,
