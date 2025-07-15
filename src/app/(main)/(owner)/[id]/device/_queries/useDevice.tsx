@@ -17,6 +17,7 @@ const useDevice = () => {
       queryKey: deviceKeys.all(storeId),
       queryFn: () => getDevices(storeId),
       enabled: !!storeId,
+      staleTime: 1000 * 60 * 5,
     });
 
   const detailQuery = (deviceId: string, storeId: string) =>
@@ -24,6 +25,7 @@ const useDevice = () => {
       queryKey: deviceKeys.detail(storeId, deviceId),
       queryFn: () => getDetailDevice({ storeId, deviceId }),
       enabled: !!storeId && !!deviceId,
+      staleTime: 1000 * 60 * 5,
     });
 
   const update = useMutation({

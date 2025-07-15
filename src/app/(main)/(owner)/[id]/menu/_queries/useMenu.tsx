@@ -22,13 +22,15 @@ export default function useMenu(storeId: string) {
       queryKey: menuKeys.category(storeId, categoryId),
       queryFn: () => getMenuList({ storeId, categoryId }),
       enabled: !!categoryId,
+      staleTime: 1000 * 60 * 5,
     });
 
-  const detailQuery = (categoryId: string, menuId: string, enabled?: boolean) =>
+  const detailQuery = (categoryId: string, menuId: string) =>
     useQuery({
       queryKey: menuKeys.menuInCategory(storeId, categoryId, menuId),
       queryFn: () => getMenuDetail({ storeId, categoryId, menuId }),
-      enabled,
+      enabled: !!categoryId && !!menuId,
+      staleTime: 1000 * 60 * 5,
     });
 
   const add = useMutation({

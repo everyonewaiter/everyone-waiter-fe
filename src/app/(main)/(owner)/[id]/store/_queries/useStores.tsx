@@ -26,6 +26,7 @@ const useStores = () => {
       queryKey: storeKeys.list(page),
       queryFn: () => getRegisters(page),
       placeholderData: (previousData) => previousData,
+      staleTime: 1000 * 60 * 5,
     });
 
   const registrationDetail = (registrationId: string) =>
@@ -33,6 +34,7 @@ const useStores = () => {
       queryKey: storeKeys.registration(registrationId),
       queryFn: () => registerDetails(JSON.stringify(registrationId)),
       enabled: !!registrationId,
+      staleTime: 1000 * 60 * 5,
     });
 
   const reapply = useMutation({
@@ -72,6 +74,7 @@ const useStores = () => {
     }>({
       queryKey: storeKeys.stores(),
       queryFn: getStoreList,
+      staleTime: 1000 * 60 * 5,
     });
 
   const storesDetail = (storeId: string) =>
@@ -79,6 +82,7 @@ const useStores = () => {
       queryKey: storeKeys.detail(storeId),
       queryFn: () => getStoreInfoDetail(storeId),
       enabled: !!storeId,
+      staleTime: 1000 * 60 * 5,
     });
 
   const updateInfo = useMutation({
