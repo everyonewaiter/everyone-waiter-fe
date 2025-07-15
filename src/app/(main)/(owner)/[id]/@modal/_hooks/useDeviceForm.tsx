@@ -3,7 +3,12 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import getQueryClient from "@/app/get-query-client";
 
-export default function useDeviceForm() {
+export default function useDeviceForm(
+  data?: Device & {
+    tableNo: number;
+    ksnetDeviceNo: string;
+  }
+) {
   const navigate = useRouter();
   const queryClient = getQueryClient();
 
@@ -14,14 +19,14 @@ export default function useDeviceForm() {
       createdAt: string;
     }
   >({
-    defaultValues: {
-      name: "",
-      createdAt: "",
-      state: "",
-      purpose: "HALL",
-      paymentType: "POSTPAID",
-      tableNo: 0,
-      deviceNumber: "",
+    values: {
+      name: data?.name ?? "",
+      createdAt: data?.createdAt ?? "",
+      state: data ? data.state : "",
+      purpose: data?.purpose ?? "HALL",
+      paymentType: data?.paymentType ?? "POSTPAID",
+      tableNo: data?.tableNo ?? 0,
+      deviceNumber: data?.ksnetDeviceNo ?? "",
     },
   });
 
