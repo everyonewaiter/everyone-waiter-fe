@@ -1,4 +1,3 @@
-import { Info } from "lucide-react";
 import { InputHTMLAttributes, ReactNode } from "react";
 import {
   ControllerRenderProps,
@@ -11,6 +10,7 @@ import cn from "@/lib/utils";
 import {
   FormControl,
   FormDescription,
+  FormErrorMessage,
   FormField,
   FormItem,
   FormLabel,
@@ -70,14 +70,7 @@ export default function LabeledInput<T extends FieldValues>({
             {rightComponent?.(field)}
           </div>
 
-          {errorMessage && (
-            <div className="flex items-center gap-1">
-              <Info className="stroke-status-error mb-[1px] h-4 w-4" />
-              <span className="lg:text-s text-status-error text-xs">
-                {errorMessage}
-              </span>
-            </div>
-          )}
+          {errorMessage && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
           {defaultMessage && !errorMessage && (
             <FormDescription className="lg:text-s text-xs text-gray-400 md:text-xs">
               {defaultMessage}

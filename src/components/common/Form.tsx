@@ -14,6 +14,7 @@ import {
 } from "react-hook-form";
 import Label from "@/components/common/Label";
 import cn from "@/lib/utils";
+import { Info } from "lucide-react";
 
 /* eslint-disable  */
 
@@ -142,6 +143,25 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 }
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+  const { formMessageId } = useFormField();
+
+  if (!props.children) {
+    return null;
+  }
+
+  return (
+    <p
+      data-slot="form-message"
+      id={formMessageId}
+      className={cn("text-[13px] text-gray-200", className)}
+      {...props}
+    >
+      {props.children}
+    </p>
+  );
+}
+
+function FormErrorMessage({ className, ...props }: React.ComponentProps<"p">) {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message ?? "") : props.children;
 
@@ -153,9 +173,13 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-[13px] text-gray-200", className)}
+      className={cn(
+        "lg:text-s text-status-error flex items-center gap-1 text-xs",
+        className
+      )}
       {...props}
     >
+      <Info className="stroke-status-error mb-[1px] h-4 w-4" />
       {body}
     </p>
   );
@@ -170,4 +194,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  FormErrorMessage,
 };

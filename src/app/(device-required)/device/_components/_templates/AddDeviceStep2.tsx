@@ -7,13 +7,9 @@ import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { setEncryptedItem } from "@/lib/auth/secureStorage";
 import cn from "@/lib/utils";
-import { deviceQueries } from "../_queries/useDeviceInfo";
-import useStep2Form from "../_hooks/useStep2Form";
-
-type FormValues = {
-  deviceName: string;
-  deviceNumber: string;
-};
+import { deviceQueries } from "../../_queries/useDeviceInfo";
+import useStep2Form from "../../_hooks/useStep2Form";
+import { TypeDeviceStep2Form } from "../../_schema/device.schema";
 
 type DevicePurpose = "HALL" | "POS";
 
@@ -34,7 +30,7 @@ export default function AddDeviceStep2({
   phoneNumber,
 }: IProps) {
   const navigate = useRouter();
-  const [activeIndex, setActiveIndex] = useState<DevicePurpose>("HALL");
+  const [purpose, setPurpose] = useState<DevicePurpose>("HALL");
 
   const {
     form: { form, watch, handleSubmit },
@@ -42,14 +38,14 @@ export default function AddDeviceStep2({
 
   const { mutate } = deviceQueries.useAddDevice();
 
-  const submitHandler = (data: FormValues) => {
+  const submitHandler = (data: TypeDeviceStep2Form) => {
     const submitData = {
       phoneNumber: phoneNumber.replaceAll("-", ""),
       storeId,
       name: data.deviceName,
-      purpose: activeIndex === "HALL" ? "HALL" : ("POS" as DevicePurpose),
+      purpose: purpose === "HALL" ? "HALL" : ("POS" as DevicePurpose),
       tableNo: 0,
-      ksnetDeviceNo: activeIndex === "POS" ? data.deviceNumber : "",
+      ksnetDeviceNo: purpose === "POS" ? data.deviceNumber : "",
       paymentType: "POSTPAID" as DevicePayment,
     };
 
@@ -83,7 +79,7 @@ export default function AddDeviceStep2({
           })
         );
 
-        navigate.replace(activeIndex === "HALL" ? "/hall" : "/pos");
+        navigate.replace(purpose === "HALL" ? "/hall" : "/pos");
       },
     });
   };
@@ -97,11 +93,11 @@ export default function AddDeviceStep2({
             key={tab.id}
             className={cn(
               "font-regular text-s h-10 w-full rounded-[12px] border lg:h-20 lg:rounded-[16px] lg:text-base",
-              activeIndex === tab.id
+              purpose === tab.id
                 ? "border-primary text-primary bg-[#f2202004]"
                 : "border-gray-600 text-gray-200"
             )}
-            onClick={() => setActiveIndex(tab.id)}
+            onClick={() => setPurpose(tab.id)}
           >
             {tab.label}
           </button>
@@ -118,12 +114,14 @@ export default function AddDeviceStep2({
             name="deviceName"
             placeholder="기기 이름을 입력해주세요."
           />
-          <LabeledInput
-            form={form}
-            label="단말기 번호"
-            name="deviceNumber"
-            placeholder="단말기 번호를 입력해주세요." // 기본값 DPTOTEST01
-          />
+          {purpose === "POS" && (
+            <LabeledInput
+              form={form}
+              label="단말기 번호"
+              name="deviceNumber"
+              placeholder="단말기 번호를 입력해주세요." // 기본값 DPT0TEST03
+            />
+          )}
           <ResponsiveButton
             type="submit"
             responsiveButtons={{

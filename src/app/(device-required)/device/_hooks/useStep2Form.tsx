@@ -1,16 +1,14 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import useMakeDeviceName from "./useMakeDeviceName";
-
-export interface FormValues {
-  deviceName: string;
-  deviceNumber: string;
-}
+import { step2Schema, TypeDeviceStep2Form } from "../_schema/device.schema";
 
 export default function useStep2Form() {
   const dn = useMakeDeviceName();
 
-  const form = useForm<FormValues>({
+  const form = useForm<TypeDeviceStep2Form>({
     mode: "onChange",
+    resolver: zodResolver(step2Schema),
     defaultValues: {
       deviceName: dn,
       deviceNumber: "",

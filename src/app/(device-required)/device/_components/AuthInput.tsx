@@ -3,7 +3,7 @@ import {
   FormField,
   FormItem,
   FormControl,
-  FormMessage,
+  FormErrorMessage,
 } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -28,7 +28,7 @@ export default function AuthInput({
   return (
     <FormField
       control={control}
-      name="phone"
+      name="authNumber"
       render={({ field }) => (
         <FormItem>
           <div className="flex flex-row gap-3">
@@ -67,7 +67,7 @@ export default function AuthInput({
               확인
             </ResponsiveButton>
           </div>
-          <FormMessage />
+          <FormErrorMessage />
         </FormItem>
       )}
     />

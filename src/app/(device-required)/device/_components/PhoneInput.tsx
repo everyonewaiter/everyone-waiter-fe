@@ -4,7 +4,7 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormMessage,
+  FormErrorMessage,
 } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -61,7 +61,7 @@ export default function PhoneInput({
               {isSubmitted ? "재인증" : "인증요청"}
             </ResponsiveButton>
           </div>
-          <FormMessage />
+          <FormErrorMessage />
         </FormItem>
       )}
     />

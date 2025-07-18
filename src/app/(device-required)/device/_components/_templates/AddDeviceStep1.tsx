@@ -8,10 +8,11 @@ import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import useOverlay from "@/hooks/use-overlay";
-import { deviceQueries } from "../_queries/useDeviceInfo";
-import useStep1Form from "../_hooks/useStep1Form";
-import PhoneInput from "./PhoneInput";
-import AuthInput from "./AuthInput";
+import { deviceQueries } from "../../_queries/useDeviceInfo";
+import useStep1Form from "../../_hooks/useStep1Form";
+import PhoneInput from "../PhoneInput";
+import AuthInput from "../AuthInput";
+import useAuthReducer from "../../_hooks/useAuthReducer";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -29,20 +30,12 @@ interface IProps {
   }) => void;
 }
 
-const INIT_TIME = 300;
-
 export default function AddDeviceStep1({ onNextStep }: IProps) {
   const {
     form: { form, setValue, watch },
   } = useStep1Form();
+  const { state, dispatch } = useAuthReducer();
 
-  const [authTime, setAuthTime] = useState(INIT_TIME);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [disables, setDisables] = useState({
-    requestAuthentication: true,
-    requestNumCheck: true,
-    goToNextStep: false,
-  });
   const [stores, setStores] = useState<{ storeId: bigint; name: string }[]>();
   const [active, setActive] = useState("매장을 선택해주세요.");
 
@@ -51,26 +44,23 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
   const { mutate: verify } = useVerifyPhone();
 
   useEffect(() => {
-    if (!disables.requestNumCheck) {
+    if (!state.disables.requestNumCheck) {
       const timer = setInterval(() => {
-        setAuthTime((prev) => {
-          if (prev <= 1) {
-            setValue("phone", "");
-            setValue("authNumber", "");
-            setIsSubmitted(false);
-            setDisables({ ...disables, requestNumCheck: false });
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
+        if (state.authTime <= 1) {
+          setValue("phone", "");
+          setValue("authNumber", "");
+          dispatch({ type: "stop-auth" });
+          clearInterval(timer);
+        } else {
+          dispatch({ type: "decrease-time" });
+        }
       }, 1000);
 
       return () => clearInterval(timer);
     }
 
-    return () => {};
-  }, [disables.requestNumCheck]);
+    return undefined;
+  }, [state.disables.requestNumCheck, state.authTime, setValue, dispatch]);
 
   const { open, close } = useOverlay();
 
@@ -86,30 +76,16 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
 
   // NOTE - 인증 요청
   const handleAuthentication = () => {
-    setIsSubmitted(true);
-    setDisables((prev) => ({ ...prev, requestNumCheck: false }));
-    setAuthTime(INIT_TIME);
-
-    const phoneNumber = watch("phone").replaceAll("-", "");
+    dispatch({ type: "start-auth" });
 
     send(
-      { phoneNumber },
-      {
-        onError: (e) => {
-          form.setError("phone", e);
-        },
-      }
+      { phoneNumber: watch("phone").replaceAll("-", "") },
+      { onError: (e) => form.setError("phone", e) }
     );
   };
 
   // NOTE - 인증 확인
   const handleCheckAuth = () => {
-    setDisables({
-      ...disables,
-      requestAuthentication: true,
-      requestNumCheck: true,
-    });
-
     const phoneNumber = watch("phone").replaceAll("-", "");
     const code = Number(watch("authNumber"));
 
@@ -120,28 +96,14 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
           if (!data || data.stores.length === 0) {
             handleOpenAlert();
             form.reset();
-            setIsSubmitted(false);
-            setDisables((prev) => ({ ...prev, requestNumCheck: true }));
+            dispatch({ type: "stop-auth" });
           } else {
             setStores(data.stores);
             if (data.stores.length === 1) setActive(data.stores[0].name);
-            setDisables({
-              requestAuthentication: true,
-              requestNumCheck: true,
-              goToNextStep: true,
-            });
-            setIsSubmitted(false);
-            setAuthTime(0);
+            dispatch({ type: "success" });
           }
         },
-        onError: () => {
-          setDisables({
-            ...disables,
-            requestNumCheck: false,
-            goToNextStep: true,
-          });
-          setIsSubmitted(true);
-        },
+        onError: () => dispatch({ type: "fail" }),
       }
     );
   };
@@ -165,18 +127,19 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
             <PhoneInput
               control={form.control}
               onClick={handleAuthentication}
-              disabled={disables.requestAuthentication}
-              isSubmitted={isSubmitted}
+              disabled={state.disables.requestAuthentication}
+              isSubmitted={state.isSubmitted}
             />
-            <AuthInput
-              control={form.control}
-              onClick={handleCheckAuth}
-              authTime={authTime}
-              isSubmitted={isSubmitted}
-              disabled={disables.requestNumCheck}
-            />
+            {state.isSubmitted && (
+              <AuthInput
+                control={form.control}
+                onClick={handleCheckAuth}
+                authTime={state.authTime}
+                isSubmitted={state.isSubmitted}
+                disabled={state.disables.requestNumCheck}
+              />
+            )}
           </div>
-
           {!!stores?.length && (
             <div className="mt-4">
               {stores?.length === 1 && (
@@ -208,7 +171,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
               lg: { buttonSize: "lg" },
             }}
             commonClassName="mt-5 lg:mt-8 w-full"
-            disabled={!disables.goToNextStep}
+            disabled={!state.disables.goToNextStep}
           >
             다음
           </ResponsiveButton>

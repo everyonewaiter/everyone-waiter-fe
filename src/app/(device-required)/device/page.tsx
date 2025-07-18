@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 import cn from "@/lib/utils";
-import AddDeviceStep1 from "./_components/AddDeviceStep1";
-import AddDeviceStep2 from "./_components/AddDeviceStep2";
 import useDeviceUI from "./_hooks/useDeviceUi";
+import AddDeviceStep1 from "./_components/_templates/AddDeviceStep1";
+import AddDeviceStep2 from "./_components/_templates/AddDeviceStep2";
 
 export default function Device() {
   const [storeName, setStoreName] = useState("");
