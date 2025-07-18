@@ -1,19 +1,18 @@
 "use client";
 
-import { notFound, useParams } from "next/navigation";
+import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
-import dynamic from "next/dynamic";
-import { AxiosError } from "axios";
+import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import CategoriesButton from "../../_components/CategoriesButton";
 import POSHeader from "../../_components/POSHeader";
 import POSMenuCard from "../../_components/POSMenuCard";
 import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
 import { useMemoStore } from "../../_hooks/useMemoStore";
 import { useOrderStore } from "../../_hooks/useOrderStore";
-import usePos from "../../_queries/usePos";
+import { posQueries } from "../../_queries/usePos";
 
 const MenuModal = dynamic(() => import("../../_components/modals/MenuModal"), {
   ssr: false,
@@ -42,25 +41,17 @@ export default function DetailTableOrder() {
   const { setOriginMemo } = useMemoStore();
   const { resetCheckedMenu } = useCheckedMenuStore();
 
-  const { detail } = useDeviceInfo();
-  const { data: device } = detail();
+  const { data: device } = deviceQueries.useDeviceDetail();
 
-  const { menuList, activity } = usePos();
-
-  const { data: menus, isLoading } = menuList(device?.storeId as string);
+  const { data: menus, isLoading } = posQueries.useMenuList(
+    device?.storeId as string
+  );
   const allMenus = menus?.categories?.map((el) => el.menus).flat();
   const selectedCategory = menus?.categories?.find(
     (el) => el.categoryId === isActive
   )?.menus;
 
-  const { data, error } = activity(Number(tableNo));
-
-  useEffect(() => {
-    const errors = error as AxiosError;
-    if (errors?.response?.status === 404) {
-      notFound();
-    }
-  }, [error]);
+  const { data } = posQueries.useActivity(Number(tableNo));
 
   useEffect(() => {
     if (!isLoading && (data || menus)) {

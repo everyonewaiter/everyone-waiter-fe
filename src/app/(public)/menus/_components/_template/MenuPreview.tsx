@@ -7,7 +7,7 @@ import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
-import usePublic from "../../../_queries/usePublic";
+import { publicQueries } from "../../../_queries/usePublic";
 
 const MenuCard = dynamic(
   () => import("@/app/(main)/(owner)/[id]/menu/_components/MenuCard"),
@@ -26,7 +26,6 @@ export default function MenuPreview() {
   const navigate = useRouter();
   const searchParams = useSearchParams();
   const storeId = searchParams.get("storeId") as string;
-  const accessKey = searchParams.get("accessKey") as string;
 
   const [activeTab, setActiveTab] = useState("전체");
 
@@ -36,8 +35,7 @@ export default function MenuPreview() {
     open(() => <OriginModal close={close} />);
   };
 
-  const { menus } = usePublic(storeId, accessKey);
-  const { data } = menus;
+  const { data } = publicQueries.usePreviewMenu(storeId);
   const menuList =
     activeTab === "전체"
       ? data?.categories.map((el) => el.menus).flat()

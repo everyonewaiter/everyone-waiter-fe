@@ -5,8 +5,8 @@ import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/use-overlay";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
-import useOrder from "../../_queries/useOrder";
-import usePos from "../../_queries/usePos";
+import { orderQueries } from "../../_queries/useOrder";
+import { posQueries } from "../../_queries/usePos";
 import SideBottom from "./SideBottom";
 import SideContents from "./SideContents";
 import SideControl from "./SideControl";
@@ -28,9 +28,11 @@ export default function SideSection() {
 
   const { open, close } = useOverlay();
 
-  const { activity, updateOrder } = usePos();
-  const { data } = activity(Number(tableNo));
-  const { addDiscount, complete, cancel } = useOrder();
+  const { data } = posQueries.useActivity(Number(tableNo));
+  const updateOrder = posQueries.useUpdateOrder();
+  const addDiscount = orderQueries.useAddDiscount();
+  const cancel = orderQueries.useCancelOrder();
+  const complete = orderQueries.useCompleteOrder();
 
   const handleAddMenu = () => {
     open(() => (

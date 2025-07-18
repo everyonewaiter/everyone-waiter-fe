@@ -10,7 +10,7 @@ import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { useMemoStore } from "../_hooks/useMemoStore";
 import { useOrderStore } from "../_hooks/useOrderStore";
 import { useSelectItemStore } from "../_hooks/useSelectItemStore";
-import usePos from "../_queries/usePos";
+import { posQueries } from "../_queries/usePos";
 import ReceiptModal from "./modals/ReceiptModal";
 
 const MemoAlert = dynamic(() => import("./modals/MemoAlert"), {
@@ -53,8 +53,7 @@ export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
 
-  const { activity } = usePos();
-  const { data } = activity(tableNo);
+  const { data } = posQueries.useActivity(tableNo);
 
   const { orders } = useOrderStore();
   const { selectedOrder } = useSelectItemStore();

@@ -1,7 +1,7 @@
 import { arrayMove } from "@dnd-kit/sortable";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import useMenu from "../_queries/useMenu";
+import { menuQueries } from "../_queries/useMenu";
 
 export function useMenuSort(storeId: string, categoryId: string) {
   const initialRef = useRef<Menu[]>([]);
@@ -9,8 +9,8 @@ export function useMenuSort(storeId: string, categoryId: string) {
     defaultValues: { menus: [] },
   });
 
-  const { query: menuQuery, move } = useMenu(storeId);
-  const menus = menuQuery(categoryId).data?.menus;
+  const { data: menus } = menuQueries.useMenuList(storeId, categoryId);
+  const move = menuQueries.useMove();
 
   const setInit = useCallback(
     (data: Menu[]) => {
@@ -44,8 +44,8 @@ export function useMenuSort(storeId: string, categoryId: string) {
   };
 
   useEffect(() => {
-    if (menus) setInit(menus);
-  }, [menus, setInit]);
+    if (menus?.menus) setInit(menus?.menus);
+  }, [menus?.menus, setInit]);
 
   const handleSortSave = async () => {
     await Promise.all(

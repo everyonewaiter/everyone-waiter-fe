@@ -39,9 +39,8 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
   const [stores, setStores] = useState<{ storeId: bigint; name: string }[]>();
   const [active, setActive] = useState("매장을 선택해주세요.");
 
-  const { useSendAuth, useVerifyPhone } = deviceQueries;
-  const { mutate: send } = useSendAuth();
-  const { mutate: verify } = useVerifyPhone();
+  const send = deviceQueries.useSendAuth();
+  const verify = deviceQueries.useVerifyPhone();
 
   useEffect(() => {
     if (!state.disables.requestNumCheck) {
@@ -78,7 +77,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
   const handleAuthentication = () => {
     dispatch({ type: "start-auth" });
 
-    send(
+    send.mutate(
       { phoneNumber: watch("phone").replaceAll("-", "") },
       { onError: (e) => form.setError("phone", e) }
     );
@@ -89,7 +88,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
     const phoneNumber = watch("phone").replaceAll("-", "");
     const code = Number(watch("authNumber"));
 
-    verify(
+    verify.mutate(
       { phoneNumber, code },
       {
         onSuccess: (data) => {

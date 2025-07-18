@@ -30,7 +30,7 @@ import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
 import useControlCheck from "@/hooks/useControlCheck";
 import PageTitle from "@/app/(main)/_components/PageTitle";
-import useDevice from "../../_queries/useDevice";
+import { deviceQueries } from "../../_queries/useDevice";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -52,8 +52,8 @@ export default function DevicePage() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { deviceQuery, remove } = useDevice();
-  const { data } = deviceQuery(storeId);
+  const { data } = deviceQueries.useDevices(storeId);
+  const remove = deviceQueries.useRemoveDevice();
 
   const { checkedItems, allChecked, handleCheckAll, handleCheckItem } =
     useControlCheck<Device>(data?.content!, "deviceId");

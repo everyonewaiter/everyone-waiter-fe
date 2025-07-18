@@ -8,14 +8,13 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { useStoreContext } from "@/providers/storeProvider";
-import useCategories from "../_queries/useCategories";
+import { categoryQueries } from "../_queries/useCategories";
 
 export default function Page() {
   const navigate = useRouter();
   const { storeId } = useStoreContext();
 
-  const { categories } = useCategories(storeId);
-  const { data } = categories(storeId);
+  const { data } = categoryQueries.useCategories(storeId);
 
   const form = useForm<{ categories: { name: string }[] }>({
     defaultValues: { categories: [] },

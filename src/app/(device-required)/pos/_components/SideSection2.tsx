@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
 import cn from "@/lib/utils";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
-import usePos from "../_queries/usePos";
+import { posQueries } from "../_queries/usePos";
 import MenuBox from "./MenuBox";
 import CancelAlert from "./modals/CancelAlert";
 import { print } from "../_utils/print-receipt";
@@ -17,20 +17,16 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
 
-interface IProps {
-  selectedRow: OrderPaymentsList | null;
-}
-
-export default function SideSection2({ selectedRow }: IProps) {
+export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
   const openReceipt = useOverlay();
   const cancel = useOverlay();
 
   const { storeId } = useDeviceContext();
 
-  const { activityById, storeInfo } = usePos();
-
-  const { data: activity } = activityById(selectedRow?.posTableActivityId!);
-  const { data: stores } = storeInfo(storeId!);
+  const { data: activity } = posQueries.useActivityById(
+    selectedRow?.posTableActivityId as string
+  );
+  const { data: stores } = posQueries.useStoreInfo(storeId as string);
 
   const handleReceipt = () => {
     activity?.orderPayments.forEach((payment) => {

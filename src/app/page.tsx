@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import useStores from "./(main)/(owner)/[id]/store/_queries/useStores";
+import { storesQueries } from "./(main)/(owner)/[id]/store/_queries/useStores";
 
 export default function Page() {
-  const { storesList } = useStores();
-  const { data, isLoading } = storesList();
+  const { data, isLoading } = storesQueries.useStoresList();
 
   const firstStoreId = data?.stores?.[0]?.storeId;
 

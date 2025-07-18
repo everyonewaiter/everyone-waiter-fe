@@ -13,7 +13,7 @@ import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
-import usePos from "../../_queries/usePos";
+import { posQueries } from "../../_queries/usePos";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -78,9 +78,8 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   });
 
   const { payCard, payCash } = usePayment();
-  const { activity, storeInfo } = usePos();
-  const { data: activityData } = activity(props.tableNo);
-  const { data: stores } = storeInfo(storeId!);
+  const { data: activityData } = posQueries.useActivity(props.tableNo);
+  const { data: stores } = posQueries.useStoreInfo(storeId!);
 
   const monthlyPlan = [
     "일시불",

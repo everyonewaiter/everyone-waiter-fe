@@ -6,7 +6,7 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import { registerStateTranslate } from "@/constants/translates";
 import PageTitle from "@/app/(main)/_components/PageTitle";
 import useDebounce from "@/hooks/useDebounce";
-import useAdmin from "../../../_hooks/useAdmin";
+import { adminQueries } from "../../../_queries/useAdmin";
 import StoresContent from "../StoresContent";
 
 export default function StoresPage() {
@@ -28,8 +28,7 @@ export default function StoresPage() {
     delay: 300,
   });
 
-  const { storesList } = useAdmin();
-  const { data, refetch } = storesList(
+  const { data, refetch } = adminQueries.useStores(
     isChecked ? "" : debouncedValue,
     isChecked ? debouncedValue : "",
     activeStatus === "전체"

@@ -5,27 +5,28 @@ import {
   getTeamsFrontOfMe,
 } from "../_api/public.api";
 
-export default function usePublic(storeId?: string, accessKey?: string) {
-  const waiting = useQuery({
+const useCheckWaiting = (storeId: string, accessKey: string) =>
+  useQuery({
     queryKey: ["front-of-my-turn"],
     queryFn: () =>
       getTeamsFrontOfMe({ storeId: storeId!, accessKey: accessKey! }),
     enabled: !!storeId && !!accessKey,
   });
 
-  const cancelMyTurn = useMutation({
+const useCancelMyTurn = () =>
+  useMutation({
     mutationFn: cancelWaiting,
   });
 
-  const menus = useQuery({
+const usePreviewMenu = (storeId: string) =>
+  useQuery({
     queryKey: ["menu-list", storeId],
     queryFn: () => getMenuPreview(storeId!),
     enabled: !!storeId,
   });
 
-  return {
-    waiting,
-    cancelMyTurn,
-    menus,
-  };
-}
+export const publicQueries = {
+  useCancelMyTurn,
+  useCheckWaiting,
+  usePreviewMenu,
+};

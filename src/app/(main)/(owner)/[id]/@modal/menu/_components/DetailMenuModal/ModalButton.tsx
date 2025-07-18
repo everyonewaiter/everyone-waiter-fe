@@ -7,7 +7,7 @@ import { getPathnameWithoutStoreId } from "@/utils/getPathname";
 import { useStoreContext } from "@/providers/storeProvider";
 import { formToRequest } from "../../_hooks/useMenuForm";
 import { MenuFormType } from "../../_types/menuForm.type";
-import useMenu from "../../../../menu/_queries/useMenu";
+import { menuQueries } from "../../../../menu/_queries/useMenu";
 
 interface IProps {
   isEditing: boolean;
@@ -32,7 +32,9 @@ export default function ModalButton({
     Omit<MenuFormType, "image"> & { image: File | string | null }
   >();
 
-  const { add, update, updateWithImg } = useMenu(storeId);
+  const add = menuQueries.useAddMenu(storeId);
+  const updateWithImg = menuQueries.useUpdateWithImage(storeId);
+  const updateWithoutImg = menuQueries.useUpdateWithoutImage(storeId);
 
   const handleSubmit = () => {
     const values = form.getValues();
@@ -71,7 +73,7 @@ export default function ModalButton({
           }
         );
       } else {
-        update.mutate(
+        updateWithoutImg.mutate(
           {
             storeId,
             menuId: data?.menuId as string,

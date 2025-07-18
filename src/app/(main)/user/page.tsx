@@ -2,14 +2,13 @@
 
 import GuideComponent from "@/components/GuideComponent";
 import useAuthStore from "@/stores/useAuthStore";
-import useStores from "../(owner)/[id]/store/_queries/useStores";
+import { storesQueries } from "../(owner)/[id]/store/_queries/useStores";
 
 export default function Page() {
   const { user } = useAuthStore();
 
-  const { storesList, registrationList } = useStores();
-  const { data, isLoading } = storesList();
-  const { data: registerData } = registrationList();
+  const { data, isLoading } = storesQueries.useStoresList();
+  const { data: registerData } = storesQueries.useRegistrationList();
 
   const firstStoreId = data?.stores?.[0]?.storeId;
 

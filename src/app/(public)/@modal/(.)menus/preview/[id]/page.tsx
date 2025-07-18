@@ -1,6 +1,6 @@
 "use client";
 
-import usePublic from "@/app/(public)/_queries/usePublic";
+import { publicQueries } from "@/app/(public)/_queries/usePublic";
 import dynamic from "next/dynamic";
 import { useParams, useSearchParams } from "next/navigation";
 
@@ -18,8 +18,7 @@ export default function Page() {
   const storeId = searchParams.get("storeId");
   const categoryId = searchParams.get("categoryId");
 
-  const { menus } = usePublic(storeId!);
-  const { data } = menus;
+  const { data } = publicQueries.usePreviewMenu(storeId as string);
   const menu = data?.categories
     .flatMap((el) => el.menus)
     .find(

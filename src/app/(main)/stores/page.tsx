@@ -24,7 +24,7 @@ import { registerStateTranslate } from "@/constants/translates";
 import useOverlay from "@/hooks/use-overlay";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
-import useStores from "../(owner)/[id]/store/_queries/useStores";
+import { storesQueries } from "../(owner)/[id]/store/_queries/useStores";
 import PageTitle from "../_components/PageTitle";
 
 const PendingAcceptModal = dynamic(
@@ -70,8 +70,7 @@ export default function StoreList() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { registrationList } = useStores();
-  const { data, refetch } = registrationList(currentPage);
+  const { data, refetch } = storesQueries.useRegistrationList(currentPage);
 
   const { open, close } = useOverlay();
 

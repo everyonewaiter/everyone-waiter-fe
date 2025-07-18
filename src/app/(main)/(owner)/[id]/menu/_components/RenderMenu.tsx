@@ -7,7 +7,7 @@ import { useMediaQuery } from "react-responsive";
 import DashedBorder from "@/components/DashedBorder";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import { useStoreContext } from "@/providers/storeProvider";
-import useMenu from "../_queries/useMenu";
+import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
 
 const Sortable = dynamic(() => import("@/components/Sortable"), {
@@ -39,8 +39,7 @@ export default function RenderMenu({
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const { storeId } = useStoreContext();
-  const { query: menuQuery } = useMenu(storeId);
-  const menu = menuQuery(categoryId).data?.menus;
+  const { data } = menuQueries.useMenuList(storeId, categoryId);
 
   const handleNavigate = (menuId: string) =>
     `/${storeId}/menu/${menuId}/category/${categoryId}?hideModal=${isMobile}`;
@@ -72,10 +71,10 @@ export default function RenderMenu({
           </button>
           {changeSort ? (
             <Sortable
-              items={menu?.map((item) => item.menuId)!}
+              items={data?.menus?.map((item) => item.menuId)!}
               onDragEnd={handleDragEnd}
             >
-              {menu?.map((item) => (
+              {data?.menus?.map((item) => (
                 <SortableItem
                   key={item.menuId}
                   item={item}
@@ -84,7 +83,7 @@ export default function RenderMenu({
               ))}
             </Sortable>
           ) : (
-            menu?.map((item) => (
+            data?.menus?.map((item) => (
               <MenuCard
                 key={item.menuId}
                 onToggle={toggle}

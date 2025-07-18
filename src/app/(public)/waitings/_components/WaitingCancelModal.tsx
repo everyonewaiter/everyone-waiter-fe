@@ -9,7 +9,7 @@ import {
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import usePublic from "../../_queries/usePublic";
+import { publicQueries } from "../../_queries/usePublic";
 
 interface IProps {
   close: () => void;
@@ -21,10 +21,10 @@ export default function WaitingCancelModal({ close, storeId, key }: IProps) {
   const navigate = useRouter();
 
   const [otpValue, setOtpValue] = useState("");
-  const { cancelMyTurn } = usePublic(storeId, key);
+  const cancelMyTurn = publicQueries.useCancelMyTurn();
 
   const handleCancel = () => {
-    // NOTE: optValue를 안 보냄
+    // TODO: optValue를 안 보냄
     cancelMyTurn.mutate(
       {
         storeId,

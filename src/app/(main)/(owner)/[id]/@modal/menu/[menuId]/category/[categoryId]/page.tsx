@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import Spinner from "@/components/common/Spinner";
-import useMenu from "../../../../../menu/_queries/useMenu";
+import { menuQueries } from "../../../../../menu/_queries/useMenu";
 
 const DetailMenuModal = dynamic(
   () => import("../../../_components/DetailMenuModal/index"),
@@ -18,8 +18,11 @@ export default function Page() {
   const menuId = params?.menuId as string;
   const categoryId = params?.categoryId as string;
 
-  const { detailQuery } = useMenu(storeId);
-  const { data, isLoading } = detailQuery(categoryId ?? "", menuId);
+  const { data, isLoading } = menuQueries.useMenuDetail(
+    storeId,
+    categoryId ?? "",
+    menuId
+  );
 
   const [isEditing, setIsEditing] = useState(false);
 

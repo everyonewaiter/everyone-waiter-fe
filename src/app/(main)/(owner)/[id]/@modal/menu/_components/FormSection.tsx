@@ -7,7 +7,7 @@ import LabeledInput from "@/components/common/LabeledInput";
 import Switch from "@/components/common/Switch";
 import { menuLabelTranslate, menuStateTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
-import useCategories from "../../../menu/_queries/useCategories";
+import { categoryQueries } from "../../../menu/_queries/useCategories";
 import { MenuFormType } from "../_types/menuForm.type";
 
 interface IProps {
@@ -17,8 +17,7 @@ interface IProps {
 }
 
 export default function FormSection({ isEditing, storeId, type }: IProps) {
-  const { categories } = useCategories(storeId);
-  const { data } = categories(storeId);
+  const { data } = categoryQueries.useCategories(storeId);
 
   const form = useFormContext<
     Omit<MenuFormType, "image"> & { image: File | string | null }

@@ -8,7 +8,7 @@ import LabeledInput from "@/components/common/LabeledInput";
 import { deviceTranslate, paymentTimeTranslate } from "@/constants/translates";
 import { useStoreContext } from "@/providers/storeProvider";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
-import useDevice from "../../../device/_queries/useDevice";
+import { deviceQueries } from "../../../device/_queries/useDevice";
 import ModalButton from "../../_components/ModalButton";
 import useDeviceForm from "../../_hooks/useDeviceForm";
 
@@ -18,8 +18,8 @@ export default function DeviceInfoModal() {
 
   const { storeId } = useStoreContext();
 
-  const { detailQuery, update } = useDevice();
-  const { data } = detailQuery(deviceId, storeId);
+  const { data } = deviceQueries.useDetails(deviceId, storeId);
+  const update = deviceQueries.useUpdateDevice();
 
   const { form, submitHandler } = useDeviceForm(data);
 

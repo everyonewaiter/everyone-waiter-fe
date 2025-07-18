@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { AxiosError } from "axios";
 import PublicComponent from "../_components/PublicComponent";
 import WaitingCancelModal from "../_components/WaitingCancelModal";
-import usePublic from "../../_queries/usePublic";
+import { publicQueries } from "../../_queries/usePublic";
 
 export default function Page() {
   const navigate = useRouter();
@@ -16,8 +16,10 @@ export default function Page() {
   const storeId = searchParams.get("storeId") as string;
   const accessKey = searchParams.get("accessKey") as string;
 
-  const { waiting } = usePublic(storeId, accessKey);
-  const { data, isError, error } = waiting;
+  const { data, isError, error } = publicQueries.useCheckWaiting(
+    storeId,
+    accessKey
+  );
 
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
@@ -32,7 +34,7 @@ export default function Page() {
     } else if (data?.state === "COMPLETE") {
       navigate.replace("/waitings/result?type=enter");
     }
-  }, [data, isError]);
+  }, [data, isError, error, navigate]);
 
   const initNumber = data?.initWaitingTeamCount!;
   const currentNumber = data?.currentWaitingTeamCount!;

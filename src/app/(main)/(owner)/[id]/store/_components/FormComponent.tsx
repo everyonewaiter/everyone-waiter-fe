@@ -10,7 +10,7 @@ import Icon from "@/components/common/Icon";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
-import useStores from "../_queries/useStores";
+import { storesQueries } from "../_queries/useStores";
 import Origins from "./Origins";
 import useStoreForm from "../_hooks/useStoreForm";
 
@@ -20,8 +20,8 @@ export default function FormComponent() {
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { storesDetail, updateInfo } = useStores();
-  const { data } = storesDetail(storeId);
+  const { data } = storesQueries.useStoresDetail(storeId);
+  const updateInfo = storesQueries.useUpdateInfo();
 
   const { form, fields, isSubmitted, submitHandler, appendOrigin } =
     useStoreForm(data!, storeId);

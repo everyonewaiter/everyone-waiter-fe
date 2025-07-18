@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import useStores from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
+import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
@@ -15,6 +15,7 @@ import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { TypeStore, storeSchema } from "@/schema/store.schema";
+import { useRouter } from "next/navigation";
 
 const UploadPhoto = dynamic(
   () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),
@@ -24,7 +25,9 @@ const UploadPhoto = dynamic(
 );
 
 export default function CreateForm() {
+  const navigate = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
+
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -40,9 +43,7 @@ export default function CreateForm() {
     },
   });
 
-  const {
-    add: { mutate, error },
-  } = useStores();
+  const { mutate, error } = storesQueries.useRegister();
 
   useEffect(() => {
     if (error?.message) {
@@ -65,6 +66,7 @@ export default function CreateForm() {
 
     mutate(formData, {
       onError: () => setIsSubmitted(false),
+      onSuccess: () => navigate.push("/create?state=pending"),
     });
   };
 

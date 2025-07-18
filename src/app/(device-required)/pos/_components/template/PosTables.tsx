@@ -4,12 +4,12 @@ import { ChevronsRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
+import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
-import usePos from "../../_queries/usePos";
+import { posQueries } from "../../_queries/usePos";
 import POSHeader from "../POSHeader";
 import TableBox from "../TableBox";
 
@@ -22,12 +22,11 @@ export default function PosTables() {
   const searchParams = useSearchParams();
   const moveSourceTableNo = searchParams.get("sourceTableNo");
 
-  const { detail } = useDeviceInfo();
-  const { data: device } = detail();
+  const { data: device } = deviceQueries.useDeviceDetail();
 
   const { open, close } = useOverlay();
-  const { tableList, move } = usePos();
-  const { data, isLoading } = tableList(!!device?.deviceId);
+  const { data, isLoading } = posQueries.useTableList(!!device?.deviceId);
+  const move = posQueries.useMoveTable();
 
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 

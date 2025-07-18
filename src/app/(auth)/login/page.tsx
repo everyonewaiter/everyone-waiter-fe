@@ -16,7 +16,7 @@ import useLogin from "./_hooks/useLogin";
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { mutate: login } = useLogin();
+  const login = useLogin();
 
   const form = useForm<TypeLogin>({
     mode: "onChange",
@@ -29,7 +29,7 @@ export default function Login() {
 
   const submitHandler = (formData: TypeLogin) => {
     setIsLoading(true);
-    login(formData, {
+    login.mutate(formData, {
       onError: (e) => {
         setIsLoading(false);
         if ((e as any).response.data.code.startsWith("FAILED")) {

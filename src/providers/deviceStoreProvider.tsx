@@ -31,6 +31,7 @@ export function DeviceProvider({ children }: { children: React.ReactNode }) {
     const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
     setStoreId(meta.storeId ?? null);
     setDeviceId(meta.deviceId ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = useMemo(() => ({ storeId, deviceId }), [storeId]);

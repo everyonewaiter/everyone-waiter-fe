@@ -12,96 +12,98 @@ import {
   resendReceiptKitchen,
   updateMenus,
 } from "../_api/pos.api";
+import { posKeys } from "./keys";
 
-export default function usePos() {
-  const queryClient = getQueryClient();
+const queryClient = getQueryClient();
 
-  const open = useMutation({
+const useOpenStore = () =>
+  useMutation({
     mutationFn: openStore,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["stores"] });
+      queryClient.invalidateQueries({ queryKey: posKeys.stores });
     },
   });
 
-  const close = useMutation({
+const useCloseStore = () =>
+  useMutation({
     mutationFn: closeStore,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["stores"] });
+      queryClient.invalidateQueries({ queryKey: posKeys.stores });
     },
   });
 
-  const store = (storeId: string) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["stores"],
-      queryFn: () => getStoreInfo({ storeId }),
-      enabled: !!storeId,
-      staleTime: 1000 * 60 * 5,
-    });
+const useStoreInfo = (storeId: string) =>
+  useQuery({
+    queryKey: posKeys.stores,
+    queryFn: () => getStoreInfo({ storeId }),
+    enabled: !!storeId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const menuList = (storeId: string, menuId?: string) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["pos-menu-list"],
-      queryFn: () => getPosMenuList(storeId),
-      enabled: menuId ? !!storeId && !!menuId : !!storeId,
-      staleTime: 1000 * 60 * 5,
-    });
+const useMenuList = (storeId: string, menuId?: string) =>
+  useQuery({
+    queryKey: posKeys.menus,
+    queryFn: () => getPosMenuList(storeId),
+    enabled: menuId ? !!storeId && !!menuId : !!storeId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const tableList = (enabled: boolean) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["table-list"],
-      queryFn: getTables,
-      enabled,
-      staleTime: 1000 * 60 * 5,
-    });
+const useTableList = (enabled: boolean) =>
+  useQuery({
+    queryKey: posKeys.tables,
+    queryFn: getTables,
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const activity = (tableNo: number) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["table", tableNo],
-      queryFn: () => getTableActivity({ tableNo }),
-      enabled: !!tableNo,
-      staleTime: 1000 * 60 * 5,
-    });
+const useActivity = (tableNo: number) =>
+  useQuery({
+    queryKey: posKeys.activity(tableNo),
+    queryFn: () => getTableActivity({ tableNo }),
+    enabled: !!tableNo,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const activityById = (posTableActivityId: string) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["activity", posTableActivityId],
-      queryFn: () => getDetailActivity({ posTableActivityId }),
-      enabled: !!posTableActivityId,
-      staleTime: 1000 * 60 * 5,
-    });
+const useActivityById = (posTableActivityId: string) =>
+  useQuery({
+    queryKey: posKeys.activityById(posTableActivityId),
+    queryFn: () => getDetailActivity({ posTableActivityId }),
+    enabled: !!posTableActivityId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const move = useMutation({
+const useMoveTable = () =>
+  useMutation({
     mutationFn: moveTables,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["table-list"] });
+      queryClient.invalidateQueries({ queryKey: posKeys.tables });
     },
   });
 
-  const resendReceipt = useMutation({
+const useResendReceipt = () =>
+  useMutation({
     mutationFn: resendReceiptKitchen,
   });
 
-  const updateOrder = useMutation({
+const useUpdateOrder = () =>
+  useMutation({
     mutationFn: updateMenus,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+      queryClient.invalidateQueries({
+        queryKey: posKeys.activity(variables.tableNo),
+      });
     },
   });
 
-  return {
-    store: { open, close },
-    menuList,
-    tableList,
-    activity,
-    storeInfo: store,
-    move,
-    resendReceipt,
-    updateOrder,
-    activityById,
-  };
-}
+export const posQueries = {
+  useOpenStore,
+  useCloseStore,
+  useActivity,
+  useActivityById,
+  useMenuList,
+  useMoveTable,
+  useResendReceipt,
+  useStoreInfo,
+  useTableList,
+  useUpdateOrder,
+};

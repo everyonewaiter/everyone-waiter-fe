@@ -10,7 +10,7 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import CategoryForm from "../../../../menu/_components/CategoryForm";
-import useCategories from "../../../../menu/_queries/useCategories";
+import { categoryQueries } from "../../../../menu/_queries/useCategories";
 import ModalButton from "../../../_components/ModalButton";
 import ModalTitle from "../../../_components/ModalTitle";
 import useCategoryForm from "../../_hooks/useCategoryForm";
@@ -33,8 +33,8 @@ export default function Page() {
     { sourceId: string; targetId: string; where: "NEXT" | "PREVIOUS" }[]
   >([]);
 
-  const { categories, move } = useCategories(storeId);
-  const { data } = categories(storeId);
+  const { data } = categoryQueries.useCategories(storeId);
+  const move = categoryQueries.useMoveCategory(storeId);
 
   const { form, setInitialCategories } = useCategoryForm();
 

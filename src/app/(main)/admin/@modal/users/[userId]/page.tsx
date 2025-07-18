@@ -13,7 +13,7 @@ import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
-import useAdmin from "../../../_hooks/useAdmin";
+import { adminQueries } from "../../../_queries/useAdmin";
 
 interface TypeForm {
   email: string;
@@ -35,8 +35,8 @@ export default function Page() {
 
   const [isDisabled, setIsDisabled] = useState(false);
 
-  const { detailAccount, updateDetail } = useAdmin();
-  const { data: accountData } = detailAccount(accountId);
+  const { data: accountData } = adminQueries.useAccountDetail(accountId);
+  const updateDetail = adminQueries.useUpdateAccount();
 
   const form = useForm<TypeForm | TypeEditForm>({
     mode: "onChange",

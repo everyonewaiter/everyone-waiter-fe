@@ -9,7 +9,7 @@ import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PublicComponent from "../_components/PublicComponent";
-import usePublic from "../../_queries/usePublic";
+import { publicQueries } from "../../_queries/usePublic";
 
 export default function Page() {
   const navigate = useRouter();
@@ -17,12 +17,12 @@ export default function Page() {
   const storeId = searchParams.get("storeId") as string;
   const accessKey = searchParams.get("accessKey") as string;
 
-  const { cancelMyTurn } = usePublic(storeId, accessKey);
+  const cancelMyTurn = publicQueries.useCancelMyTurn();
 
   const [otpValue, setOtpValue] = useState("");
 
   const handleCancel = () => {
-    // NOTE: optValue를 안 보냄
+    // TODO: optValue 안 보냄 - 백엔드 요청
     cancelMyTurn.mutate(
       {
         storeId,

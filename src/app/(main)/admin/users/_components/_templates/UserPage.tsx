@@ -5,7 +5,7 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import useDebounce from "@/hooks/useDebounce";
 import PageTitle from "@/app/(main)/_components/PageTitle";
 import { FormProvider, useForm } from "react-hook-form";
-import useAdmin from "../../../_hooks/useAdmin";
+import { adminQueries } from "../../../_queries/useAdmin";
 import UsersContent from "../UsersContent";
 
 const permissionObj = {
@@ -57,8 +57,7 @@ export default function UserPage() {
     delay: 300,
   });
 
-  const { accountList } = useAdmin();
-  const { data, refetch } = accountList(
+  const { data, refetch } = adminQueries.useAccount(
     debouncedValue,
     permissionObj[
       activePermission as keyof typeof permissionObj

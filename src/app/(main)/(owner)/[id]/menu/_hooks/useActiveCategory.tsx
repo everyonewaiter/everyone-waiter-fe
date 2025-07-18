@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import useCategories from "../_queries/useCategories";
+import { categoryQueries } from "../_queries/useCategories";
 
 export function useActiveCategory(storeId: string) {
-  const { categories } = useCategories(storeId);
-  const { data } = categories(storeId);
+  const { data } = categoryQueries.useCategories(storeId);
 
   const [active, setActive] = useState(data?.categories?.[0]?.categoryId ?? "");
 

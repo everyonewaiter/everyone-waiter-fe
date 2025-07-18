@@ -5,10 +5,11 @@ import {
   sendAuthCodeInDevice,
   verifyPhoneInDevice,
 } from "../_api/device.api";
+import { deviceKeys } from "./keys";
 
 const useDeviceDetail = () =>
   useQuery({
-    queryKey: ["get-device-info-with-store"],
+    queryKey: deviceKeys.detail,
     queryFn: getDeviceDetail,
   });
 

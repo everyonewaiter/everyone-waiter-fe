@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import cn from "@/lib/utils";
 import getQueryClient from "@/app/get-query-client";
-import useOrder from "../../_queries/useOrder";
+import { orderQueries } from "../../_queries/useOrder";
 import usePayment from "../../_queries/usePayment";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 
@@ -26,7 +26,7 @@ export default function CancelAlert({
 
   const { resetOrders } = useOrderStore();
 
-  const { cancel } = useOrder();
+  const cancel = orderQueries.useCancelOrder();
   const { cancelCard } = usePayment();
 
   const handleCancel = async () => {

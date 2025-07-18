@@ -14,26 +14,26 @@ import getQueryClient from "@/app/get-query-client";
 import { useOptimisticReorderMutation } from "@/hooks/useOptimisticReorder";
 import { menuKeys } from "./keys";
 
-export default function useMenu(storeId: string) {
-  const queryClient = getQueryClient();
+const queryClient = getQueryClient();
 
-  const query = (categoryId: string) =>
-    useQuery({
-      queryKey: menuKeys.category(storeId, categoryId),
-      queryFn: () => getMenuList({ storeId, categoryId }),
-      enabled: !!categoryId,
-      staleTime: 1000 * 60 * 5,
-    });
+const useMenuList = (storeId: string, categoryId: string) =>
+  useQuery({
+    queryKey: menuKeys.category(storeId, categoryId),
+    queryFn: () => getMenuList({ storeId, categoryId }),
+    enabled: !!categoryId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const detailQuery = (categoryId: string, menuId: string) =>
-    useQuery({
-      queryKey: menuKeys.menuInCategory(storeId, categoryId, menuId),
-      queryFn: () => getMenuDetail({ storeId, categoryId, menuId }),
-      enabled: !!categoryId && !!menuId && !!storeId,
-      staleTime: 1000 * 60 * 5,
-    });
+const useMenuDetail = (storeId: string, categoryId: string, menuId: string) =>
+  useQuery({
+    queryKey: menuKeys.menuInCategory(storeId, categoryId, menuId),
+    queryFn: () => getMenuDetail({ storeId, categoryId, menuId }),
+    enabled: !!categoryId && !!menuId && !!storeId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const add = useMutation({
+const useAddMenu = (storeId: string) =>
+  useMutation({
     mutationFn: postMenu,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -44,7 +44,8 @@ export default function useMenu(storeId: string) {
     onError: (e) => alert((e as any).response.data.message),
   });
 
-  const update = useMutation({
+const useUpdateWithoutImage = (storeId: string) =>
+  useMutation({
     mutationFn: updateMenuWithoutImage,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -53,7 +54,8 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const updateWithImg = useMutation({
+const useUpdateWithImage = (storeId: string) =>
+  useMutation({
     mutationFn: updateMenuWithImage,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -62,7 +64,8 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const remove = useMutation({
+const useDeleteMenu = (storeId: string) =>
+  useMutation({
     mutationFn: deleteMenu,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -71,7 +74,8 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const multiRemove = useMutation({
+const useMultiDelete = (storeId: string) =>
+  useMutation({
     mutationFn: deleteMultipleMenus,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -80,18 +84,17 @@ export default function useMenu(storeId: string) {
     },
   });
 
-  const move = useOptimisticReorderMutation(moveMenus, (_storeId) =>
-    menuKeys.all(_storeId)
-  );
+const useMove = () =>
+  useOptimisticReorderMutation(moveMenus, (_storeId) => menuKeys.all(_storeId));
 
-  return {
-    query,
-    detailQuery,
-    add,
-    update,
-    updateWithImg,
-    remove,
-    multiRemove,
-    move,
-  };
-}
+export const menuQueries = {
+  useAddMenu,
+  useDeleteMenu,
+  useMenuDetail,
+  useMenuList,
+  useMove,
+  useMultiDelete,
+  useOptimisticReorderMutation,
+  useUpdateWithImage,
+  useUpdateWithoutImage,
+};

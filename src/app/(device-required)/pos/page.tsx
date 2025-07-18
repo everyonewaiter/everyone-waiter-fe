@@ -10,7 +10,7 @@ import useOverlay from "@/hooks/use-overlay";
 import useGetDate from "@/hooks/useGetDate";
 import dynamic from "next/dynamic";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
-import usePos from "./_queries/usePos";
+import { posQueries } from "./_queries/usePos";
 import SalesModal from "./_components/modals/SalesModal";
 
 const OpenSwitch = dynamic(() => import("./_components/OpenSwitch"), {
@@ -26,10 +26,10 @@ export default function Pos() {
 
   const { now } = useNowContext();
   const { storeId } = useDeviceContext();
-
-  const { store, storeInfo } = usePos();
-  const { data, isLoading } = storeInfo(storeId as string);
   const { date, day } = useGetDate(now);
+
+  const { data, isLoading } = posQueries.useStoreInfo(storeId as string);
+  const open = posQueries.useOpenStore();
 
   const posControl = useOverlay();
   const salesControl = useOverlay();
@@ -50,7 +50,7 @@ export default function Pos() {
             buttonText="오픈하기"
             noResponsive
             onAction={() => {
-              store.open.mutate(undefined, {
+              open.mutate(undefined, {
                 onSuccess: successHandler,
                 onError: (e) => {
                   if (

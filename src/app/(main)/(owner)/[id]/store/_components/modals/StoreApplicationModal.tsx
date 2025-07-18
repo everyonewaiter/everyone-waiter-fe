@@ -3,6 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ChangeEvent, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import getQueryClient from "@/app/get-query-client";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
@@ -11,8 +12,7 @@ import ModalWithTitle from "@/components/modal/largeModalLayout";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import formatDate from "@/lib/formatting/formatDate";
-// import { useStoreContext } from "@/providers/storeProvider";
-import useStores from "../../_queries/useStores";
+import { storesQueries } from "../../_queries/useStores";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
 
@@ -37,6 +37,8 @@ export default function StoreApplicationModal({
   //  TODO: 수정
   const storeId = "1";
 
+  const navigate = useRouter();
+
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -59,8 +61,8 @@ export default function StoreApplicationModal({
   });
 
   const { handleOpenAddress } = useOpenDaumPostcode(form);
-  const { reapply, reapplyWithImg } = useStores();
-  const { mutate } = reapplyWithImg(storeId);
+  const reapply = storesQueries.useReapply();
+  const reapplyWithImg = storesQueries.useReapplyWithImg();
 
   const handleBusinessNumber = (e: ChangeEvent<HTMLInputElement>) => {
     const str = e.target.value.replace(/[^0-9]/g, "");
@@ -82,10 +84,15 @@ export default function StoreApplicationModal({
     formData.append("address", form.getValues("address"));
     formData.append("file", form.getValues("image") as File);
 
-    mutate({
-      registrationId: item.registrationId.toString(),
-      body: formData,
-    });
+    reapplyWithImg.mutate(
+      {
+        registrationId: item.registrationId.toString(),
+        body: formData,
+      },
+      {
+        onSuccess: () => navigate.push(`/${storeId}`),
+      }
+    );
   };
 
   const handleReapply = () => {

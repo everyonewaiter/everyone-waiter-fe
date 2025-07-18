@@ -32,7 +32,7 @@ export default function useDeviceInfo() {
     };
 
     fetchDeviceInfo();
-  }, []);
+  }, [deviceId, storeId]);
 
   return { deviceInfo, isLoading, error };
 }

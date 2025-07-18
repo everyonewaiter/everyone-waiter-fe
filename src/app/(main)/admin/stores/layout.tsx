@@ -1,13 +1,10 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren } from "react";
 
-export default function Layout({
-  children,
-  modal,
-}: PropsWithChildren<{ modal: ReactNode }>) {
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       {children}
-      {modal}
+      {/* {modal} */}
     </>
   );
 }

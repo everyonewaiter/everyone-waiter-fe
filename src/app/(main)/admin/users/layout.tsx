@@ -1,13 +1,13 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren } from "react";
 
 export default function Layout({
   children,
-  modal,
-}: PropsWithChildren<{ modal: ReactNode }>) {
+  // modal,
+}: PropsWithChildren) {
   return (
     <div className="h-full">
       {children}
-      {modal}
+      {/* {modal} */}
     </div>
   );
 }

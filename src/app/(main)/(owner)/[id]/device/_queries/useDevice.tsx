@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useMutation, useQuery } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import {
@@ -9,26 +8,26 @@ import {
 } from "../_api/device.api";
 import { deviceKeys } from "./keys";
 
-const useDevice = () => {
-  const queryClient = getQueryClient();
+const queryClient = getQueryClient();
 
-  const deviceQuery = (storeId: string) =>
-    useQuery({
-      queryKey: deviceKeys.all(storeId),
-      queryFn: () => getDevices(storeId),
-      enabled: !!storeId,
-      staleTime: 1000 * 60 * 5,
-    });
+const useDevices = (storeId: string) =>
+  useQuery({
+    queryKey: deviceKeys.all(storeId),
+    queryFn: () => getDevices(storeId),
+    enabled: !!storeId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const detailQuery = (deviceId: string, storeId: string) =>
-    useQuery({
-      queryKey: deviceKeys.detail(storeId, deviceId),
-      queryFn: () => getDetailDevice({ storeId, deviceId }),
-      enabled: !!storeId && !!deviceId,
-      staleTime: 1000 * 60 * 5,
-    });
+const useDetails = (deviceId: string, storeId: string) =>
+  useQuery({
+    queryKey: deviceKeys.detail(storeId, deviceId),
+    queryFn: () => getDetailDevice({ storeId, deviceId }),
+    enabled: !!storeId && !!deviceId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const update = useMutation({
+const useUpdateDevice = () =>
+  useMutation({
     mutationFn: updateDevice,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -37,7 +36,8 @@ const useDevice = () => {
     },
   });
 
-  const remove = useMutation({
+const useRemoveDevice = () =>
+  useMutation({
     mutationFn: deleteDevice,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -46,12 +46,9 @@ const useDevice = () => {
     },
   });
 
-  return {
-    deviceQuery,
-    detailQuery,
-    update,
-    remove,
-  };
+export const deviceQueries = {
+  useDetails,
+  useDevices,
+  useRemoveDevice,
+  useUpdateDevice,
 };
-
-export default useDevice;

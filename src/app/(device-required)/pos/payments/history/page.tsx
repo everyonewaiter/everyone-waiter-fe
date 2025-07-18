@@ -16,7 +16,7 @@ import cn from "@/lib/utils";
 import { useNowContext } from "@/providers/nowProvider";
 import SideSection2 from "../../_components/SideSection2";
 import SideLayout from "../../_components/SideSection/SideLayout";
-import usePaymentList from "../../_queries/usePaymentList";
+import { paymentListQueries } from "../../_queries/usePaymentList";
 
 const itemWidth = {
   "No.": "flex-[4]",
@@ -48,8 +48,8 @@ export default function PaymentHistory() {
     ? `${date.getFullYear()}${formattedMonth(date.getMonth() + 1)}${formattedDate(date.getDate())}`
     : "";
 
-  const { payments } = usePaymentList();
-  const { data, refetch, isLoading } = payments(formatted);
+  const { data, refetch, isLoading } =
+    paymentListQueries.usePaymentsList(formatted);
 
   useEffect(() => {
     refetch();
@@ -149,7 +149,7 @@ export default function PaymentHistory() {
       </div>
       {selectedRow && (
         <SideLayout>
-          <SideSection2 selectedRow={selectedRow} />
+          <SideSection2 {...selectedRow} />
         </SideLayout>
       )}
     </div>

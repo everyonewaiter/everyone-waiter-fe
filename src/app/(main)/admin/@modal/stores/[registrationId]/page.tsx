@@ -9,7 +9,7 @@ import Label from "@/components/common/Label";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
-import useAdmin from "../../../_hooks/useAdmin";
+import { adminQueries } from "../../../_queries/useAdmin";
 
 const dataObj = {
   상호명: "name",
@@ -34,8 +34,9 @@ export default function Page() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [active, setActive] = useState(REJECT_REASONS[0]);
 
-  const { detailStore, rejectStore, approveStore } = useAdmin();
-  const { data } = detailStore(registrationId);
+  const { data } = adminQueries.useStoresDetail(registrationId);
+  const rejectStore = adminQueries.useRejectStore();
+  const approveStore = adminQueries.useApproveStore();
 
   const submitHandler = (type: "reject" | "approve") => {
     setIsSubmitted(true);

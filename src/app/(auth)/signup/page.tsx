@@ -77,14 +77,14 @@ export default function Signup() {
     }
 
     setAuthTime(300);
-    mutateSendPhoneAuthCode({ phoneNumber });
+    mutateSendPhoneAuthCode.mutate({ phoneNumber });
   };
 
   // NOTE - 인증 확인
   const handleCheckAuth = (value: string) => {
     handleSubmitValue("codeAuth", true);
 
-    mutateVerifyAuthCode(
+    mutateVerifyAuthCode.mutate(
       {
         phoneNumber: form.getValues("phone"),
         code: Number(value),
