@@ -1,11 +1,12 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
 import dynamic from "next/dynamic";
+import { AxiosError } from "axios";
 import CategoriesButton from "../../_components/CategoriesButton";
 import POSHeader from "../../_components/POSHeader";
 import POSMenuCard from "../../_components/POSMenuCard";
@@ -52,7 +53,14 @@ export default function DetailTableOrder() {
     (el) => el.categoryId === isActive
   )?.menus;
 
-  const { data } = activity(Number(tableNo));
+  const { data, error } = activity(Number(tableNo));
+
+  useEffect(() => {
+    const errors = error as AxiosError;
+    if (errors?.response?.status === 404) {
+      notFound();
+    }
+  }, [error]);
 
   useEffect(() => {
     if (!isLoading && (data || menus)) {
@@ -115,7 +123,7 @@ export default function DetailTableOrder() {
   };
 
   return (
-    <div className="flex min-h-screen flex-row">
+    <div className="flex h-screen flex-row">
       <div
         className="relative flex flex-1 cursor-pointer flex-col"
         onClick={resetCheckedMenu}

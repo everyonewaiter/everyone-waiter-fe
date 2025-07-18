@@ -161,18 +161,17 @@ export default function usePayment() {
   };
 
   const handleCancelCard = async ({
-    activity,
+    totalPaymentPrice,
     successHandler,
   }: {
-    activity: PosTableActivity;
+    totalPaymentPrice: number;
     successHandler?: () => void;
   }) => {
-    const amount = activity.totalPaymentPrice;
-    const nonTax = Math.floor(amount / 1.1);
+    const nonTax = Math.floor(totalPaymentPrice / 1.1);
 
     const req = makeKSCATApprovalREQ({
-      amount,
-      tax: amount - nonTax,
+      amount: totalPaymentPrice,
+      tax: totalPaymentPrice - nonTax,
       nonTax,
       installment: "",
       type: "0",

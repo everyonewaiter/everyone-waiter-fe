@@ -89,7 +89,7 @@ export default function SideSection() {
   };
 
   return (
-    <SideLayout>
+    <SideLayout className="flex-col">
       <SideHeader
         tableNo={Number(tableNo)}
         hasOrders={orders.length > 0}

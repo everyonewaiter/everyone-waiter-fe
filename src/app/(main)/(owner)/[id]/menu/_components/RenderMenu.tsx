@@ -43,7 +43,7 @@ export default function RenderMenu({
   const menu = menuQuery(categoryId).data?.menus;
 
   const handleNavigate = (menuId: string) =>
-    `/${storeId}/menu/${menuId}?hideModal=${isMobile}&categoryId=${categoryId}`;
+    `/${storeId}/menu/${menuId}/category/${categoryId}?hideModal=${isMobile}`;
 
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">

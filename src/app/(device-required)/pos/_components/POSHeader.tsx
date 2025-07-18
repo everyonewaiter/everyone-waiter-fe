@@ -9,13 +9,13 @@ import { useNowContext } from "@/providers/nowProvider";
 import OpenStore from "./OpenStore";
 
 export default function POSHeader({ children }: PropsWithChildren) {
-  const now = useNowContext();
+  const { now } = useNowContext();
   const { fullDate, day, time } = useGetDate(now);
 
   return (
     <header className="flex flex-col px-[60px] pt-10">
       <div className="flex flex-row items-center justify-between">
-        <Link href="/pos/tables" className="flex flex-row items-center gap-5">
+        <Link href="/pos" className="flex flex-row items-center gap-5">
           <Image
             src="/logo/logo.svg"
             alt="모두의 웨이터 로고"

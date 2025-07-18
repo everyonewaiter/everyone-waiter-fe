@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import {
   closeStore,
+  getDetailActivity,
   getPosMenuList,
   getStoreInfo,
   getTableActivity,
@@ -35,6 +36,7 @@ export default function usePos() {
       queryKey: ["stores"],
       queryFn: () => getStoreInfo({ storeId }),
       enabled: !!storeId,
+      staleTime: 1000 * 60 * 5,
     });
 
   const menuList = (storeId: string, menuId?: string) =>
@@ -43,6 +45,7 @@ export default function usePos() {
       queryKey: ["pos-menu-list"],
       queryFn: () => getPosMenuList(storeId),
       enabled: menuId ? !!storeId && !!menuId : !!storeId,
+      staleTime: 1000 * 60 * 5,
     });
 
   const tableList = (enabled: boolean) =>
@@ -51,6 +54,7 @@ export default function usePos() {
       queryKey: ["table-list"],
       queryFn: getTables,
       enabled,
+      staleTime: 1000 * 60 * 5,
     });
 
   const activity = (tableNo: number) =>
@@ -59,6 +63,16 @@ export default function usePos() {
       queryKey: ["table", tableNo],
       queryFn: () => getTableActivity({ tableNo }),
       enabled: !!tableNo,
+      staleTime: 1000 * 60 * 5,
+    });
+
+  const activityById = (posTableActivityId: string) =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useQuery({
+      queryKey: ["activity", posTableActivityId],
+      queryFn: () => getDetailActivity({ posTableActivityId }),
+      enabled: !!posTableActivityId,
+      staleTime: 1000 * 60 * 5,
     });
 
   const move = useMutation({
@@ -88,5 +102,6 @@ export default function usePos() {
     move,
     resendReceipt,
     updateOrder,
+    activityById,
   };
 }

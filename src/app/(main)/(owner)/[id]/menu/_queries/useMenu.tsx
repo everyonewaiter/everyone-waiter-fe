@@ -29,7 +29,7 @@ export default function useMenu(storeId: string) {
     useQuery({
       queryKey: menuKeys.menuInCategory(storeId, categoryId, menuId),
       queryFn: () => getMenuDetail({ storeId, categoryId, menuId }),
-      enabled: !!categoryId && !!menuId,
+      enabled: !!categoryId && !!menuId && !!storeId,
       staleTime: 1000 * 60 * 5,
     });
 

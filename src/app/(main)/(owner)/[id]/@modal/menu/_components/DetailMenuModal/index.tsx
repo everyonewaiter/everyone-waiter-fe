@@ -53,7 +53,7 @@ export default function DetailMenuModal({
   });
 
   useEffect(() => {
-    if (data) {
+    if (data?.menuId) {
       form.reset({
         ...data,
         category: data.categoryId,
@@ -83,7 +83,7 @@ export default function DetailMenuModal({
       {/* 콘텐츠 */}
       <FormProvider {...form}>
         <div className="overflow-hidden">
-          <div className="flex h-full w-full flex-col overflow-y-auto md:flex-row md:gap-3 lg:gap-[18px]">
+          <div className="scrollbar-hide flex h-full w-full flex-col overflow-y-auto md:flex-row md:gap-3 lg:gap-[18px]">
             <ImageSection
               previewUrl={previewUrl}
               onSetPreviewUrl={setPreviewUrl}

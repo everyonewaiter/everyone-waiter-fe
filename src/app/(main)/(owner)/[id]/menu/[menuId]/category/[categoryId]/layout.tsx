@@ -4,7 +4,7 @@ import {
   getMenuList,
 } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
 import getQueryClient from "@/app/get-query-client";
-import { categoryKeys, menuKeys } from "../_queries/keys";
+import { categoryKeys, menuKeys } from "../../../_queries/keys";
 
 export default async function Layout({
   children,

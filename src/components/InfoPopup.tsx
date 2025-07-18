@@ -43,7 +43,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
         >
           <Icon iconKey="user" size={16} className="h-4 w-4 lg:h-6 lg:w-6" />
         </div>
-        <span className="md:text-s font-regular text-xs text-gray-100 lg:text-[15px]">
+        <span className="md:text-s font-regular lg:text-s text-xs text-gray-100">
           {user?.email}
         </span>
       </div>

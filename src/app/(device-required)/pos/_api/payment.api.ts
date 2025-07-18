@@ -26,3 +26,14 @@ export const cancelPayment = async ({
   );
   return response.data;
 };
+
+export const getPaymentList = async (
+  date: string
+): Promise<{ orderPayments: OrderPaymentsList[] }> => {
+  const response = await signatureInstance.get(`${API_PATH.orders}/payments`, {
+    params: {
+      date,
+    },
+  });
+  return response.data;
+};

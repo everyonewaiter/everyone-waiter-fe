@@ -1,38 +1,21 @@
 "use client";
 
-import { useEffect, useState, PropsWithChildren } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useState } from "react";
+import { FormProvider } from "react-hook-form";
+import { Plus } from "lucide-react";
 import { useStoreContext } from "@/providers/storeProvider";
-import { useMediaQuery } from "react-responsive";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import Icon from "@/components/common/Icon";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
-import { Plus } from "lucide-react";
+import Spinner from "@/components/common/Spinner";
 import useStores from "../_queries/useStores";
-
-function TableRow({
-  children,
-  className,
-}: PropsWithChildren<{ className?: string }>) {
-  return (
-    <div className={`center h-full w-full text-center ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-interface FormType {
-  name: string;
-  license: string;
-  address: string;
-  origins: CountryOfOriginItem[];
-}
+import Origins from "./Origins";
+import useStoreForm from "../_hooks/useStoreForm";
 
 export default function FormComponent() {
   const { storeId } = useStoreContext();
-  const isLargeScreen = useMediaQuery({ query: "(min-width: 961px)" });
 
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -40,54 +23,14 @@ export default function FormComponent() {
   const { storesDetail, updateInfo } = useStores();
   const { data } = storesDetail(storeId);
 
-  const form = useForm<FormType>({
-    mode: "onChange",
-    defaultValues: {
-      name: "",
-      license: "",
-      address: "",
-      origins: [],
-    },
-  });
+  const { form, fields, isSubmitted, submitHandler, appendOrigin } =
+    useStoreForm(data!, storeId);
 
-  useEffect(() => {
-    if (!data) return;
-
-    form.reset({
-      name: data.name,
-      license: data.license,
-      address: data.address,
-      origins: data.setting.countryOfOrigins ?? [],
+  const handleSubmit = () => {
+    submitHandler(updateInfo, () => {
+      setMakeDisabled(true);
+      setIsEditing(false);
     });
-  }, [data, form]);
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "origins",
-  });
-
-  const createNewItem = {
-    item: "",
-    origin: "",
-  };
-
-  const submitHandler = () => {
-    updateInfo.mutate(
-      {
-        storeId,
-        body: {
-          ...data,
-          landline: data?.landline!,
-          setting: {
-            ...data?.setting!,
-            countryOfOrigins: fields,
-          },
-        },
-      },
-      {
-        onSuccess: () => setMakeDisabled(true),
-      }
-    );
   };
 
   return (
@@ -95,7 +38,7 @@ export default function FormComponent() {
       <Form {...form}>
         <form
           className="flex flex-col gap-3 lg:gap-4"
-          onSubmit={form.handleSubmit(submitHandler)}
+          onSubmit={form.handleSubmit(handleSubmit)}
         >
           <LabeledInput form={form} label="상호명" name="name" disabled />
           <LabeledInput
@@ -107,65 +50,9 @@ export default function FormComponent() {
           <LabeledInput form={form} label="주소" name="address" disabled />
           <Label>원산지</Label>
           {isEditing || fields?.length > 0 ? (
-            <div className="text-s flex flex-col overflow-hidden rounded-[12px] border border-gray-600 font-medium">
-              <div className="flex h-10 w-full bg-gray-700">
-                <TableRow className="w-full">품목</TableRow>
-                <TableRow className="w-full">원산지</TableRow>
-                {isEditing && (
-                  <TableRow className="text-primary w-full text-center lg:w-20 lg:flex-shrink-0">
-                    삭제
-                  </TableRow>
-                )}
-              </div>
-              {fields?.map((item, idx) => (
-                <div
-                  key={item.id}
-                  className={`flex h-10 w-full ${
-                    idx !== fields.length - 1 && "border-b border-b-gray-600"
-                  }`}
-                >
-                  <TableRow className="w-full">
-                    {isEditing ? (
-                      <input
-                        placeholder={
-                          isLargeScreen ? "품목을 입력해주세요" : "품목 입력"
-                        }
-                        {...form.register(`origins.${idx}.item`)}
-                        className="w-full text-center outline-none"
-                      />
-                    ) : (
-                      item.item
-                    )}
-                  </TableRow>
-                  <TableRow className="w-full">
-                    {isEditing ? (
-                      <input
-                        placeholder={
-                          isLargeScreen
-                            ? "원산지를 입력해주세요"
-                            : "원산지 입력"
-                        }
-                        {...form.register(`origins.${idx}.origin`)}
-                        className="w-full text-center outline-none"
-                      />
-                    ) : (
-                      item.origin
-                    )}
-                  </TableRow>
-                  {isEditing && (
-                    <TableRow className="w-full text-center lg:w-20 lg:flex-shrink-0">
-                      <button type="button" onClick={() => remove(idx)}>
-                        <Icon
-                          iconKey="trash"
-                          size={16}
-                          className="text-primary"
-                        />
-                      </button>
-                    </TableRow>
-                  )}
-                </div>
-              ))}
-            </div>
+            <FormProvider {...form}>
+              <Origins isEditing={isEditing} />
+            </FormProvider>
           ) : (
             <div className="flex w-full flex-col items-center justify-center rounded-[16px] border border-gray-600 bg-gray-700 md:h-35 md:gap-1 md:p-6">
               <span className="text-gray-0 text-sm font-medium">
@@ -192,7 +79,7 @@ export default function FormComponent() {
                 }}
                 disabled={makeDisabled}
                 commonClassName="border-dashed mt-3"
-                onClick={() => append(createNewItem)}
+                onClick={appendOrigin}
               >
                 <Plus className="h-5 w-5 text-gray-400" />
               </ResponsiveButton>
@@ -212,8 +99,9 @@ export default function FormComponent() {
                     className: "mt-8",
                   },
                 }}
+                disabled={isSubmitted}
               >
-                저장하기
+                {isSubmitted ? <Spinner /> : "저장하기"}
               </ResponsiveButton>
             </>
           )}
@@ -231,8 +119,7 @@ export default function FormComponent() {
             },
             md: {
               buttonSize: "sm",
-              className:
-                "!h-[34px] md:flex items-center hidden lg:hidden !gap-1 mt-6",
+              className: "!h-[34px] flex items-center !gap-1 mt-6",
             },
             lg: {
               buttonSize: "lg",

@@ -102,7 +102,7 @@ export default function StoreList() {
   return (
     <div className="flex h-full flex-col">
       <PageTitle title="매장 등록 신청 현황" />
-      <div className="flex w-full flex-1 flex-col">
+      <div className="flex w-full flex-1 flex-col pt-8">
         <div className="z-10 hidden w-full justify-end md:flex">
           <ResponsiveButton
             variant="outline"

@@ -1,5 +1,3 @@
-/* eslint-disable react/no-array-index-key */
-
 "use client";
 
 import { Plus } from "lucide-react";
@@ -11,10 +9,6 @@ import cn from "@/lib/utils";
 import { MenuFormType } from "../_types/menuForm.type";
 import OptionBox from "./OptionBox";
 import OptionComponent from "./OptionComponent";
-
-/* eslint-disable react/no-array-index-key */
-
-/* eslint-disable react/no-array-index-key */
 
 interface IProps {
   title: string;
@@ -75,7 +69,7 @@ export default function OptionTemplate({
             {form.watch(type)?.length > 0 ? (
               form.watch(type)?.map((option, i) => (
                 <div
-                  key={i}
+                  key={option.name}
                   className={cn(
                     "flex gap-3",
                     i > 0 ? "mt-3 lg:mt-4" : "",

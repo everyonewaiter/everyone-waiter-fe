@@ -6,6 +6,7 @@ import InfoPopup from "@/components/InfoPopup";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
+import { StoreProvider } from "@/providers/storeProvider";
 
 export default function PageTitle({ title }: { title: string }) {
   const ref = useRef<HTMLButtonElement>(null);
@@ -17,7 +18,9 @@ export default function PageTitle({ title }: { title: string }) {
   const handleOpenPopup = () => {
     open(() => (
       <QueryProviders>
-        <InfoPopup close={() => close} />
+        <StoreProvider>
+          <InfoPopup close={() => close} />
+        </StoreProvider>
       </QueryProviders>
     ));
   };

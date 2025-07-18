@@ -7,8 +7,7 @@ import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import { deviceTranslate, paymentTimeTranslate } from "@/constants/translates";
 import { useStoreContext } from "@/providers/storeProvider";
-import SkeletonLabel from "@/components/common/Skeleton/SkeletonLabel";
-import SkeletonInput from "@/components/common/Skeleton/SkeletonInput";
+import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
 import useDevice from "../../../device/_queries/useDevice";
 import ModalButton from "../../_components/ModalButton";
 import useDeviceForm from "../../_hooks/useDeviceForm";
@@ -31,14 +30,7 @@ export default function DeviceInfoModal() {
   if (!data)
     return (
       <div className="flex h-[288px] flex-col gap-3.5 md:h-[324px] lg:h-[488px]">
-        {Array.from({ length: 5 }, (_, i: number) => i + 1).map(
-          (el: number) => (
-            <div className="flex flex-col gap-2.5" key={el}>
-              <SkeletonLabel />
-              <SkeletonInput />
-            </div>
-          )
-        )}
+        <SkeletonGroup />
       </div>
     );
 

@@ -8,8 +8,7 @@ import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { ScrollArea } from "@/components/common/ScrollArea";
-import SkeletonInput from "@/components/common/Skeleton/SkeletonInput";
-import SkeletonLabel from "@/components/common/Skeleton/SkeletonLabel";
+import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
 import useAdmin from "../../../_hooks/useAdmin";
 
 const dataObj = {
@@ -114,14 +113,7 @@ export default function Page() {
           </ScrollArea>
         ) : (
           <div className="flex h-[288px] flex-col gap-3.5 md:h-[324px] lg:h-[488px]">
-            {Array.from({ length: 5 }, (_, i: number) => i + 1).map(
-              (el: number) => (
-                <div className="flex flex-col gap-2.5" key={el}>
-                  <SkeletonLabel />
-                  <SkeletonInput />
-                </div>
-              )
-            )}
+            <SkeletonGroup />
           </div>
         )}
       </div>

@@ -105,7 +105,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             type: "card-receipt",
             activity: activityData!,
             stores: stores!,
-            payment: { ...res, installment: form.watch("monthlyPlan") },
+            payment: { ...res, INSTALLMENT: form.watch("monthlyPlan") },
             successHandler:
               props.orders.length > 0
                 ? () => close()
@@ -142,6 +142,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                     close();
                     navigate.push("/pos/tables");
                   },
+            cashReceiptPhoneNo: form.watch("phoneNumber"),
           });
         },
       });

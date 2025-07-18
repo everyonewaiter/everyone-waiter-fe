@@ -61,7 +61,13 @@ export default function Sidebar() {
     >
       {isNavigating && <Loading />}
       <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-4 md:w-[186px] lg:w-[318px] lg:px-5 lg:pt-8">
-        <div className="mb-6 flex items-center gap-[18px] lg:mb-9">
+        <button
+          type="button"
+          className="mb-6 flex items-center gap-[18px] lg:mb-9"
+          onClick={() =>
+            navigate.push(`/${selectedStoreId || storeList?.stores[0].storeId}`)
+          }
+        >
           <Image
             src="/logo/logo.svg"
             alt="모두의 웨이터 로고"
@@ -72,7 +78,7 @@ export default function Sidebar() {
           <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
             모두의 웨이터
           </h1>
-        </div>
+        </button>
         <nav>
           {permission === "OWNER" ? (
             <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>

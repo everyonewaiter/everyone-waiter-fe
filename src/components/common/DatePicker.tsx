@@ -15,9 +15,12 @@ const Calendar = dynamic(() => import("@/components/common/Calender"), {
   ssr: false,
 });
 
-export default function DatePicker() {
-  const now = new Date();
-  const [date, setDate] = useState<Date | null>(now);
+interface IProps {
+  date: Date | null;
+  onSetDate: (value: Date | null) => void;
+}
+
+export default function DatePicker({ date, onSetDate }: IProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -33,7 +36,15 @@ export default function DatePicker() {
         >
           {date ? (
             <span className="text-gray-0">
-              {date.toISOString().split("T")[0].split("-").join(".")}
+              {date
+                .toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })
+                .split(" ")
+                .join("")
+                .slice(0, -1)}
             </span>
           ) : (
             <span className="text-[16px] text-gray-200">YYYY.MM.DD</span>
@@ -46,7 +57,7 @@ export default function DatePicker() {
           mode="single"
           selected={date!}
           onSelect={(day) => {
-            setDate(day ?? null);
+            onSetDate(day ?? null);
             setOpen(false);
           }}
           initialFocus

@@ -103,10 +103,12 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
 
   axiosInstance.interceptors.request.use(async (config) => {
     const method = config.method?.toUpperCase() || "GET";
-    const uri = config.url || "/";
+    const rawUrl = config.url || "/";
+    const searchParams = new URLSearchParams(config.params).toString();
+    const uri = searchParams ? `${rawUrl}?${searchParams}` : rawUrl;
 
     await signatureMutex.runExclusive(async () => {
-      const key = getCacheKey(method, `/v1${uri}`, "HALL");
+      const key = getCacheKey(method, `/v1${uri}`, "POS");
       const cached = signatureCache[key];
 
       if (!cached || Date.now() - cached.createdAt > 1000) {
@@ -169,34 +171,22 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
   let lastErrorTime = 0;
 
   axiosInstance.interceptors.response.use(
-    (response) => {
-      // 응답 성공 시 처리
-      console.log("✅ Axios Response Success:", response);
-      return response;
-    },
+    (response) => response,
     (error) => {
-      // 응답 에러 발생 시 처리
-      console.error(
-        "❌ Axios Response Error:",
-        error.response || error.message || error
-      );
-
       const errorMsg =
         error?.response?.data?.message || error.message || "Unknown error";
       const now = Date.now();
 
-      // 에러 응답 데이터 확인
       if (error.response) {
-        // 서버가 응답했지만 상태 코드가 2xx 범위가 아닌 경우
-        console.error("   Status:", error.response.status);
-        console.error("   Data:", error.response.data); // <-- 여기가 에러 응답 데이터
-        console.error("   Headers:", error.response.headers);
+        if (error.response?.status === 404) {
+          const customError = new Error("NOT_FOUND");
+          (customError as any).code = "NOT_FOUND";
+          throw customError;
+        }
       } else if (error.request) {
-        // 요청이 만들어졌지만 응답을 받지 못한 경우 (예: 네트워크 문제)
-        console.error("   No response received for the request.");
-        console.error("   Request:", error.request);
+        console.error("   ❗ No response received.");
+        console.error("   URL:", error.config?.url);
       } else {
-        // 오류를 발생시킨 요청을 설정하는 중에 문제가 발생한 경우
         console.error("   Error setting up the request:", error.message);
       }
 
@@ -206,7 +196,7 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
         lastErrorTime = now;
       }
 
-      return Promise.reject(error); // 에러를 다시 throw하여 호출자에게 전달
+      return Promise.reject(error);
     }
   );
 };

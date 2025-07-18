@@ -77,7 +77,7 @@ export const putUpdateStore = async ({
   };
 }) => {
   const response = await instance.put(`${API_PATH.stores}/${storeId}`, {
-    body,
+    ...body,
   });
   return response.data;
 };

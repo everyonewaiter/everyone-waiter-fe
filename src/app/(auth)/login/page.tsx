@@ -5,11 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { SyncLoader } from "react-spinners";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { TypeLogin, loginSchema } from "@/schema/login.schema";
+import Spinner from "@/components/common/Spinner";
 import SignupLayout from "../signup/layout";
 import useLogin from "./_hooks/useLogin";
 
@@ -86,17 +86,7 @@ export default function Login() {
             disabled={isLoading}
             commonClassName="w-full mt-8"
           >
-            {isLoading ? (
-              <SyncLoader
-                color="#fff"
-                loading={isLoading}
-                size={24}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-            ) : (
-              "로그인"
-            )}
+            {isLoading ? <Spinner /> : "로그인"}
           </ResponsiveButton>
         </form>
       </Form>

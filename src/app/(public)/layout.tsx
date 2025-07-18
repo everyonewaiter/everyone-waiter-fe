@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import ClientModalWrapper from "../(main)/_components/ClientModalWrapper";
 
-export default function Layout({
+export default async function Layout({
   children,
   modal,
 }: {

@@ -57,3 +57,12 @@ interface OrderPayments {
   cashReceiptNo: string;
   cashReceiptType: OrderReceiptType;
 }
+
+interface OrderPaymentsList extends OrderPayments {
+  orderPaymentId: string;
+  posTableActivityId: string;
+  storeId: string;
+  state: OrderPaymentState;
+  cancellable: boolean;
+  createdAt: string;
+}

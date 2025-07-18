@@ -1,8 +1,6 @@
 import { PropsWithChildren } from "react";
-import ClientLayout from "./_components/ClientLayout";
+import { NowProvider } from "@/providers/nowProvider";
 
 export default function Layout({ children }: PropsWithChildren) {
-  const now = new Date().toISOString();
-
-  return <ClientLayout now={now}>{children}</ClientLayout>;
+  return <NowProvider>{children}</NowProvider>;
 }

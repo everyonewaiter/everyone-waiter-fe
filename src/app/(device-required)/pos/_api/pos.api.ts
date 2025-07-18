@@ -36,6 +36,17 @@ export const getTableActivity = async ({
   return response.data;
 };
 
+export const getDetailActivity = async ({
+  posTableActivityId,
+}: {
+  posTableActivityId: string;
+}): Promise<PosTableActivity> => {
+  const response = await signatureInstance.get(
+    `${API_PATH.pos}/tables/activities/${posTableActivityId}`
+  );
+  return response.data;
+};
+
 export const moveTables = async ({
   sourceTableNo,
   targetTableNo,

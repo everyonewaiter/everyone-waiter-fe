@@ -12,8 +12,7 @@ import transformDate from "@/lib/formatting/transformDate";
 import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import SkeletonLabel from "@/components/common/Skeleton/SkeletonLabel";
-import SkeletonInput from "@/components/common/Skeleton/SkeletonInput";
+import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
 import useAdmin from "../../../_hooks/useAdmin";
 
 interface TypeForm {
@@ -173,14 +172,7 @@ export default function Page() {
         </ScrollArea>
       ) : (
         <div className="flex !h-[300px] flex-col gap-3.5 md:!h-[360px] lg:!h-[450px]">
-          {Array.from({ length: 5 }, (_, i: number) => i + 1).map(
-            (el: number) => (
-              <div className="flex flex-col gap-2.5" key={el}>
-                <SkeletonLabel />
-                <SkeletonInput />
-              </div>
-            )
-          )}
+          <SkeletonGroup />
         </div>
       )}
       <div className="mt-8 flex w-full flex-row items-center justify-between gap-3">
