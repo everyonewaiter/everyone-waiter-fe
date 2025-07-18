@@ -1,27 +1,26 @@
 "use client";
 
-// import { useMutation } from "@tanstack/react-query";
-// import { addDevice } from "@/app/(device-required)/device/_api/device.api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { setEncryptedItem } from "@/lib/auth/secureStorage";
 import cn from "@/lib/utils";
-import useMakeDeviceName from "../_hooks/useMakeDeviceName";
-import useDeviceInfo from "../_queries/useDeviceInfo";
+import { deviceQueries } from "../_queries/useDeviceInfo";
+import useStep2Form from "../_hooks/useStep2Form";
 
 type FormValues = {
   deviceName: string;
   deviceNumber: string;
 };
 
-const tabs = [
+type DevicePurpose = "HALL" | "POS";
+
+const TABS: { id: DevicePurpose; label: string }[] = [
   { id: "HALL", label: "홀 관리" },
   { id: "POS", label: "POS" },
-];
+] as const;
 
 interface IProps {
   storeId: string;
@@ -35,29 +34,22 @@ export default function AddDeviceStep2({
   phoneNumber,
 }: IProps) {
   const navigate = useRouter();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState<DevicePurpose>("HALL");
 
-  const dn = useMakeDeviceName();
+  const {
+    form: { form, watch, handleSubmit },
+  } = useStep2Form();
 
-  const form = useForm<FormValues>({
-    mode: "onChange",
-    defaultValues: {
-      deviceName: dn,
-      deviceNumber: "",
-    },
-  });
-
-  const { add } = useDeviceInfo();
-  const { mutate } = add();
+  const { mutate } = deviceQueries.useAddDevice();
 
   const submitHandler = (data: FormValues) => {
     const submitData = {
       phoneNumber: phoneNumber.replaceAll("-", ""),
       storeId,
       name: data.deviceName,
-      purpose: activeIndex === 0 ? "HALL" : ("POS" as DevicePurpose),
+      purpose: activeIndex === "HALL" ? "HALL" : ("POS" as DevicePurpose),
       tableNo: 0,
-      ksnetDeviceNo: activeIndex === 1 ? data.deviceNumber : "",
+      ksnetDeviceNo: activeIndex === "POS" ? data.deviceNumber : "",
       paymentType: "POSTPAID" as DevicePayment,
     };
 
@@ -91,7 +83,7 @@ export default function AddDeviceStep2({
           })
         );
 
-        navigate.push(activeIndex === 0 ? "/hall" : "/pos");
+        navigate.replace(activeIndex === "HALL" ? "/hall" : "/pos");
       },
     });
   };
@@ -99,17 +91,17 @@ export default function AddDeviceStep2({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex gap-2 lg:gap-3">
-        {tabs.map((tab, index) => (
+        {TABS.map((tab) => (
           <button
             type="button"
             key={tab.id}
             className={cn(
               "font-regular text-s h-10 w-full rounded-[12px] border lg:h-20 lg:rounded-[16px] lg:text-base",
-              activeIndex === index
+              activeIndex === tab.id
                 ? "border-primary text-primary bg-[#f2202004]"
                 : "border-gray-600 text-gray-200"
             )}
-            onClick={() => setActiveIndex(index)}
+            onClick={() => setActiveIndex(tab.id)}
           >
             {tab.label}
           </button>
@@ -118,7 +110,7 @@ export default function AddDeviceStep2({
       <Form {...form}>
         <form
           className="flex flex-col gap-3 lg:gap-8"
-          onSubmit={form.handleSubmit(submitHandler)}
+          onSubmit={handleSubmit(submitHandler)}
         >
           <LabeledInput
             form={form}
@@ -139,7 +131,7 @@ export default function AddDeviceStep2({
               md: { buttonSize: "sm", className: "w-full mt-3" },
               lg: { buttonSize: "lg", className: "w-full" },
             }}
-            disabled={!form.watch("deviceNumber")}
+            disabled={!watch("deviceNumber")}
           >
             등록하기
           </ResponsiveButton>
