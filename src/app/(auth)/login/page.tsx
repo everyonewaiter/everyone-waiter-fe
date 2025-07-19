@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
-import { TypeLogin, loginSchema } from "@/schema/login.schema";
 import Spinner from "@/components/common/Spinner";
+import { TypeLogin, loginSchema } from "./_schema/login.schema";
 import SignupLayout from "../signup/layout";
 import useLogin from "./_hooks/useLogin";
 

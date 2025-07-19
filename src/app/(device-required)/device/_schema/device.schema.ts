@@ -1,14 +1,11 @@
+import { commonSchema } from "@/schema";
 import z from "zod";
 
 const schema = z.object({
-  phone: z
-    .string()
-    .refine((val) => val === "" || /^01[016789]-\d{3,4}-\d{4}$/.test(val), {
-      message: "유효하지 않은 휴대폰 번호 형식입니다.",
-    }),
-  authNumber: z.string().min(6).max(6),
+  phone: commonSchema.shape.phone,
+  authNumber: commonSchema.shape.authNumber,
   deviceName: z.string(),
-  deviceNumber: z.string().min(10).max(10),
+  deviceNumber: commonSchema.shape.deviceNumber,
 });
 
 export const step1Schema = schema.pick({

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { TypeSignup, signupSchema } from "@/schema/signup.schema";
+import { TypeSignup, signupSchema } from "../_schema/signup.schema";
 
 export default function useSignupForm() {
   const [formButtonDisabled, setFormButtonDisabled] = useState(false);
@@ -14,13 +14,6 @@ export default function useSignupForm() {
   const form = useForm<TypeSignup>({
     mode: "onChange",
     resolver: zodResolver(signupSchema),
-    defaultValues: {
-      email: "",
-      phone: "",
-      authNumber: "",
-      password: "",
-      confirm: "",
-    },
   });
 
   const submitHandler = (

@@ -1,3 +1,4 @@
+import { commonSchema } from "@/schema";
 import { z } from "zod";
 
 const schema = z.object({
@@ -7,7 +8,7 @@ const schema = z.object({
   purpose: z.enum(["HALL", "POS", "WAITING", "TABLE"]),
   paymentType: z.enum(["POSTPAID", "PREPAID"]),
   tableNo: z.number(),
-  deviceNumber: z.string().min(10).max(10),
+  deviceNumber: commonSchema.shape.deviceNumber,
 });
 
 export const deviceFormSchema = schema.pick({

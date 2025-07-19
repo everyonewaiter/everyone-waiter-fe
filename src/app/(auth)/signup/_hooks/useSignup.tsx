@@ -6,7 +6,7 @@ import {
   sendAuthCode,
   verifyAuthCode,
 } from "@/lib/api/auth.api";
-import { TypeSignup } from "@/schema/signup.schema";
+import { TypeSignup } from "../_schema/signup.schema";
 
 interface IUseSignup {
   form: UseFormReturn<TypeSignup>;

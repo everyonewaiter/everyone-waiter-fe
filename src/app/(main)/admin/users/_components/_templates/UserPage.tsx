@@ -5,8 +5,10 @@ import Paginations from "@/components/common/Pagination/Paginations";
 import useDebounce from "@/hooks/useDebounce";
 import PageTitle from "@/app/(main)/_components/PageTitle";
 import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { adminQueries } from "../../../_queries/useAdmin";
 import UsersContent from "../UsersContent";
+import { TypeUserForm, userSchema } from "../../_schema/user.schema";
 
 const permissionObj = {
   전체: "",
@@ -28,21 +30,17 @@ export interface TypeActive {
   status: string;
 }
 
-interface FormType {
-  searchWord: string;
-  active: TypeActive;
-}
-
 export default function UserPage() {
-  const form = useForm<FormType>({
+  const form = useForm<TypeUserForm>({
     mode: "onChange",
+    resolver: zodResolver(userSchema),
     defaultValues: {
       searchWord: "",
       active: {
-        permission: "",
-        subscription: "",
-        storeAccepted: "",
-        status: "",
+        permission: "전체",
+        subscription: "전체",
+        storeAccepted: "전체",
+        status: "전체",
       },
     },
   });
