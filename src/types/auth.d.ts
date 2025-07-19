@@ -12,4 +12,4 @@ type UserProfile = {
   permission: AccountPermission;
 };
 
-type Status = "INACTIVE" | "ACTIVE" | "DELETE";
+type Status = "INACTIVE" | "ACTIVE";

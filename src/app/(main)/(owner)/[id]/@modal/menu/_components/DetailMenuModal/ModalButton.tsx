@@ -6,8 +6,8 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { getPathnameWithoutStoreId } from "@/utils/getPathname";
 import { useStoreContext } from "@/providers/storeProvider";
 import { formToRequest } from "../../_hooks/useMenuForm";
-import { MenuFormType } from "../../_types/menuForm.type";
 import { menuQueries } from "../../../../menu/_queries/useMenu";
+import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
 
 interface IProps {
   isEditing: boolean;
@@ -28,9 +28,7 @@ export default function ModalButton({
 
   const { storeId } = useStoreContext();
 
-  const form = useFormContext<
-    Omit<MenuFormType, "image"> & { image: File | string | null }
-  >();
+  const form = useFormContext<TypeMenuForm>();
 
   const add = menuQueries.useAddMenu(storeId);
   const updateWithImg = menuQueries.useUpdateWithImage(storeId);
@@ -46,7 +44,7 @@ export default function ModalButton({
           storeId,
           categoryId: form.watch("category"),
           body: {
-            file: form.getValues("image") as File,
+            file: form.getValues("imgFile") as File,
             request,
           },
         },
@@ -55,16 +53,13 @@ export default function ModalButton({
         }
       );
     } else if (type === "update") {
-      if (
-        form.watch("image") instanceof File &&
-        data?.image !== form.watch("image")
-      ) {
+      if (form.watch("imgFile") && data?.image !== form.watch("imgString")) {
         updateWithImg.mutate(
           {
             storeId,
             menuId: data?.menuId as string,
             body: {
-              file: form.watch("image") as File,
+              file: form.watch("imgFile") as File,
               request,
             },
           },

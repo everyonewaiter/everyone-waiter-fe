@@ -8,7 +8,12 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { useStoreContext } from "@/providers/storeProvider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { categoryQueries } from "../_queries/useCategories";
+import {
+  categoryFormSchema,
+  TypeCategoryForm,
+} from "../_schema/category.schema";
 
 export default function Page() {
   const navigate = useRouter();
@@ -16,7 +21,9 @@ export default function Page() {
 
   const { data } = categoryQueries.useCategories(storeId);
 
-  const form = useForm<{ categories: { name: string }[] }>({
+  const form = useForm<TypeCategoryForm>({
+    mode: "onChange",
+    resolver: zodResolver(categoryFormSchema),
     defaultValues: { categories: [] },
   });
 

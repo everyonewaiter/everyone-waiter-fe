@@ -6,9 +6,9 @@ import { useFormContext } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
 import cn from "@/lib/utils";
-import { MenuFormType } from "../_types/menuForm.type";
 import OptionBox from "./OptionBox";
 import OptionComponent from "./OptionComponent";
+import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 
 interface IProps {
   title: string;
@@ -28,9 +28,7 @@ export default function OptionTemplate({
   isEditing,
   ...props
 }: IProps) {
-  const form = useFormContext<
-    Omit<MenuFormType, "image"> & { image: File | null }
-  >();
+  const form = useFormContext<TypeMenuForm>();
 
   const [popupAction, setPopupAction] = useState("");
 

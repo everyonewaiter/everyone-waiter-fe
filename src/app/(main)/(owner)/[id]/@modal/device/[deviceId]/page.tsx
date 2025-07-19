@@ -23,10 +23,6 @@ export default function DeviceInfoModal() {
 
   const { form, submitHandler } = useDeviceForm(data);
 
-  const handleSubmit = () => {
-    submitHandler(update, storeId, deviceId);
-  };
-
   if (!data)
     return (
       <div className="flex h-[288px] flex-col gap-3.5 md:h-[324px] lg:h-[488px]">
@@ -38,7 +34,9 @@ export default function DeviceInfoModal() {
     <Form {...form}>
       <form
         className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(handleSubmit)}
+        onSubmit={form.handleSubmit((_data) =>
+          submitHandler(update, _data, { storeId, deviceId })
+        )}
       >
         <LabeledInput form={form} name="name" label="기기 이름" />
         <LabeledInput form={form} name="createdAt" label="등록일시" disabled />

@@ -28,9 +28,16 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
+      const e = error as any;
       const originalRequest = error.config as any;
 
       if (error.response?.status === 403) {
+        return Promise.reject(error);
+      }
+
+      if (error.response?.status === 400) {
+        // eslint-disable-next-line no-alert
+        alert(e.response.data.message);
         return Promise.reject(error);
       }
 

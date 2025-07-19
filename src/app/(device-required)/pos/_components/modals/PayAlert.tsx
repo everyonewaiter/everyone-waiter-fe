@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable no-unsafe-optional-chaining */
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
@@ -10,20 +9,16 @@ import Label from "@/components/common/Label";
 import { useRouter } from "next/navigation";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import { posQueries } from "../../_queries/usePos";
+import { paySchema, TypePayForm } from "../../_schema/pos.schema";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
-
-interface FormType {
-  receiptType: string;
-  phoneNumber: string;
-  monthlyPlan: string;
-}
 
 declare global {
   interface Window {
@@ -69,7 +64,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     0
   );
 
-  const form = useForm<FormType>({
+  const form = useForm<TypePayForm>({
+    mode: "onChange",
+    resolver: zodResolver(paySchema),
     defaultValues: {
       receiptType: "개인소득공제용",
       phoneNumber: "",
@@ -160,7 +157,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     >
       <div className="-mt-4 flex w-full flex-col gap-10">
         <div className="flex items-center justify-between">
-          <h3 className="text-[28px] font-semibold">2번 테이블</h3>
+          <h3 className="text-[28px] font-semibold">
+            {props.tableNo}번 테이블
+          </h3>
           <Button
             variant="outline"
             color="primary"
@@ -173,9 +172,13 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제 정보</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {menus && menus?.length === 1
-                ? menus?.[0]
-                : `${menus?.[0]} 외 ${menus?.length - 1}개`}
+              {menus && menus.length > 0 && (
+                <strong className="mt-2 text-2xl font-semibold">
+                  {menus.length === 1
+                    ? menus[0]
+                    : `${menus[0]} 외 ${menus.length - 1}개`}
+                </strong>
+              )}
             </strong>
           </div>
           <div className="flex flex-col items-start">
@@ -203,7 +206,12 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                       }
                       variant="outline"
                       className="button-lg w-full !font-medium"
-                      onClick={() => form.setValue("receiptType", key)}
+                      onClick={() =>
+                        form.setValue(
+                          "receiptType",
+                          key as TypePayForm["receiptType"]
+                        )
+                      }
                     >
                       {key}
                     </Button>

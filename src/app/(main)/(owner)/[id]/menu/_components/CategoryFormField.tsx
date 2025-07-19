@@ -13,25 +13,22 @@ import Input from "@/components/common/Input";
 import cn from "@/lib/utils";
 import { useStoreContext } from "@/providers/storeProvider";
 import { categoryQueries } from "../_queries/useCategories";
+import { TypeCategoryForm } from "../_schema/category.schema";
 import useCategoryForm from "../../@modal/menu/_hooks/useCategoryForm";
 
-interface IProps {
+interface IProps extends Category {
   changeMove: boolean;
-  fields: Category;
 }
 
-export default function CategoryFormField({ changeMove, fields }: IProps) {
+export default function CategoryFormField({ changeMove, ...fields }: IProps) {
   const { storeId } = useStoreContext();
 
-  const form = useFormContext<{
-    categories: Category[];
-  }>();
+  const form = useFormContext<TypeCategoryForm>();
+  const { initialCategoriesRef } = useCategoryForm(storeId);
 
   const index = form
     .watch("categories")
     .findIndex((f) => f.categoryId === fields.categoryId);
-
-  const { initialCategoriesRef } = useCategoryForm();
 
   const {
     attributes,
@@ -47,6 +44,7 @@ export default function CategoryFormField({ changeMove, fields }: IProps) {
     transition,
   };
 
+  const { data } = categoryQueries.useCategories(storeId);
   const update = categoryQueries.useUpdateCategory();
   const add = categoryQueries.useAddCategory();
   const remove = categoryQueries.useDeleteCategory();
@@ -117,10 +115,27 @@ export default function CategoryFormField({ changeMove, fields }: IProps) {
                 onClick={() =>
                   changeMove
                     ? null
-                    : remove.mutate({
-                        categoryId: form.watch("categories")[index].categoryId,
-                        storeId,
-                      })
+                    : (() => {
+                        // 기존 데이터에서 존재하는지 확인
+                        const isInitial = data?.categories.find(
+                          (el) => el.categoryId === fields.categoryId
+                        );
+                        if (isInitial) {
+                          // 존재한다면 백엔드에 삭제 요청
+                          remove.mutate({
+                            categoryId: fields.categoryId,
+                            storeId,
+                          });
+                        } else {
+                          // 새로 추가된거라면 필드에서 바로 삭제
+                          form.setValue(
+                            "categories",
+                            data?.categories.filter(
+                              (el) => el.categoryId !== fields.categoryId
+                            ) as Category[]
+                          );
+                        }
+                      })()
                 }
                 commonClassName="hover:!bg-white"
                 ref={changeMove ? setActivatorNodeRef : undefined}

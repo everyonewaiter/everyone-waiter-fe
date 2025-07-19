@@ -4,12 +4,7 @@ import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
 import makeKSCATApprovalREQ from "../_utils/make-approval-req";
 import { print } from "../_utils/print-receipt";
-
-interface FormType {
-  receiptType: string;
-  phoneNumber: string;
-  monthlyPlan: string;
-}
+import { TypePayForm } from "../_schema/pos.schema";
 
 export default function usePayment() {
   const approvePay = useMutation({
@@ -112,7 +107,7 @@ export default function usePayment() {
     tableNo,
     successHandler,
   }: {
-    form: UseFormReturn<FormType, any, FormType>;
+    form: UseFormReturn<TypePayForm, any, TypePayForm>;
     amount: number;
     tableNo: number;
     successHandler: (res: PaymentResponse) => void;

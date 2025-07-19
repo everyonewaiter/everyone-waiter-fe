@@ -1,8 +1,10 @@
+"use client";
+
 import { useRef } from "react";
 import Image from "next/image";
 import cn from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
-import { MenuFormType } from "../../_types/menuForm.type";
+import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
 
 interface IProps {
   previewUrl: string | null;
@@ -17,14 +19,12 @@ export default function ImageSection({
 }: IProps) {
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const form = useFormContext<
-    Omit<MenuFormType, "image"> & { image: File | string | null }
-  >();
+  const { watch, setValue } = useFormContext<TypeMenuForm>();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      form.setValue("image", file);
+      setValue("imgFile", file);
       onSetPreviewUrl(URL.createObjectURL(file));
     }
   };
@@ -34,14 +34,14 @@ export default function ImageSection({
       <div
         className={cn(
           "overflow-hidden rounded-[12px] md:h-[280px] lg:h-[478px] lg:rounded-[24px]",
-          previewUrl || form.watch("image") ? "" : "border border-gray-500"
+          previewUrl || watch("imgString") ? "" : "border border-gray-500"
         )}
       >
-        {(previewUrl || form.watch("image")) && (
+        {(previewUrl || watch("imgString")) && (
           <Image
             src={
               previewUrl ||
-              `${process.env.NEXT_PUBLIC_DEV_CDN}/${form.watch("image")}`
+              `${process.env.NEXT_PUBLIC_DEV_CDN}/${watch("imgString")}`
             }
             alt="menu image"
             width={364}
@@ -58,7 +58,7 @@ export default function ImageSection({
             className="center lg:text-s text-gray-0 md:font-regular h-8 rounded-[8px] border border-gray-300 text-xs lg:h-9 lg:font-medium"
             onClick={() => fileRef.current?.click()}
           >
-            이미지 {form.watch("image") ? "수정" : "등록"}
+            이미지 {watch("imgString") ? "수정" : "등록"}
           </button>
           <input
             type="file"

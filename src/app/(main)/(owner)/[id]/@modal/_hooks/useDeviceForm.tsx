@@ -2,6 +2,12 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import getQueryClient from "@/app/get-query-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  deviceFormSchema,
+  TypeDeviceForm,
+} from "../../device/_schema/device.schema";
+import { deviceKeys } from "../../device/_queries/keys";
 
 export default function useDeviceForm(
   data?: Device & {
@@ -12,17 +18,13 @@ export default function useDeviceForm(
   const navigate = useRouter();
   const queryClient = getQueryClient();
 
-  const form = useForm<
-    Omit<Device, "updatedAt" | "storeId" | "deviceId"> & {
-      deviceNumber: string;
-      tableNo: number;
-      createdAt: string;
-    }
-  >({
+  const form = useForm<TypeDeviceForm>({
+    mode: "onSubmit",
+    resolver: zodResolver(deviceFormSchema),
     values: {
       name: data?.name ?? "",
       createdAt: data?.createdAt ?? "",
-      state: data ? data.state : "",
+      state: data?.state || null,
       purpose: data?.purpose ?? "HALL",
       paymentType: data?.paymentType ?? "POSTPAID",
       tableNo: data?.tableNo ?? 0,
@@ -40,23 +42,24 @@ export default function useDeviceForm(
       } & { storeId: string; deviceId: string },
       unknown
     >,
-    storeId: string,
-    deviceId: string
+    submitData: TypeDeviceForm,
+    id: { storeId: string; deviceId: string }
   ) => {
     action.mutate(
       {
-        name: form.watch("name"),
-        purpose: form.watch("purpose") as DevicePurpose,
-        paymentType: form.watch("paymentType") as DevicePayment,
-        tableNo: form.watch("tableNo") ?? 0,
-        ksnetDeviceNo: form.watch("deviceNumber"),
-        storeId,
-        deviceId,
+        ksnetDeviceNo: submitData.deviceNumber,
+        name: submitData.name,
+        purpose: submitData.purpose,
+        paymentType: submitData.paymentType,
+        tableNo: submitData.tableNo,
+        ...id,
       },
       {
-        onSuccess: () => {
+        onSuccess: (_, variables) => {
           navigate.back();
-          queryClient.invalidateQueries({ queryKey: ["get-devices"] });
+          queryClient.invalidateQueries({
+            queryKey: deviceKeys.all(variables.storeId),
+          });
         },
         onError: (e) => {
           const res = (e as any).response.data;

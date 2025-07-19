@@ -8,7 +8,7 @@ import Switch from "@/components/common/Switch";
 import { menuLabelTranslate, menuStateTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
 import { categoryQueries } from "../../../menu/_queries/useCategories";
-import { MenuFormType } from "../_types/menuForm.type";
+import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 
 interface IProps {
   isEditing: boolean;
@@ -19,9 +19,7 @@ interface IProps {
 export default function FormSection({ isEditing, storeId, type }: IProps) {
   const { data } = categoryQueries.useCategories(storeId);
 
-  const form = useFormContext<
-    Omit<MenuFormType, "image"> & { image: File | string | null }
-  >();
+  const form = useFormContext<TypeMenuForm>();
 
   const inputGap = "gap-1 lg:gap-2";
   const marginTop = "mt-2 lg:mt-4";
@@ -32,10 +30,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
 
   return (
     <section className="flex h-fit basis-[32.81%] rounded-[12px] border border-gray-600 p-4 lg:rounded-[24px] lg:p-6">
-      <form
-        className="flex w-full flex-col"
-        // onSubmit={form.handleSubmit(submitHandler)}
-      >
+      <div className="flex w-full flex-col">
         <div className={cn("flex flex-col", inputGap)}>
           <Label disabled={!isEditing}>카테고리</Label>
           <Dropdown
@@ -54,7 +49,6 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 form.setValue("category", id);
               }
             }}
-            // TODO: 추후 수정
             disabled={type !== "create"}
           />
         </div>
@@ -107,7 +101,12 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                   },
                 }}
                 onClick={() =>
-                  isEditing ? form.setValue("label", key as MenuLabel) : null
+                  isEditing
+                    ? form.setValue(
+                        "label",
+                        key as "DEFAULT" | "BEST" | "NEW" | "RECOMMEND"
+                      )
+                    : null
                 }
               >
                 {menuLabelTranslate[key as keyof typeof menuLabelTranslate]}
@@ -191,7 +190,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
           </span>
           <Switch className="h-5 w-10" />
         </div>
-      </form>
+      </div>
     </section>
   );
 }

@@ -1,9 +1,10 @@
-import { useRouter } from "next/navigation";
 import Icon from "@/components/common/Icon";
 
-export default function Header() {
-  const navigate = useRouter();
+interface IProps {
+  onNavigate: () => void;
+}
 
+export default function Header({ onNavigate }: IProps) {
   return (
     <div className="mt-8 flex w-full justify-between md:mt-0">
       <div className="flex flex-col gap-1 lg:gap-3">
@@ -18,7 +19,7 @@ export default function Header() {
         iconKey="close"
         size={32}
         className="h-6 w-6 text-black md:h-8 md:w-8"
-        onClick={() => navigate.back()}
+        onClick={onNavigate}
       />
     </div>
   );
