@@ -34,7 +34,7 @@ export function DeviceProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const value = useMemo(() => ({ storeId, deviceId }), [storeId]);
+  const value = useMemo(() => ({ storeId, deviceId }), [storeId, deviceId]);
 
   return (
     <DeviceContext.Provider value={value}>{children}</DeviceContext.Provider>

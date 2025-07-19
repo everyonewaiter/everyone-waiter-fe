@@ -30,6 +30,7 @@ function useCategoryForm(storeId: string) {
     if (data) {
       setInitialCategories(data?.categories);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, form]);
 
   return {
