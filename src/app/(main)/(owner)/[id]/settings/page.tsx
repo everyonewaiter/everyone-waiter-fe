@@ -9,16 +9,19 @@ import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Switch from "@/components/common/Switch";
 import { useStoreContext } from "@/providers/storeProvider";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Spinner from "@/components/common/Spinner";
+import { settingsSchema, TypeSettingsForm } from "./_schema/settings.schema";
 import useSettings from "./_queries/useSettings";
 
 const Sortable = dynamic(() => import("@/components/Sortable"), {
   ssr: false,
-  loading: () => <div>순서 변경 로딩 중...</div>,
+  loading: () => <Spinner />,
 });
 
 const MoveableChips = dynamic(() => import("./_components/MoveableChips"), {
   ssr: false,
-  loading: () => <div>로딩 중...</div>,
+  loading: () => <Spinner />,
 });
 
 export default function Settings() {
@@ -26,11 +29,15 @@ export default function Settings() {
 
   const [items, setItems] = useState<string[]>([]);
 
-  const form = useForm({ defaultValues: { value: "" } });
+  const form = useForm<TypeSettingsForm>({
+    mode: "onChange",
+    resolver: zodResolver(settingsSchema),
+    defaultValues: { optionText: "" },
+  });
   const { updateSetting, settingData } = useSettings(storeId);
 
   const submitHandler = () => {
-    const value = form.getValues("value");
+    const value = form.getValues("optionText");
     if (value.trim()) {
       const nextItems = [...items, value];
       updateSetting({ staffCallOptions: nextItems }, () => {
@@ -143,7 +150,7 @@ export default function Settings() {
                   <Input
                     className="!h-9 w-full !rounded-[10px] placeholder:text-xs placeholder:text-gray-300"
                     placeholder="옵션명을 입력해주세요."
-                    {...form.register("value")}
+                    {...form.register("optionText")}
                   />
                   <ResponsiveButton
                     type="submit"

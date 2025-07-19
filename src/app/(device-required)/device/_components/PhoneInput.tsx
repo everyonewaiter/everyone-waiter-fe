@@ -9,6 +9,7 @@ import {
 import Input from "@/components/common/Input";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import { TypeDeviceStep1Form } from "../_schema/device.schema";
 
 interface Props {
   control: any;
@@ -23,7 +24,7 @@ export default function PhoneInput({
   disabled,
   isSubmitted,
 }: Props) {
-  const form = useFormContext();
+  const form = useFormContext<TypeDeviceStep1Form>();
 
   return (
     <FormField

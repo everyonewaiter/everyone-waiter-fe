@@ -57,6 +57,9 @@ const useReapply = () =>
       queryClient.invalidateQueries({
         queryKey: storeKeys.registration(variables.registrationId),
       });
+      queryClient.invalidateQueries({
+        queryKey: storeKeys.all(),
+      });
     },
   });
 

@@ -1,11 +1,15 @@
-import { arrayMove } from "@dnd-kit/sortable";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { arrayMove } from "@dnd-kit/sortable";
 import { menuQueries } from "../_queries/useMenu";
+import { menuListSchema, TypeMenuList } from "../_schema/menu.schema";
 
 export function useMenuSort(storeId: string, categoryId: string) {
-  const initialRef = useRef<Menu[]>([]);
-  const form = useForm<{ menus: Menu[] }>({
+  const initialRef = useRef<TypeMenuList["menus"]>([]);
+  const form = useForm<TypeMenuList>({
+    mode: "onChange",
+    resolver: zodResolver(menuListSchema),
     defaultValues: { menus: [] },
   });
 
@@ -13,7 +17,7 @@ export function useMenuSort(storeId: string, categoryId: string) {
   const move = menuQueries.useMove();
 
   const setInit = useCallback(
-    (data: Menu[]) => {
+    (data: TypeMenuList["menus"]) => {
       form.reset({ menus: data });
       initialRef.current = data;
     },
@@ -36,15 +40,22 @@ export function useMenuSort(storeId: string, categoryId: string) {
     setPendingMoves((prev) => [
       ...prev,
       {
-        sourceId: list[oldIndex].menuId,
-        targetId: list[newIndex].menuId,
+        sourceId: list[oldIndex].menuId!,
+        targetId: list[newIndex].menuId!,
         where: oldIndex < newIndex ? "NEXT" : "PREVIOUS",
       },
     ]);
   };
 
   useEffect(() => {
-    if (menus?.menus) setInit(menus?.menus);
+    if (menus?.menus)
+      setInit(
+        menus.menus.map((el) => ({
+          ...el,
+          category: el.categoryId,
+          label: el.label!,
+        }))
+      );
   }, [menus?.menus, setInit]);
 
   const handleSortSave = async () => {

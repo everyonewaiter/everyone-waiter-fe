@@ -80,8 +80,8 @@ export default function StoreList() {
         <QueryProviders>
           <StoreApplicationModal
             close={close}
-            item={item}
             isAccepted={item.status === "APPROVE"}
+            {...item}
           />
         </QueryProviders>
       ));

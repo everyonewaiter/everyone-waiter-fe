@@ -7,17 +7,18 @@ import { useMediaQuery } from "react-responsive";
 import DashedBorder from "@/components/DashedBorder";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import { useStoreContext } from "@/providers/storeProvider";
+import Spinner from "@/components/common/Spinner";
 import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
 
 const Sortable = dynamic(() => import("@/components/Sortable"), {
   ssr: false,
-  loading: () => <div>순서 변경 로딩 중...</div>,
+  loading: () => <Spinner />,
 });
 
 const SortableItem = dynamic(() => import("./SortableItem"), {
   ssr: false,
-  loading: () => <div>로딩 중...</div>,
+  loading: () => <Spinner />,
 });
 
 interface IProps {

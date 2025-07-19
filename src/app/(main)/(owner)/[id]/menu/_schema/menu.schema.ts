@@ -1,8 +1,10 @@
 import * as z from "zod";
 
 const schema = z.object({
+  menuId: z.string().optional(),
   imgFile: z.instanceof(File).nullable(),
   imgString: z.string(),
+  image: z.string(),
   category: z.string(),
   name: z.string(),
   description: z.string().optional(),
@@ -52,4 +54,21 @@ export const menuFormSchema = schema
   })
   .required();
 
+export const menuListSchema = z.object({
+  menus: z.array(
+    schema.pick({
+      menuId: true,
+      category: true,
+      name: true,
+      description: true,
+      price: true,
+      spicy: true,
+      state: true,
+      label: true,
+      image: true,
+    })
+  ),
+});
+
 export type TypeMenuForm = z.infer<typeof menuFormSchema>;
+export type TypeMenuList = z.infer<typeof menuListSchema>;

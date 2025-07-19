@@ -7,6 +7,7 @@ import {
 } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { TypeDeviceStep1Form } from "../_schema/device.schema";
 
 interface Props {
   control: any;
@@ -23,7 +24,7 @@ export default function AuthInput({
   isSubmitted,
   disabled,
 }: Props) {
-  const form = useFormContext();
+  const form = useFormContext<TypeDeviceStep1Form>();
 
   return (
     <FormField
