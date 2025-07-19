@@ -60,7 +60,7 @@ export default function useAuthReducer() {
           disables: {
             ...state.disables,
             requestNumCheck: false,
-            goToNextStep: true,
+            goToNextStep: false,
           },
         };
       case "reset":
