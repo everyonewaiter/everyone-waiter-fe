@@ -1,4 +1,4 @@
-import { useNowContext } from "@/providers/nowProvider";
+import useGetDate from "@/hooks/useGetDate";
 import dynamic from "next/dynamic";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
@@ -10,15 +10,14 @@ interface IProps {
 }
 
 export default function SalesModal({ close }: IProps) {
-  const { month, date } = useNowContext();
+  const { formattedMonth, formattedDate } = useGetDate(new Date());
 
   return (
     <Alert hasNoAction onClose={close} noResponsive>
       <div className="flex flex-col gap-10">
         <div className="flex items-center justify-between text-2xl font-semibold">
           <h1 className="text-gray-0">
-            {String(month).padStart(2, "0")}월 {String(date).padStart(2, "0")}일
-            매출 내역
+            {formattedMonth}월 {formattedDate}일 매출 내역
           </h1>
           <span className="text-primary">1,000,000원</span>
         </div>

@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
-import { useNowContext } from "@/providers/nowProvider";
+import useGetDate from "@/hooks/useGetDate";
 import SideSection2 from "../../_components/SideSection2";
 import SideLayout from "../../_components/SideSection/SideLayout";
 import { paymentListQueries } from "../../_queries/usePaymentList";
@@ -38,14 +38,15 @@ export interface DUMMY {
 }
 
 export default function PaymentHistory() {
-  const { now, formattedMonth, formattedDate } = useNowContext();
+  const now = new Date();
+  const { formattedMonth, formattedDate } = useGetDate(now);
 
   const [selectedRow, setSelectedRow] = useState<OrderPaymentsList | null>(
     null
   );
   const [date, setDate] = useState<Date | null>(now);
   const formatted = date
-    ? `${date.getFullYear()}${formattedMonth(date.getMonth() + 1)}${formattedDate(date.getDate())}`
+    ? `${date.getFullYear()}${formattedMonth}${formattedDate}`
     : "";
 
   const { data, refetch, isLoading } =

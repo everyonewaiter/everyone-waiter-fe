@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
-import { NowProvider, useNowContext } from "@/providers/nowProvider";
 import useOverlay from "@/hooks/use-overlay";
 import useGetDate from "@/hooks/useGetDate";
 import dynamic from "next/dynamic";
@@ -24,9 +23,8 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 export default function Pos() {
   const navigate = useRouter();
 
-  const { now } = useNowContext();
   const { storeId } = useDeviceContext();
-  const { date, day } = useGetDate(now);
+  const { year, formattedMonth, formattedDate, day } = useGetDate(new Date());
 
   const { data, isLoading } = posQueries.useStoreInfo(storeId as string);
   const open = posQueries.useOpenStore();
@@ -73,9 +71,7 @@ export default function Pos() {
   const openSales = () => {
     salesControl.open(() => (
       <QueryProviders>
-        <NowProvider>
-          <SalesModal close={salesControl.close} />
-        </NowProvider>
+        <SalesModal close={salesControl.close} />
       </QueryProviders>
     ));
   };
@@ -95,7 +91,7 @@ export default function Pos() {
           </div>
         )}
         <div className="flex flex-col gap-4">
-          <span className="font-regular text-center text-2xl text-white">{`${date.year}년 ${date.month}월 ${date.date}일 ${day}요일`}</span>
+          <span className="font-regular text-center text-2xl text-white">{`${year}년 ${formattedMonth}월 ${formattedDate}일 ${day}요일`}</span>
           <h1 className="h-18 text-center text-[48px] font-bold text-white">
             {isLoading || !data?.name
               ? "안녕하세요"

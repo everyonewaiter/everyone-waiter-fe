@@ -5,12 +5,10 @@ import Link from "next/link";
 import { PropsWithChildren } from "react";
 import Icon from "@/components/common/Icon";
 import useGetDate from "@/hooks/useGetDate";
-import { useNowContext } from "@/providers/nowProvider";
 import OpenStore from "./OpenStore";
 
 export default function POSHeader({ children }: PropsWithChildren) {
-  const { now } = useNowContext();
-  const { fullDate, day, time } = useGetDate(now);
+  const { fullDate, fullTime, day } = useGetDate(new Date());
 
   return (
     <header className="flex flex-col px-[60px] pt-10">
@@ -25,7 +23,7 @@ export default function POSHeader({ children }: PropsWithChildren) {
           />
           <h1 className="font-hakgyo text-primary text-2xl">모두의 웨이터</h1>
         </Link>
-        <span className="text-2xl">{`${fullDate}(${day}) ${time}`}</span>
+        <span className="text-2xl">{`${fullDate}(${day}) ${fullTime}`}</span>
         <div className="flex flex-row items-center gap-6">
           {children || (
             <Link
