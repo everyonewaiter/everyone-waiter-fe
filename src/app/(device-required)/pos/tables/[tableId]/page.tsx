@@ -133,7 +133,7 @@ export default function DetailTableOrder() {
         }}
       >
         <POSHeader />
-        <div className="relative h-full overflow-y-auto bg-blue-50 px-[60px] pt-8">
+        <div className="relative h-full overflow-y-auto px-[60px] pt-8">
           <CategoriesButton
             categories={menus?.categories!}
             isActive={isActive}
