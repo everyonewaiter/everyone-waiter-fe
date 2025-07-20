@@ -1,5 +1,6 @@
 "use client";
 
+import { Metadata } from "next";
 import cn from "@/lib/utils";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/useOverlay";
@@ -9,6 +10,14 @@ import { AxiosError } from "axios";
 import PublicComponent from "../_components/PublicComponent";
 import WaitingCancelModal from "../_components/WaitingCancelModal";
 import { publicQueries } from "../../_queries/usePublic";
+
+export const metadata: Metadata = {
+  title: "내 순서 확인하기",
+  description: "내 순서를 확인할 수 있다..",
+  icons: {
+    icon: "/logo/logo.svg",
+  },
+};
 
 export default function Page() {
   const navigate = useRouter();
