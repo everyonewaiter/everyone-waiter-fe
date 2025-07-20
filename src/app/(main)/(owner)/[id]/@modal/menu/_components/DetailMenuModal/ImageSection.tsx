@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import cn from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
+import { getCdn } from "@/utils/getCdn";
 import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
 
 interface IProps {
@@ -39,10 +40,7 @@ export default function ImageSection({
       >
         {(previewUrl || watch("imgString")) && (
           <Image
-            src={
-              previewUrl ||
-              `${process.env.NEXT_PUBLIC_DEV_CDN}/${watch("imgString")}`
-            }
+            src={previewUrl || getCdn(watch("imgString"))}
             alt="menu image"
             width={364}
             height={478}

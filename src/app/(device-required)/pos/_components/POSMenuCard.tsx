@@ -1,28 +1,43 @@
+import { getCdn } from "@/utils/getCdn";
 import Image from "next/image";
+import { memo } from "react";
 
 interface IProps extends Menu {
   onClick?: () => void;
 }
 
-export default function POSMenuCard({ onClick, ...props }: IProps) {
-  return (
-    <button
-      type="button"
-      className="relative h-[340px] overflow-hidden rounded-[24px] border-[1.5px] border-gray-600"
-      onClick={onClick}
-    >
+const POSMenuCard = memo(({ onClick, ...props }: IProps) => (
+  <button
+    type="button"
+    className="relative h-[340px] overflow-hidden rounded-[24px] border-[1.5px] border-gray-600"
+    onClick={onClick}
+  >
+    {props.image ? (
       <Image
-        src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${props.image}`}
-        alt="menu"
+        src={getCdn(props.image)}
+        alt={`${props.name} 메뉴 이미지`}
         fill
         className="object-cover"
+        priority
       />
-      <div className="absolute bottom-0 flex h-[101px] w-full flex-col items-center justify-center gap-2 bg-white">
-        <span className="text-gray-0 text-lg font-medium">{props.name}</span>
-        <strong className="text-gray-0 text-2xl font-semibold">
-          {props.price.toLocaleString()}원
-        </strong>
+    ) : (
+      <div className="center h-full w-full bg-gray-600 pb-20 opacity-50">
+        <Image
+          src="/logo/logo-medium-gray.svg"
+          alt="매뉴 이미지 없음"
+          width={100}
+          height={100}
+          className="opacity-50"
+        />
       </div>
-    </button>
-  );
-}
+    )}
+    <div className="absolute bottom-0 flex h-[101px] w-full flex-col items-center justify-center gap-2 bg-white">
+      <span className="text-gray-0 text-lg font-medium">{props.name}</span>
+      <strong className="text-gray-0 text-2xl font-semibold">
+        {props.price.toLocaleString()}원
+      </strong>
+    </div>
+  </button>
+));
+
+export default POSMenuCard;

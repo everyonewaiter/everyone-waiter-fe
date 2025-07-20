@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/useOverlay";
 import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import CategoriesButton from "../../_components/CategoriesButton";
@@ -39,7 +38,7 @@ export default function DetailTableOrder() {
   const { orders, addOrders } = useOrderStore();
   const { open, close } = useOverlay();
   const { setOriginMemo } = useMemoStore();
-  const { resetCheckedMenu } = useCheckedMenuStore();
+  const { resetCheckedMenu, checkedMenu } = useCheckedMenuStore();
 
   const { data: device } = deviceQueries.useDeviceDetail();
 
@@ -116,19 +115,25 @@ export default function DetailTableOrder() {
   return (
     <div className="flex h-screen flex-row">
       <div
-        className="relative flex flex-1 cursor-pointer flex-col"
-        onClick={resetCheckedMenu}
+        className="relative flex flex-1 flex-col"
+        onClick={() => {
+          if (checkedMenu) {
+            resetCheckedMenu();
+          }
+        }}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            resetCheckedMenu();
+            if (checkedMenu) {
+              resetCheckedMenu();
+            }
           }
         }}
       >
         <POSHeader />
-        <div className="relative h-full px-[60px] pt-8">
+        <div className="relative h-full overflow-y-auto bg-blue-50 px-[60px] pt-8">
           <CategoriesButton
             categories={menus?.categories!}
             isActive={isActive}
@@ -144,9 +149,9 @@ export default function DetailTableOrder() {
               등록된 메뉴가 없습니다.
             </div>
           )}
-          <div>
+          <div className="">
             {hasLoadedOnce && list?.length! > 0 && (
-              <ScrollArea className="h-[856px] w-full pt-9">
+              <div className="h-full w-full pt-9">
                 <div className="grid grid-cols-4 gap-x-6 gap-y-8">
                   {list?.map((menu) => (
                     <Fragment key={menu.menuId}>
@@ -157,7 +162,7 @@ export default function DetailTableOrder() {
                     </Fragment>
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
             )}
             {hasLoadedOnce && list?.length! === 0 && menus?.categories && (
               <div className="text-gray-0 center h-[740px] pt-8 text-center text-xl">

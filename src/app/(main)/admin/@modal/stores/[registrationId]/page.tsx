@@ -9,6 +9,7 @@ import Label from "@/components/common/Label";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
+import { getCdn } from "@/utils/getCdn";
 import { adminQueries } from "../../../_queries/useAdmin";
 
 const dataObj = {
@@ -101,7 +102,7 @@ export default function Page() {
                 {data?.image && (
                   <div className="flex w-full justify-center rounded-[16px] md:py-1 lg:py-6">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${data?.image!}`}
+                      src={getCdn(data?.image)}
                       alt="사업자 등록증"
                       width={381}
                       height={458}
