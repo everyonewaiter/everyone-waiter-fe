@@ -25,7 +25,7 @@ export default function OpenSwitch({ className, isStoreOpen }: IProps) {
       <div
         className={cn(
           "font-regular flex h-[44px] w-[83px] items-center justify-center rounded-full text-xl transition-colors",
-          !isStoreOpen ? "bg-red-600 text-white" : "text-gray-300"
+          !isStoreOpen ? "bg-gray-200 text-white" : "text-gray-300"
         )}
       >
         마감
