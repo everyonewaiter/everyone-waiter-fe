@@ -5,7 +5,7 @@ import { Fragment } from "react";
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { useMemoStore } from "../_hooks/useMemoStore";
 import { useOrderStore } from "../_hooks/useOrderStore";

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { posQueries } from "../_queries/usePos";

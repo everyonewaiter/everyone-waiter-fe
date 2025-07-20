@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import { posQueries } from "../../_queries/usePos";
 
 const CancelAlert = dynamic(() => import("../modals/CancelAlert"), {

@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/common/Table/Tables";
 import { registerStateTranslate } from "@/constants/translates";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
 import { storesQueries } from "../(owner)/[id]/store/_queries/useStores";

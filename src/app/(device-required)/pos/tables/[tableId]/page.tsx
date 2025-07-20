@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { ScrollArea } from "@/components/common/ScrollArea";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import CategoriesButton from "../../_components/CategoriesButton";
 import POSHeader from "../../_components/POSHeader";

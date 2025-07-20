@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import useGetDate from "@/hooks/useGetDate";
 import dynamic from "next/dynamic";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";

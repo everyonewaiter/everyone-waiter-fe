@@ -8,7 +8,7 @@ import { deviceQueries } from "@/app/(device-required)/device/_queries/useDevice
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import { posQueries } from "../../_queries/usePos";
 import POSHeader from "../POSHeader";
 import TableBox from "../TableBox";

@@ -2,7 +2,7 @@
 
 import cn from "@/lib/utils";
 import Button from "@/components/common/Button/Button";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { AxiosError } from "axios";

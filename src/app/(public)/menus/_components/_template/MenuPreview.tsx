@@ -5,7 +5,7 @@ import { Fragment, useState } from "react";
 import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
 import { publicQueries } from "../../../_queries/usePublic";
 

@@ -7,7 +7,7 @@ import Dropdown from "@/components/common/Dropdown";
 import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import { deviceQueries } from "../../_queries/useDeviceInfo";
 import useStep1Form from "../../_hooks/useStep1Form";
 import PhoneInput from "../PhoneInput";
