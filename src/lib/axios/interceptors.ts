@@ -1,6 +1,5 @@
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
-/* eslint-disable no-console */
+
 import { Mutex } from "async-mutex";
 import { AxiosInstance } from "axios";
 import makeSignature from "@/utils/make-signature";
@@ -41,8 +40,8 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
         return Promise.reject(error);
       }
 
-      if (error.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
+      if (error.response?.status === 401 && !originalRequest.retryFlag) {
+        originalRequest.retryFlag = true;
 
         // 갱신 중이면 기다림
         if (isRefreshing && refreshPromise) {
@@ -57,14 +56,23 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
         refreshPromise = mutex.runExclusive(async () => {
           try {
             const refreshToken = await getToken("refreshToken");
-            console.log(`refresh ${refreshToken}`);
+
+            if (process.env.NODE_ENV === "development") {
+              // eslint-disable-next-line no-console
+              console.log(`refresh ${refreshToken}`);
+            }
+
             if (!refreshToken) {
               window.location.href = "/login";
               throw error;
             }
 
             const { accessToken } = await renewToken({ refreshToken });
-            console.log("refresh: success ✅");
+
+            if (process.env.NODE_ENV === "development") {
+              // eslint-disable-next-line no-console
+              console.log("refresh: success ✅");
+            }
 
             await setCookie("accessToken", accessToken);
             return accessToken;
@@ -75,6 +83,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
             } else {
               await deleteCookie("accessToken");
               await deleteCookie("refreshToken");
+              window.location.href = "/login";
             }
             throw refreshError;
           } finally {
@@ -134,6 +143,7 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
         })) as string;
 
         if (!deviceInfo || !secretKey) {
+          // eslint-disable-next-line no-console
           console.warn("❌ deviceInfo 또는 secretKey가 없습니다.");
           return;
         }
@@ -149,21 +159,24 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
           deviceId: deviceInfo.deviceId,
         });
 
-        console.log("🧾 Signing Payload", {
-          method,
-          uri: `/v1${uri}`,
-          secretKey,
-          timestamp,
-          purpose: deviceInfo.purpose,
-          name: deviceInfo.name,
-          deviceId: deviceInfo.deviceId,
-        });
-
-        console.log("🧾 Headers", {
-          "x-ew-access-key": deviceInfo.deviceId,
-          "x-ew-signature": signature,
-          "x-ew-timestamp": timestamp,
-        });
+        if (process.env.NODE_ENV === "development") {
+          // eslint-disable-next-line no-console
+          console.log("🧾 Signing Payload", {
+            method,
+            uri: `/v1${uri}`,
+            secretKey,
+            timestamp,
+            purpose: deviceInfo.purpose,
+            name: deviceInfo.name,
+            deviceId: deviceInfo.deviceId,
+          });
+          // eslint-disable-next-line no-console
+          console.log("🧾 Headers", {
+            "x-ew-access-key": deviceInfo.deviceId,
+            "x-ew-signature": signature,
+            "x-ew-timestamp": timestamp,
+          });
+        }
 
         config.headers["x-ew-access-key"] = deviceInfo.deviceId;
         config.headers["x-ew-signature"] = signature;
@@ -191,13 +204,19 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
           throw customError;
         }
       } else if (error.request) {
-        console.error("   ❗ No response received.");
-        console.error("   URL:", error.config?.url);
-      } else {
+        if (process.env.NODE_ENV === "development") {
+          // eslint-disable-next-line no-console
+          console.error("   ❗ No response received.");
+          // eslint-disable-next-line no-console
+          console.error("   URL:", error.config?.url);
+        }
+      } else if (process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
         console.error("   Error setting up the request:", error.message);
       }
 
       if (errorMsg !== lastErrorMessage || now - lastErrorTime > 3000) {
+        // eslint-disable-next-line no-console
         console.error("❌ Axios Response Error:", errorMsg);
         lastErrorMessage = errorMsg;
         lastErrorTime = now;
