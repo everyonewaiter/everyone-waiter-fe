@@ -23,8 +23,17 @@ interface IProps {
 export default function DatePicker({ date, onSetDate }: IProps) {
   const [open, setOpen] = useState(false);
 
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
+      document.body.classList.add("disable-modal-close");
+    } else {
+      document.body.classList.remove("disable-modal-close");
+    }
+    setOpen(newOpen);
+  };
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -52,7 +61,7 @@ export default function DatePicker({ date, onSetDate }: IProps) {
           <CalendarIcon className="absolute right-3 size-6 text-gray-500" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="mt-2 ml-15 w-auto p-0">
+      <PopoverContent className="!z-[10000] mt-2 ml-15 w-auto p-0">
         <Calendar
           mode="single"
           selected={date!}
