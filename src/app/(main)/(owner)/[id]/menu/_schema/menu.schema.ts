@@ -2,7 +2,7 @@ import * as z from "zod";
 
 const schema = z.object({
   menuId: z.string().optional(),
-  imgFile: z.instanceof(File).nullable(),
+  imgFile: z.any().nullable(),
   imgString: z.string(),
   image: z.string(),
   category: z.string(),

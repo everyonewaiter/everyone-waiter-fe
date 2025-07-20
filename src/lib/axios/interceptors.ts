@@ -35,8 +35,8 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
       }
 
       if (error.response?.status === 400) {
-        // eslint-disable-next-line no-alert
-        alert(e.response.data.message);
+        // eslint-disable-next-line no-console
+        console.error(e.response.data.message);
         return Promise.reject(error);
       }
 
