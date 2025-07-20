@@ -11,9 +11,9 @@ const useGetDate = (dateInput: string | Date) => {
   return {
     year: yyyy,
     month: date.getMonth() + 1,
-    formattedMonth: String(date.getMonth() + 1).padStart(2, "0"),
+    formattedMonth: (d: Date) => String(d.getMonth() + 1).padStart(2, "0"),
     date: date.getDate(),
-    formattedDate: String(date.getDate()).padStart(2, "0"),
+    formattedDate: (d: Date) => String(d.getDate()).padStart(2, "0"),
     day,
     hour: hh,
     minute: mi,

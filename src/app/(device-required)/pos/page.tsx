@@ -91,7 +91,7 @@ export default function Pos() {
           </div>
         )}
         <div className="flex flex-col gap-4">
-          <span className="font-regular text-center text-2xl text-white">{`${year}년 ${formattedMonth}월 ${formattedDate}일 ${day}요일`}</span>
+          <span className="font-regular text-center text-2xl text-white">{`${year}년 ${formattedMonth(new Date())}월 ${formattedDate(new Date())}일 ${day}요일`}</span>
           <h1 className="h-18 text-center text-[48px] font-bold text-white">
             {isLoading || !data?.name
               ? "안녕하세요"

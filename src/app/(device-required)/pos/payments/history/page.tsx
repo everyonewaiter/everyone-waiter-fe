@@ -46,7 +46,7 @@ export default function PaymentHistory() {
   );
   const [date, setDate] = useState<Date | null>(now);
   const formatted = date
-    ? `${date.getFullYear()}${formattedMonth}${formattedDate}`
+    ? `${date.getFullYear()}${formattedMonth(date)}${formattedDate(date)}`
     : "";
 
   const { data, refetch, isLoading } =
