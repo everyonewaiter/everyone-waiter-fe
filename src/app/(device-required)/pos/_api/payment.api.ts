@@ -37,3 +37,12 @@ export const getPaymentList = async (
   });
   return response.data;
 };
+
+export const getRevenueList = async (date: string): Promise<Revenue> => {
+  const response = await signatureInstance.get(`${API_PATH.pos}/revenue`, {
+    params: {
+      date,
+    },
+  });
+  return response.data;
+};

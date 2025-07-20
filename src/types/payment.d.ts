@@ -66,3 +66,13 @@ interface OrderPaymentsList extends OrderPayments {
   cancellable: boolean;
   createdAt: string;
 }
+
+interface Revenue {
+  totalOrderPrice: number;
+  totalDiscountPrice: number;
+  totalPaymentPrice: number;
+  cashPaymentApprovePrice: number;
+  cardPaymentApprovePrice: number;
+  cashPaymentCancelPrice: number;
+  cardPaymentCancelPrice: number;
+}
