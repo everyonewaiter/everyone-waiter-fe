@@ -34,7 +34,7 @@ export default function FormComponent() {
   };
 
   return (
-    <div className="my-8 flex flex-col md:my-6 lg:my-10">
+    <div className="my-8 flex w-full flex-col md:my-6 lg:my-10">
       <Form {...form}>
         <form
           className="flex flex-col gap-3 lg:gap-4"
