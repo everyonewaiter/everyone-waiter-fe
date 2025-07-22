@@ -7,7 +7,7 @@ export default function StoreInfo() {
         <div className="mt-10 flex h-full w-full flex-col items-center md:mt-6 lg:mt-10">
           <div className="w-full">
             <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
-              매장 정보!
+              매장 정보
             </h1>
             <div className="md:text-s font-regular gap-1/2 mt-2 flex w-full flex-col text-xs text-gray-300 lg:mt-3 lg:text-sm">
               <span>등록된 매장 정보를 확인할 수 있습니다.</span>
