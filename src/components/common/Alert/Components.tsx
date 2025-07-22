@@ -75,7 +75,7 @@ const AlertDialogTitle = React.forwardRef<
   <AlertDialogPrimitive.Title
     ref={ref}
     className={cn(
-      "w-full text-center text-base font-semibold break-words whitespace-pre-wrap md:text-lg",
+      "w-full text-center text-base font-semibold break-words whitespace-pre-wrap lg:text-lg",
       className
     )}
     {...props}
