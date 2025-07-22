@@ -12,6 +12,7 @@ import { deviceKeys } from "../../device/_queries/keys";
 export default function useDeviceForm(
   data?: Device & {
     tableNo: number;
+    ksnetDeviceNo: string;
   }
 ) {
   const navigate = useRouter();
@@ -27,6 +28,7 @@ export default function useDeviceForm(
       purpose: data?.purpose ?? "HALL",
       paymentType: data?.paymentType ?? "POSTPAID",
       tableNo: data?.tableNo ?? 0,
+      deviceNumber: data?.ksnetDeviceNo ?? "",
     },
   });
 
@@ -36,6 +38,7 @@ export default function useDeviceForm(
       Error,
       Pick<Device, "name" | "purpose" | "paymentType"> & {
         tableNo: number;
+        ksnetDeviceNo: string;
       } & { storeId: string; deviceId: string },
       unknown
     >,
@@ -48,6 +51,7 @@ export default function useDeviceForm(
         purpose: submitData.purpose,
         paymentType: submitData.paymentType,
         tableNo: submitData.tableNo,
+        ksnetDeviceNo: submitData.deviceNumber,
         ...id,
       },
       {

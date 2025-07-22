@@ -16,7 +16,7 @@ export const getDevices = async (
 export const getDetailDevice = async ({
   storeId,
   deviceId,
-}: IDs): Promise<Device & { tableNo: number }> => {
+}: IDs): Promise<Device & { tableNo: number; ksnetDeviceNo: string }> => {
   const response = await instance.get(
     `${API_PATH.stores}/${storeId}/devices/${deviceId}`
   );
@@ -29,6 +29,7 @@ export const updateDevice = async ({
   ...body
 }: Pick<Device, "name" | "purpose" | "paymentType"> & {
   tableNo: number;
+  ksnetDeviceNo: string;
 } & IDs) => {
   const response = await instance.put(
     `${API_PATH.stores}/${storeId}/devices/${deviceId}`,

@@ -29,7 +29,8 @@ export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
     if (ksnetDeviceNo) {
       form.setValue("deviceNumber", ksnetDeviceNo as string);
     }
-  }, [form, ksnetDeviceNo]);
+    // eslint-disable-next-line
+  }, [ksnetDeviceNo]);
 
   const handleUpdateDeviceNumber = () => {
     const number = form.watch("deviceNumber");
