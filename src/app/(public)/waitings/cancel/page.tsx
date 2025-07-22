@@ -1,6 +1,5 @@
 "use client";
 
-import { Metadata } from "next";
 import {
   InputOTP,
   InputOTPGroup,
@@ -11,14 +10,6 @@ import Button from "@/components/common/Button/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PublicComponent from "../_components/PublicComponent";
 import { publicQueries } from "../../_queries/usePublic";
-
-export const metadata: Metadata = {
-  title: "내 순서 취소하기",
-  description: "내 웨이팅 순서를 취소할 수 있다.",
-  icons: {
-    icon: "/logo/logo.svg",
-  },
-};
 
 export default function Page() {
   const navigate = useRouter();
