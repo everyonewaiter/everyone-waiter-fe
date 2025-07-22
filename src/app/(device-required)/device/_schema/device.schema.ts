@@ -5,7 +5,6 @@ const schema = z.object({
   phone: commonSchema.shape.phone,
   authNumber: commonSchema.shape.authNumber,
   deviceName: z.string(),
-  deviceNumber: commonSchema.shape.deviceNumber,
 });
 
 export const step1Schema = schema.pick({
@@ -15,7 +14,6 @@ export const step1Schema = schema.pick({
 
 export const step2Schema = schema.pick({
   deviceName: true,
-  deviceNumber: true,
 });
 
 export type TypeDeviceStep1Form = z.infer<typeof step1Schema>;

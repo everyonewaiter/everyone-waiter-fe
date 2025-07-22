@@ -18,7 +18,6 @@ export const deviceFormSchema = schema.pick({
   purpose: true,
   paymentType: true,
   tableNo: true,
-  deviceNumber: true,
 });
 
 export type TypeDeviceForm = z.infer<typeof deviceFormSchema>;

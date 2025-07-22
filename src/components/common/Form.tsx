@@ -153,7 +153,10 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-[13px] text-gray-200", className)}
+      className={cn(
+        "lg:text-s flex items-center gap-0.5 text-xs text-[13px] text-gray-400",
+        className
+      )}
       {...props}
     >
       {props.children}
@@ -174,7 +177,7 @@ function FormErrorMessage({ className, ...props }: React.ComponentProps<"p">) {
       data-slot="form-message"
       id={formMessageId}
       className={cn(
-        "lg:text-s text-status-error flex items-center gap-1 text-xs",
+        "lg:text-s text-status-error flex items-center gap-0.5 text-xs",
         className
       )}
       {...props}

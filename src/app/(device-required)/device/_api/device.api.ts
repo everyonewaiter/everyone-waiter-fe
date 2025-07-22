@@ -6,7 +6,6 @@ export const addDevice = async ({
   ...body
 }: Omit<Device, "state" | "updatedAt" | "deviceId" | "createdAt"> & {
   tableNo: number;
-  ksnetDeviceNo: string;
   phoneNumber: string;
   storeId: string;
 }): Promise<{ deviceId: bigint; secretKey: string }> => {

@@ -34,7 +34,7 @@ export default function AddDeviceStep2({
 
   const {
     form: { form, watch, handleSubmit },
-  } = useStep2Form();
+  } = useStep2Form(purpose);
 
   const { mutate } = deviceQueries.useAddDevice();
 
@@ -45,7 +45,6 @@ export default function AddDeviceStep2({
       name: data.deviceName,
       purpose: purpose === "HALL" ? "HALL" : ("POS" as DevicePurpose),
       tableNo: 0,
-      ksnetDeviceNo: purpose === "POS" ? data.deviceNumber : "",
       paymentType: "POSTPAID" as DevicePayment,
     };
 
@@ -114,14 +113,6 @@ export default function AddDeviceStep2({
             name="deviceName"
             placeholder="기기 이름을 입력해주세요."
           />
-          {purpose === "POS" && (
-            <LabeledInput
-              form={form}
-              label="단말기 번호"
-              name="deviceNumber"
-              placeholder="단말기 번호를 입력해주세요." // 기본값 DPT0TEST03
-            />
-          )}
           <ResponsiveButton
             type="submit"
             responsiveButtons={{
@@ -129,7 +120,7 @@ export default function AddDeviceStep2({
               md: { buttonSize: "sm", className: "w-full mt-3" },
               lg: { buttonSize: "lg", className: "w-full" },
             }}
-            disabled={!watch("deviceNumber")}
+            disabled={!watch("deviceName")}
           >
             등록하기
           </ResponsiveButton>

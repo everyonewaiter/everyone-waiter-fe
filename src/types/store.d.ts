@@ -33,6 +33,7 @@ interface Settings {
   showOrderTotalPrice: boolean;
   countryOfOrigins: CountryOfOriginItem[];
   staffCallOptions: string[];
+  ksnetDeviceNo: string;
 }
 
 interface StoreInfoDetail extends Omit<StoreForm, "file"> {
