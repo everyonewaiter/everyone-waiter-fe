@@ -45,7 +45,6 @@ export default function AddDeviceStep2({
       name: data.deviceName,
       purpose: purpose === "HALL" ? "HALL" : ("POS" as DevicePurpose),
       tableNo: 0,
-      ksnetDeviceNo: purpose === "POS" ? data.deviceNumber : "",
       paymentType: "POSTPAID" as DevicePayment,
     };
 
