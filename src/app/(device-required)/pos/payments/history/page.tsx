@@ -1,10 +1,9 @@
 "use client";
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import DatePicker from "@/components/common/DatePicker";
-import Paginations from "@/components/common/Pagination/Paginations";
 import {
   Table,
   TableBody,
@@ -14,16 +13,19 @@ import {
   TableRow,
 } from "@/components/common/Table/Tables";
 import cn from "@/lib/utils";
+import useGetDate from "@/hooks/useGetDate";
 import SideSection2 from "../../_components/SideSection2";
 import SideLayout from "../../_components/SideSection/SideLayout";
+import { paymentListQueries } from "../../_queries/usePaymentList";
 
 const itemWidth = {
-  "No.": "flex-[5]",
-  현금: "flex-[9]",
-  카드: "flex-[9]",
+  "No.": "flex-[4]",
+  결제수단: "flex-[5]",
+  승인번호: "flex-[8]",
+  현금영수증: "flex-[6]",
   합계: "flex-[9]",
-  상태: "flex-[7]",
-  시간: "flex-[9]",
+  상태: "flex-[5]",
+  결제시간: "flex-[9]",
 };
 
 export interface DUMMY {
@@ -35,51 +37,29 @@ export interface DUMMY {
   createdAt: string;
 }
 
-const dummy: DUMMY[] = [
-  {
-    id: "4886",
-    cash: 0,
-    card: 141000,
-    total: 141000,
-    state: "approve",
-    createdAt: "2025-06-01 08:37:46",
-  },
-  {
-    id: "4887",
-    cash: 10000,
-    card: 0,
-    total: 10000,
-    state: "cancel",
-    createdAt: "2025-06-01 08:37:47",
-  },
-  {
-    id: "4888",
-    cash: 10000,
-    card: 141000,
-    total: 151000,
-    state: "approve",
-    createdAt: "2025-06-01 08:37:48",
-  },
-];
-
 export default function PaymentHistory() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRow, setSelectedRow] = useState<DUMMY | null>(null);
+  const now = new Date();
+  const { formattedMonth, formattedDate } = useGetDate(now);
 
-  const handleOutsideClose = () => selectedRow && setSelectedRow(null);
+  const [selectedRow, setSelectedRow] = useState<OrderPaymentsList | null>(
+    null
+  );
+  const [date, setDate] = useState<Date | null>(now);
+  const formatted = date
+    ? `${date.getFullYear()}${formattedMonth(date)}${formattedDate(date)}`
+    : "";
+
+  const { data, refetch, isLoading } =
+    paymentListQueries.usePaymentsList(formatted);
+
+  useEffect(() => {
+    refetch();
+  }, [formatted, refetch]);
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      className="flex w-full cursor-pointer"
-      onClick={handleOutsideClose}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") handleOutsideClose();
-      }}
-    >
-      <div className="flex w-full flex-1 flex-col px-[60px] pt-8 pb-6">
-        <DatePicker />
+    <div className="flex h-[calc(100dvh-133px)] w-full">
+      <div className="relative flex w-full flex-1 flex-col px-[60px] pt-8 pb-6">
+        <DatePicker date={date} onSetDate={setDate} />
         <div className="h-[704px]">
           <Table className="mt-6 w-full">
             <TableHeader>
@@ -97,73 +77,82 @@ export default function PaymentHistory() {
                 ))}
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {dummy?.map((item) => (
-                <TableRow
-                  key={item.id.toString()}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedRow(item);
-                  }}
-                >
-                  <TableCell
-                    className={itemWidth["No." as keyof typeof itemWidth]}
+            {!isLoading && data?.orderPayments.length && (
+              <TableBody>
+                {data?.orderPayments?.map((item, idx) => (
+                  <TableRow
+                    key={item.orderPaymentId}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedRow(item);
+                    }}
                   >
-                    {item.id}
-                  </TableCell>
-                  <TableCell
-                    className={itemWidth["현금" as keyof typeof itemWidth]}
-                  >
-                    {item.cash.toLocaleString()}원
-                  </TableCell>
-                  <TableCell
-                    className={itemWidth["카드" as keyof typeof itemWidth]}
-                  >
-                    {item.card.toLocaleString()}원
-                  </TableCell>
-                  <TableCell
-                    className={itemWidth["합계" as keyof typeof itemWidth]}
-                  >
-                    {item.total.toLocaleString()}원
-                  </TableCell>
-                  <TableCell
-                    className={itemWidth["상태" as keyof typeof itemWidth]}
-                  >
-                    <Button
-                      className="button-sm px-5 py-2"
-                      color={item.state === "approve" ? "approve" : "reject"}
+                    <TableCell
+                      className={itemWidth["No." as keyof typeof itemWidth]}
                     >
-                      {item.state === "approve" ? "승인" : "취소"}
-                    </Button>
-                  </TableCell>
-                  <TableCell
-                    className={itemWidth["시간" as keyof typeof itemWidth]}
-                  >
-                    {item.createdAt}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+                      {(data?.orderPayments?.length ?? 0) - idx}
+                    </TableCell>
+                    <TableCell
+                      className={
+                        itemWidth["결제수단" as keyof typeof itemWidth]
+                      }
+                    >
+                      {item.method === "CARD" ? "카드" : "현금"}
+                    </TableCell>
+                    <TableCell
+                      className={
+                        itemWidth["승인번호" as keyof typeof itemWidth]
+                      }
+                    >
+                      {item.method === "CARD" && item.approvalNo?.trim()
+                        ? item.approvalNo
+                        : "-"}
+                    </TableCell>
+                    <TableCell
+                      className={
+                        itemWidth["현금영수증" as keyof typeof itemWidth]
+                      }
+                    >
+                      {item.cashReceiptNo ? "발급됨" : "-"}
+                    </TableCell>
+                    <TableCell
+                      className={itemWidth["합계" as keyof typeof itemWidth]}
+                    >
+                      {item.amount.toLocaleString()}원
+                    </TableCell>
+                    <TableCell
+                      className={itemWidth["상태" as keyof typeof itemWidth]}
+                    >
+                      <Button
+                        className="button-sm px-5 py-2"
+                        color={item.state === "APPROVE" ? "approve" : "reject"}
+                      >
+                        {item.state === "APPROVE" ? "승인" : "취소"}
+                      </Button>
+                    </TableCell>
+                    <TableCell
+                      className={
+                        itemWidth["결제시간" as keyof typeof itemWidth]
+                      }
+                    >
+                      {item.createdAt}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
+            {!isLoading && data?.orderPayments.length === 0 && (
+              <TableBody>해당 날짜에 결제 내역이 없습니다.</TableBody>
+            )}
+            {isLoading && <TableBody>결제 내역을 가져오는 중입니다.</TableBody>}
           </Table>
         </div>
-        <Paginations
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-          move={{
-            fastforward: { hasMore: false },
-            forward: { hasMore: false },
-            backward: { hasMore: false },
-            fastbackward: { hasMore: false },
-          }}
-        />
       </div>
-      <SideLayout
-        className="h-[calc(100dvh-134px)]"
-        // onClick={(e) => e.stopPropagation()}
-      >
-        <SideSection2 selectedRow={selectedRow} />
-      </SideLayout>
+      {selectedRow && (
+        <SideLayout>
+          <SideSection2 {...selectedRow} />
+        </SideLayout>
+      )}
     </div>
   );
 }

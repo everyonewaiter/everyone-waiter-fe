@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import usePayment from "../../_queries/usePayment";
-import usePos from "../../_queries/usePos";
+import { posQueries } from "../../_queries/usePos";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -9,13 +9,13 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 interface IProps {
   close: () => void;
   tableNo: number;
+  storeId: string;
 }
 
-export default function ReceiptModal({ close, tableNo }: IProps) {
+export default function ReceiptModal({ close, tableNo, storeId }: IProps) {
   const { printReceipt } = usePayment();
-  const { activity, storeStatus } = usePos();
-  const { data: activityData } = activity(tableNo);
-  const { data: stores } = storeStatus;
+  const { data: activityData } = posQueries.useActivity(tableNo);
+  const { data: stores } = posQueries.useStoreInfo(storeId);
 
   const handleAction = () => {
     printReceipt({

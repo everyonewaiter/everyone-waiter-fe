@@ -1,18 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import useDeviceInfo from "@/app/(device-required)/device/_queries/useDeviceInfo";
-import { ScrollArea } from "@/components/common/ScrollArea";
-import useOverlay from "@/hooks/use-overlay";
-import dynamic from "next/dynamic";
+import useOverlay from "@/hooks/useOverlay";
+import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import CategoriesButton from "../../_components/CategoriesButton";
 import POSHeader from "../../_components/POSHeader";
 import POSMenuCard from "../../_components/POSMenuCard";
 import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
 import { useMemoStore } from "../../_hooks/useMemoStore";
 import { useOrderStore } from "../../_hooks/useOrderStore";
-import usePos from "../../_queries/usePos";
+import { posQueries } from "../../_queries/usePos";
 
 const MenuModal = dynamic(() => import("../../_components/modals/MenuModal"), {
   ssr: false,
@@ -39,20 +38,19 @@ export default function DetailTableOrder() {
   const { orders, addOrders } = useOrderStore();
   const { open, close } = useOverlay();
   const { setOriginMemo } = useMemoStore();
-  const { resetCheckedMenu } = useCheckedMenuStore();
+  const { resetCheckedMenu, checkedMenu } = useCheckedMenuStore();
 
-  const { detail } = useDeviceInfo();
-  const { data: device } = detail();
+  const { data: device } = deviceQueries.useDeviceDetail();
 
-  const { menuList, activity } = usePos();
-
-  const { data: menus, isLoading } = menuList(device?.storeId as string);
+  const { data: menus, isLoading } = posQueries.useMenuList(
+    device?.storeId as string
+  );
   const allMenus = menus?.categories?.map((el) => el.menus).flat();
   const selectedCategory = menus?.categories?.find(
     (el) => el.categoryId === isActive
   )?.menus;
 
-  const { data } = activity(Number(tableNo));
+  const { data } = posQueries.useActivity(Number(tableNo));
 
   useEffect(() => {
     if (!isLoading && (data || menus)) {
@@ -115,21 +113,27 @@ export default function DetailTableOrder() {
   };
 
   return (
-    <div className="flex min-h-screen flex-row">
+    <div className="flex h-screen flex-row">
       <div
-        className="relative flex flex-1 cursor-pointer flex-col"
-        onClick={resetCheckedMenu}
+        className="relative flex flex-1 flex-col"
+        onClick={() => {
+          if (checkedMenu) {
+            resetCheckedMenu();
+          }
+        }}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            resetCheckedMenu();
+            if (checkedMenu) {
+              resetCheckedMenu();
+            }
           }
         }}
       >
         <POSHeader />
-        <div className="relative h-full px-[60px] pt-8">
+        <div className="relative h-full overflow-y-auto px-[60px] pt-8">
           <CategoriesButton
             categories={menus?.categories!}
             isActive={isActive}
@@ -141,13 +145,13 @@ export default function DetailTableOrder() {
             </div>
           )}
           {hasLoadedOnce && list?.length! === 0 && !menus?.categories && (
-            <div className="text-gray-0 center flex flex-1 flex-col bg-green-50 pt-8 text-center text-xl">
+            <div className="text-gray-0 center flex flex-1 flex-col pt-8 text-center text-xl">
               등록된 메뉴가 없습니다.
             </div>
           )}
-          <div>
+          <div className="">
             {hasLoadedOnce && list?.length! > 0 && (
-              <ScrollArea className="h-[856px] w-full pt-9">
+              <div className="h-full w-full pt-9">
                 <div className="grid grid-cols-4 gap-x-6 gap-y-8">
                   {list?.map((menu) => (
                     <Fragment key={menu.menuId}>
@@ -158,7 +162,7 @@ export default function DetailTableOrder() {
                     </Fragment>
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
             )}
             {hasLoadedOnce && list?.length! === 0 && menus?.categories && (
               <div className="text-gray-0 center h-[740px] pt-8 text-center text-xl">

@@ -5,22 +5,54 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
-import { DUMMY } from "../payments/history/page";
-// import { print } from "../_utils/print-receipt";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
+import { posQueries } from "../_queries/usePos";
+import MenuBox from "./MenuBox";
+import CancelAlert from "./modals/CancelAlert";
+import { print } from "../_utils/print-receipt";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
 
-interface IProps {
-  selectedRow: DUMMY | null;
-}
-
-export default function SideSection2({ selectedRow }: IProps) {
+export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
   const openReceipt = useOverlay();
   const cancel = useOverlay();
+
+  const { storeId } = useDeviceContext();
+
+  const { data: activity } = posQueries.useActivityById(
+    selectedRow?.posTableActivityId as string
+  );
+  const { data: stores } = posQueries.useStoreInfo(storeId as string);
+
+  const handleReceipt = () => {
+    activity?.orderPayments.forEach((payment) => {
+      if (payment.method === "CARD") {
+        print({
+          type: "card-receipt",
+          activity: activity!,
+          stores: stores!,
+          payment: {
+            CARDNAME: payment.issuerName,
+            FILLER: payment.cardNo,
+            INSTALLMENT: payment.installment,
+            APPROVALNO: payment.approvalNo,
+            TRADETIME: payment.tradeTime,
+          },
+        });
+      } else {
+        print({
+          type: "cash-receipt",
+          activity: activity!,
+          stores: stores!,
+          cashReceiptPhoneNo: payment.cashReceiptNo,
+        });
+      }
+    });
+  };
 
   const handlePrintReceipt: React.MouseEventHandler<HTMLButtonElement> = (
     e
@@ -32,7 +64,7 @@ export default function SideSection2({ selectedRow }: IProps) {
         <Alert
           onClose={openReceipt.close}
           buttonText="출력하기"
-          // onAction={}
+          onAction={handleReceipt}
         >
           <div className="flex flex-col gap-[6px] py-3">
             <span className="text-gray-0 text-xl font-semibold">
@@ -54,28 +86,22 @@ export default function SideSection2({ selectedRow }: IProps) {
 
     cancel.open(() => (
       <QueryProviders>
-        <Alert
-          onClose={cancel.close}
-          buttonColor="primary"
-          onAction={() => {}}
-          buttonText="취소하기"
-        >
-          <div className="-py-3 flex flex-col gap-3">
-            <span className="text-primary text-[28px] font-semibold">
-              {(72000).toLocaleString()}원
-            </span>
-            <span className="font-regular text-lg text-gray-200">
-              결제를 취소하시겠습니까?
-            </span>
-          </div>
-        </Alert>
+        <CancelAlert
+          close={cancel.close}
+          activityData={activity!}
+          type="pay-cancel"
+          hasMultiCancel
+        />
       </QueryProviders>
     ));
   };
 
   return (
-    <>
-      <div className="flex items-center gap-4">
+    <aside className="w-full">
+      <div className="flex items-center justify-between gap-4">
+        <strong className="text-gray-0 text-[28px] font-semibold">
+          주문 내역
+        </strong>
         <div
           className={cn(
             "rounded-[80px] px-5 py-3 text-xl font-medium",
@@ -84,44 +110,43 @@ export default function SideSection2({ selectedRow }: IProps) {
               : "bg-gray-700 text-gray-300"
           )}
         >
-          {selectedRow ? "4888" : "-"}
+          {selectedRow ? selectedRow.orderPaymentId : "-"}
         </div>
-        <strong className="text-gray-0 text-[28px] font-semibold">
-          주문 내역
-        </strong>
       </div>
       <div className="flex flex-col">
-        <ScrollArea className="h-[700px] w-full">
+        <ScrollArea className="h-[700px] w-full pt-8">
           {selectedRow &&
-            [1, 2].map((item, index, arr) => (
-              <Fragment key={item}>
-                {/* <MenuBox key={item} index={index} /> */}
-                {index < arr.length - 1 && (
+            activity?.orders?.map((item, index, arr) => (
+              <Fragment key={item.orderId}>
+                <MenuBox index={index} nonInteractive {...item} />
+                {selectedRow && index < arr.length - 1 && (
                   <div className="my-8 h-[2px] w-full bg-gray-700" />
                 )}
               </Fragment>
             ))}
         </ScrollArea>
-        <div className="mt-8 flex gap-3">
-          <Button
-            variant="outline"
-            color="black"
-            className="flex h-[64px] w-[180px] rounded-[12px] px-8 text-xl"
-            onClick={handleCancelPayment}
-            disabled={!selectedRow}
-          >
-            결제 취소하기
-          </Button>
+        <div className="mt-8 flex w-full gap-3">
+          {selectedRow?.cancellable && (
+            <Button
+              variant="outline"
+              color="black"
+              className="flex h-[64px] w-[180px] rounded-[12px] px-8 text-xl"
+              disabled={!selectedRow}
+              onClick={handleCancelPayment}
+            >
+              결제 취소하기
+            </Button>
+          )}
           <Button
             color="black"
             className="flex h-[64px] flex-1 rounded-[12px] px-8 text-xl"
-            onClick={handlePrintReceipt}
             disabled={!selectedRow}
+            onClick={handlePrintReceipt}
           >
             영수증 출력하기
           </Button>
         </div>
       </div>
-    </>
+    </aside>
   );
 }

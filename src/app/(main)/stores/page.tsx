@@ -21,10 +21,11 @@ import {
   TableRow,
 } from "@/components/common/Table/Tables";
 import { registerStateTranslate } from "@/constants/translates";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
-import useStores from "../(owner)/[id]/store/_queries/useStores";
+import { storesQueries } from "../(owner)/[id]/store/_queries/useStores";
+import PageTitle from "../_components/PageTitle";
 
 const PendingAcceptModal = dynamic(
   () => import("../(owner)/[id]/store/_components/modals/PendingAcceptModal"),
@@ -69,8 +70,7 @@ export default function StoreList() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { registrationList } = useStores();
-  const { data, refetch } = registrationList(currentPage);
+  const { data, refetch } = storesQueries.useRegistrationList(currentPage);
 
   const { open, close } = useOverlay();
 
@@ -80,8 +80,8 @@ export default function StoreList() {
         <QueryProviders>
           <StoreApplicationModal
             close={close}
-            item={item}
             isAccepted={item.status === "APPROVE"}
+            {...item}
           />
         </QueryProviders>
       ));
@@ -99,133 +99,139 @@ export default function StoreList() {
   }, [currentPage]);
 
   return (
-    <div className="w-full">
-      <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
-        <TableHeader className="w-full">
-          <TableRow isHead>
-            {Object.keys(itemWidths).map((item) => (
-              <TableHead
-                key={item}
-                className={
-                  itemWidths[item as keyof typeof itemWidths].className
-                }
-              >
-                {item}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data?.content?.map((item, idx) => (
-            <TableRow
-              key={item.registrationId.toString()}
-              onClick={() => handleOpenModal(item)}
-            >
-              <TableCell className={itemWidths["No."].className}>
-                {idx + 1}
-              </TableCell>
-              <TableCell className={itemWidths.신청일.className}>
-                {transformDate(item.createdAt)}
-              </TableCell>
-              <TableCell className={itemWidths.상호명.className}>
-                {item.name}
-              </TableCell>
-              <TableCell
-                className={cn(itemWidths.상태.className, "flex justify-center")}
-              >
-                <ResponsiveButton
-                  color={item.status.toLowerCase()}
-                  responsiveButtons={{
-                    md: {
-                      buttonSize: "custom",
-                      className:
-                        "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
-                    },
-                    lg: {
-                      buttonSize: "custom",
-                      className:
-                        "h-[37px] px-5 py-2 rounded-[8px] text-sm text-white font-regular",
-                    },
-                  }}
+    <div className="flex h-full flex-col">
+      <PageTitle title="매장 등록 신청 현황" />
+      <div className="flex w-full flex-1 flex-col pt-8">
+        <div className="z-10 hidden w-full justify-end md:flex">
+          <ResponsiveButton
+            variant="outline"
+            color="primary"
+            onClick={() => navigate.push("/create")}
+            responsiveButtons={{
+              lg: { buttonSize: "lg" },
+              md: { buttonSize: "sm" },
+              sm: { buttonSize: "sm" },
+            }}
+          >
+            <div className="flex flex-row items-center lg:gap-[6px]">
+              <Plus className="fill-primary h-4 w-4" />
+              <span>매장 추가</span>
+            </div>
+          </ResponsiveButton>
+        </div>
+        <Table className="z-10 mt-[-10px] flex w-full flex-col md:mt-4">
+          <TableHeader className="w-full">
+            <TableRow isHead>
+              {Object.keys(itemWidths).map((item) => (
+                <TableHead
+                  key={item}
+                  className={
+                    itemWidths[item as keyof typeof itemWidths].className
+                  }
                 >
-                  {registerStateTranslate[item.status]}
-                </ResponsiveButton>
-              </TableCell>
-              <TableCell className={itemWidths.사유.className}>
-                {item.reason || "-"}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {data?.content.map((item, index) => (
-        <MobileTable
-          className="z-10 mx-5"
-          key={item.registrationId}
-          onClick={() => handleOpenModal(item)}
-        >
-          <TableBody className="flex flex-col">
-            <MobileTableRow>
-              <MobileTableHead>No.</MobileTableHead>
-              <MobileTableCell>{index + 1}</MobileTableCell>
-            </MobileTableRow>
-            {Object.keys(itemWidths)
-              .slice(1)
-              .map((key) => (
-                <MobileTableRow key={key}>
-                  <MobileTableHead>{key}</MobileTableHead>
-                  {key === "신청일" && (
-                    <MobileTableCell>
-                      {transformDate(item.createdAt)}
-                    </MobileTableCell>
-                  )}
-                  {key === "상태" && (
-                    <MobileTableCell>
-                      <ResponsiveButton
-                        color={item.status.toLowerCase()}
-                        responsiveButtons={{
-                          sm: {
-                            buttonSize: "custom",
-                            className:
-                              "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
-                          },
-                        }}
-                      >
-                        {registerStateTranslate[item.status]}
-                      </ResponsiveButton>
-                    </MobileTableCell>
-                  )}
-                  {key !== "신청일" && key !== "상태" && (
-                    <MobileTableCell>
-                      {
-                        item[
-                          itemWidths[key as keyof typeof itemWidths]
-                            .text as keyof StoreDetail
-                        ]
-                      }
-                    </MobileTableCell>
-                  )}
-                </MobileTableRow>
+                  {item}
+                </TableHead>
               ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data?.content?.map((item, idx) => (
+              <TableRow
+                key={item.registrationId.toString()}
+                onClick={() => handleOpenModal(item)}
+              >
+                <TableCell className={itemWidths["No."].className}>
+                  {idx + 1}
+                </TableCell>
+                <TableCell className={itemWidths.신청일.className}>
+                  {transformDate(item.createdAt)}
+                </TableCell>
+                <TableCell className={itemWidths.상호명.className}>
+                  {item.name}
+                </TableCell>
+                <TableCell
+                  className={cn(
+                    itemWidths.상태.className,
+                    "flex justify-center"
+                  )}
+                >
+                  <ResponsiveButton
+                    color={item.status.toLowerCase()}
+                    responsiveButtons={{
+                      md: {
+                        buttonSize: "custom",
+                        className:
+                          "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+                      },
+                      lg: {
+                        buttonSize: "custom",
+                        className:
+                          "h-[37px] px-5 py-2 rounded-[8px] text-sm text-white font-regular",
+                      },
+                    }}
+                  >
+                    {registerStateTranslate[item.status]}
+                  </ResponsiveButton>
+                </TableCell>
+                <TableCell className={itemWidths.사유.className}>
+                  {item.reason || "-"}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
-        </MobileTable>
-      ))}
-      <div className="z-10 hidden w-full justify-end md:flex">
-        <ResponsiveButton
-          variant="outline"
-          color="primary"
-          onClick={() => navigate.push("/create")}
-          responsiveButtons={{
-            lg: { buttonSize: "lg" },
-            md: { buttonSize: "sm" },
-            sm: { buttonSize: "sm" },
-          }}
-        >
-          <div className="flex flex-row items-center lg:gap-[6px]">
-            <Plus className="fill-primary h-4 w-4" />
-            <span>매장 추가</span>
-          </div>
-        </ResponsiveButton>
+        </Table>
+        {data?.content.map((item, index) => (
+          <MobileTable
+            className="z-10 mx-5"
+            key={item.registrationId}
+            onClick={() => handleOpenModal(item)}
+          >
+            <TableBody className="flex flex-col">
+              <MobileTableRow>
+                <MobileTableHead>No.</MobileTableHead>
+                <MobileTableCell>{index + 1}</MobileTableCell>
+              </MobileTableRow>
+              {Object.keys(itemWidths)
+                .slice(1)
+                .map((key) => (
+                  <MobileTableRow key={key}>
+                    <MobileTableHead>{key}</MobileTableHead>
+                    {key === "신청일" && (
+                      <MobileTableCell>
+                        {transformDate(item.createdAt)}
+                      </MobileTableCell>
+                    )}
+                    {key === "상태" && (
+                      <MobileTableCell>
+                        <ResponsiveButton
+                          color={item.status.toLowerCase()}
+                          responsiveButtons={{
+                            sm: {
+                              buttonSize: "custom",
+                              className:
+                                "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+                            },
+                          }}
+                        >
+                          {registerStateTranslate[item.status]}
+                        </ResponsiveButton>
+                      </MobileTableCell>
+                    )}
+                    {key !== "신청일" && key !== "상태" && (
+                      <MobileTableCell>
+                        {
+                          item[
+                            itemWidths[key as keyof typeof itemWidths]
+                              .text as keyof StoreDetail
+                          ]
+                        }
+                      </MobileTableCell>
+                    )}
+                  </MobileTableRow>
+                ))}
+            </TableBody>
+          </MobileTable>
+        ))}
       </div>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
@@ -247,7 +253,7 @@ export default function StoreList() {
             target: data?.fastBackwardPage!,
           },
         }}
-        className="mt-8"
+        className="my-8"
       />
     </div>
   );

@@ -1,12 +1,9 @@
-"use client";
-
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-/* eslint-disable react-hooks/rules-of-hooks */
 import {
   getRegisters,
   getStoreInfoDetail,
   getStoreList,
+  putUpdateStore,
   reapplyRegistration,
   reapplyRegistrationWithImage,
   registerDetails,
@@ -17,24 +14,41 @@ import { storeKeys } from "./keys";
 
 const queryClient = getQueryClient();
 
-const useStores = () => {
-  const navigate = useRouter();
+const useRegistrationList = (page: number = 1) =>
+  useQuery({
+    queryKey: storeKeys.list(page),
+    queryFn: () => getRegisters(page),
+    placeholderData: (previousData) => previousData,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const registrationList = (page: number = 1) =>
-    useQuery({
-      queryKey: storeKeys.list(page),
-      queryFn: () => getRegisters(page),
-      placeholderData: (previousData) => previousData,
-    });
+const useRegistrationDetail = (registrationId: string) =>
+  useQuery({
+    queryKey: storeKeys.registration(registrationId),
+    queryFn: () => registerDetails(JSON.stringify(registrationId)),
+    enabled: !!registrationId,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const registrationDetail = (registrationId: string) =>
-    useQuery({
-      queryKey: storeKeys.registration(registrationId),
-      queryFn: () => registerDetails(JSON.stringify(registrationId)),
-      enabled: !!registrationId,
-    });
+const useStoresList = () =>
+  useQuery<{
+    stores: { storeId: string; name: string }[];
+  }>({
+    queryKey: storeKeys.stores(),
+    queryFn: getStoreList,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const reapply = useMutation({
+const useStoresDetail = (storeId: string) =>
+  useQuery({
+    queryKey: storeKeys.detail(storeId),
+    queryFn: () => getStoreInfoDetail(storeId),
+    enabled: !!storeId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+const useReapply = () =>
+  useMutation({
     mutationFn: reapplyRegistration,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
@@ -43,52 +57,47 @@ const useStores = () => {
       queryClient.invalidateQueries({
         queryKey: storeKeys.registration(variables.registrationId),
       });
+      queryClient.invalidateQueries({
+        queryKey: storeKeys.all(),
+      });
     },
   });
 
-  const add = useMutation({
+const useRegister = () =>
+  useMutation({
     mutationFn: registerStore,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: storeKeys.stores(),
       });
-      navigate.push("/create?state=pending");
     },
   });
 
-  const reapplyWithImg = (storeId: string) =>
-    useMutation({
-      mutationFn: reapplyRegistrationWithImage,
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: storeKeys.all() });
-        navigate.push(`/${storeId}`);
-      },
-    });
+const useReapplyWithImg = () =>
+  useMutation({
+    mutationFn: reapplyRegistrationWithImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: storeKeys.all() });
+    },
+  });
 
-  const storesList = () =>
-    useQuery<{
-      stores: { storeId: string; name: string }[];
-    }>({
-      queryKey: storeKeys.stores(),
-      queryFn: getStoreList,
-    });
+const useUpdateInfo = () =>
+  useMutation({
+    mutationFn: putUpdateStore,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: storeKeys.detail(variables.storeId),
+      });
+    },
+  });
 
-  const storesDetail = (storeId: string) =>
-    useQuery({
-      queryKey: storeKeys.detail(storeId),
-      queryFn: () => getStoreInfoDetail(storeId),
-      enabled: !!storeId,
-    });
-
-  return {
-    registrationList,
-    registrationDetail,
-    add,
-    reapply,
-    reapplyWithImg,
-    storesList,
-    storesDetail,
-  };
+export const storesQueries = {
+  useReapply,
+  useReapplyWithImg,
+  useRegister,
+  useRegistrationDetail,
+  useRegistrationList,
+  useStoresDetail,
+  useStoresList,
+  useUpdateInfo,
 };
-
-export default useStores;

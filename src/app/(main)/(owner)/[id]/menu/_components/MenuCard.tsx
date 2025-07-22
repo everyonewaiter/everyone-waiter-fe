@@ -4,6 +4,7 @@ import Image from "next/image";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
+import { getCdn } from "@/utils/getCdn";
 
 interface IProps extends Menu {
   onToggle?: (value: Menu) => void;
@@ -37,15 +38,28 @@ export default function MenuCard({
       role="button"
       tabIndex={0}
     >
-      <Image
-        src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${menu.image}`}
-        alt="menu image"
-        width={329}
-        height={440}
-        className="h-full w-full object-cover"
-        priority
-        loading="eager"
-      />
+      <div className="h-[440px] w-[328px]">
+        {menu.image ? (
+          <Image
+            src={getCdn(menu.image)}
+            alt={`${menu.image} 메뉴 이미지`}
+            fill
+            className="object-cover"
+            loading="eager"
+            priority
+          />
+        ) : (
+          <div className="center h-full w-full bg-gray-600 pb-20 opacity-50">
+            <Image
+              src="/logo/logo-medium-gray.svg"
+              alt="매뉴 이미지 없음"
+              width={100}
+              height={100}
+              className="opacity-50"
+            />
+          </div>
+        )}
+      </div>
       <div className="absolute top-0 flex h-full w-full flex-col justify-between p-1 lg:p-2">
         {!hideSelect && (
           <Checkbox

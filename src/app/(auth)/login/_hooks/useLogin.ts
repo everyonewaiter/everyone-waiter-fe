@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { getAccount, login } from "@/lib/api/auth.api";
 import { setCookie } from "@/lib/cookies";
 import useAuthStore from "@/stores/useAuthStore";
+import { storeKeys } from "@/app/(main)/(owner)/[id]/store/_queries/keys";
+import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 
 export default function useLogin() {
   const { saveUser } = useAuthStore();
@@ -25,7 +27,18 @@ export default function useLogin() {
       // 3. 유저 정보 저장
       saveUser(profileData);
       // 4. 리다이렉트
-      router.push("/");
+      const storeList = await queryClient.fetchQuery({
+        queryKey: storeKeys.stores(),
+        queryFn: getStoreList,
+      });
+
+      if (profileData.permission === "ADMIN") {
+        router.push("/admin/users");
+      } else if (storeList.stores.length > 0) {
+        router.push(`/${storeList.stores[0].storeId}`);
+      } else {
+        router.push("/");
+      }
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       throw new Error(error.message);

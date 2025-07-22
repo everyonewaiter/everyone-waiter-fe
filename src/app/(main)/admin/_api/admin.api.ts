@@ -28,7 +28,7 @@ export const getAccounts = async ({
   return response.data;
 };
 
-export const getDetailAccount = async (accountId: bigint) => {
+export const getDetailAccount = async (accountId: string) => {
   const response = await instance.get(
     `${API_PATH.admin}/accounts/${accountId.toString()}`
   );
@@ -40,7 +40,7 @@ export const updateDetailAccount = async ({
   permission,
   state,
 }: {
-  accountId: bigint;
+  accountId: string;
   permission: AccountPermission;
   state: Status;
 }) => {
@@ -86,7 +86,7 @@ export const getAdminRegistrations = async ({
 };
 
 export const getDetailAdminRegistrations = async (
-  id: bigint
+  id: string
 ): Promise<StoreDetail> => {
   const response = await instance.get(
     `${API_PATH.admin}/stores/registrations/${id}`
@@ -98,7 +98,7 @@ export const rejectResigtration = async ({
   id,
   reason,
 }: {
-  id: bigint;
+  id: string;
   reason: string;
 }) => {
   const response = await instance.post(
@@ -108,7 +108,7 @@ export const rejectResigtration = async ({
   return response.data;
 };
 
-export const approveRegistration = async (id: bigint) => {
+export const approveRegistration = async ({ id }: { id: string }) => {
   const response = await instance.post(
     `${API_PATH.admin}/stores/registrations/${id}/approve`
   );

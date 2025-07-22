@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useStore } from "zustand";
@@ -18,11 +17,14 @@ import {
 import MENU_ITEMS from "@/constants/sidebarMenus";
 import useAuthStore from "@/stores/useAuthStore";
 import { getComparePath } from "@/utils/getPathname";
+import Loading from "@/components/Loading";
 
 export default function Sidebar() {
+  const navigate = useRouter();
   const { prefetch } = useRouter();
   const pathname = usePathname();
 
+  const [isNavigating, setIsNavigating] = useState(false);
   const [selectedStoreId, setSelectedStoreId] = useState<string>("");
 
   const { user } = useStore(useAuthStore, (state) => state);
@@ -44,6 +46,12 @@ export default function Sidebar() {
     }
   }, [storeList]);
 
+  useEffect(() => {
+    // 경로가 변경되면 로딩 종료
+
+    setIsNavigating(false);
+  }, [pathname]);
+
   const isOwnerWithoutStore =
     permission === "OWNER" && storeList?.stores.length === 0;
 
@@ -51,8 +59,15 @@ export default function Sidebar() {
     <div
       className={`hidden md:py-5 md:pr-3 md:pl-5 lg:py-8 lg:pl-[60px] ${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}
     >
+      {isNavigating && <Loading />}
       <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-4 md:w-[186px] lg:w-[318px] lg:px-5 lg:pt-8">
-        <div className="mb-6 flex items-center gap-[18px] lg:mb-9">
+        <button
+          type="button"
+          className="mb-6 flex items-center gap-[18px] lg:mb-9"
+          onClick={() =>
+            navigate.push(`/${selectedStoreId || storeList?.stores[0].storeId}`)
+          }
+        >
           <Image
             src="/logo/logo.svg"
             alt="모두의 웨이터 로고"
@@ -63,7 +78,7 @@ export default function Sidebar() {
           <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
             모두의 웨이터
           </h1>
-        </div>
+        </button>
         <nav>
           {permission === "OWNER" ? (
             <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
@@ -98,19 +113,23 @@ export default function Sidebar() {
             )}
             <ul>
               {MENU_ITEMS[permission].map((item) => {
-                const isActive =
-                  item.href === "/"
-                    ? comparePath === "/"
-                    : comparePath === item.href ||
-                      comparePath.startsWith(`${item.href}/`);
+                const isActive = () => {
+                  if (item.href === "/") return comparePath === "/";
+                  if (item.href === "/admin") return comparePath === "/admin";
+                  return (
+                    comparePath === item.href ||
+                    comparePath.startsWith(`${item.href}/`)
+                  );
+                };
                 return (
                   <li key={item.href}>
-                    <Link
-                      href={
-                        permission === "OWNER"
-                          ? `/${selectedStoreId}${item.href}`
-                          : item.href
-                      }
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isNavigating || item.href === comparePath) return;
+                        setIsNavigating(true);
+                        navigate.push(`/${selectedStoreId}${item.href}`);
+                      }}
                       onMouseEnter={() => {
                         if (permission === "OWNER") {
                           prefetch(`/${selectedStoreId}${item.href}`);
@@ -119,21 +138,21 @@ export default function Sidebar() {
                         }
                       }}
                       className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
-                        isActive ? "text-primary" : "text-gray-300"
+                        isActive() ? "text-primary" : "text-gray-300"
                       }`}
                     >
                       {/* 빨간 점 (활성 메뉴만) */}
                       <div
                         className={`z-1 size-2 rounded-full ${
-                          isActive ? "bg-primary" : "bg-gray-600"
+                          isActive() ? "bg-primary" : "bg-gray-600"
                         }`}
                       />
                       <Icon
                         iconKey={item.icon as string}
-                        className={`size-6 ${isActive ? "text-primary" : "text-gray-300"}`}
+                        className={`size-6 ${isActive() ? "text-primary" : "text-gray-300"}`}
                       />
                       <span className="font-medium">{item.label}</span>
-                    </Link>
+                    </button>
                   </li>
                 );
               })}

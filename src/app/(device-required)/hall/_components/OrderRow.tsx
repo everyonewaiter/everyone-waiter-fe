@@ -2,7 +2,7 @@
 
 import Button from "@/components/common/Button/Button";
 import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
 import dynamic from "next/dynamic";
 import OrderCard from "./OrderCard";

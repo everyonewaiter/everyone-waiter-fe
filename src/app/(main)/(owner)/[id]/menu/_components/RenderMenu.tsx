@@ -7,17 +7,18 @@ import { useMediaQuery } from "react-responsive";
 import DashedBorder from "@/components/DashedBorder";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import { useStoreContext } from "@/providers/storeProvider";
-import useMenu from "../_queries/useMenu";
+import Spinner from "@/components/common/Spinner";
+import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
 
 const Sortable = dynamic(() => import("@/components/Sortable"), {
   ssr: false,
-  loading: () => <div>순서 변경 로딩 중...</div>,
+  loading: () => <Spinner />,
 });
 
 const SortableItem = dynamic(() => import("./SortableItem"), {
   ssr: false,
-  loading: () => <div>로딩 중...</div>,
+  loading: () => <Spinner />,
 });
 
 interface IProps {
@@ -39,11 +40,10 @@ export default function RenderMenu({
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const { storeId } = useStoreContext();
-  const { query: menuQuery } = useMenu(storeId);
-  const menu = menuQuery(categoryId).data?.menus;
+  const { data } = menuQueries.useMenuList(storeId, categoryId);
 
   const handleNavigate = (menuId: string) =>
-    `/${storeId}/menu/${menuId}?hideModal=${isMobile}&categoryId=${categoryId}`;
+    `/${storeId}/menu/${menuId}/category/${categoryId}?hideModal=${isMobile}`;
 
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
@@ -72,10 +72,10 @@ export default function RenderMenu({
           </button>
           {changeSort ? (
             <Sortable
-              items={menu?.map((item) => item.menuId)!}
+              items={data?.menus?.map((item) => item.menuId)!}
               onDragEnd={handleDragEnd}
             >
-              {menu?.map((item) => (
+              {data?.menus?.map((item) => (
                 <SortableItem
                   key={item.menuId}
                   item={item}
@@ -84,7 +84,7 @@ export default function RenderMenu({
               ))}
             </Sortable>
           ) : (
-            menu?.map((item) => (
+            data?.menus?.map((item) => (
               <MenuCard
                 key={item.menuId}
                 onToggle={toggle}

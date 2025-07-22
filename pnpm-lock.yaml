@@ -89,6 +89,9 @@ dependencies:
   immer:
     specifier: ^10.1.1
     version: 10.1.1
+  input-otp:
+    specifier: ^1.4.2
+    version: 1.4.2(react-dom@19.1.0)(react@19.1.0)
   lucide-react:
     specifier: ^0.487.0
     version: 0.487.0(react@19.1.0)
@@ -116,6 +119,9 @@ dependencies:
   react-responsive:
     specifier: ^10.0.1
     version: 10.0.1(react@19.1.0)
+  react-spinners:
+    specifier: ^0.17.0
+    version: 0.17.0(react-dom@19.1.0)(react@19.1.0)
   tailwind-merge:
     specifier: ^3.1.0
     version: 3.3.1
@@ -6316,6 +6322,16 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dev: true
 
+  /input-otp@1.4.2(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-l3jWwYNvrEa6NTCt7BECfCm48GvwuZzkoeG3gBL2w4CHeOXW3eKFmf9UNYkNfYc3mxMrthMnxjIE07MT0zLBQA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    dev: false
+
   /internal-slot@1.1.0:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
@@ -8297,6 +8313,16 @@ packages:
       prop-types: 15.8.1
       react: 19.1.0
       shallow-equal: 3.1.0
+    dev: false
+
+  /react-spinners@0.17.0(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-L/8HTylaBmIWwQzIjMq+0vyaRXuoAevzWoD35wKpNTxxtYXWZp+xtgkfD7Y4WItuX0YvdxMPU79+7VhhmbmuTQ==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
   /react-style-singleton@2.2.3(@types/react@19.1.8)(react@19.1.0):

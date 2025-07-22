@@ -5,19 +5,19 @@ import { deleteCookie } from "@/lib/cookies";
 interface AuthProps {
   user: UserProfile | null; // 유저 정보
   saveUser: (userInfo: UserProfile) => void; // 유저 정보 저장
-  isLogin: boolean; // 로그인 여부
+  isLoggedIn: boolean; // 로그인 여부
   logout: () => void; // 로그아웃
 }
 const useAuthStore = create(
   persist<AuthProps>(
     (set) => ({
       user: null,
-      isLogin: false,
-      saveUser: (userInfo) => set({ user: userInfo, isLogin: true }),
+      isLoggedIn: false,
+      saveUser: (userInfo) => set({ user: userInfo, isLoggedIn: true }),
       logout: async () => {
         await deleteCookie("accessToken");
         await deleteCookie("refreshToken");
-        set({ user: null, isLogin: false });
+        set({ user: null, isLoggedIn: false });
       },
     }),
     {

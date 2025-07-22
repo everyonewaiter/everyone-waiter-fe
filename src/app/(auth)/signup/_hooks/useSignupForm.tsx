@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UseMutateFunction } from "@tanstack/react-query";
+import { UseMutationResult } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { TypeSignup, signupSchema } from "@/schema/signup.schema";
+import { TypeSignup, signupSchema } from "../_schema/signup.schema";
 
 export default function useSignupForm() {
   const [formButtonDisabled, setFormButtonDisabled] = useState(false);
@@ -14,23 +14,16 @@ export default function useSignupForm() {
   const form = useForm<TypeSignup>({
     mode: "onChange",
     resolver: zodResolver(signupSchema),
-    defaultValues: {
-      email: "",
-      phone: "",
-      authNumber: "",
-      password: "",
-      confirm: "",
-    },
   });
 
   const submitHandler = (
     data: TypeSignup,
-    action: UseMutateFunction<any, Error, Account, unknown>,
+    action: UseMutationResult<any, Error, Account, unknown>,
     successHandler: () => void
   ) => {
     setFormButtonDisabled(true);
 
-    action(
+    action.mutate(
       {
         email: data.email,
         password: data.password,

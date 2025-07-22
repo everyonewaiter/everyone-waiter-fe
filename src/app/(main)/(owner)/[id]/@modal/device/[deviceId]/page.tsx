@@ -1,51 +1,42 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
 import Dropdown from "@/components/common/Dropdown";
 import { Form } from "@/components/common/Form";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
-import {
-  deviceTranslate,
-  paymentTimeTranslate,
-  stateTranslate,
-} from "@/constants/translates";
-import useDevice from "../../../device/_queries/useDevice";
+import { deviceTranslate, paymentTimeTranslate } from "@/constants/translates";
+import { useStoreContext } from "@/providers/storeProvider";
+import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
+import { deviceQueries } from "../../../device/_queries/useDevice";
 import ModalButton from "../../_components/ModalButton";
 import useDeviceForm from "../../_hooks/useDeviceForm";
 
 export default function DeviceInfoModal() {
   const params = useParams();
-  const storeId = params?.id as string;
   const deviceId = params?.deviceId as string;
 
-  const { form, submitHandler } = useDeviceForm();
+  const { storeId } = useStoreContext();
 
-  const { detailQuery, update } = useDevice();
-  const { data } = detailQuery(deviceId, storeId);
+  const { data } = deviceQueries.useDetails(deviceId, storeId);
+  const update = deviceQueries.useUpdateDevice();
 
-  useEffect(() => {
-    if (data) {
-      form.reset({
-        ...data,
-        state: stateTranslate[data?.state as keyof typeof stateTranslate],
-        deviceNumber: data?.ksnetDeviceNo,
-        tableNo: data?.tableNo,
-        createdAt: data?.createdAt,
-      });
-    }
-  }, [form, data]);
+  const { form, submitHandler } = useDeviceForm(data);
 
-  const handleSubmit = () => {
-    submitHandler(update, storeId, deviceId);
-  };
+  if (!data)
+    return (
+      <div className="flex h-[288px] flex-col gap-3.5 md:h-[324px] lg:h-[488px]">
+        <SkeletonGroup />
+      </div>
+    );
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(handleSubmit)}
+        onSubmit={form.handleSubmit((_data) =>
+          submitHandler(update, _data, { storeId, deviceId })
+        )}
       >
         <LabeledInput form={form} name="name" label="기기 이름" />
         <LabeledInput form={form} name="createdAt" label="등록일시" disabled />
@@ -66,7 +57,8 @@ export default function DeviceInfoModal() {
               form.setValue("purpose", selected?.[0] as DevicePurpose);
             }}
             defaultText={
-              deviceTranslate[data?.purpose as keyof typeof deviceTranslate]
+              deviceTranslate[data?.purpose as keyof typeof deviceTranslate] ||
+              "전체"
             }
             triggerClassName="w-full h-10 lg:h-12 rounded-[8px] lg:rounded-[12px] text-sm lg:text-[15px] md:font-regular"
             className="md:!w-[348px] lg:!w-[476px]"
@@ -106,7 +98,7 @@ export default function DeviceInfoModal() {
             <LabeledInput form={form} name="deviceNumber" label="단말기 번호" />
           </>
         )}
-        <ModalButton buttonText="확인" type="submit" />
+        <ModalButton buttonText="수정" type="submit" />
       </form>
     </Form>
   );

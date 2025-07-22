@@ -6,7 +6,7 @@ import {
   sendAuthCode,
   verifyAuthCode,
 } from "@/lib/api/auth.api";
-import { TypeSignup } from "@/schema/signup.schema";
+import { TypeSignup } from "../_schema/signup.schema";
 
 interface IUseSignup {
   form: UseFormReturn<TypeSignup>;
@@ -15,7 +15,7 @@ interface IUseSignup {
 }
 
 const useSignup = ({ form, setCodeSubmited, setAuthTime }: IUseSignup) => {
-  const { mutate: mutateSendPhoneAuthCode } = useMutation({
+  const mutateSendPhoneAuthCode = useMutation({
     mutationFn: sendAuthCode,
     onError: (error) => {
       const { code, message } = (error as any).response.data;
@@ -33,11 +33,11 @@ const useSignup = ({ form, setCodeSubmited, setAuthTime }: IUseSignup) => {
     },
   });
 
-  const { mutate: mutateVerifyAuthCode } = useMutation({
+  const mutateVerifyAuthCode = useMutation({
     mutationFn: verifyAuthCode,
   });
 
-  const { mutate: mutateSignup } = useMutation({
+  const mutateSignup = useMutation({
     mutationFn: createAccount,
     onError: (error) => {
       const { code, message } = (error as any).response.data;

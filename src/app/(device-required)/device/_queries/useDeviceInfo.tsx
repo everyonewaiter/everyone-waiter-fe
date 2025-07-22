@@ -1,22 +1,36 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addDevice, getDeviceDetail } from "../_api/device.api";
+import {
+  addDevice,
+  getDeviceDetail,
+  sendAuthCodeInDevice,
+  verifyPhoneInDevice,
+} from "../_api/device.api";
+import { deviceKeys } from "./keys";
 
-export default function useDeviceInfo() {
-  const detail = () =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["get-device-info-with-store"],
-      queryFn: getDeviceDetail,
-    });
+const useDeviceDetail = () =>
+  useQuery({
+    queryKey: deviceKeys.detail,
+    queryFn: getDeviceDetail,
+  });
 
-  const add = () =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useMutation({
-      mutationFn: addDevice,
-    });
+const useAddDevice = () =>
+  useMutation({
+    mutationFn: addDevice,
+  });
 
-  return {
-    detail,
-    add,
-  };
-}
+const useVerifyPhone = () =>
+  useMutation({
+    mutationFn: verifyPhoneInDevice,
+  });
+
+const useSendAuth = () =>
+  useMutation({
+    mutationFn: sendAuthCodeInDevice,
+  });
+
+export const deviceQueries = {
+  useDeviceDetail,
+  useAddDevice,
+  useVerifyPhone,
+  useSendAuth,
+};

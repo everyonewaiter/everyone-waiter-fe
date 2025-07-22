@@ -1,6 +1,5 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
-import PageTitle from "@/app/(main)/_components/PageTitle";
 import getQueryClient from "@/app/get-query-client";
 import { getRegisters } from "../(owner)/[id]/store/_api/stores.api";
 import { storeKeys } from "../(owner)/[id]/store/_queries/keys";
@@ -17,7 +16,6 @@ export default async function Layout({ children }: PropsWithChildren) {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="h-screen w-screen bg-gray-700 lg:px-[60px] lg:py-[32px]">
         <div className="h-full w-full rounded-[32px] bg-white lg:px-8">
-          <PageTitle title="매장 등록 신청 현황" />
           {children}
         </div>
       </div>

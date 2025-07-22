@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 
 const CompleteAllModal = dynamic(() => import("./CompleteAllModal"), {
   ssr: false,

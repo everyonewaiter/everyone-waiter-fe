@@ -1,7 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import QueryProviders from "@/app/query-providers";
+import { useRouter } from "next/navigation";
 import Checkbox from "@/components/common/Checkbox";
 import {
   MobileTable,
@@ -15,27 +14,14 @@ import {
   TableRow,
 } from "@/components/common/Table/Tables";
 import { permissionTranslate, stateTranslate } from "@/constants/translates";
-import useOverlay from "@/hooks/use-overlay";
 import UsersTableRow from "./UsersTableRow";
-
-const UserInfoModal = dynamic(() => import("../../_components/UserInfoModal"), {
-  ssr: false,
-});
 
 interface IProps {
   data: AdminAccount[];
 }
 
 export default function UsersTable({ data }: IProps) {
-  const { open, close } = useOverlay();
-
-  const handleOpenModal = (accountId: bigint) => {
-    open(() => (
-      <QueryProviders>
-        <UserInfoModal close={close} accountId={accountId} />
-      </QueryProviders>
-    ));
-  };
+  const navigate = useRouter();
 
   return (
     <>
@@ -62,7 +48,8 @@ export default function UsersTable({ data }: IProps) {
             <UsersTableRow
               key={item.accountId.toString()}
               {...item}
-              openModal={() => handleOpenModal(item.accountId)}
+              // openModal={() => handleOpenModal(item.accountId)}
+              openModal={() => navigate.push(`/admin/users/${item.accountId}`)}
             />
           ))}
         </TableBody>
@@ -72,7 +59,8 @@ export default function UsersTable({ data }: IProps) {
           <MobileTable
             key={item.accountId}
             className="z-10"
-            onClick={() => handleOpenModal(item.accountId)}
+            // onClick={() => handleOpenModal(item.accountId)}
+            onClick={() => navigate.push(`/admin/users/${item.accountId}`)}
           >
             <TableBody className="flex flex-col">
               <MobileTableRow>

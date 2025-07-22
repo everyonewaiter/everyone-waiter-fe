@@ -9,30 +9,31 @@ import { waitingKeys } from "./keys";
 
 const queryClient = getQueryClient();
 
-export default function useWaiting(enabled = true) {
-  const { data: list } = useQuery({
+const useWaitingList = (enabled: boolean) =>
+  useQuery({
     queryKey: waitingKeys.all(),
     queryFn: waitingList,
     enabled,
   });
 
-  const add = useMutation({
+const useAddWaiting = () =>
+  useMutation({
     mutationFn: addWaiting,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: waitingKeys.all() });
     },
   });
 
-  const action = useMutation({
+const useControlWaiting = () =>
+  useMutation({
     mutationFn: waitingAction,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: waitingKeys.all() });
     },
   });
 
-  return {
-    list,
-    add,
-    action,
-  };
-}
+export const waitingQueries = {
+  useWaitingList,
+  useAddWaiting,
+  useControlWaiting,
+};

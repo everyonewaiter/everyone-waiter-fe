@@ -11,6 +11,9 @@ export function getComparePath(
   if (permission === "OWNER") {
     return `/${pathname.split("/").slice(2).join("/")}`;
   }
+  if (permission === "ADMIN") {
+    return `/${pathname.split("/").slice(1).join("/")}`;
+  }
   return pathname;
 }
 export function getMenuLabel(pathname: string, permission: AccountPermission) {

@@ -6,7 +6,7 @@ interface Device {
   storeId: string;
   name: string;
   purpose: DevicePurpose;
-  state: Omit<Status, "DELETE">;
+  state: Status;
   paymentType: DevicePayment;
   updatedAt: string;
   createdAt: string;

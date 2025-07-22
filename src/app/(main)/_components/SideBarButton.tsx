@@ -3,7 +3,7 @@
 import { Menu } from "lucide-react";
 import MobileSidebar from "@/app/(main)/_components/MobileSidebar";
 import QueryProviders from "@/app/query-providers";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 
 export default function SideBarButton() {
   const { open, close } = useOverlay();

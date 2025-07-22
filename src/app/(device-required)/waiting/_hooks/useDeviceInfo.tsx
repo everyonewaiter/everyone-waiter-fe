@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { getDecryptedItem } from "@/lib/auth/secureStorage";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
 
 export default function useDeviceInfo() {
+  const { deviceId, storeId } = useDeviceContext();
+
   const [deviceInfo, setDeviceInfo] = useState<Pick<
     Device,
     "deviceId" | "name" | "purpose"
@@ -13,11 +16,10 @@ export default function useDeviceInfo() {
     const fetchDeviceInfo = async () => {
       try {
         setIsLoading(true);
-        const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
         const value = (await getDecryptedItem({
           key: "@deviceInfo",
-          deviceId: meta.deviceId,
-          storeId: meta.storeId,
+          deviceId: deviceId!,
+          storeId: storeId!,
         })) as Device;
         setDeviceInfo(value);
         setError(null);
@@ -30,7 +32,7 @@ export default function useDeviceInfo() {
     };
 
     fetchDeviceInfo();
-  }, []);
+  }, [deviceId, storeId]);
 
   return { deviceInfo, isLoading, error };
 }

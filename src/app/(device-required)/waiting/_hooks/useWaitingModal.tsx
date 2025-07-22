@@ -1,5 +1,5 @@
 import QueryProviders from "@/app/query-providers";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import WaitingModal from "../_components/WaitingModal";
 
 export default function useWaitingModal() {

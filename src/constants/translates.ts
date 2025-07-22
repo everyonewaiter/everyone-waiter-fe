@@ -7,7 +7,6 @@ export const permissionTranslate: Record<AccountPermission, string> = {
 export const stateTranslate: Record<Status, string> = {
   ACTIVE: "활성화",
   INACTIVE: "비활성화",
-  DELETE: "탈퇴함",
 } as const;
 
 export const registerStateTranslate: Record<RegisterStatus, string> = {

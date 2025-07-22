@@ -4,7 +4,7 @@ import Textarea from "@/components/common/TextArea";
 import { useMemoStore } from "../../_hooks/useMemoStore";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
-import useOrder from "../../_queries/useOrder";
+import { orderQueries } from "../../_queries/useOrder";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -30,7 +30,8 @@ export default function MemoAlert({
   const { selectedOrder, setSelectedOrder } = useSelectItemStore();
   const { orders, resetOrders } = useOrderStore();
 
-  const { memoUpdate, order } = useOrder();
+  const memoUpdate = orderQueries.useUpdateMemo();
+  const order = orderQueries.useOrderMenu();
 
   const isReadonly = !isOrder && !isEditing;
   const placeholder =

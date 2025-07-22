@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
-import { useNowContext } from "@/providers/nowProvider";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import useGetDate from "@/hooks/useGetDate";
 import dynamic from "next/dynamic";
-import usePos from "./_queries/usePos";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
+import { posQueries } from "./_queries/usePos";
+import SalesModal from "./_components/modals/SalesModal";
 
 const OpenSwitch = dynamic(() => import("./_components/OpenSwitch"), {
   ssr: false,
@@ -22,31 +23,32 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 export default function Pos() {
   const navigate = useRouter();
 
-  const now = useNowContext();
+  const { storeId } = useDeviceContext();
+  const { year, formattedMonth, formattedDate, day } = useGetDate(new Date());
 
-  const { store, storeStatus } = usePos();
-  const { data, isLoading } = storeStatus;
+  const { data, isLoading } = posQueries.useStoreInfo(storeId as string);
+  const open = posQueries.useOpenStore();
 
-  const { date, day } = useGetDate(now);
-  const { open, close } = useOverlay();
+  const posControl = useOverlay();
+  const salesControl = useOverlay();
 
   const handleOpenPos = () => {
     const successHandler = () => {
-      close();
+      posControl.close();
       navigate.push("/pos/tables");
     };
 
     if (data?.status === "OPEN") {
       successHandler();
     } else {
-      open(() => (
+      posControl.open(() => (
         <QueryProviders>
           <Alert
-            onClose={close}
+            onClose={posControl.close}
             buttonText="오픈하기"
             noResponsive
             onAction={() => {
-              store.open.mutate(undefined, {
+              open.mutate(undefined, {
                 onSuccess: successHandler,
                 onError: (e) => {
                   if (
@@ -54,8 +56,6 @@ export default function Pos() {
                   ) {
                     // eslint-disable-next-line no-alert
                     alert((e as any).response.data.message);
-                    close();
-                    navigate.push("/pos/tables");
                   }
                 },
               });
@@ -68,6 +68,14 @@ export default function Pos() {
     }
   };
 
+  const openSales = () => {
+    salesControl.open(() => (
+      <QueryProviders>
+        <SalesModal close={salesControl.close} />
+      </QueryProviders>
+    ));
+  };
+
   return (
     <div className="h-screen w-screen">
       <Image
@@ -77,13 +85,17 @@ export default function Pos() {
         className="object-cover"
       />
       <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center gap-[80px]">
-        <div className="absolute top-0 right-0 px-[60px] py-10 text-[40px] text-red-500">
-          <OpenSwitch isStoreOpen={data?.status === "OPEN"} />
-        </div>
+        {data?.name && (
+          <div className="absolute top-0 right-0 px-[60px] py-10 text-[40px] text-red-500">
+            <OpenSwitch isStoreOpen={data?.status === "OPEN"} />
+          </div>
+        )}
         <div className="flex flex-col gap-4">
-          <span className="font-regular text-center text-2xl text-white">{`${date.year}년 ${date.month}월 ${date.date}일 ${day}요일`}</span>
+          <span className="font-regular text-center text-2xl text-white">{`${year}년 ${formattedMonth(new Date())}월 ${formattedDate(new Date())}일 ${day}요일`}</span>
           <h1 className="h-18 text-center text-[48px] font-bold text-white">
-            {isLoading ? "안녕하세요" : `안녕하세요, ${data?.name} 입니다.`}
+            {isLoading || !data?.name
+              ? "안녕하세요"
+              : `안녕하세요, ${data?.name} 입니다.`}
           </h1>
         </div>
         <div className="flex flex-col gap-4">
@@ -102,14 +114,13 @@ export default function Pos() {
               결제내역
             </button>
           </Link>
-          <Link href="/pos/payments/sales" className="w-full">
-            <button
-              type="button"
-              className="center h-[72px] w-full rounded-[16px] border border-white text-2xl font-semibold text-white"
-            >
-              매출액
-            </button>
-          </Link>
+          <button
+            type="button"
+            className="center h-[72px] w-full rounded-[16px] border border-white text-2xl font-semibold text-white"
+            onClick={openSales}
+          >
+            매출액
+          </button>
         </div>
       </div>
     </div>

@@ -2,8 +2,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import {
   closeStore,
+  getDetailActivity,
   getPosMenuList,
-  getStoreStatus,
+  getStoreInfo,
   getTableActivity,
   getTables,
   moveTables,
@@ -11,73 +12,98 @@ import {
   resendReceiptKitchen,
   updateMenus,
 } from "../_api/pos.api";
+import { posKeys } from "./keys";
 
-export default function usePos() {
-  const queryClient = getQueryClient();
+const queryClient = getQueryClient();
 
-  const open = useMutation({
+const useOpenStore = () =>
+  useMutation({
     mutationFn: openStore,
-  });
-
-  const close = useMutation({
-    mutationFn: closeStore,
-  });
-
-  const storeStatus = useQuery({
-    queryKey: ["store-status"],
-    queryFn: getStoreStatus,
-  });
-
-  const menuList = (storeId: string, menuId?: string) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["pos-menu-list"],
-      queryFn: () => getPosMenuList(storeId),
-      enabled: menuId ? !!storeId && !!menuId : !!storeId,
-    });
-
-  const tableList = (enabled: boolean) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["table-list"],
-      queryFn: getTables,
-      enabled,
-    });
-
-  const activity = (tableNo: number) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useQuery({
-      queryKey: ["table", tableNo],
-      queryFn: () => getTableActivity({ tableNo }),
-      enabled: !!tableNo,
-    });
-
-  const move = useMutation({
-    mutationFn: moveTables,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["table-list"] });
+      queryClient.invalidateQueries({ queryKey: posKeys.stores });
     },
   });
 
-  const resendReceipt = useMutation({
+const useCloseStore = () =>
+  useMutation({
+    mutationFn: closeStore,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: posKeys.stores });
+    },
+  });
+
+const useStoreInfo = (storeId: string) =>
+  useQuery({
+    queryKey: posKeys.stores,
+    queryFn: () => getStoreInfo({ storeId }),
+    enabled: !!storeId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+const useMenuList = (storeId: string, menuId?: string) =>
+  useQuery({
+    queryKey: posKeys.menus,
+    queryFn: () => getPosMenuList(storeId),
+    enabled: menuId ? !!storeId && !!menuId : !!storeId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+const useTableList = (enabled: boolean) =>
+  useQuery({
+    queryKey: posKeys.tables,
+    queryFn: getTables,
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+
+const useActivity = (tableNo: number) =>
+  useQuery({
+    queryKey: posKeys.activity(tableNo),
+    queryFn: () => getTableActivity({ tableNo }),
+    enabled: !!tableNo,
+    staleTime: 1000 * 60 * 5,
+  });
+
+const useActivityById = (posTableActivityId: string) =>
+  useQuery({
+    queryKey: posKeys.activityById(posTableActivityId),
+    queryFn: () => getDetailActivity({ posTableActivityId }),
+    enabled: !!posTableActivityId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+const useMoveTable = () =>
+  useMutation({
+    mutationFn: moveTables,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: posKeys.tables });
+    },
+  });
+
+const useResendReceipt = () =>
+  useMutation({
     mutationFn: resendReceiptKitchen,
   });
 
-  const updateOrder = useMutation({
+const useUpdateOrder = () =>
+  useMutation({
     mutationFn: updateMenus,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+      queryClient.invalidateQueries({
+        queryKey: posKeys.activity(variables.tableNo),
+      });
     },
   });
 
-  return {
-    store: { open, close },
-    menuList,
-    tableList,
-    activity,
-    storeStatus,
-    move,
-    resendReceipt,
-    updateOrder,
-  };
-}
+export const posQueries = {
+  useOpenStore,
+  useCloseStore,
+  useActivity,
+  useActivityById,
+  useMenuList,
+  useMoveTable,
+  useResendReceipt,
+  useStoreInfo,
+  useTableList,
+  useUpdateOrder,
+};

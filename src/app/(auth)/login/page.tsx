@@ -8,14 +8,15 @@ import { useForm } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
-import { TypeLogin, loginSchema } from "@/schema/login.schema";
+import Spinner from "@/components/common/Spinner";
+import { TypeLogin, loginSchema } from "./_schema/login.schema";
 import SignupLayout from "../signup/layout";
 import useLogin from "./_hooks/useLogin";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { mutate: login, isPending } = useLogin();
+  const login = useLogin();
 
   const form = useForm<TypeLogin>({
     mode: "onChange",
@@ -28,7 +29,21 @@ export default function Login() {
 
   const submitHandler = (formData: TypeLogin) => {
     setIsLoading(true);
-    login(formData);
+    login.mutate(formData, {
+      onError: (e) => {
+        setIsLoading(false);
+        if ((e as any).response.data.code.startsWith("FAILED")) {
+          form.setError("email", {
+            type: "value",
+            message: (e as any).response.data.message,
+          });
+          form.setError("password", {
+            type: "value",
+            message: (e as any).response.data.message,
+          });
+        }
+      },
+    });
   };
 
   return (
@@ -68,10 +83,10 @@ export default function Login() {
               md: { buttonSize: "sm" },
               lg: { buttonSize: "lg" },
             }}
-            disabled={isPending || isLoading}
+            disabled={isLoading}
             commonClassName="w-full mt-8"
           >
-            로그인
+            {isLoading ? <Spinner /> : "로그인"}
           </ResponsiveButton>
         </form>
       </Form>
