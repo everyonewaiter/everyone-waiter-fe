@@ -115,7 +115,6 @@ export default function Sidebar() {
               {MENU_ITEMS[permission].map((item) => {
                 const isActive = () => {
                   if (item.href === "/") return comparePath === "/";
-                  if (item.href === "/admin") return comparePath === "/admin";
                   return (
                     comparePath === item.href ||
                     comparePath.startsWith(`${item.href}/`)
@@ -128,7 +127,12 @@ export default function Sidebar() {
                       onClick={() => {
                         if (isNavigating || item.href === comparePath) return;
                         setIsNavigating(true);
-                        navigate.push(`/${selectedStoreId}${item.href}`);
+                        const targetPath =
+                          permission === "OWNER"
+                            ? `/${selectedStoreId}${item.href}`
+                            : item.href;
+
+                        navigate.push(targetPath);
                       }}
                       onMouseEnter={() => {
                         if (permission === "OWNER") {

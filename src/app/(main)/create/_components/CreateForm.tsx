@@ -1,10 +1,9 @@
 "use client";
 
-/* eslint-disable no-nested-ternary */
-import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -15,7 +14,7 @@ import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { TypeStore, storeSchema } from "@/schema/store.schema";
-import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const UploadPhoto = dynamic(
   () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),
@@ -43,13 +42,7 @@ export default function CreateForm() {
     },
   });
 
-  const { mutate, error } = storesQueries.useRegister();
-
-  useEffect(() => {
-    if (error?.message) {
-      setIsSubmitted(false);
-    }
-  }, [error]);
+  const { mutate } = storesQueries.useRegister();
 
   const handleSubmit = (data: TypeStore) => {
     setIsSubmitted(true);
@@ -66,7 +59,7 @@ export default function CreateForm() {
 
     mutate(formData, {
       onError: () => setIsSubmitted(false),
-      onSuccess: () => navigate.push("/create?state=pending"),
+      onSuccess: () => navigate.replace("/create?state=pending"),
     });
   };
 
@@ -119,7 +112,7 @@ export default function CreateForm() {
               name="ceoName"
               label="대표자명"
               placeholder="대표자명 입력해주세요."
-              className="cursor-pointer placeholder:text-gray-300"
+              className="placeholder:text-gray-300"
             />
             <LabeledInput
               form={form}
@@ -141,7 +134,7 @@ export default function CreateForm() {
                 }}
                 value={form.watch("landline")}
                 placeholder="매장 전화번호를 입력해주세요"
-                className="cursor-pointer placeholder:text-gray-300"
+                className="placeholder:text-gray-300"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -155,7 +148,7 @@ export default function CreateForm() {
                 }}
                 value={form.watch("license")}
                 placeholder="사업자 번호를 입력해주세요"
-                className="cursor-pointer placeholder:text-gray-300"
+                className="placeholder:text-gray-300"
               />
             </div>
             <UploadPhoto
