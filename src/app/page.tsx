@@ -1,13 +1,20 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { storesQueries } from "./(main)/(owner)/[id]/store/_queries/useStores";
 
 export default function Page() {
   const { data, isLoading } = storesQueries.useStoresList();
-
   const firstStoreId = data?.stores?.[0]?.storeId;
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!firstStoreId) redirect("/user");
+      else redirect(`/${firstStoreId}`);
+    }
+  }, [isLoading, firstStoreId]);
 
   if (isLoading) {
     return (
@@ -36,7 +43,4 @@ export default function Page() {
       </div>
     );
   }
-
-  if (!isLoading && !firstStoreId) redirect("/user");
-  if (!isLoading && firstStoreId) redirect(`/${firstStoreId}`);
 }
