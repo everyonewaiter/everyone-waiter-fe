@@ -5,9 +5,9 @@ import useAuthStore from "@/stores/useAuthStore";
 import { storesQueries } from "../(owner)/[id]/store/_queries/useStores";
 
 export default function Page() {
-  const { user } = useAuthStore();
+  const { user, isLoggedIn } = useAuthStore();
 
-  const { data, isLoading } = storesQueries.useStoresList();
+  const { data, isLoading } = storesQueries.useStoresList(!!isLoggedIn);
   const { data: registerData } = storesQueries.useRegistrationList();
 
   const firstStoreId = data?.stores?.[0]?.storeId;

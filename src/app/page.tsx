@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import useAuthStore from "@/stores/useAuthStore";
 import { storesQueries } from "./(main)/(owner)/[id]/store/_queries/useStores";
 
 export default function Page() {
+  const { setIsLoggedIn } = useAuthStore();
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,7 +20,9 @@ export default function Page() {
       redirect("/login");
     } else {
       setToken(t);
+      setIsLoggedIn(t);
     }
+    // eslint-disable-next-line
   }, []);
 
   const { data, isLoading } = storesQueries.useStoresList(!!token);
@@ -32,31 +36,29 @@ export default function Page() {
     }
   }, [isLoading, token, firstStoreId]);
 
-  if (isLoading) {
-    return (
-      <div className="center bg-primary h-screen w-screen md:bg-white">
-        <div className="animate-pulse">
+  if (!isLoading) return null;
+
+  return (
+    <div className="center bg-primary h-screen w-screen md:bg-white">
+      <div className="animate-pulse">
+        <Image
+          src="/logo/logo-with-text.svg"
+          alt="logo"
+          priority
+          width={300}
+          height={300}
+          className="hidden md:block md:h-[200px] md:w-[200px] lg:h-[300px] lg:w-[300px]"
+        />
+        <div className="relative block h-[160px] w-[160px] md:hidden">
           <Image
-            src="/logo/logo-with-text.svg"
+            src="/logo/logo-with-text-white.svg"
             alt="logo"
             priority
-            width={300}
-            height={300}
-            className="hidden md:block md:h-[200px] md:w-[200px] lg:h-[300px] lg:w-[300px]"
+            fill
+            className="object-contain"
           />
-          <div className="relative block h-[160px] w-[160px] md:hidden">
-            <Image
-              src="/logo/logo-with-text-white.svg"
-              alt="logo"
-              priority
-              fill
-              className="object-contain"
-            />
-          </div>
         </div>
       </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 }
