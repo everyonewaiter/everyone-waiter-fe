@@ -37,10 +37,10 @@ export default function UserPage() {
     defaultValues: {
       searchWord: "",
       active: {
-        permission: "전체",
-        subscription: "전체",
-        storeAccepted: "전체",
-        status: "전체",
+        permission: null,
+        subscription: null,
+        storeAccepted: null,
+        status: null,
       },
     },
   });
