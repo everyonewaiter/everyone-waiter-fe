@@ -5,7 +5,6 @@ import QueryProviders from "@/app/query-providers";
 import InfoPopup from "@/components/InfoPopup";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/useOverlay";
-import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import { StoreProvider } from "@/providers/storeProvider";
 
 export default function PageTitle({ title }: { title: string }) {
@@ -13,13 +12,11 @@ export default function PageTitle({ title }: { title: string }) {
 
   const { open, close } = useOverlay();
 
-  useModalCloseTriggers({ ref, onClose: close });
-
   const handleOpenPopup = () => {
     open(() => (
       <QueryProviders>
         <StoreProvider>
-          <InfoPopup close={() => close} />
+          <InfoPopup close={close} />
         </StoreProvider>
       </QueryProviders>
     ));
