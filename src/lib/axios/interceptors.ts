@@ -6,6 +6,7 @@ import makeSignature from "@/utils/make-signature";
 import { renewToken } from "../api/auth.api";
 import { getDecryptedItem } from "../auth/secureStorage";
 import { deleteCookie, getToken, setCookie } from "../cookies";
+import { getClientCookie } from "../cookies/client";
 
 let isRefreshing = false;
 let refreshPromise: Promise<any> | null = null;
@@ -14,7 +15,14 @@ const mutex = new Mutex();
 export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.request.use(
     async (config) => {
-      const token = await getToken("accessToken");
+      let token;
+
+      if (typeof window === "undefined") {
+        token = await getToken("accessToken");
+      } else {
+        token = getClientCookie("accessToken");
+      }
+
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
