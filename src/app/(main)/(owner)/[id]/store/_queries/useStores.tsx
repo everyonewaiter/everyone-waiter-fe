@@ -30,12 +30,13 @@ const useRegistrationDetail = (registrationId: string) =>
     staleTime: 1000 * 60 * 5,
   });
 
-const useStoresList = () =>
+const useStoresList = (enabled: boolean) =>
   useQuery<{
     stores: { storeId: string; name: string }[];
   }>({
     queryKey: storeKeys.stores(),
     queryFn: getStoreList,
+    enabled,
     staleTime: 1000 * 60 * 5,
   });
 
