@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
+import { getClientCookie } from "@/lib/cookies/client";
 import { storesQueries } from "./(main)/(owner)/[id]/store/_queries/useStores";
 
 export default function Page() {
@@ -11,17 +12,15 @@ export default function Page() {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const t = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const t = getClientCookie("accessToken");
 
-    if (!t) {
-      redirect("/login");
-    } else {
+    if (t) {
       setToken(t);
       setIsLoggedIn(t);
+    } else {
+      redirect("/login");
     }
+
     // eslint-disable-next-line
   }, []);
 

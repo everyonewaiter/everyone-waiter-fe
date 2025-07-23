@@ -2,10 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { getAccount, login } from "@/lib/api/auth.api";
-import { setCookie } from "@/lib/cookies";
 import useAuthStore from "@/stores/useAuthStore";
 import { storeKeys } from "@/app/(main)/(owner)/[id]/store/_queries/keys";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
+import { setClientCookie } from "@/lib/cookies/client";
 
 export default function useLogin() {
   const { saveUser } = useAuthStore();
@@ -16,8 +16,8 @@ export default function useLogin() {
     mutationFn: login,
     onSuccess: async (response) => {
       // 1. 토큰 저장
-      await setCookie("accessToken", response.accessToken);
-      await setCookie("refreshToken", response.refreshToken);
+      setClientCookie("accessToken", response.accessToken);
+      setClientCookie("refreshToken", response.refreshToken);
 
       // 2. 유저 정보 가져오기
       const profileData = await queryClient.fetchQuery({
