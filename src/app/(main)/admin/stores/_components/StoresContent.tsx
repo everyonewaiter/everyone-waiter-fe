@@ -34,12 +34,11 @@ export default function StoresContent({ data }: IProps) {
             defaultText="상태"
             active={watch("activeStatus")}
             setActive={(value) => setValue("activeStatus", value)}
-            triggerClassName="lg:!text-base !rounded-[40px] !w-fit"
-            className="lg:!text-base"
+            triggerClassName="!w-fit !px-4"
           />
           <div
             className={cn(
-              "flex items-center gap-2 text-xs md:hidden",
+              "flex items-center gap-2 text-xs whitespace-nowrap md:hidden",
               watch("isChecked") ? "text-gray-100" : "text-gray-300"
             )}
           >
