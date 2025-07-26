@@ -67,7 +67,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
             key={item.text}
             role="menuitem"
             tabIndex={0}
-            className="flex h-9 w-full items-center gap-2 rounded-[8px] px-3 lg:px-5"
+            className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-[8px] px-3 lg:px-5"
             aria-label={item.text}
             onClick={() => handleNavigate(`/${storeId}/${item.url}`)}
             onKeyDown={(e) => {
@@ -84,7 +84,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
       <div
         role="button"
         tabIndex={0}
-        className="flex h-9 w-full items-center gap-2 rounded-[8px] px-3 lg:px-5"
+        className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-[8px] px-3 lg:px-5"
         aria-label="로그아웃"
         onClick={() => {
           logout();
