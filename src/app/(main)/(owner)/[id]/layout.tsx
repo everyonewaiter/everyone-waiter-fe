@@ -8,7 +8,7 @@ export default async function OwnerLayout({
 }: PropsWithChildren<{ modal: ReactNode }>) {
   return (
     <StoreProvider>
-      <div className="relative flex h-full flex-col overflow-hidden">
+      <div className="relative flex h-full flex-col">
         <div className="flex-1">{children}</div>
         <Suspense fallback={<div>로드 중...</div>}>
           <ClientModalWrapper>{modal}</ClientModalWrapper>
