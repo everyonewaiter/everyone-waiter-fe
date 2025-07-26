@@ -25,7 +25,7 @@ export default function UsersContent({ debouncedValue, data }: IProps) {
           <DropdownGroup />
         </div>
       </div>
-      <div className="-mt-3 w-full md:hidden">
+      <div className="-mt-3 w-full pb-10 md:hidden">
         <UsersTable data={data} />
       </div>
       <div className="mt-6 hidden items-center justify-between md:flex">

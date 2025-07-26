@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 import DashedBorder from "@/components/DashedBorder";
-import { ScrollArea } from "@/components/common/ScrollArea";
 import { useStoreContext } from "@/providers/storeProvider";
 import Spinner from "@/components/common/Spinner";
 import { menuQueries } from "../_queries/useMenu";
@@ -47,8 +46,8 @@ export default function RenderMenu({
 
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
-      <ScrollArea className="h-[550px] md:h-[385px] lg:h-[785px]">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-[16px] lg:h-[440px] lg:gap-x-[32px] lg:gap-y-[40px]">
+      <div className="flex-1">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-[16px] lg:gap-x-[32px] lg:gap-y-[40px]">
           <button
             type="button"
             className="h-full"
@@ -95,7 +94,7 @@ export default function RenderMenu({
             ))
           )}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
