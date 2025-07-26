@@ -47,10 +47,10 @@ export default function RenderMenu({
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
       <div className="flex-1">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-[16px] lg:gap-x-[32px] lg:gap-y-[40px]">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-x-[10px] md:gap-y-[16px] lg:grid-cols-4 lg:gap-x-[32px] lg:gap-y-[40px]">
           <button
             type="button"
-            className="h-full"
+            className="aspect-[329/440] h-full"
             onClick={() =>
               navigate.push(
                 `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`

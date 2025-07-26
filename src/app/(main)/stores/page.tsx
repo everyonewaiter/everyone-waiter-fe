@@ -25,7 +25,6 @@ import useOverlay from "@/hooks/useOverlay";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
 import { storesQueries } from "../(owner)/[id]/store/_queries/useStores";
-import PageTitle from "../_components/PageTitle";
 
 const PendingAcceptModal = dynamic(
   () => import("../(owner)/[id]/store/_components/modals/PendingAcceptModal"),
@@ -100,7 +99,6 @@ export default function StoreList() {
 
   return (
     <div className="flex h-full flex-col">
-      <PageTitle title="매장 등록 신청 현황" />
       <div className="flex w-full flex-1 flex-col pt-8">
         <div className="z-10 hidden w-full justify-end md:flex">
           <ResponsiveButton

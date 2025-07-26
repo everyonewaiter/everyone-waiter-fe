@@ -25,7 +25,7 @@ export default function MenuCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[12px] border md:h-[220px] lg:h-[440px] lg:rounded-[24px]",
+        "relative cursor-pointer overflow-hidden rounded-[12px] border lg:rounded-[24px]",
         isSelected ? "border-primary" : "border-gray-600",
         className
       )}
@@ -38,7 +38,7 @@ export default function MenuCard({
       role="button"
       tabIndex={0}
     >
-      <div className="h-[440px] w-[328px]">
+      <div className="relative aspect-[329/440]">
         {menu.image ? (
           <Image
             src={getCdn(menu.image)}
@@ -47,6 +47,10 @@ export default function MenuCard({
             className="object-cover"
             loading="eager"
             priority
+            onError={() => {
+              // eslint-disable-next-line
+              console.error("이미지 로딩 실패:", getCdn(menu.image));
+            }}
           />
         ) : (
           <div className="center h-full w-full bg-gray-600 pb-20 opacity-50">
