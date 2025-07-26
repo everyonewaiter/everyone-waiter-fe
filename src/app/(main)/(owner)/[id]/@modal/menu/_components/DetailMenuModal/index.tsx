@@ -52,7 +52,7 @@ export default function DetailMenuModal({
       <div className="scrollbar-hide flex h-full w-full flex-col md:gap-5 lg:gap-8">
         {/* 헤더 */}
         <div className="shrink-0">
-          <Header onNavigate={() => navigate.replace(`/${storeId}/menu`)} />
+          <Header onNavigate={() => navigate.back()} />
         </div>
         {/* 콘텐츠 */}
 

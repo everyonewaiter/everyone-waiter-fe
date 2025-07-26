@@ -50,6 +50,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
               }
             }}
             disabled={type !== "create"}
+            triggerClassName="!w-fit"
           />
         </div>
         <LabeledInput
