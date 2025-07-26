@@ -4,7 +4,6 @@ import {
   getCategories,
   getMenuList,
 } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
-import PageTitle from "@/app/(main)/_components/PageTitle";
 import getQueryClient from "@/app/get-query-client";
 import { categoryKeys, menuKeys } from "./_queries/keys";
 
@@ -31,9 +30,8 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="relative flex min-h-screen flex-col">
-        <PageTitle title="메뉴 관리" />
-        {children}
+      <div className="relative flex w-full flex-col md:h-full">
+        <div className="">{children}</div>
         {/* {modal} */}
       </div>
     </HydrationBoundary>

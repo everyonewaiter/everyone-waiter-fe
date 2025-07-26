@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Paginations from "@/components/common/Pagination/Paginations";
 import useDebounce from "@/hooks/useDebounce";
-import PageTitle from "@/app/(main)/_components/PageTitle";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { adminQueries } from "../../../_queries/useAdmin";
@@ -70,7 +69,6 @@ export default function UserPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <PageTitle title="회원 관리" />
       <FormProvider {...form}>
         <UsersContent debouncedValue={debouncedValue} data={data?.content!} />
       </FormProvider>
