@@ -35,8 +35,8 @@ export default function InfoPopup({ close }: { close: () => void }) {
   };
 
   const handleNavigateToLogin = () => {
-    close();
     navigate.replace("/login");
+    close();
   };
 
   return (
