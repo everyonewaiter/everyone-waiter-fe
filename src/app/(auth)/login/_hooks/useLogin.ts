@@ -28,6 +28,8 @@ export default function useLogin() {
       });
       // 3. 유저 정보 저장
       saveUser(profileData);
+      setClientCookie("permission", profileData.permission);
+
       // 4. 리다이렉트
       const storeList = await queryClient.fetchQuery({
         queryKey: storeKeys.stores(),

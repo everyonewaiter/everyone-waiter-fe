@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { deleteCookie } from "@/lib/cookies";
+import { deleteClientCookie } from "@/lib/cookies/client";
 
 interface AuthProps {
   user: UserProfile | null; // 유저 정보
@@ -15,9 +15,9 @@ const useAuthStore = create(
       user: null,
       isLoggedIn: false,
       saveUser: (userInfo) => set({ user: userInfo, isLoggedIn: true }),
-      logout: async () => {
-        await deleteCookie("accessToken");
-        await deleteCookie("refreshToken");
+      logout: () => {
+        deleteClientCookie("accessToken");
+        deleteClientCookie("refreshToken");
         set({ user: null, isLoggedIn: false });
       },
       setIsLoggedIn: (token) =>
