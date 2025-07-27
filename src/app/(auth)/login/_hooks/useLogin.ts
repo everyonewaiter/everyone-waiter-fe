@@ -28,6 +28,8 @@ export default function useLogin() {
       });
       // 3. 유저 정보 저장
       saveUser(profileData);
+      setClientCookie("permission", profileData.permission);
+
       // 4. 리다이렉트
       const storeList = await queryClient.fetchQuery({
         queryKey: storeKeys.stores(),
@@ -36,7 +38,10 @@ export default function useLogin() {
 
       if (profileData.permission === "ADMIN") {
         router.push("/admin/users");
-      } else if (storeList.stores.length > 0) {
+      } else if (
+        Array.isArray(storeList?.stores) &&
+        storeList.stores.length > 0
+      ) {
         router.push(`/${storeList.stores[0].storeId}`);
       } else {
         router.push("/");

@@ -29,7 +29,6 @@ import useOverlay from "@/hooks/useOverlay";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
 import useControlCheck from "@/hooks/useControlCheck";
-import PageTitle from "@/app/(main)/_components/PageTitle";
 import { deviceQueries } from "../../_queries/useDevice";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
@@ -96,7 +95,6 @@ export default function DevicePage() {
 
   return (
     <div className="flex h-full flex-col">
-      <PageTitle title="기기 관리" />
       <div className="flex w-full flex-1 flex-col">
         <button
           type="button"
@@ -111,7 +109,7 @@ export default function DevicePage() {
           />
           <span className="text-status-error text-sm lg:text-lg">삭제</span>
         </button>
-        <div className="hidden min-h-[calc(100dvh-420px)] w-full overflow-y-scroll md:block">
+        <div className="hidden w-full md:block">
           <Table>
             <TableHeader>
               <TableRow isHead>

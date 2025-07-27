@@ -38,6 +38,7 @@ export default function DetailMenuModal({
   const { storeId } = useStoreContext();
   const { form } = useMenuModalForm(data);
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [showInfo, setShowInfo] = useState<Record<OptionType, boolean>>({
     [OptionType.REQUIRED]: false,
@@ -52,7 +53,7 @@ export default function DetailMenuModal({
       <div className="scrollbar-hide flex h-full w-full flex-col md:gap-5 lg:gap-8">
         {/* 헤더 */}
         <div className="shrink-0">
-          <Header onNavigate={() => navigate.replace(`/${storeId}/menu`)} />
+          <Header onNavigate={() => navigate.back()} />
         </div>
         {/* 콘텐츠 */}
 
@@ -97,9 +98,10 @@ export default function DetailMenuModal({
               <ModalButton
                 isEditing={isEditing}
                 onSetEditing={onSetEditing}
-                menuId={data?.menuId!}
-                image={data?.image}
                 type={type}
+                onSetIsSubmitted={setIsSubmitted}
+                isSubmitted={isSubmitted}
+                {...data}
               />
             </div>
           </div>
@@ -110,9 +112,10 @@ export default function DetailMenuModal({
           <ModalButton
             isEditing={isEditing}
             onSetEditing={onSetEditing}
-            menuId={data?.menuId}
-            image={data?.image}
             type={type}
+            onSetIsSubmitted={setIsSubmitted}
+            isSubmitted={isSubmitted}
+            {...data}
           />
         </div>
       </div>

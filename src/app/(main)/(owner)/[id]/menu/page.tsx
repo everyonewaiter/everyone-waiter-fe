@@ -10,15 +10,11 @@ export default function Page() {
 
   const { data } = categoryQueries.useCategories(storeId);
 
-  return (
-    <div className="flex flex-1">
-      {data?.categories?.length! > 0 ? (
-        <MenuList />
-      ) : (
-        <div className="flex flex-1 items-center justify-center">
-          <GuideAddCategory />
-        </div>
-      )}
+  return data?.categories?.length! > 0 ? (
+    <MenuList />
+  ) : (
+    <div className="flex min-h-screen flex-1 items-center justify-center">
+      <GuideAddCategory />
     </div>
   );
 }

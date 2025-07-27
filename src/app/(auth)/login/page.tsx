@@ -14,7 +14,7 @@ import SignupLayout from "../signup/layout";
 import useLogin from "./_hooks/useLogin";
 
 export default function Login() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const login = useLogin();
 
@@ -28,10 +28,10 @@ export default function Login() {
   });
 
   const submitHandler = (formData: TypeLogin) => {
-    setIsLoading(true);
+    setIsSubmitted(true);
     login.mutate(formData, {
       onError: (e) => {
-        setIsLoading(false);
+        setIsSubmitted(false);
         if ((e as any).response.data.code.startsWith("FAILED")) {
           form.setError("email", {
             type: "value",
@@ -67,6 +67,7 @@ export default function Login() {
               name="email"
               label="이메일"
               placeholder="이메일을 입력해주세요."
+              disabled={isSubmitted}
             />
             <LabeledInput
               form={form}
@@ -74,6 +75,7 @@ export default function Login() {
               name="password"
               label="비밀번호"
               placeholder="비밀번호를 입력해주세요."
+              disabled={isSubmitted}
             />
           </div>
           <ResponsiveButton
@@ -83,10 +85,10 @@ export default function Login() {
               md: { buttonSize: "sm" },
               lg: { buttonSize: "lg" },
             }}
-            disabled={isLoading}
+            disabled={isSubmitted}
             commonClassName="w-full mt-8"
           >
-            {isLoading ? <Spinner /> : "로그인"}
+            {isSubmitted ? <Spinner /> : "로그인"}
           </ResponsiveButton>
         </form>
       </Form>

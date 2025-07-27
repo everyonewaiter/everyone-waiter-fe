@@ -22,7 +22,7 @@ export default function MenuList() {
   const [changeSort, setChangeSort] = useState(false);
 
   return (
-    <div className="flex flex-1 flex-col pb-2 md:pt-4 lg:pt-6">
+    <div className="flex flex-col pb-2 md:pt-4 lg:pt-6">
       <div className="flex flex-col md:flex-row md:justify-between">
         <div className="scrollbar-hide md:overflow-none my-5 flex items-center gap-2 overflow-auto md:my-0 lg:gap-3">
           <ResponsiveButton

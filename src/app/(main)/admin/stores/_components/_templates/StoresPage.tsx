@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import Paginations from "@/components/common/Pagination/Paginations";
 import { registerStateTranslate } from "@/constants/translates";
-import PageTitle from "@/app/(main)/_components/PageTitle";
 import useDebounce from "@/hooks/useDebounce";
 import { adminQueries } from "../../../_queries/useAdmin";
 import StoresContent from "../StoresContent";
@@ -46,7 +45,6 @@ export default function StoresPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <PageTitle title="매장 등록 승인" />
       <FormProvider {...form}>
         <StoresContent data={data?.content!} />
       </FormProvider>

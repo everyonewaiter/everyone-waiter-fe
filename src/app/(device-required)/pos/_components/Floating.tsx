@@ -110,21 +110,22 @@ export default function Floating({ hasData, tableNo }: IProps) {
 
   return (
     <aside className="shadow-floating font-regular text-gray-0 absolute bottom-7 left-1/2 flex h-[76px] -translate-x-1/2 flex-row rounded-[40px] bg-white px-10 py-6 text-xl">
-      {list?.map((item, index, arr) => (
-        <Fragment key={item.label}>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 whitespace-nowrap"
-            onClick={() => handleAction(item.icon)}
-          >
-            <Icon iconKey={item.icon} className="text-gray-0" />
-            <span>{item.label}</span>
-          </button>
-          {index < arr.length - 1 && (
-            <div className="mx-5 mt-1.5 h-5 w-px bg-gray-600" />
-          )}
-        </Fragment>
-      ))}
+      {Array.isArray(list) &&
+        list?.map((item, index, arr) => (
+          <Fragment key={item.label}>
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 whitespace-nowrap"
+              onClick={() => handleAction(item.icon)}
+            >
+              <Icon iconKey={item.icon} className="text-gray-0" />
+              <span>{item.label}</span>
+            </button>
+            {index < arr.length - 1 && (
+              <div className="mx-5 mt-1.5 h-5 w-px bg-gray-600" />
+            )}
+          </Fragment>
+        ))}
     </aside>
   );
 }

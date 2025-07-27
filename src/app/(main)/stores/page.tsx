@@ -24,8 +24,8 @@ import { registerStateTranslate } from "@/constants/translates";
 import useOverlay from "@/hooks/useOverlay";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
+import { StoreProvider } from "@/providers/storeProvider";
 import { storesQueries } from "../(owner)/[id]/store/_queries/useStores";
-import PageTitle from "../_components/PageTitle";
 
 const PendingAcceptModal = dynamic(
   () => import("../(owner)/[id]/store/_components/modals/PendingAcceptModal"),
@@ -78,11 +78,13 @@ export default function StoreList() {
     if (["REJECT", "APPROVE"].includes(item.status)) {
       open(() => (
         <QueryProviders>
-          <StoreApplicationModal
-            close={close}
-            isAccepted={item.status === "APPROVE"}
-            {...item}
-          />
+          <StoreProvider>
+            <StoreApplicationModal
+              close={close}
+              isAccepted={item.status === "APPROVE"}
+              {...item}
+            />
+          </StoreProvider>
         </QueryProviders>
       ));
     } else if (item.status === "APPLY") {
@@ -100,7 +102,6 @@ export default function StoreList() {
 
   return (
     <div className="flex h-full flex-col">
-      <PageTitle title="매장 등록 신청 현황" />
       <div className="flex w-full flex-1 flex-col pt-8">
         <div className="z-10 hidden w-full justify-end md:flex">
           <ResponsiveButton

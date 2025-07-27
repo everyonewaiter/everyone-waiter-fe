@@ -22,7 +22,7 @@ export default function DeleteAlert({
       onClose={close}
       onAction={() => {
         const fn =
-          selected.length > 1
+          selected?.length > 1
             ? () => multiRemove.mutate({ body: selected, storeId })
             : () =>
                 remove.mutate({

@@ -50,6 +50,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
               }
             }}
             disabled={type !== "create"}
+            triggerClassName="!w-fit"
           />
         </div>
         <LabeledInput
@@ -188,7 +189,14 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
           <span className="font-regular text-gray-0 text-xs lg:text-sm">
             주방 프린터에 출력하기
           </span>
-          <Switch className="h-5 w-10" />
+          <Switch
+            className="h-5 w-10"
+            checked={form.watch("printEnabled")}
+            onCheckedChange={(checked) =>
+              form.setValue("printEnabled", checked)
+            }
+            disabled={!isEditing}
+          />
         </div>
       </div>
     </section>

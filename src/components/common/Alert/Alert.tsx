@@ -12,6 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./Components";
+import Spinner from "../Spinner";
 
 interface IProps {
   onAction?: () => void;
@@ -23,6 +24,7 @@ interface IProps {
   layoutClassName?: string;
   noResponsive?: boolean;
   disabled?: boolean;
+  isSubmitted?: boolean;
 }
 
 function Alert({
@@ -36,6 +38,7 @@ function Alert({
   buttonColor = "primary",
   noResponsive,
   disabled,
+  isSubmitted,
 }: PropsWithChildren<IProps>) {
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(true);
@@ -79,7 +82,7 @@ function Alert({
               className="flex-1"
               disabled={disabled}
             >
-              <span>{buttonText}</span>
+              {isSubmitted ? <Spinner /> : <span>{buttonText}</span>}
             </AlertDialogAction>
           )}
         </AlertDialogFooter>

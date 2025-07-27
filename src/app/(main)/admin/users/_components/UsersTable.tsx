@@ -54,7 +54,7 @@ export default function UsersTable({ data }: IProps) {
           ))}
         </TableBody>
       </Table>
-      <div className="flex w-full flex-col gap-5 overflow-y-scroll md:hidden">
+      <div className="flex w-full flex-col gap-5 md:hidden">
         {data?.map((item, idx) => (
           <MobileTable
             key={item.accountId}
@@ -70,7 +70,7 @@ export default function UsersTable({ data }: IProps) {
               <MobileTableRow>
                 <MobileTableHead>이메일</MobileTableHead>
                 <MobileTableCell>
-                  {item.email.length > 10
+                  {item.email?.length > 10
                     ? `${item.email.slice(0, 10)}...`
                     : item.email}
                 </MobileTableCell>

@@ -70,7 +70,7 @@ function MenuModal({
 
   const handleTotalPrice = () => {
     let result = data?.price;
-    if (form.watch("required").length > 0) {
+    if (form.watch("required")?.length > 0) {
       result += form
         .watch("required")
         .map((el) =>
@@ -78,7 +78,7 @@ function MenuModal({
         )
         .reduce((a, b) => a + b, 0);
     }
-    if (form.watch("optional").length > 0) {
+    if (form.watch("optional")?.length > 0) {
       result += form
         .watch("optional")
         .map((el) =>
@@ -196,36 +196,40 @@ function MenuModal({
               </div>
             </div>
             <div className="my-4 h-2 w-full rounded-[8px] bg-gray-700 lg:my-5" />
-            {data?.menuOptionGroups?.length > 0 ? (
+            {Array.isArray(data?.menuOptionGroups) &&
+            data?.menuOptionGroups?.length > 0 ? (
               <FormProvider {...form}>
                 <div className="flex flex-col">
-                  {MandatoryOptions?.length > 0 && (
-                    <OptionGroupSection
-                      data={data?.menuOptionGroups.filter(
-                        (el) => el.type === "MANDATORY"
-                      )}
-                      type={type}
-                      required
-                    >
-                      필수 추가 옵션
-                    </OptionGroupSection>
-                  )}
-
-                  {OptionalOptions?.length > 0 && (
-                    <>
-                      {MandatoryOptions.length > 0 && (
-                        <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
-                      )}
+                  {Array.isArray(MandatoryOptions) &&
+                    MandatoryOptions?.length > 0 && (
                       <OptionGroupSection
-                        data={data?.menuOptionGroups.filter(
-                          (el) => el.type === "OPTIONAL"
+                        data={data.menuOptionGroups.filter(
+                          (el) => el.type === "MANDATORY"
                         )}
                         type={type}
+                        required
                       >
-                        선택 추가 옵션
+                        필수 추가 옵션
                       </OptionGroupSection>
-                    </>
-                  )}
+                    )}
+
+                  {Array.isArray(OptionalOptions) &&
+                    OptionalOptions?.length > 0 && (
+                      <>
+                        {Array.isArray(MandatoryOptions) &&
+                          MandatoryOptions?.length > 0 && (
+                            <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
+                          )}
+                        <OptionGroupSection
+                          data={data.menuOptionGroups.filter(
+                            (el) => el.type === "OPTIONAL"
+                          )}
+                          type={type}
+                        >
+                          선택 추가 옵션
+                        </OptionGroupSection>
+                      </>
+                    )}
                 </div>
               </FormProvider>
             ) : (

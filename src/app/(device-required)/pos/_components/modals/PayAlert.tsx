@@ -103,7 +103,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             stores: stores!,
             payment: { ...res, INSTALLMENT: form.watch("monthlyPlan") },
             successHandler:
-              props.orders.length > 0
+              props.orders?.length > 0
                 ? () => close()
                 : () => {
                     close();
@@ -132,7 +132,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             activity: activityData!,
             stores: stores!,
             successHandler:
-              props.orders.length > 0
+              props.orders?.length > 0
                 ? () => close()
                 : () => {
                     close();
@@ -172,7 +172,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제 정보</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {menus && menus.length > 0 && (
+              {menus && (
                 <strong className="mt-2 text-2xl font-semibold">
                   {menus.length === 1
                     ? menus[0]
@@ -222,10 +222,10 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                 <div className="flex flex-col items-start gap-2">
                   <Label className="text-[15px] font-medium">휴대폰 번호</Label>
                   <Input
+                    {...form.register("phoneNumber")}
                     placeholder={`${form.watch("receiptType") === "개인소득공제용" ? "휴대폰 번호" : "사업자 번호"}를 입력해주세요.`}
                     className="placeholder:font-medium placeholder:text-gray-300"
                     autoFocus
-                    value={form.watch("phoneNumber")}
                     onChange={(e) => {
                       const onlyNums = e.target.value.replace(/[^0-9]/g, "");
                       const formatted = phoneNumberPattern(onlyNums);

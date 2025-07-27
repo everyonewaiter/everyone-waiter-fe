@@ -52,7 +52,7 @@ export default function StoreApplicationModal({
                 isActive={active}
               />
             </div>
-            <div className="mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] md:overflow-y-scroll lg:mt-5 lg:h-[454px]">
+            <div className="mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] lg:mt-5 lg:h-[454px] lg:overflow-y-scroll">
               {active === 0 && (
                 <StoreApplyForm
                   isUpdating={isUpdating}

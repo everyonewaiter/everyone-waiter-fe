@@ -1,5 +1,6 @@
 import axios from "axios";
-import { setupInterceptors, setupDeviceInterceptors } from "./interceptors";
+import { setupDeviceInterceptors } from "./setupDeviceInterceptors";
+import { setupInterceptors } from "./setupInterceptors";
 
 // NOTE - 로그인/회원가입 등 토큰이 필요 없는 instance
 const authInstance = axios.create({

@@ -8,6 +8,7 @@ import LabeledInput from "@/components/common/LabeledInput";
 import { deviceTranslate, paymentTimeTranslate } from "@/constants/translates";
 import { useStoreContext } from "@/providers/storeProvider";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
+import { useState } from "react";
 import { deviceQueries } from "../../../device/_queries/useDevice";
 import ModalButton from "../../_components/ModalButton";
 import useDeviceForm from "../../_hooks/useDeviceForm";
@@ -21,7 +22,9 @@ export default function DeviceInfoModal() {
   const { data } = deviceQueries.useDetails(deviceId, storeId);
   const update = deviceQueries.useUpdateDevice();
 
-  const { form, submitHandler } = useDeviceForm(data);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const { form, submitHandler } = useDeviceForm({ data, setIsSubmitted });
 
   if (!data)
     return (
@@ -60,45 +63,47 @@ export default function DeviceInfoModal() {
               deviceTranslate[data?.purpose as keyof typeof deviceTranslate] ||
               "전체"
             }
-            triggerClassName="w-full h-10 lg:h-12 rounded-[8px] lg:rounded-[12px] text-sm lg:text-[15px] md:font-regular"
-            className="md:!w-[348px] lg:!w-[476px]"
+            triggerClassName="h-10 lg:h-12 text-sm lg:text-[15px] md:font-regular !w-fit"
           />
         </div>
         {["HALL", "TABLE"].includes(form.watch("purpose")) && (
-          <LabeledInput form={form} name="tableNo" label="테이블 번호" />
+          <LabeledInput
+            form={form}
+            name="tableNo"
+            label="테이블 번호"
+            type="number"
+          />
         )}
 
         {(form.watch("purpose") === "HALL" ||
           form.watch("purpose") === "TABLE") && (
-          <>
-            <div className="flex flex-col gap-2">
-              <Label>결제 방식</Label>
-              <Dropdown
-                data={Object.values(paymentTimeTranslate)}
-                active={
-                  paymentTimeTranslate[
-                    form.watch("paymentType") as DevicePayment
-                  ]
+          <div className="flex flex-col gap-2">
+            <Label>결제 방식</Label>
+            <Dropdown
+              data={Object.values(paymentTimeTranslate)}
+              active={
+                paymentTimeTranslate[form.watch("paymentType") as DevicePayment]
+              }
+              setActive={(value) => {
+                const selected = Object.entries(paymentTimeTranslate).find(
+                  (el) => el[1] === value
+                );
+                if (selected) {
+                  form.setValue("paymentType", selected[0] as DevicePayment);
                 }
-                setActive={(value) => {
-                  const selected = Object.entries(paymentTimeTranslate).find(
-                    (el) => el[1] === value
-                  );
-                  if (selected) {
-                    form.setValue("paymentType", selected[0] as DevicePayment);
-                  }
-                }}
-                defaultText={
-                  paymentTimeTranslate[data?.paymentType as DevicePayment]
-                }
-                triggerClassName="w-full h-10 lg:h-12 rounded-[8px] lg:rounded-[12px] text-sm lg:text-[15px] md:font-regular"
-                className="md:!w-[348px] lg:!w-[476px]"
-              />
-            </div>
-            <LabeledInput form={form} name="deviceNumber" label="단말기 번호" />
-          </>
+              }}
+              defaultText={
+                paymentTimeTranslate[data?.paymentType as DevicePayment]
+              }
+              triggerClassName="h-10 lg:h-12 text-sm lg:text-[15px] md:font-regular !w-fit"
+            />
+          </div>
         )}
-        <ModalButton buttonText="수정" type="submit" />
+        <ModalButton
+          buttonText="수정"
+          type="submit"
+          isSubmitted={isSubmitted}
+        />
       </form>
     </Form>
   );

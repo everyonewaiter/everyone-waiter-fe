@@ -116,6 +116,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
       <div className="flex flex-col">
         <ScrollArea className="h-[700px] w-full pt-8">
           {selectedRow &&
+            Array.isArray(activity?.orders) &&
             activity?.orders?.map((item, index, arr) => (
               <Fragment key={item.orderId}>
                 <MenuBox index={index} nonInteractive {...item} />

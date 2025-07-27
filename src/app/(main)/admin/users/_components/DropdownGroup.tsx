@@ -17,7 +17,7 @@ function DropdownGroup() {
           )
         }
         active={watch("active.permission")}
-        triggerClassName="!rounded-[40px] text-s lg:!text-sm min-w-[65px] lg:min-w-[90px]"
+        triggerClassName="text-s lg:!text-sm"
       />
       <Dropdown
         data={["전체", "구독", "미구독", "구독철회"]}
@@ -29,7 +29,7 @@ function DropdownGroup() {
           )
         }
         active={watch("active.subscription")}
-        triggerClassName="lg:min-w-[110px] min-w-[94px] !rounded-[40px] text-s lg:!text-sm"
+        triggerClassName="text-s lg:!text-sm"
       />
       <Dropdown
         data={["전체", "Y", "N"]}
@@ -41,7 +41,7 @@ function DropdownGroup() {
           )
         }
         active={watch("active.storeAccepted")}
-        triggerClassName="lg:min-w-[110px] min-w-[94px] !rounded-[40px] text-s lg:!text-sm"
+        triggerClassName="text-s lg:!text-sm"
       />
       <Dropdown
         data={["전체", "활성화", "비활성화"]}
@@ -50,7 +50,7 @@ function DropdownGroup() {
           setValue("active.status", value as TypeUserForm["active"]["status"])
         }
         active={watch("active.status")}
-        triggerClassName="!rounded-[40px] text-s lg:!text-sm lg:min-w-[90px] min-w-[65px]"
+        triggerClassName="text-s lg:!text-sm"
       />
     </div>
   );

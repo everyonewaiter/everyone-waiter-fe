@@ -14,12 +14,11 @@ export default function useStoreApplyForm(
   });
 
   useEffect(() => {
-    if (data.registrationId) {
-      form.reset({
-        ...data,
-      });
+    if (data?.registrationId) {
+      form.reset({ ...data });
     }
-  }, [data, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.registrationId]);
 
   const reapply = storesQueries.useReapply();
   const reapplyWithImg = storesQueries.useReapplyWithImg();
