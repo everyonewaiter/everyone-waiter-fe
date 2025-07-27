@@ -143,17 +143,15 @@ export default function Page() {
         </div>
       )}
 
-      <ModalButton
-        buttonText={changeMove ? "순서 저장하기" : "저장하기"}
-        colorBlack={changeMove}
-        onAction={() =>
-          changeMove
-            ? handleSortSave(() =>
-                navigate.replace(`/${storeId}/menu/category`)
-              )
-            : null
-        }
-      />
+      {changeMove && (
+        <ModalButton
+          buttonText="순서 저장하기"
+          colorBlack
+          onAction={() =>
+            handleSortSave(() => navigate.replace(`/${storeId}/menu/category`))
+          }
+        />
+      )}
     </div>
   );
 }

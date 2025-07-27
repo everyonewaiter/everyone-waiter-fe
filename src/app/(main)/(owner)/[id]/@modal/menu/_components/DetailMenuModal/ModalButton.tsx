@@ -1,25 +1,27 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useFormContext } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { getPathnameWithoutStoreId } from "@/utils/getPathname";
 import { useStoreContext } from "@/providers/storeProvider";
-import { formToRequest } from "../../_hooks/useMenuForm";
-import { menuQueries } from "../../../../menu/_queries/useMenu";
-import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
+import Spinner from "@/components/common/Spinner";
+import useHandleMenuSubmit from "../../_hooks/useHandleMenuSubmit";
 
 interface IProps {
   isEditing: boolean;
   onSetEditing: (value: boolean) => void;
-  image: string | undefined;
-  menuId: string | undefined;
+  onSetIsSubmitted: (value: boolean) => void;
+  isSubmitted: boolean;
   type: "create" | "update";
+  image?: string;
+  menuId?: string;
 }
 
 export default function ModalButton({
   isEditing,
   onSetEditing,
+  onSetIsSubmitted,
+  isSubmitted,
   type,
   ...data
 }: IProps) {
@@ -28,57 +30,17 @@ export default function ModalButton({
 
   const { storeId } = useStoreContext();
 
-  const form = useFormContext<TypeMenuForm>();
+  const { handleSubmit } = useHandleMenuSubmit({
+    storeId,
+    type,
+    data,
+    onSetIsSubmitted,
+  });
 
-  const add = menuQueries.useAddMenu(storeId);
-  const updateWithImg = menuQueries.useUpdateWithImage(storeId);
-  const updateWithoutImg = menuQueries.useUpdateWithoutImage(storeId);
-
-  const handleSubmit = () => {
-    const values = form.getValues();
-    const { request } = formToRequest(values);
-
-    if (type === "create") {
-      add.mutate(
-        {
-          storeId,
-          categoryId: form.watch("category"),
-          body: {
-            file: form.getValues("imgFile") as File,
-            request,
-          },
-        },
-        {
-          onSuccess: () => navigate.back(),
-        }
-      );
-    } else if (type === "update") {
-      if (form.watch("imgFile") && data?.image !== form.watch("imgString")) {
-        updateWithImg.mutate(
-          {
-            storeId,
-            menuId: data?.menuId as string,
-            body: {
-              file: form.watch("imgFile") as File,
-              request,
-            },
-          },
-          {
-            onSuccess: () => navigate.back(),
-          }
-        );
-      } else {
-        updateWithoutImg.mutate(
-          {
-            storeId,
-            menuId: data?.menuId as string,
-            body: request,
-          },
-          { onSuccess: () => navigate.back() }
-        );
-      }
-    }
-  };
+  const handleAfterAction = () => ({
+    onSuccess: () => navigate.back(),
+    onError: () => onSetIsSubmitted(false),
+  });
 
   const buttonText = () => {
     if (getPathnameWithoutStoreId(pathname) === "/menu/create") {
@@ -99,9 +61,11 @@ export default function ModalButton({
         md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
         sm: { buttonSize: "sm", className: "!h-10" },
       }}
-      onClick={() => (isEditing ? handleSubmit() : onSetEditing(true))}
+      onClick={() =>
+        isEditing ? handleSubmit(handleAfterAction) : onSetEditing(true)
+      }
     >
-      {buttonText()}
+      {isSubmitted ? <Spinner /> : buttonText()}
     </ResponsiveButton>
   );
 }
