@@ -1,36 +1,29 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useStore } from "zustand";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import Icon from "@/components/common/Icon";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/common/select";
-import MENU_ITEMS from "@/constants/sidebarMenus";
-import useAuthStore from "@/stores/useAuthStore";
-import { getComparePath } from "@/utils/getPathname";
-import Loading from "@/components/Loading";
+import { getClientPermission } from "@/lib/cookies/client";
+import SidebarMenu from "./SidebarMenu";
+
+const StoreSelect = dynamic(() => import("./StoreSelect"), {
+  ssr: false,
+  loading: () => null,
+});
 
 export default function Sidebar() {
   const navigate = useRouter();
-  const { prefetch } = useRouter();
-  const pathname = usePathname();
+  const permission =
+    getClientPermission() ||
+    (typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("authStore") || "{}")?.state?.user
+          ?.permission
+      : null);
 
-  const [isNavigating, setIsNavigating] = useState(false);
   const [selectedStoreId, setSelectedStoreId] = useState<string>("");
-
-  const { user } = useStore(useAuthStore, (state) => state);
-  const permission = user?.permission || "USER";
-
-  const comparePath = getComparePath(pathname, permission);
 
   // OWNER인 경우에만 매장 목록 조회
   const { data: storeList } = useQuery({
@@ -39,34 +32,18 @@ export default function Sidebar() {
     enabled: permission === "OWNER",
   });
 
-  // storeList가 있을 때 첫 번째 매장 ID를 기본값으로 설정
-  useEffect(() => {
-    if (storeList?.stores.length) {
-      setSelectedStoreId(storeList.stores[0].storeId);
-    }
-  }, [storeList]);
-
-  useEffect(() => {
-    // 경로가 변경되면 로딩 종료
-
-    setIsNavigating(false);
-  }, [pathname]);
-
   const isOwnerWithoutStore =
     permission === "OWNER" && storeList?.stores.length === 0;
 
   return (
-    <div
+    <aside
       className={`hidden md:py-5 md:pr-3 md:pl-5 lg:py-8 lg:pl-[60px] ${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}
     >
-      {isNavigating && <Loading />}
-      <aside className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-4 md:w-[186px] lg:w-[318px] lg:px-5 lg:pt-8">
+      <div className="flex h-full flex-col rounded-[28px] bg-white px-3 pt-4 md:w-[186px] lg:w-[318px] lg:px-5 lg:pt-8">
         <button
           type="button"
           className="mb-6 flex items-center gap-[18px] lg:mb-9"
-          onClick={() =>
-            navigate.push(`/${selectedStoreId || storeList?.stores[0].storeId}`)
-          }
+          onClick={() => navigate.push(`/${selectedStoreId}`)}
         >
           <Image
             src="/logo/logo.svg"
@@ -81,25 +58,11 @@ export default function Sidebar() {
         </button>
         <nav>
           {permission === "OWNER" ? (
-            <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
-              <SelectTrigger
-                className="bg-primary flex w-full items-center justify-between rounded-xl text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
-                aria-label="매장 선택"
-              >
-                <SelectValue placeholder="매장 선택">
-                  {storeList?.stores.find(
-                    (store) => store.storeId === selectedStoreId
-                  )?.name || "매장 선택"}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {storeList?.stores.map((store) => (
-                  <SelectItem key={store.storeId} value={store.storeId}>
-                    {store.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <StoreSelect
+              storeList={storeList?.stores}
+              selectedStoreId={selectedStoreId}
+              setSelectedStoreId={setSelectedStoreId}
+            />
           ) : (
             <div className="bg-primary flex w-full items-center justify-between rounded-xl py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5">
               <h1 className="text-[15px] font-bold text-white lg:text-[18px]">
@@ -107,63 +70,12 @@ export default function Sidebar() {
               </h1>
             </div>
           )}
-          <div className="relative mt-2">
-            {MENU_ITEMS[permission].length > 1 && (
-              <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
-            )}
-            <ul>
-              {MENU_ITEMS[permission].map((item) => {
-                const isActive = () => {
-                  if (item.href === "/") return comparePath === "/";
-                  return (
-                    comparePath === item.href ||
-                    comparePath.startsWith(`${item.href}/`)
-                  );
-                };
-                return (
-                  <li key={item.href}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (isNavigating || item.href === comparePath) return;
-                        setIsNavigating(true);
-                        const targetPath =
-                          permission === "OWNER"
-                            ? `/${selectedStoreId}${item.href}`
-                            : item.href;
-
-                        navigate.push(targetPath);
-                      }}
-                      onMouseEnter={() => {
-                        if (permission === "OWNER") {
-                          prefetch(`/${selectedStoreId}${item.href}`);
-                        } else {
-                          prefetch(item.href);
-                        }
-                      }}
-                      className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
-                        isActive() ? "text-primary" : "text-gray-300"
-                      }`}
-                    >
-                      {/* 빨간 점 (활성 메뉴만) */}
-                      <div
-                        className={`z-1 size-2 rounded-full ${
-                          isActive() ? "bg-primary" : "bg-gray-600"
-                        }`}
-                      />
-                      <Icon
-                        iconKey={item.icon as string}
-                        className={`size-6 ${isActive() ? "text-primary" : "text-gray-300"}`}
-                      />
-                      <span className="font-medium">{item.label}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          <SidebarMenu
+            selectedStoreId={selectedStoreId}
+            permission={permission}
+          />
         </nav>
-      </aside>
-    </div>
+      </div>
+    </aside>
   );
 }
