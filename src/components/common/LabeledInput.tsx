@@ -43,6 +43,7 @@ export default function LabeledInput<T extends FieldValues>({
   ...props
 }: IProps<T>) {
   const errorMessage = (form.formState.errors[name] as FieldError)?.message;
+  const { value, ...restProps } = props;
 
   return (
     <FormField
@@ -63,7 +64,7 @@ export default function LabeledInput<T extends FieldValues>({
                   inputClassname
                 )}
                 hasError={!!errorMessage}
-                {...props}
+                {...restProps}
                 {...field}
               />
             </FormControl>

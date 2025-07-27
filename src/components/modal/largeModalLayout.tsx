@@ -78,7 +78,7 @@ function Layout({
   return (
     <div
       className={cn(
-        "min-h-[362px] overflow-y-scroll md:max-h-87 lg:max-h-145",
+        "scrollbar-hide min-h-[362px] overflow-y-scroll md:max-h-87 lg:max-h-145",
         className
       )}
     >
