@@ -1,3 +1,8 @@
+import {
+  FormErrorMessage,
+  FormField,
+  FormItem,
+} from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
@@ -45,19 +50,27 @@ export default function StoreApplyForm({ isUpdating, isAccepted }: IProps) {
         placeholder="대표자명을 입력해주세요."
         disabled={!isUpdating || isAccepted}
       />
-      <div>
-        <Label className="mb-2" disabled={!isUpdating || isAccepted}>
-          사업자 번호
-        </Label>
-        <Input
-          {...form.register("license")}
-          placeholder="사업자 번호를 입력해주세요."
-          className="placeholder:text-gray-300"
-          value={form.watch("license")}
-          onChange={handleBusinessNumber}
-          disabled={!isUpdating || isAccepted}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="license"
+        render={({ field }) => (
+          <FormItem>
+            <div>
+              <Label className="mb-2" disabled={!isUpdating || isAccepted}>
+                사업자 번호
+              </Label>
+              <Input
+                {...field}
+                placeholder="사업자 번호를 입력해주세요."
+                className="placeholder:text-gray-300"
+                onChange={handleBusinessNumber}
+                disabled={!isUpdating || isAccepted}
+              />
+            </div>
+            <FormErrorMessage />
+          </FormItem>
+        )}
+      />
       <LabeledInput
         form={form}
         name="address"
@@ -68,19 +81,27 @@ export default function StoreApplyForm({ isUpdating, isAccepted }: IProps) {
         className="cursor-pointer"
         readOnly={isUpdating}
       />
-      <div>
-        <Label className="mb-2" disabled={!isUpdating || isAccepted}>
-          신청일
-        </Label>
-        <Input
-          {...form.register("createdAt")}
-          value={form.watch("createdAt")}
-          placeholder="신청일을 입력해주세요."
-          className="placeholder:text-gray-300"
-          onChange={handleDate}
-          disabled={!isUpdating || isAccepted}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="createdAt"
+        render={({ field }) => (
+          <FormItem>
+            <div>
+              <Label className="mb-2" disabled={!isUpdating || isAccepted}>
+                신청일
+              </Label>
+              <Input
+                {...field}
+                placeholder="신청일을 입력해주세요."
+                className="placeholder:text-gray-300"
+                onChange={handleDate}
+                disabled={!isUpdating || isAccepted}
+              />
+            </div>
+            <FormErrorMessage />
+          </FormItem>
+        )}
+      />
       {!isAccepted && (
         <LabeledInput
           form={form}

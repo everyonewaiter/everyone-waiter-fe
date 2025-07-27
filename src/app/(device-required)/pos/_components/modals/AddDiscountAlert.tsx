@@ -70,8 +70,8 @@ export default function AddDiscountAlert({
         </div>
         <div className="flex flex-col">
           <RadioGroup
+            {...form.register("discountType")}
             className="flex items-center gap-6"
-            value={form.watch("discountType")}
             onValueChange={(value) => {
               form.setValue("discountType", value as "fixed" | "percent");
               form.setValue("discount", null);
