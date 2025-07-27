@@ -24,6 +24,7 @@ import { registerStateTranslate } from "@/constants/translates";
 import useOverlay from "@/hooks/useOverlay";
 import transformDate from "@/lib/formatting/transformDate";
 import cn from "@/lib/utils";
+import { StoreProvider } from "@/providers/storeProvider";
 import { storesQueries } from "../(owner)/[id]/store/_queries/useStores";
 
 const PendingAcceptModal = dynamic(
@@ -77,11 +78,13 @@ export default function StoreList() {
     if (["REJECT", "APPROVE"].includes(item.status)) {
       open(() => (
         <QueryProviders>
-          <StoreApplicationModal
-            close={close}
-            isAccepted={item.status === "APPROVE"}
-            {...item}
-          />
+          <StoreProvider>
+            <StoreApplicationModal
+              close={close}
+              isAccepted={item.status === "APPROVE"}
+              {...item}
+            />
+          </StoreProvider>
         </QueryProviders>
       ));
     } else if (item.status === "APPLY") {
