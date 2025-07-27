@@ -13,6 +13,7 @@ import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
+import Spinner from "@/components/common/Spinner";
 import { adminQueries } from "../../../_queries/useAdmin";
 
 interface TypeForm {
@@ -33,7 +34,7 @@ export default function Page() {
   const params = useParams();
   const accountId = params?.userId as string;
 
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { data: accountData } = adminQueries.useAccountDetail(accountId);
   const updateDetail = adminQueries.useUpdateAccount();
@@ -58,7 +59,7 @@ export default function Page() {
     Object.keys(obj).find((key) => obj[key] === value);
 
   const submitHandler = () => {
-    setIsDisabled(true);
+    setIsSubmitted(true);
 
     updateDetail.mutate(
       {
@@ -73,7 +74,7 @@ export default function Page() {
         ) as Status,
       },
       {
-        onError: () => setIsDisabled(false),
+        onError: () => setIsSubmitted(false),
       }
     );
   };
@@ -109,7 +110,7 @@ export default function Page() {
                   <div className="relative flex w-full flex-col gap-2">
                     <Label>권한</Label>
                     <Dropdown
-                      disabled={isDisabled}
+                      disabled={isSubmitted}
                       data={["사용자", "사장님", "관리자"]}
                       defaultText={
                         permissionTranslate[
@@ -142,7 +143,7 @@ export default function Page() {
                   <div className="flex w-full flex-col gap-2">
                     <Label>상태</Label>
                     <Dropdown
-                      disabled={isDisabled}
+                      disabled={isSubmitted}
                       data={["활성화", "비활성화"]}
                       defaultText={
                         stateTranslate[
@@ -184,10 +185,10 @@ export default function Page() {
             md: { buttonSize: "sm" },
             lg: { buttonSize: "lg" },
           }}
-          disabled={isDisabled}
+          disabled={isSubmitted}
           commonClassName="w-full"
         >
-          변경 내용 저장하기
+          {isSubmitted ? <Spinner /> : "변경 내용 저장하기"}
         </ResponsiveButton>
       </div>
     </div>

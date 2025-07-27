@@ -9,17 +9,21 @@ import {
 } from "../../device/_schema/device.schema";
 import { deviceKeys } from "../../device/_queries/keys";
 
-export default function useDeviceForm(
+export default function useDeviceForm({
+  data,
+  setIsSubmitted,
+}: {
   data?: Device & {
     tableNo: number;
     ksnetDeviceNo: string;
-  }
-) {
+  };
+  setIsSubmitted: (checked: boolean) => void;
+}) {
   const navigate = useRouter();
   const queryClient = getQueryClient();
 
   const form = useForm<TypeDeviceForm>({
-    mode: "onSubmit",
+    mode: "onChange",
     resolver: zodResolver(deviceFormSchema),
     values: {
       name: data?.name ?? "",
@@ -45,6 +49,8 @@ export default function useDeviceForm(
     submitData: TypeDeviceForm,
     id: { storeId: string; deviceId: string }
   ) => {
+    setIsSubmitted(true);
+
     action.mutate(
       {
         name: submitData.name,
@@ -62,6 +68,7 @@ export default function useDeviceForm(
           });
         },
         onError: (e) => {
+          setIsSubmitted(false);
           const res = (e as any).response.data;
           if (
             ["ALREADY_USE_DEVICE_NAME", "DEVICE_NOT_FOUND"].includes(res.code)

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
+import Spinner from "@/components/common/Spinner";
 import useSignup from "./_hooks/useSignup";
 import useSignupForm from "./_hooks/useSignupForm";
 import { TypeSignup } from "./_schema/signup.schema";
@@ -229,7 +230,7 @@ export default function Signup() {
             }}
             commonClassName="font-regular w-full"
           >
-            가입하기
+            {disableFormButton ? <Spinner /> : "가입하기"}
           </ResponsiveButton>
         </form>
       </Form>

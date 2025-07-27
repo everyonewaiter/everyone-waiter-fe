@@ -7,6 +7,7 @@ import {
 } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import Spinner from "@/components/common/Spinner";
 import { TypeDeviceStep1Form } from "../_schema/device.schema";
 
 interface Props {
@@ -65,7 +66,7 @@ export default function AuthInput({
                 lg: { buttonSize: "lg", className: "w-[120px]" },
               }}
             >
-              확인
+              {isSubmitted ? <Spinner /> : "확인"}
             </ResponsiveButton>
           </div>
           <FormErrorMessage />

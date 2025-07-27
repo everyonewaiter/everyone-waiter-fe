@@ -25,6 +25,7 @@ export default function MemoAlert({
 }: IProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { memo, setMemo, resetMemo } = useMemoStore();
   const { selectedOrder, setSelectedOrder } = useSelectItemStore();
@@ -58,6 +59,7 @@ export default function MemoAlert({
           resetMemo();
           close();
         },
+        onError: () => setIsSubmitted(false),
       }
     );
   };
@@ -75,11 +77,14 @@ export default function MemoAlert({
           resetMemo();
           close();
         },
+        onError: () => setIsSubmitted(false),
       }
     );
   };
 
   const handleAction = () => {
+    setIsSubmitted(true);
+
     if (isOrder) {
       handleOrder();
     } else if (isEditing) {
@@ -103,6 +108,7 @@ export default function MemoAlert({
     buttonText: getButtonText(),
     onAction: handleAction,
     hasNoCancel: isEditing,
+    isSubmitted,
   };
 
   return (

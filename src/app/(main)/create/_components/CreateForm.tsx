@@ -15,6 +15,7 @@ import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { TypeStore, storeSchema } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Spinner from "@/components/common/Spinner";
 
 const UploadPhoto = dynamic(
   () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),
@@ -132,7 +133,6 @@ export default function CreateForm() {
                   const formatted = phoneNumberPattern(onlyNums);
                   form.setValue("landline", formatted);
                 }}
-                value={form.watch("landline")}
                 placeholder="매장 전화번호를 입력해주세요"
                 className="placeholder:text-gray-300"
               />
@@ -146,7 +146,6 @@ export default function CreateForm() {
                   const formatted = formatBusinessNumber(onlyNums);
                   form.setValue("license", formatted);
                 }}
-                value={form.watch("license")}
                 placeholder="사업자 번호를 입력해주세요"
                 className="placeholder:text-gray-300"
               />
@@ -167,7 +166,7 @@ export default function CreateForm() {
               disabled={isSubmitted}
               commonClassName="mt-4"
             >
-              신청하기
+              {isSubmitted ? <Spinner /> : "신청하기"}
             </ResponsiveButton>
           </form>
         </FormProvider>
