@@ -86,7 +86,7 @@ export default function OptionGroupSection({
           (opt) => opt.name !== value
         );
 
-        if (updatedOptions.length > 0) {
+        if (updatedOptions?.length > 0) {
           selected[groupIndex] = {
             ...group,
             orderOptions: updatedOptions,

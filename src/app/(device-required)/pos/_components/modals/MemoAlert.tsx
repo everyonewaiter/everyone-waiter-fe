@@ -92,7 +92,9 @@ export default function MemoAlert({
     } else {
       setIsEditing(true);
       ref.current?.focus();
-      ref.current?.setSelectionRange(memo.length, memo.length);
+      if (typeof memo === "string") {
+        ref.current?.setSelectionRange(memo.length, memo.length);
+      }
     }
   };
 

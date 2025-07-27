@@ -38,7 +38,10 @@ export default function useLogin() {
 
       if (profileData.permission === "ADMIN") {
         router.push("/admin/users");
-      } else if (storeList.stores.length > 0) {
+      } else if (
+        Array.isArray(storeList?.stores) &&
+        storeList.stores.length > 0
+      ) {
         router.push(`/${storeList.stores[0].storeId}`);
       } else {
         router.push("/");

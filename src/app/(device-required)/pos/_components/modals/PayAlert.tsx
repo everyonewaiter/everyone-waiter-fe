@@ -103,7 +103,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             stores: stores!,
             payment: { ...res, INSTALLMENT: form.watch("monthlyPlan") },
             successHandler:
-              props.orders.length > 0
+              props.orders?.length > 0
                 ? () => close()
                 : () => {
                     close();
@@ -132,7 +132,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             activity: activityData!,
             stores: stores!,
             successHandler:
-              props.orders.length > 0
+              props.orders?.length > 0
                 ? () => close()
                 : () => {
                     close();
@@ -172,7 +172,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제 정보</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {menus && menus.length > 0 && (
+              {menus && (
                 <strong className="mt-2 text-2xl font-semibold">
                   {menus.length === 1
                     ? menus[0]

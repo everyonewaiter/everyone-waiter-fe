@@ -147,7 +147,7 @@ export default function StoresTable({ data }: IProps) {
                     )}
                     {key === "신청자" && (
                       <MobileTableCell>
-                        {item.email.length > 10
+                        {item.email?.length > 10
                           ? `${item.email.slice(0, 10)}...`
                           : item.email}
                       </MobileTableCell>

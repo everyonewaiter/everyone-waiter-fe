@@ -47,7 +47,7 @@ export default function makeKSCATApprovalREQ({
   };
 
   const body = Object.values(data).join("");
-  const header = `AP${body.length.toString().padStart(4, "0")}`;
+  const header = `AP${body.toString().padStart(4, "0")}`;
 
   return `${header}${body}`;
 }

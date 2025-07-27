@@ -7,7 +7,7 @@ export function useActiveCategory(storeId: string) {
   const [active, setActive] = useState(data?.categories?.[0]?.categoryId ?? "");
 
   useEffect(() => {
-    if (data?.categories && data?.categories.length > 0 && !active) {
+    if (data?.categories && data?.categories?.length > 0 && !active) {
       setActive(data?.categories[0].categoryId ?? "");
     }
   }, [active, data?.categories]);

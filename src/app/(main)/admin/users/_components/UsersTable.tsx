@@ -70,7 +70,7 @@ export default function UsersTable({ data }: IProps) {
               <MobileTableRow>
                 <MobileTableHead>이메일</MobileTableHead>
                 <MobileTableCell>
-                  {item.email.length > 10
+                  {item.email?.length > 10
                     ? `${item.email.slice(0, 10)}...`
                     : item.email}
                 </MobileTableCell>

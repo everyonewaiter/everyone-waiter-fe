@@ -77,7 +77,7 @@ export default function PaymentHistory() {
                 ))}
               </TableRow>
             </TableHeader>
-            {!isLoading && data?.orderPayments.length && (
+            {!isLoading && data?.orderPayments?.length && (
               <TableBody>
                 {data?.orderPayments?.map((item, idx) => (
                   <TableRow
@@ -141,7 +141,7 @@ export default function PaymentHistory() {
                 ))}
               </TableBody>
             )}
-            {!isLoading && data?.orderPayments.length === 0 && (
+            {!isLoading && data?.orderPayments?.length === 0 && (
               <TableBody>해당 날짜에 결제 내역이 없습니다.</TableBody>
             )}
             {isLoading && <TableBody>결제 내역을 가져오는 중입니다.</TableBody>}

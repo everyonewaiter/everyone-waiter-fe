@@ -33,7 +33,7 @@ export default function Sidebar() {
   });
 
   const isOwnerWithoutStore =
-    permission === "OWNER" && storeList?.stores.length === 0;
+    permission === "OWNER" && storeList?.stores?.length === 0;
 
   return (
     <aside

@@ -17,7 +17,7 @@ export default function UsersTableRow({ openModal, ...item }: IProps) {
       <TableCell className="flex-[1.3]">
         <span className="hidden lg:block">{item.email}</span>
         <span className="hidden md:block lg:hidden">
-          {item.email.length > 15
+          {item.email?.length > 15
             ? `${item.email.slice(0, 15)}...`
             : item.email}
         </span>

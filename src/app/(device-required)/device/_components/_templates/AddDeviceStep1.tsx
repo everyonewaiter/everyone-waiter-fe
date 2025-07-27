@@ -92,13 +92,19 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
       { phoneNumber, code },
       {
         onSuccess: (data) => {
-          if (!data || data.stores.length === 0) {
+          if (
+            !data ||
+            !Array.isArray(data.stores) ||
+            data.stores.length === 0
+          ) {
             handleOpenAlert();
             form.reset();
             dispatch({ type: "stop-auth" });
           } else {
             setStores(data.stores);
-            if (data.stores.length === 1) setActive(data.stores[0].name);
+            if (Array.isArray(data.stores) && data.stores.length === 1) {
+              setActive(data.stores[0].name);
+            }
             dispatch({ type: "success" });
           }
         },
@@ -139,19 +145,19 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
               />
             )}
           </div>
-          {!!stores?.length && (
+          {Array.isArray(stores) && stores.length > 0 && (
             <div className="mt-4">
-              {stores?.length === 1 && (
+              {stores.length === 1 && (
                 <div className="flex flex-col gap-2">
                   <Label disabled>매장 선택</Label>
                   <Input value={stores[0].name} disabled />
                 </div>
               )}
-              {stores?.length! > 1 && (
+              {stores.length > 1 && (
                 <div className="flex w-full flex-col gap-2">
                   <Label disabled>매장 선택</Label>
                   <Dropdown
-                    data={stores?.map((el) => el.name)!}
+                    data={stores.map((el) => el.name)}
                     defaultText="매장을 선택해주세요."
                     active={active}
                     setActive={setActive}

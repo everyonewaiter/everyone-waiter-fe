@@ -18,11 +18,11 @@ export default function SidebarMenu({ selectedStoreId, permission }: IProps) {
 
   return (
     <div className="relative mt-2">
-      {menu.length > 1 && (
+      {menu?.length > 1 && (
         <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
       )}
       <ul>
-        {menu.map((item) => {
+        {menu?.map((item) => {
           const isActive = () => {
             if (item.href === "/") return comparePath === "/";
             return (

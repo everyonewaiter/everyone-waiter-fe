@@ -45,7 +45,7 @@ export default function AuthInput({
                   {...field}
                   onChange={(e) => {
                     const { value } = e.target;
-                    if (value.length <= 6) {
+                    if (typeof value === "string" && value.length <= 6) {
                       form.setValue("authNumber", value);
                     }
                   }}

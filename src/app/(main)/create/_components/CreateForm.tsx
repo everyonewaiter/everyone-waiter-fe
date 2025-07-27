@@ -153,7 +153,7 @@ export default function CreateForm() {
             <UploadPhoto
               ref={fileRef}
               handleFile={handleFile}
-              image={imageUrl!}
+              image={imageUrl ?? ""}
               className="h-[140px] max-w-full md:h-40 md:w-[348px] lg:w-100"
             />
             <ResponsiveButton

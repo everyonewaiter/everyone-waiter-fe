@@ -39,13 +39,13 @@ export default function MobileSidebarSection({ onClose }: IProps) {
 
   // storeList가 있을 때 첫 번째 매장 ID를 기본값으로 설정
   useEffect(() => {
-    if (storeList?.stores.length) {
+    if (storeList?.stores?.length) {
       setSelectedStoreId(storeList.stores[0].storeId);
     }
   }, [storeList]);
 
   const isOwnerWithoutStore =
-    permission === "OWNER" && storeList?.stores.length === 0;
+    permission === "OWNER" && storeList?.stores?.length === 0;
 
   const handleClick = (href: string) => {
     if (permission === "OWNER") {
@@ -84,7 +84,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
           </div>
         )}
         <ul className="relative">
-          {MENU_ITEMS[permission].length > 1 && (
+          {MENU_ITEMS[permission]?.length > 1 && (
             <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
           )}
           {MENU_ITEMS[permission].map((item) => {

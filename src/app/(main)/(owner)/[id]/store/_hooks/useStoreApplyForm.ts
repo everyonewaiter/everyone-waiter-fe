@@ -17,7 +17,7 @@ export default function useStoreApplyForm(
     if (data?.registrationId) {
       form.reset({ ...data });
     }
-    // disable-eslint
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.registrationId]);
 
   const reapply = storesQueries.useReapply();
