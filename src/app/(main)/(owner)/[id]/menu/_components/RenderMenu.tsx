@@ -7,6 +7,7 @@ import { useMediaQuery } from "react-responsive";
 import DashedBorder from "@/components/DashedBorder";
 import { useStoreContext } from "@/providers/storeProvider";
 import Spinner from "@/components/common/Spinner";
+import { Skeleton } from "@/components/common/Skeleton/Skeleton";
 import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
 
@@ -39,7 +40,7 @@ export default function RenderMenu({
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const { storeId } = useStoreContext();
-  const { data } = menuQueries.useMenuList(storeId, categoryId);
+  const { data, isLoading } = menuQueries.useMenuList(storeId, categoryId);
 
   const handleNavigate = (menuId: string) =>
     `/${storeId}/menu/${menuId}/category/${categoryId}?hideModal=${isMobile}`;
@@ -69,7 +70,7 @@ export default function RenderMenu({
               <span className="text-base">메뉴 추가</span>
             </DashedBorder>
           </button>
-          {changeSort ? (
+          {data && changeSort && (
             <Sortable
               items={data?.menus?.map((item) => item.menuId)!}
               onDragEnd={handleDragEnd}
@@ -82,7 +83,9 @@ export default function RenderMenu({
                 />
               ))}
             </Sortable>
-          ) : (
+          )}
+          {data &&
+            !changeSort &&
             data?.menus?.map((item) => (
               <MenuCard
                 key={item.menuId}
@@ -91,8 +94,14 @@ export default function RenderMenu({
                 onClick={() => navigate.push(handleNavigate(item.menuId))}
                 {...item}
               />
-            ))
-          )}
+            ))}
+          {isLoading &&
+            [0, 1, 2, 3].map((el) => (
+              <Skeleton
+                key={el + 1}
+                className="aspect-[329/440] rounded-[12px] lg:rounded-[24px]"
+              />
+            ))}
         </div>
       </div>
     </div>
