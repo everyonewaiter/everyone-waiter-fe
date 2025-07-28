@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
@@ -9,31 +9,23 @@ import { storesQueries } from "./(main)/(owner)/[id]/store/_queries/useStores";
 
 export default function Page() {
   const { setIsLoggedIn } = useAuthStore();
-  const [token, setToken] = useState<string | null>(null);
+  const accessToken = getClientCookie("accessToken");
 
   useEffect(() => {
-    const t = getClientCookie("accessToken");
-
-    if (t) {
-      setToken(t);
-      setIsLoggedIn(t);
-    } else {
-      redirect("/login");
-    }
-
+    if (accessToken) setIsLoggedIn(accessToken);
     // eslint-disable-next-line
-  }, []);
+  }, [accessToken]);
 
-  const { data, isLoading } = storesQueries.useStoresList(!!token);
+  const { data, isLoading } = storesQueries.useStoresList(!!accessToken);
 
   const firstStoreId = data?.stores?.[0]?.storeId;
 
   useEffect(() => {
-    if (!isLoading && token) {
+    if (!isLoading && accessToken) {
       if (!firstStoreId) redirect("/user");
       else redirect(`/${firstStoreId}`);
     }
-  }, [isLoading, token, firstStoreId]);
+  }, [isLoading, accessToken, firstStoreId]);
 
   if (!isLoading) return null;
 

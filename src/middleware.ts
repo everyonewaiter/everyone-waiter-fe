@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("accessToken")?.value;
   const isLoginPage = pathname.startsWith("/login");
 
-  if (!accessToken) {
+  if (!accessToken && !isLoginPage) {
     const loginUrl = new URL("/login", req.url);
     return NextResponse.redirect(loginUrl);
   }
@@ -18,3 +18,7 @@ export function middleware(req: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/((?!_next|favicon.ico|logo|images|fonts|api|manifest).*)"],
+};
