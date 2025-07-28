@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { getClientPermission } from "@/lib/cookies/client";
+import { getClientPermission, setClientCookie } from "@/lib/cookies/client";
 import SidebarMenu from "./SidebarMenu";
 
 const StoreSelect = dynamic(() => import("./StoreSelect"), {
@@ -61,7 +61,10 @@ export default function Sidebar() {
             <StoreSelect
               storeList={storeList?.stores}
               selectedStoreId={selectedStoreId}
-              setSelectedStoreId={setSelectedStoreId}
+              setSelectedStoreId={(value) => {
+                setClientCookie("store", value);
+                setSelectedStoreId(value);
+              }}
             />
           ) : (
             <div className="bg-primary flex w-full items-center justify-between rounded-xl py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5">

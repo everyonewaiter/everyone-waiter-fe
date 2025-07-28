@@ -25,6 +25,9 @@ export async function generateMetadata({
   return {
     title: `${menuData?.name}` || "Menu",
     description: "매장 정보를 확인하고 수정할 수 있는 페이지입니다.",
+    icons: {
+      icon: "/logo/logo.svg",
+    },
   };
 }
 

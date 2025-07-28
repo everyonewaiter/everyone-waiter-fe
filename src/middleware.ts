@@ -4,6 +4,8 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const accessToken = req.cookies.get("accessToken")?.value;
+  const permission = req.cookies.get("permission")?.value;
+  const storeId = req.cookies.get("store")?.value;
   const isLoginPage = pathname.startsWith("/login");
 
   if (!accessToken && !isLoginPage) {
@@ -12,7 +14,16 @@ export function middleware(req: NextRequest) {
   }
 
   if (accessToken && isLoginPage) {
-    const redirectUrl = new URL("/", req.url);
+    let redirectUrl: URL;
+
+    if (permission === "ADMIN") {
+      redirectUrl = new URL("/admin/users", req.url);
+    } else if (storeId) {
+      redirectUrl = new URL(`/${storeId}`, req.url);
+    } else {
+      redirectUrl = new URL("https://everyonewaiter.com", req.url);
+    }
+
     return NextResponse.redirect(redirectUrl);
   }
 
