@@ -10,7 +10,7 @@ import Icon from "./common/Icon";
 const popupList = [
   {
     text: "매장 등록 신청 현황",
-    url: "/",
+    url: "/stores",
   },
   // {
   //   text: "구독",

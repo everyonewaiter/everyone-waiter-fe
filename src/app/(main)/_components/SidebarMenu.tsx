@@ -40,8 +40,11 @@ export default function SidebarMenu({ selectedStoreId, permission }: IProps) {
                     permission === "OWNER"
                       ? `/${selectedStoreId}${item.href}`
                       : item.href;
-
-                  navigate.push(targetPath);
+                  if (permission === "OWNER" && item.href === "/") {
+                    navigate.push(`/${selectedStoreId}`);
+                  } else {
+                    navigate.push(targetPath);
+                  }
                 }}
                 onMouseEnter={() => {
                   if (permission === "OWNER") {

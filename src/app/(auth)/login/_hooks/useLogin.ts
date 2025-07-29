@@ -44,7 +44,7 @@ export default function useLogin() {
       ) {
         router.push(`/${storeList.stores[0].storeId}`);
       } else {
-        router.push("/");
+        router.push("/user");
       }
     },
     onError: (error: AxiosError<ErrorResponse>) => {

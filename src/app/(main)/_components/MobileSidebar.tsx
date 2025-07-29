@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
+import { useStoreContext } from "@/providers/storeProvider";
 import MobileSidebarSection from "./MobileSidebarSection";
 
 interface IProps {
@@ -14,6 +15,8 @@ interface IProps {
 export default function MobileSidebar({ onClose }: IProps) {
   const navigate = useRouter();
   const ref = useRef<HTMLDivElement>(null);
+
+  const { storeId } = useStoreContext();
 
   useModalCloseTriggers({ ref, onClose });
 
@@ -28,7 +31,7 @@ export default function MobileSidebar({ onClose }: IProps) {
             type="button"
             className="flex items-center gap-3"
             onClick={() => {
-              navigate.push("/");
+              navigate.push(`/${storeId}`);
               onClose();
             }}
           >
