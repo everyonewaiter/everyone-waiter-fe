@@ -1,19 +1,16 @@
 import { PropsWithChildren, Suspense } from "react";
-import MobileHeader from "@/app/(main)/_components/MobileHeader";
 import Loading from "@/components/Loading";
-import Sidebar from "./_components/Sidebar";
+import { HydrationBoundary } from "@tanstack/react-query";
+import Sidebar from "./_components/Sidebar/Sidebar";
 import AuthGuard from "./_components/AuthGuard";
 import PageTitle from "./_components/PageTitle";
+import MobileHeader from "./_components/MobileLayout/MobileHeader";
 
 function ContentWrapper({ children }: PropsWithChildren) {
   return (
-    <div className="flex h-full flex-col">
-      <PageTitle />
-
-      <div className="scrollbar-hide flex-1 overflow-y-auto">
-        <AuthGuard>{children}</AuthGuard>
-      </div>
-    </div>
+    <HydrationBoundary>
+      <AuthGuard>{children}</AuthGuard>
+    </HydrationBoundary>
   );
 }
 
@@ -26,7 +23,10 @@ export default function Layout({ children }: PropsWithChildren) {
 
         <main className="relative flex-1 overflow-hidden rounded-[20px] px-5 md:h-full md:overflow-visible md:bg-white md:px-6 md:py-5 lg:overflow-hidden lg:p-8">
           <Suspense fallback={<Loading />}>
-            <ContentWrapper>{children}</ContentWrapper>
+            <div className="flex h-full flex-col">
+              <PageTitle />
+              <ContentWrapper>{children}</ContentWrapper>
+            </div>
           </Suspense>
         </main>
       </div>

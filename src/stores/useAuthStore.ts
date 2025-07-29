@@ -7,7 +7,7 @@ interface AuthProps {
   saveUser: (userInfo: UserProfile) => void; // 유저 정보 저장
   isLoggedIn: boolean; // 로그인 여부
   logout: () => void; // 로그아웃
-  setIsLoggedIn: (token: string) => void;
+  setIsLoggedIn: (value: boolean) => void;
 }
 const useAuthStore = create(
   persist<AuthProps>(
@@ -20,8 +20,8 @@ const useAuthStore = create(
         deleteClientCookie("refreshToken");
         set({ user: null, isLoggedIn: false });
       },
-      setIsLoggedIn: (token) =>
-        set((state) => ({ ...state, isLoggedIn: !!token })),
+      setIsLoggedIn: (value) =>
+        set((state) => ({ ...state, isLoggedIn: value })),
     }),
     {
       name: "authStore",

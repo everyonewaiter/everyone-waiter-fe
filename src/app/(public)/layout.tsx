@@ -1,19 +1,19 @@
-import { Suspense } from "react";
-import ClientModalWrapper from "../(main)/_components/ClientModalWrapper";
+"use client";
 
-export default async function Layout({
+import { PropsWithChildren, ReactNode, Suspense } from "react";
+import Loading from "@/components/Loading";
+import Guard from "./_component/Guard";
+
+export default function Layout({
   children,
   modal,
-}: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}) {
+}: PropsWithChildren<{ modal: ReactNode }>) {
   return (
-    <>
-      {children}
-      <Suspense fallback={<div>로드 중...</div>}>
-        <ClientModalWrapper>{modal}</ClientModalWrapper>
-      </Suspense>
-    </>
+    <Suspense fallback={<Loading />}>
+      <Guard>
+        {children}
+        {modal}
+      </Guard>
+    </Suspense>
   );
 }

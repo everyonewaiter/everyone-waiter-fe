@@ -15,7 +15,7 @@ import {
 import MENU_ITEMS from "@/constants/sidebarMenus";
 import useAuthStore from "@/stores/useAuthStore";
 import { getComparePath } from "@/utils/getPathname";
-import Icon from "../../../components/common/Icon";
+import Icon from "@/components/common/Icon";
 
 interface IProps {
   onClose: () => void;
