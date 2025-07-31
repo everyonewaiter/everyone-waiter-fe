@@ -1,4 +1,4 @@
-import { arrayMove } from "@dnd-kit/sortable";
+import { arrayMove } from "@/components/dnd/index";
 import { ArrowDownUp, Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";

@@ -1,5 +1,4 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable, CSS } from "@/components/dnd/index";
 import MenuCard from "./MenuCard";
 
 interface IProps {

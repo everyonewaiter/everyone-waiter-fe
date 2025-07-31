@@ -1,4 +1,4 @@
-import { arrayMove } from "@dnd-kit/sortable";
+import { arrayMove } from "@/components/dnd/index";
 import { useState } from "react";
 import { categoryQueries } from "../../../menu/_queries/useCategories";
 

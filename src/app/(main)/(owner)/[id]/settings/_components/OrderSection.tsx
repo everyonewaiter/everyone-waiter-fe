@@ -2,7 +2,7 @@ import { useFormContext } from "react-hook-form";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import Spinner from "@/components/common/Spinner";
-import { arrayMove } from "@dnd-kit/sortable";
+import { arrayMove } from "@/components/dnd/index";
 import Switch from "@/components/common/Switch";
 import { TypeSettingsForm } from "../_schema/settings.schema";
 import useSettings from "../_queries/useSettings";
