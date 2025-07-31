@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, LucideProps } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/common/Icon/index";
+import { LucideProps } from "lucide-react";
 import React from "react";
 import { DayPicker } from "react-day-picker";
 import cn from "@/lib/utils";

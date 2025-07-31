@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/common/Icon/index";
 import { usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";

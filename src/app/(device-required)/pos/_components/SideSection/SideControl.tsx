@@ -1,6 +1,6 @@
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon } from "@/components/common/Icon/index";
 import Button from "@/components/common/Button/Button";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 

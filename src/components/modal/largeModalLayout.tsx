@@ -1,4 +1,4 @@
-import { X as CloseIcon } from "lucide-react";
+import { CloseIcon } from "@/components/common/Icon/index";
 import {
   ButtonHTMLAttributes,
   PropsWithChildren,

@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowDownUp, Plus } from "lucide-react";
+import { ArrowDownUp, Plus } from "@/components/common/Icon/index";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import Spinner from "@/components/common/Spinner";
 import CategoryForm from "../../../../menu/_components/CategoryForm";

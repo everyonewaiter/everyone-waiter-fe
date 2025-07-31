@@ -1,4 +1,4 @@
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import { PropsWithChildren } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useMediaQuery } from "react-responsive";

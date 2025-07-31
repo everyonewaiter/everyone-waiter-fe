@@ -9,7 +9,7 @@ import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import MENU_ITEMS from "@/constants/sidebarMenus";
 import useAuthStore from "@/stores/useAuthStore";
 import { getComparePath } from "@/utils/getPathname";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import cn from "@/lib/utils";
 
 const MainSelect = dynamic(() => import("../MainSelect"), {

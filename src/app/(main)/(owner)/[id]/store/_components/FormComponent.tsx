@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { FormProvider } from "react-hook-form";
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/common/Icon/index";
 import { useStoreContext } from "@/providers/storeProvider";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";

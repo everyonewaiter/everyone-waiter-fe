@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import Paginations from "@/components/common/Pagination/Paginations";
 import {
   MobileTable,

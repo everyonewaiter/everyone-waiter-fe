@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import QueryProviders from "@/app/query-providers";
 import InfoPopup from "@/components/InfoPopup";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import useOverlay from "@/hooks/useOverlay";
 import { StoreProvider } from "@/providers/storeProvider";
 import { usePathname } from "next/navigation";

@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/common/Form";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import Input from "@/components/common/Input";
 import cn from "@/lib/utils";
 import { useStoreContext } from "@/providers/storeProvider";

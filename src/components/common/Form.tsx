@@ -14,7 +14,7 @@ import {
 } from "react-hook-form";
 import Label from "@/components/common/Label";
 import cn from "@/lib/utils";
-import { Info } from "lucide-react";
+import { Info } from "@/components/common/Icon/index";
 
 /* eslint-disable  */
 

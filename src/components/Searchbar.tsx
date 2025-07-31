@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search } from "@/components/common/Icon/index";
 import { InputHTMLAttributes } from "react";
 
 interface IProps

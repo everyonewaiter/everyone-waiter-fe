@@ -1,6 +1,6 @@
 "use client";
 
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
 import useElapsedMinutes from "../_hooks/useElapsedMinutes";
 import ActionButton from "./ActionButton";

@@ -1,6 +1,6 @@
 "use client";
 
-import { X as CloseIcon } from "lucide-react";
+import { CloseIcon } from "@/components/common/Icon/index";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";

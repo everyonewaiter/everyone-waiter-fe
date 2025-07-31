@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import useGetDate from "@/hooks/useGetDate";
 import OpenStore from "./OpenStore";
 

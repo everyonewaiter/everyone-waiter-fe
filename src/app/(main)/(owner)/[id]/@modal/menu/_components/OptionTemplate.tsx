@@ -1,10 +1,10 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/common/Icon/index";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import cn from "@/lib/utils";
 import OptionBox from "./OptionBox";
 import OptionComponent from "./OptionComponent";

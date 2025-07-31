@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import Popup from "./Popup";
 
 interface IProps {

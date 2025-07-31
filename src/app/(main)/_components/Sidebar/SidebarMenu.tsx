@@ -1,4 +1,4 @@
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import MENU_ITEMS from "@/constants/sidebarMenus";
 import { getComparePath } from "@/utils/getPathname";
 import { usePathname, useRouter } from "next/navigation";

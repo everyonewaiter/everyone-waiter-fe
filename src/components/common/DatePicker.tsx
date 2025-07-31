@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays as CalendarIcon } from "lucide-react";
+import { CalendarDays as CalendarIcon } from "@/components/common/Icon/index";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";

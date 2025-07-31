@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { PropsWithChildren, Suspense, useLayoutEffect, useState } from "react";
 import cn from "@/lib/utils";
-import Icon from "./Icon";
+import Icon from "./Icon/Icon";
 import Spinner from "./Spinner";
 
 const DropdownMenuItem = dynamic(

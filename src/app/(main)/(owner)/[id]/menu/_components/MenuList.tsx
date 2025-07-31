@@ -1,6 +1,6 @@
 "use client";
 
-import { SettingsIcon } from "lucide-react";
+import { SettingsIcon } from "@/components/common/Icon/index";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";

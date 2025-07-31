@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import { useStoreContext } from "@/providers/storeProvider";
 import useAuthStore from "@/stores/useAuthStore";
-import Icon from "./common/Icon";
+import Icon from "./common/Icon/Icon";
 
 const popupList = [
   {

@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusIcon } from "lucide-react";
+import { PlusIcon } from "@/components/common/Icon/index";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
