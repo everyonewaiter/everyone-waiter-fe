@@ -1,9 +1,9 @@
 "use client";
 
-import { addDays, format } from "date-fns";
+import dayjs from "dayjs";
 import { CalendarDays as CalendarIcon } from "lucide-react";
 import dynamic from "next/dynamic";
-import * as React from "react";
+import React from "react";
 import { DateRange } from "react-day-picker";
 import Button from "@/components/common/Button/Button";
 import {
@@ -22,7 +22,7 @@ export default function DatePickerWithRange({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(),
-    to: addDays(new Date(), 20),
+    to: dayjs().add(20, "day").toDate(),
   });
 
   return (
@@ -40,12 +40,9 @@ export default function DatePickerWithRange({
             {/* eslint-disable-next-line  */}
             {date?.from ? (
               date.to ? (
-                <>
-                  {format(date.from, "yyyy.MM.dd")} -{" "}
-                  {format(date.to, "yyyy.MM.dd")}
-                </>
+                `${dayjs(date.from).format("YYYY.MM.DD")} - ${dayjs(date.to).format("YYYY.MM.DD")}`
               ) : (
-                format(date.from, "LLL dd, y")
+                `${dayjs(date.from).format("YYYY.MM.DD")}`
               )
             ) : (
               <span>YYYY.MM.DD ~ YYYY.MM.DD</span>

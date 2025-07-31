@@ -38,7 +38,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
-    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "immer": "^10.1.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.487.0",
