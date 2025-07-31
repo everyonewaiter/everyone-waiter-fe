@@ -1,15 +1,24 @@
 "use client";
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+import dynamic from "next/dynamic";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { PropsWithChildren, useLayoutEffect, useState } from "react";
+import { PropsWithChildren, Suspense, useLayoutEffect, useState } from "react";
 import cn from "@/lib/utils";
 import Icon from "./Icon";
+import Spinner from "./Spinner";
+
+const DropdownMenuItem = dynamic(
+  () =>
+    import("@radix-ui/react-dropdown-menu").then((mod) => mod.DropdownMenuItem),
+  {
+    ssr: false,
+  }
+);
 
 interface IProps {
   data: any[];
@@ -105,33 +114,33 @@ export default function Dropdown({
             "z-100 mt-1 w-full rounded-[16px] bg-white px-2 py-3 text-left shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
             className
           )}
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
-          <div className="w-full">
-            {data?.map((item) => (
-              <DropdownMenuItem
-                key={item}
-                className={cn(
-                  "font-regular text-gray-0 block cursor-pointer rounded-[12px] py-2 pl-3 text-sm hover:bg-gray-700 hover:outline-none lg:text-base",
-                  active === item ? "bg-gray-700" : "",
-                  triggerClassName
-                )}
-                style={{
-                  minWidth: menuWidth
-                    ? `max(${menuWidth + 40}px, var(--radix-dropdown-menu-trigger-width))`
-                    : "var(--radix-dropdown-menu-trigger-width)",
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActive(item);
-                }}
-              >
-                {item}
-              </DropdownMenuItem>
-            ))}
-          </div>
+          <Suspense fallback={<Spinner />}>
+            <div className="w-full">
+              {data?.map((item) => (
+                <DropdownMenuItem
+                  key={item}
+                  className={cn(
+                    "font-regular text-gray-0 block cursor-pointer rounded-[12px] py-2 pl-3 text-sm hover:bg-gray-700 hover:outline-none lg:text-base",
+                    active === item ? "bg-gray-700" : "",
+                    triggerClassName
+                  )}
+                  style={{
+                    minWidth: menuWidth
+                      ? `max(${menuWidth + 40}px, var(--radix-dropdown-menu-trigger-width))`
+                      : "var(--radix-dropdown-menu-trigger-width)",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActive(item);
+                  }}
+                >
+                  {item}
+                </DropdownMenuItem>
+              ))}
+            </div>
+          </Suspense>
         </DropdownMenuContent>
       </div>
     </DropdownMenu>
