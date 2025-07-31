@@ -150,8 +150,6 @@ export default function usePayment() {
           successHandler: () => successHandler(res),
         });
       },
-      // eslint-disable-next-line no-console
-      error: (e: any) => console.log(e),
     });
   };
 
@@ -190,8 +188,6 @@ export default function usePayment() {
         });
         successHandler?.();
       },
-      // eslint-disable-next-line no-console
-      error: (e: any) => console.log(e),
     });
   };
 
