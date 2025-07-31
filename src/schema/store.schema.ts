@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { commonSchema } from ".";
+import { phoneSchema } from ".";
 
 export const storeSchema = z.object({
   name: z.string().min(1, "잘못된 형식입니다.").max(20, "잘못된 형식입니다."),
@@ -8,7 +8,7 @@ export const storeSchema = z.object({
     .min(1, "잘못된 형식입니다.")
     .regex(/^[a-zA-Z가-힣]+$/, "한글 또는 영문만 가능합니다."),
   address: z.string().min(1, "잘못된 형식입니다."),
-  landline: commonSchema.shape.phone,
+  landline: phoneSchema,
   license: z.string().min(1, "잘못된 형식입니다."),
   reason: z.string().min(1, "잘못된 형식입니다."),
   image: z.union([
