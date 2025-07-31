@@ -4,14 +4,14 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { getClientPermission, setClientCookie } from "@/lib/cookies/client";
+import Spinner from "@/components/common/Spinner";
 import SidebarMenu from "./SidebarMenu";
 
 const StoreSelect = dynamic(() => import("./StoreSelect"), {
   ssr: false,
-  loading: () => null,
 });
 
 export default function Sidebar() {
@@ -31,6 +31,12 @@ export default function Sidebar() {
     queryFn: getStoreList,
     enabled: permission === "OWNER",
   });
+
+  useEffect(() => {
+    if (storeList?.stores?.length && !selectedStoreId) {
+      setSelectedStoreId(storeList.stores[0].storeId);
+    }
+  }, [storeList, selectedStoreId]);
 
   const isOwnerWithoutStore =
     permission === "OWNER" && storeList?.stores?.length === 0;
@@ -57,16 +63,20 @@ export default function Sidebar() {
           </h1>
         </button>
         <nav>
-          {permission === "OWNER" ? (
-            <StoreSelect
-              storeList={storeList?.stores}
-              selectedStoreId={selectedStoreId}
-              setSelectedStoreId={(value) => {
-                setClientCookie("store", value);
-                setSelectedStoreId(value);
-              }}
-            />
-          ) : (
+          {permission === "OWNER" && !storeList && <Spinner />}
+          {permission === "OWNER" && storeList && (
+            <Suspense fallback={<Spinner />}>
+              <StoreSelect
+                storeList={storeList?.stores}
+                selectedStoreId={selectedStoreId}
+                setSelectedStoreId={(value) => {
+                  setClientCookie("store", value);
+                  setSelectedStoreId(value);
+                }}
+              />
+            </Suspense>
+          )}
+          {permission === "ADMIN" && (
             <div className="bg-primary flex w-full items-center justify-between rounded-xl py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5">
               <h1 className="text-[15px] font-bold text-white lg:text-[18px]">
                 관리자

@@ -1,7 +1,11 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import React, { createContext, useContext, useMemo } from "react";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+} from "react";
 
 interface StoreContextType {
   storeId: string;
@@ -17,10 +21,10 @@ export function useStoreContext() {
   return context;
 }
 
-export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const storeId = pathname.split("/")[1];
-
+export function StoreProvider({
+  children,
+  storeId,
+}: PropsWithChildren<{ storeId: string }>) {
   const value = useMemo(() => ({ storeId }), [storeId]);
 
   return (

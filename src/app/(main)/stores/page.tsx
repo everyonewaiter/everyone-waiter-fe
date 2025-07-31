@@ -2,7 +2,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import QueryProviders from "@/app/query-providers";
@@ -67,6 +67,9 @@ const itemWidths = {
 
 export default function StoreList() {
   const navigate = useRouter();
+  const pathname = usePathname();
+
+  const storeId = pathname.split("/")[0];
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -78,7 +81,7 @@ export default function StoreList() {
     if (["REJECT", "APPROVE"].includes(item.status)) {
       open(() => (
         <QueryProviders>
-          <StoreProvider>
+          <StoreProvider storeId={storeId}>
             <StoreApplicationModal
               close={close}
               isAccepted={item.status === "APPROVE"}

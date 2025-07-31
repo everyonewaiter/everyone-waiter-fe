@@ -10,7 +10,13 @@ import { usePathname } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
 import PAGE_TITLES from "@/constants/pageTitles";
 
-export default function PageTitle({ title }: { title?: string }) {
+export default function PageTitle({
+  title,
+  storeId,
+}: {
+  title?: string;
+  storeId: string;
+}) {
   const pathname = usePathname();
   const { user } = useAuthStore();
 
@@ -21,7 +27,7 @@ export default function PageTitle({ title }: { title?: string }) {
   const handleOpenPopup = () => {
     open(() => (
       <QueryProviders>
-        <StoreProvider>
+        <StoreProvider storeId={storeId}>
           <InfoPopup close={close} />
         </StoreProvider>
       </QueryProviders>
