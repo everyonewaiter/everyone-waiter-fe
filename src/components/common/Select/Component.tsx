@@ -5,7 +5,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 import cn from "@/lib/utils";
 
-function Select({
+function SelectWrapper({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -169,7 +169,7 @@ function SelectSeparator({
 }
 
 export {
-  Select,
+  SelectWrapper,
   SelectContent,
   SelectGroup,
   SelectItem,

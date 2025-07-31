@@ -10,7 +10,7 @@ import { getClientPermission, setClientCookie } from "@/lib/cookies/client";
 import Spinner from "@/components/common/Spinner";
 import SidebarMenu from "./SidebarMenu";
 
-const StoreSelect = dynamic(() => import("./StoreSelect"), {
+const MainSelect = dynamic(() => import("../MainSelect"), {
   ssr: false,
 });
 
@@ -66,13 +66,14 @@ export default function Sidebar() {
           {permission === "OWNER" && !storeList && <Spinner />}
           {permission === "OWNER" && storeList && (
             <Suspense fallback={<Spinner />}>
-              <StoreSelect
-                storeList={storeList?.stores}
-                selectedStoreId={selectedStoreId}
-                setSelectedStoreId={(value) => {
+              <MainSelect
+                stores={storeList?.stores}
+                value={selectedStoreId}
+                onValueChange={(value) => {
                   setClientCookie("store", value);
                   setSelectedStoreId(value);
                 }}
+                triggerClassname="text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
               />
             </Suspense>
           )}
