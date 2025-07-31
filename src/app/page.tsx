@@ -16,9 +16,7 @@ export default function Page() {
   const firstStoreId = data?.stores?.[0]?.storeId;
 
   useEffect(() => {
-    if (accessToken) {
-      setIsLoggedIn(!!accessToken);
-    }
+    setIsLoggedIn(!!accessToken);
   }, [accessToken, setIsLoggedIn]);
 
   useEffect(() => {
@@ -33,7 +31,5 @@ export default function Page() {
     }
   }, [isLoading, accessToken, firstStoreId, navigate]);
 
-  if (isLoading) return <FirstLoading />;
-
-  return null;
+  return <FirstLoading />;
 }
