@@ -1,16 +1,31 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
+import dynamic from "next/dynamic";
 import cn from "@/lib/utils";
+import Loading from "@/components/Loading";
+import Logo from "@/components/Logo";
 import useDeviceUI from "./_hooks/useDeviceUi";
 import AddDeviceStep1 from "./_components/_templates/AddDeviceStep1";
-import AddDeviceStep2 from "./_components/_templates/AddDeviceStep2";
+
+const AddDeviceStep2 = dynamic(
+  () => import("./_components/_templates/AddDeviceStep2"),
+  {
+    ssr: false,
+    loading: () => <Loading />,
+  }
+);
 
 export default function Device() {
-  const [storeName, setStoreName] = useState("");
-  const { step, setStep, storeId, setStoreId, phoneNumber, setPhoneNumber } =
-    useDeviceUI();
+  const { step, setStep, device, setDevice } = useDeviceUI();
+
+  const handleNextStep = async (params: {
+    storeId: string;
+    phoneNumber: string;
+    name: string;
+  }) => {
+    setDevice({ ...params, storeName: params.name });
+    setStep(1);
+  };
 
   return (
     <div
@@ -20,13 +35,12 @@ export default function Device() {
       )}
     >
       <div>
-        <Image
-          src="/logo/logo.svg"
-          alt="로고"
+        <Logo
           width={90}
           height={90}
           className="hidden md:block md:h-15 md:w-15 lg:h-[90px] lg:w-[90px]"
         />
+
         <h1 className="text-gray-0 text-xl font-bold md:pt-4 md:text-2xl lg:pt-10 lg:text-4xl">
           기기 등록
         </h1>
@@ -36,27 +50,8 @@ export default function Device() {
         </div>
       </div>
       <div className="mt-8 md:mt-6 lg:mt-12">
-        {step === 0 && (
-          <AddDeviceStep1
-            onNextStep={({
-              storeId: _storeId,
-              name,
-              phoneNumber: _phoneNumber,
-            }) => {
-              setStoreId(_storeId);
-              setPhoneNumber(_phoneNumber);
-              setStoreName(name);
-              setStep(step + 1);
-            }}
-          />
-        )}
-        {step === 1 && (
-          <AddDeviceStep2
-            storeId={storeId.toString()}
-            phoneNumber={phoneNumber}
-            storeName={storeName}
-          />
-        )}
+        {step === 0 && <AddDeviceStep1 onNextStep={handleNextStep} />}
+        {step === 1 && <AddDeviceStep2 {...device} />}
       </div>
     </div>
   );
