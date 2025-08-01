@@ -4,6 +4,7 @@ import { PropsWithChildren, Suspense, useEffect } from "react";
 import Loading from "@/components/Loading";
 import { HydrationBoundary } from "@tanstack/react-query";
 import { notFound, usePathname, useRouter } from "next/navigation";
+import { getClientCookie } from "@/lib/cookies/client";
 import Sidebar from "./_components/Sidebar/Sidebar";
 import AuthGuard from "./_components/AuthGuard";
 import PageTitle from "./_components/PageTitle";
@@ -20,11 +21,12 @@ function ContentWrapper({ children }: PropsWithChildren) {
 export default function Layout({ children }: PropsWithChildren) {
   const navigate = useRouter();
   const pathname = usePathname();
+  const permission = getClientCookie("permission");
 
   const storeId = pathname.split("/")[1];
 
   useEffect(() => {
-    if (!/^\d+$/.test(storeId)) {
+    if (permission === "OWNER" && !/^\d+$/.test(storeId)) {
       notFound();
     }
   }, [storeId, navigate]);

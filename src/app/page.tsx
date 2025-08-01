@@ -11,6 +11,7 @@ export default function Page() {
   const navigate = useRouter();
   const { setIsLoggedIn } = useAuthStore();
   const accessToken = getClientCookie("accessToken");
+  const permission = getClientCookie("permission");
 
   const { data, isLoading } = storesQueries.useStoresList(!!accessToken);
   const firstStoreId = data?.stores?.[0]?.storeId;
@@ -21,7 +22,9 @@ export default function Page() {
 
   useEffect(() => {
     if (!isLoading) {
-      if (!accessToken) {
+      if (permission === "ADMIN") {
+        navigate.replace("/admin/users");
+      } else if (!accessToken) {
         navigate.replace("/login");
       } else if (!firstStoreId) {
         navigate.replace("/user");
@@ -29,7 +32,7 @@ export default function Page() {
         navigate.replace(`/${firstStoreId}`);
       }
     }
-  }, [isLoading, accessToken, firstStoreId, navigate]);
+  }, [isLoading, accessToken, firstStoreId, permission]);
 
   return <FirstLoading />;
 }
