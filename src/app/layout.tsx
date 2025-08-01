@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import ClientLayout from "./(main)/_components/ClientRootLayout";
 import "./globals.css";
 import JQueryScripts from "./(main)/_components/Scripts";
@@ -11,13 +12,56 @@ export const metadata: Metadata = {
   },
 };
 
+const hakgyo = localFont({
+  src: [
+    {
+      path: "../../public/fonts/HakgyoansimDunggeunmiso-B.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-hakgyo",
+  display: "swap",
+});
+
+const pretendard = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Pretendard-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-pretendard",
+  display: "swap",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${hakgyo.variable} ${pretendard.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Apple Touch Icon for iOS */}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -41,8 +85,11 @@ export default function RootLayout({
 
         {/* Font */}
         <link
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/dynamic-subset-variable.css"
-          rel="stylesheet"
+          rel="preload"
+          as="font"
+          href="/fonts/HakgyoansimDunggeunmiso-B.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
         />
       </head>
 
