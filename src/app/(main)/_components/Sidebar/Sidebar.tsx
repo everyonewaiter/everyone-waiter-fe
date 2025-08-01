@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +7,7 @@ import { Suspense, useEffect, useState } from "react";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { getClientPermission, setClientCookie } from "@/lib/cookies/client";
 import Spinner from "@/components/common/Spinner";
+import Logo from "@/components/Logo";
 import SidebarMenu from "./SidebarMenu";
 
 const MainSelect = dynamic(() => import("../MainSelect"), {
@@ -51,13 +51,7 @@ export default function Sidebar() {
           className="mb-6 flex items-center gap-[18px] lg:mb-9"
           onClick={() => navigate.push(`/${selectedStoreId}`)}
         >
-          <Image
-            src="/logo/logo.svg"
-            alt="모두의 웨이터 로고"
-            width={40}
-            height={40}
-            priority
-          />
+          <Logo width={40} height={40} />
           <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
             모두의 웨이터
           </h1>

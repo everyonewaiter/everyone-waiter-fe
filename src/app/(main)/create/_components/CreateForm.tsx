@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -16,6 +15,7 @@ import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { TypeStore, storeSchema } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "@/components/common/Spinner";
+import Logo from "@/components/Logo";
 
 const UploadPhoto = dynamic(
   () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),
@@ -77,9 +77,7 @@ export default function CreateForm() {
   return (
     <div className="flex w-full justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
       <div className="hidden flex-col md:flex">
-        <Image
-          src="/logo/logo.svg"
-          alt="로고"
+        <Logo
           width={90}
           height={90}
           className="md:h-[60px] md:w-[60px] lg:h-[90px] lg:w-[90px]"

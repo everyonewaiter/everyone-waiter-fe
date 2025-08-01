@@ -1,5 +1,5 @@
-import Image from "next/image";
 import SideBarButton from "@/app/(main)/_components/Sidebar/SideBarButton";
+import Logo from "@/components/Logo";
 
 export default function MobileHeader() {
   return (
@@ -7,13 +7,7 @@ export default function MobileHeader() {
       <div className="flex h-full items-center justify-center">
         <SideBarButton />
         <div className="flex w-full items-center justify-center gap-3">
-          <Image
-            src="/logo/logo.svg"
-            alt="모두의 웨이터 로고"
-            width={24}
-            height={24}
-            priority
-          />
+          <Logo width={24} height={24} />
           <h1 className="font-hakgyo text-primary text-lg">모두의 웨이터</h1>
         </div>
       </div>

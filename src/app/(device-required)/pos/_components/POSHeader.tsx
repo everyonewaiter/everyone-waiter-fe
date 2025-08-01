@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 import Icon from "@/components/common/Icon/Icon";
 import useGetDate from "@/hooks/useGetDate";
+import Logo from "@/components/Logo";
 import OpenStore from "./OpenStore";
 
 export default function POSHeader({ children }: PropsWithChildren) {
@@ -14,13 +14,7 @@ export default function POSHeader({ children }: PropsWithChildren) {
     <header className="flex flex-col px-[60px] pt-10">
       <div className="flex flex-row items-center justify-between">
         <Link href="/pos" className="flex flex-row items-center gap-5">
-          <Image
-            src="/logo/logo.svg"
-            alt="모두의 웨이터 로고"
-            width={60}
-            height={60}
-            priority
-          />
+          <Logo width={60} height={60} />
           <h1 className="font-hakgyo text-primary text-2xl">모두의 웨이터</h1>
         </Link>
         <span className="text-2xl">{`${fullDate}(${day}) ${fullTime}`}</span>

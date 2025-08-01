@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button/Button";
+import Logo from "@/components/Logo";
 
 export default function Header() {
   const navigate = useRouter();
@@ -10,13 +10,7 @@ export default function Header() {
   return (
     <header className="flex w-full items-center justify-between rounded-[32px] bg-white px-8 py-6">
       <div className="flex items-center gap-5">
-        <Image
-          src="/icons/logo/logo.svg"
-          alt="logo"
-          width={60}
-          height={60}
-          priority
-        />
+        <Logo width={60} height={60} />
         <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
           모두의 웨이터
         </h1>
