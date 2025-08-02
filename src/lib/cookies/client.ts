@@ -1,8 +1,12 @@
-type KeyType = "accessToken" | "refreshToken" | "permission" | "store";
+type KeyType =
+  | "client-accessToken"
+  | "client-refreshToken"
+  | "permission"
+  | "store";
 
 const TOKEN_EXPIRATION: Record<KeyType, number> = {
-  accessToken: 60 * 60 * 3, // 3시간
-  refreshToken: 60 * 60 * 24 * 365, // 1년
+  "client-accessToken": 60 * 60 * 3, // 3시간
+  "client-refreshToken": 60 * 60 * 24 * 365, // 1년
   permission: 60 * 30 * 3, // 30분
   store: 60 * 30 * 3,
 };

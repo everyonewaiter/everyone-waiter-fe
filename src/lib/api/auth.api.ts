@@ -1,5 +1,6 @@
 import API_PATH from "@/lib/api/paths";
 import { authInstance, instance } from "@/lib/axios/instance";
+import { deleteCookie } from "../cookies";
 
 export const createAccount = async (body: Account) => {
   const response = await authInstance.post(API_PATH.account, body);
@@ -67,4 +68,11 @@ export const renewToken = async (body: {
 export const getAccount = async (): Promise<UserProfile> => {
   const response = await instance.get(`${API_PATH.account}/me`);
   return response.data;
+};
+
+export const logout = async (handler: () => void) => {
+  await deleteCookie("accessToken");
+  await deleteCookie("refreshToken");
+  await deleteCookie("role");
+  handler();
 };

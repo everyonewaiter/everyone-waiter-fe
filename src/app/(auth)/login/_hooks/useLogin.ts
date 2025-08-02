@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
 import { useTransition } from "react";
@@ -16,14 +15,15 @@ export default function useLogin() {
   async function loginUser(email: string, password: string) {
     startTransition(async () => {
       try {
-        const { profileData, storeList, accessToken, permission } =
-          await serverLogin(email, password);
+        const { profileData, storeList, permission, token } = await serverLogin(
+          email,
+          password
+        );
 
         saveUser(profileData);
         setClientCookie("permission", permission);
-        setClientCookie("accessToken", accessToken);
-
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        setClientCookie("client-accessToken", token.accessToken);
+        setClientCookie("client-refreshToken", token.refreshToken);
 
         if (profileData.permission === "ADMIN") {
           router.push("/admin/users");

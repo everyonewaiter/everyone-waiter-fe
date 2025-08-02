@@ -7,19 +7,20 @@ import { setCookie } from "@/lib/cookies";
 export async function serverLogin(email: string, password: string) {
   const response = await login({ email, password });
 
+  // 서버 쿠키
   setCookie("accessToken", response.accessToken);
   setCookie("refreshToken", response.refreshToken);
 
-  const profileData = await getAccount(response.accessToken);
+  const profileData = await getAccount();
 
   setCookie("role", profileData.permission);
 
-  const storeList = await getStoreList(response.accessToken);
+  const storeList = await getStoreList();
 
   return {
     profileData,
     storeList,
-    accessToken: response.accessToken,
+    token: { ...response },
     permission: profileData.permission,
   };
 }
