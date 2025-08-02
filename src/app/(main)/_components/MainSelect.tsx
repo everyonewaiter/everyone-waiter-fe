@@ -5,7 +5,6 @@ interface IProps {
   value: string;
   onValueChange: (value: string) => void;
   triggerClassname: string;
-  isMobile?: boolean;
   stores?: {
     storeId: string;
     name: string;
@@ -16,7 +15,6 @@ export default function MainSelect({
   value,
   onValueChange,
   triggerClassname,
-  isMobile,
   stores,
 }: IProps) {
   return (
@@ -29,10 +27,7 @@ export default function MainSelect({
       )}
       triggerPlaceholder="매장 선택"
       triggerValue={
-        isMobile
-          ? stores?.find((store) => store.storeId === value)?.name ||
-            "매장 선택"
-          : null
+        stores?.find((store) => store.storeId === value)?.name || "매장 선택"
       }
       data={stores?.map((el) => ({
         key: el.storeId,
