@@ -63,13 +63,13 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+
         {/* Apple Touch Icon for iOS */}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-        {/* Favicon (fallback) */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-
-        {/* Manifest icons for Android & PWA */}
+        {/* Manifest icons for Android */}
         <link
           rel="icon"
           type="image/png"
@@ -81,15 +81,6 @@ export default function RootLayout({
           type="image/png"
           sizes="512x512"
           href="/icon-512x512.png"
-        />
-
-        {/* Font */}
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/HakgyoansimDunggeunmiso-B.woff2"
-          type="font/woff2"
-          crossOrigin="anonymous"
         />
       </head>
 
