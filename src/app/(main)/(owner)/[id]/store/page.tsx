@@ -2,9 +2,9 @@ import FormComponent from "./_components/FormComponent";
 
 export default function StoreInfo() {
   return (
-    <div className="flex w-80 flex-col md:w-[480px]">
+    <div className="flex w-80 flex-col md:w-[272px] lg:w-[480px]">
       <div className="min-h-full justify-center">
-        <div className="mt-10 flex h-full w-full flex-col items-center md:mt-6 lg:mt-10">
+        <div className="flex h-full w-full flex-col items-center md:mt-6 lg:mt-10">
           <div className="w-full">
             <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
               매장 정보

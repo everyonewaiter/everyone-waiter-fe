@@ -186,7 +186,7 @@ export default function StoreList() {
         </Table>
         {data?.content.map((item, index) => (
           <MobileTable
-            className="z-10 mx-5"
+            className="z-10"
             key={item.registrationId}
             onClick={() => handleOpenModal(item)}
           >
