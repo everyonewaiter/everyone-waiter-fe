@@ -40,21 +40,21 @@ export default function FormComponent() {
           className="flex flex-col gap-3 lg:gap-4"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
-          <LabeledInput form={form} label="상호명" name="name" disabled />
+          <LabeledInput form={form} label="상호명" name="name" readOnly />
           <LabeledInput
             form={form}
             label="사업자 번호"
             name="license"
-            disabled
+            readOnly
           />
-          <LabeledInput form={form} label="주소" name="address" disabled />
+          <LabeledInput form={form} label="주소" name="address" readOnly />
           <Label>원산지</Label>
           {isEditing || fields?.length > 0 ? (
             <FormProvider {...form}>
               <Origins isEditing={isEditing} />
             </FormProvider>
           ) : (
-            <div className="flex w-full flex-col items-center justify-center rounded-[16px] border border-gray-600 bg-gray-700 md:h-35 md:gap-1 md:p-6">
+            <div className="flex h-[140px] w-full flex-col items-center justify-center rounded-[16px] border border-gray-600 bg-gray-700 md:h-auto md:gap-1 md:p-6">
               <span className="text-gray-0 text-sm font-medium">
                 원산지가 등록되어 있지 않습니다.
               </span>
@@ -115,11 +115,11 @@ export default function FormComponent() {
           responsiveButtons={{
             sm: {
               buttonSize: "sm",
-              className: "mt-6 !h-[34px] !gap-2 items-center",
+              className: "mt-6 !h-[34px] !gap-2 items-center md:hidden",
             },
             md: {
               buttonSize: "sm",
-              className: "!h-[34px] flex items-center !gap-1 mt-6",
+              className: "!h-[34px] hidden md:flex items-center !gap-1 mt-6",
             },
             lg: {
               buttonSize: "lg",
