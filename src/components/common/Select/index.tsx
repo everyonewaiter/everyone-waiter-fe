@@ -1,10 +1,10 @@
 import {
+  SelectWrapper,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@radix-ui/react-select";
-import { SelectWrapper } from "./Component";
+} from "./Component";
 
 interface IProps {
   value: string;
@@ -28,7 +28,9 @@ export default function Select({ ...props }: IProps) {
       </SelectTrigger>
       <SelectContent>
         {props.data?.map((item) => (
-          <SelectItem {...item}>{item.text}</SelectItem>
+          <SelectItem key={item.key} value={item.value}>
+            {item.text}
+          </SelectItem>
         ))}
       </SelectContent>
     </SelectWrapper>

@@ -9,13 +9,13 @@ export default async function OwnerLayout({
   params,
 }: PropsWithChildren<{
   modal: ReactNode;
-  params: Promise<{ storeId: string }>;
+  params: Promise<{ id: string }>;
 }>) {
-  const { storeId } = await params;
+  const { id } = await params;
 
   return (
     <ValidationProvider valid>
-      <StoreProvider storeId={storeId}>
+      <StoreProvider storeId={id}>
         <div className="relative flex h-full flex-col">
           <div className="flex-1">{children}</div>
           <Suspense fallback={<div>로드 중...</div>}>
