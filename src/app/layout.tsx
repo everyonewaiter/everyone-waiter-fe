@@ -82,6 +82,7 @@ export default function RootLayout({
           sizes="512x512"
           href="/icon-512x512.png"
         />
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_BASE_URL} />
       </head>
 
       <body>
