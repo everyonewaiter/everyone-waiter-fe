@@ -58,7 +58,8 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
 
             if (!refreshToken) throw error;
 
-            const { accessToken } = await renewToken({ refreshToken });
+            const response = await renewToken({ refreshToken });
+            const { accessToken } = response;
 
             if (process.env.NODE_ENV === "development") {
               // eslint-disable-next-line no-console

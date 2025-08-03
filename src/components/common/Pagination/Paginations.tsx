@@ -11,17 +11,15 @@ import {
   PaginationPrevious,
 } from "./Component";
 
-interface Move {
-  target?: number;
-  hasMore: boolean;
-}
-
 interface IProps {
   className?: string;
   currentPage: number;
   setCurrentPage: (value: number) => void;
   size: string;
-  move: Record<"fastforward" | "forward" | "backward" | "fastbackward", Move>;
+  hasNext?: boolean;
+  hasPrevious?: boolean;
+  fastForwardTarget?: number;
+  fastBackwardTarget?: number;
 }
 
 export default function Paginations({
@@ -29,7 +27,10 @@ export default function Paginations({
   currentPage,
   setCurrentPage,
   size,
-  move,
+  hasNext,
+  hasPrevious,
+  fastForwardTarget,
+  fastBackwardTarget,
 }: IProps) {
   return (
     <Pagination className={className}>
@@ -37,16 +38,16 @@ export default function Paginations({
         <PaginationItem>
           <PaginationFastPrev
             className={size}
-            hasPrevPage={move?.fastbackward.hasMore}
-            onClick={() => setCurrentPage(move.fastbackward.target!)}
+            hasPrevPage={hasPrevious!}
+            onClick={() => setCurrentPage(fastBackwardTarget!)}
           />
         </PaginationItem>
         <PaginationItem>
           <PaginationPrevious
             className={size}
-            hasPrevPage={move?.backward.hasMore}
+            hasPrevPage={hasPrevious!}
             onClick={() =>
-              move.backward.hasMore ? setCurrentPage(currentPage - 1) : null
+              hasPrevious ? setCurrentPage(currentPage - 1) : null
             }
           />
         </PaginationItem>
@@ -55,18 +56,16 @@ export default function Paginations({
         </PaginationItem>
         <PaginationItem>
           <PaginationNext
-            hasNextPage={move?.forward.hasMore}
+            hasNextPage={hasNext!}
             className={size}
-            onClick={() =>
-              move.forward.hasMore ? setCurrentPage(currentPage + 1) : null
-            }
+            onClick={() => (hasNext ? setCurrentPage(currentPage + 1) : null)}
           />
         </PaginationItem>
         <PaginationItem>
           <PaginationFastNext
-            hasNextPage={move?.fastforward.hasMore}
+            hasNextPage={hasNext!}
             className={size}
-            onClick={() => setCurrentPage(move.fastbackward.target!)}
+            onClick={() => setCurrentPage(fastForwardTarget!)}
           />
         </PaginationItem>
       </PaginationContent>

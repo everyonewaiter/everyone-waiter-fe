@@ -1,5 +1,6 @@
 import API_PATH from "@/lib/api/paths";
 import { authInstance, instance } from "@/lib/axios/instance";
+import axios from "axios";
 import { deleteCookie } from "../cookies";
 
 export const createAccount = async (body: Account) => {
@@ -55,12 +56,22 @@ export const sendAuthMail = async (body: Pick<Account, "email">) => {
   return response.data;
 };
 
-export const renewToken = async (body: {
+export const renewToken = async ({
+  refreshToken,
+}: {
   refreshToken: string;
 }): Promise<{ accessToken: string; refreshToken: string }> => {
-  const response = await authInstance.post(
-    `${API_PATH.account}/renew-token`,
-    body
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1${API_PATH.account}/renew-token`,
+    {
+      refreshToken,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      timeout: 5000,
+    }
   );
   return response.data;
 };

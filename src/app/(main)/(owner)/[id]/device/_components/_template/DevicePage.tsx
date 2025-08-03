@@ -259,16 +259,15 @@ export default function DevicePage() {
           ))}
         </div>
       </div>
+      {/* TODO: 수정 필요 */}
       <Paginations
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
-        move={{
-          fastforward: { hasMore: false },
-          forward: { hasMore: false },
-          backward: { hasMore: false },
-          fastbackward: { hasMore: false },
-        }}
+        hasNext={false}
+        hasPrevious={false}
+        fastBackwardTarget={0}
+        fastForwardTarget={0}
         className="my-8"
       />
     </div>

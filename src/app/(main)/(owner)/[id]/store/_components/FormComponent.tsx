@@ -10,6 +10,7 @@ import Icon from "@/components/common/Icon/Icon";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
+import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
 import { storesQueries } from "../_queries/useStores";
 import Origins from "./Origins";
 import useStoreForm from "../_hooks/useStoreForm";
@@ -20,7 +21,7 @@ export default function FormComponent() {
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { data } = storesQueries.useStoresDetail(storeId);
+  const { data, isLoading } = storesQueries.useStoresDetail(storeId);
   const updateInfo = storesQueries.useUpdateInfo();
 
   const { form, fields, isSubmitted, submitHandler, appendOrigin } =
@@ -40,14 +41,33 @@ export default function FormComponent() {
           className="flex flex-col gap-3 lg:gap-4"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
-          <LabeledInput form={form} label="상호명" name="name" readOnly />
-          <LabeledInput
-            form={form}
-            label="사업자 번호"
-            name="license"
-            readOnly
-          />
-          <LabeledInput form={form} label="주소" name="address" readOnly />
+          {isLoading ? (
+            [1, 2, 3].map((el) => <SkeletonGroup key={el} />)
+          ) : (
+            <>
+              <LabeledInput
+                form={form}
+                label="상호명"
+                name="name"
+                readOnly
+                placeholder="상호명"
+              />
+              <LabeledInput
+                form={form}
+                label="사업자 번호"
+                name="license"
+                readOnly
+                placeholder="사업자 번호"
+              />
+              <LabeledInput
+                form={form}
+                label="주소"
+                name="address"
+                readOnly
+                placeholder="주소"
+              />
+            </>
+          )}
           <Label>원산지</Label>
           {isEditing || fields?.length > 0 ? (
             <FormProvider {...form}>
