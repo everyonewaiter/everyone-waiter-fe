@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import {
   getRegisters,
   getStoreInfoDetail,
@@ -18,7 +18,7 @@ const useRegistrationList = (page: number = 1) =>
   useQuery({
     queryKey: storeKeys.list(page),
     queryFn: () => getRegisters(page),
-    placeholderData: (previousData) => previousData,
+    placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   });
 

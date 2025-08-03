@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import {
   approveRegistration,
@@ -24,7 +24,7 @@ const useAccount = (
     queryKey: accountKeys.all(page, searchEmail, searchPermission, searchState),
     queryFn: () =>
       getAccounts({ page, searchEmail, searchPermission, searchState }),
-    placeholderData: (previousData) => previousData,
+    placeholderData: keepPreviousData,
   });
 
 const useAccountDetail = (accountId: string) =>
@@ -54,7 +54,7 @@ const useStores = (
     queryKey: accountKeys.allToApprove({ email, name, status, page }),
     queryFn: () =>
       getAdminRegistrations({ email, name, status, page, size: 20 }),
-    placeholderData: (previousData) => previousData,
+    placeholderData: keepPreviousData,
   });
 
 const useStoresDetail = (registrationId: string) =>
