@@ -3,29 +3,37 @@
 import { useState } from "react";
 import { FormProvider } from "react-hook-form";
 import { Plus } from "@/components/common/Icon/index";
-import { useStoreContext } from "@/providers/storeProvider";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import Icon from "@/components/common/Icon/Icon";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
-import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
+import useCheckLeave from "@/hooks/useCheckLeave";
 import { storesQueries } from "../_queries/useStores";
 import Origins from "./Origins";
 import useStoreForm from "../_hooks/useStoreForm";
 
-export default function FormComponent() {
-  const { storeId } = useStoreContext();
+interface IProps {
+  data: StoreInfoDetail;
+}
 
+export default function FormComponent({ data }: IProps) {
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { data, isLoading } = storesQueries.useStoresDetail(storeId);
   const updateInfo = storesQueries.useUpdateInfo();
 
-  const { form, fields, isSubmitted, submitHandler, appendOrigin } =
-    useStoreForm(data!, storeId);
+  const {
+    form,
+    fields,
+    isSubmitted,
+    submitHandler,
+    appendOrigin,
+    removeOrigin,
+  } = useStoreForm(data!, data.storeId);
+
+  useCheckLeave(isEditing);
 
   const handleSubmit = () => {
     submitHandler(updateInfo, () => {
@@ -41,37 +49,35 @@ export default function FormComponent() {
           className="flex flex-col gap-3 lg:gap-4"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
-          {isLoading ? (
-            [1, 2, 3].map((el) => <SkeletonGroup key={el} />)
-          ) : (
-            <>
-              <LabeledInput
-                form={form}
-                label="상호명"
-                name="name"
-                readOnly
-                placeholder="상호명"
-              />
-              <LabeledInput
-                form={form}
-                label="사업자 번호"
-                name="license"
-                readOnly
-                placeholder="사업자 번호"
-              />
-              <LabeledInput
-                form={form}
-                label="주소"
-                name="address"
-                readOnly
-                placeholder="주소"
-              />
-            </>
-          )}
+          <LabeledInput
+            form={form}
+            label="상호명"
+            name="name"
+            readOnly
+            placeholder="상호명"
+          />
+          <LabeledInput
+            form={form}
+            label="사업자 번호"
+            name="license"
+            readOnly
+            placeholder="사업자 번호"
+          />
+          <LabeledInput
+            form={form}
+            label="주소"
+            name="address"
+            readOnly
+            placeholder="주소"
+          />
           <Label>원산지</Label>
           {isEditing || fields?.length > 0 ? (
             <FormProvider {...form}>
-              <Origins isEditing={isEditing} />
+              <Origins
+                isEditing={isEditing}
+                fields={fields}
+                removeOrigin={removeOrigin}
+              />
             </FormProvider>
           ) : (
             <div className="flex h-[140px] w-full flex-col items-center justify-center rounded-[16px] border border-gray-600 bg-gray-700 md:h-auto md:gap-1 md:p-6">
@@ -90,12 +96,19 @@ export default function FormComponent() {
                 variant="outline"
                 color="gray"
                 responsiveButtons={{
-                  sm: { buttonSize: "sm" },
+                  sm: {
+                    buttonSize: "sm",
+                    className: "mt-6 !h-[34px] !gap-2 items-center md:hidden",
+                  },
                   md: {
                     buttonSize: "sm",
-                    className: "md-4 flex",
+                    className:
+                      "!h-[34px] hidden md:flex items-center !gap-1 mt-6",
                   },
-                  lg: { buttonSize: "lg", className: "!h-10" },
+                  lg: {
+                    buttonSize: "lg",
+                    className: "mt-8 !font-medium border-gray-0",
+                  },
                 }}
                 disabled={makeDisabled}
                 commonClassName="border-dashed mt-3"
@@ -103,26 +116,53 @@ export default function FormComponent() {
               >
                 <Plus className="h-5 w-5 text-gray-400" />
               </ResponsiveButton>
-              <ResponsiveButton
-                type="submit"
-                responsiveButtons={{
-                  sm: {
-                    buttonSize: "sm",
-                    className: "flex mt-6 !h-[34px] !gap-2 items-center",
-                  },
-                  md: {
-                    buttonSize: "sm",
-                    className: "!h-[34px] flex items-center !gap-1",
-                  },
-                  lg: {
-                    buttonSize: "lg",
-                    className: "mt-8",
-                  },
-                }}
-                disabled={isSubmitted}
-              >
-                {isSubmitted ? <Spinner /> : "저장하기"}
-              </ResponsiveButton>
+              <div className="flex gap-2">
+                <ResponsiveButton
+                  type="button"
+                  variant="outline"
+                  color="grey"
+                  responsiveButtons={{
+                    sm: {
+                      buttonSize: "sm",
+                      className: "mt-6 !h-[34px] !gap-2 items-center md:hidden",
+                    },
+                    md: {
+                      buttonSize: "sm",
+                      className:
+                        "!h-[34px] hidden md:flex items-center !gap-1 mt-6",
+                    },
+                    lg: {
+                      buttonSize: "lg",
+                      className: "mt-8 !font-medium border-gray-0",
+                    },
+                  }}
+                  disabled={isSubmitted}
+                  onClick={() => setIsEditing(false)}
+                >
+                  수정 취소
+                </ResponsiveButton>
+                <ResponsiveButton
+                  type="submit"
+                  responsiveButtons={{
+                    sm: {
+                      buttonSize: "sm",
+                      className: "flex mt-6 !h-[34px] !gap-2 items-center",
+                    },
+                    md: {
+                      buttonSize: "sm",
+                      className: "!h-[34px] flex items-center !gap-1",
+                    },
+                    lg: {
+                      buttonSize: "lg",
+                      className: "mt-8",
+                    },
+                  }}
+                  commonClassName="w-full"
+                  disabled={isSubmitted}
+                >
+                  {isSubmitted ? <Spinner /> : "저장하기"}
+                </ResponsiveButton>
+              </div>
             </>
           )}
         </form>
@@ -143,7 +183,7 @@ export default function FormComponent() {
             },
             lg: {
               buttonSize: "lg",
-              className: "mt-8 !font-medium border-gray-0",
+              className: "mt-7 !font-medium border-gray-0",
             },
           }}
           onClick={isEditing ? undefined : () => setIsEditing(true)}

@@ -33,6 +33,7 @@ export default function useLogin() {
           router.push("/user");
         }
       } catch (e) {
+        // eslint-disable-next-line
         console.error("Login failed:", e);
       }
     });

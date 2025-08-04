@@ -1,4 +1,4 @@
-import Icon from "@/components/common/Icon/Icon";
+import SidebarIcon from "@/components/common/Icon/SidebarIcon";
 import MENU_ITEMS from "@/constants/sidebarMenus";
 import { getComparePath } from "@/utils/getPathname";
 import { usePathname, useRouter } from "next/navigation";
@@ -63,9 +63,10 @@ export default function SidebarMenu({ selectedStoreId, permission }: IProps) {
                     isActive() ? "bg-primary" : "bg-gray-600"
                   }`}
                 />
-                <Icon
+                <SidebarIcon
                   iconKey={item.icon as string}
-                  className={`size-6 ${isActive() ? "text-primary" : "text-gray-300"}`}
+                  className={`size-6 shrink-0 ${isActive() ? "text-primary" : "text-gray-300"}`}
+                  style={{ minWidth: "24px", minHeight: "24px" }}
                 />
                 <span className="font-medium">{item.label}</span>
               </button>

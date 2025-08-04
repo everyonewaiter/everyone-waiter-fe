@@ -1,9 +1,12 @@
 import Icon from "@/components/common/Icon/Icon";
 import { PropsWithChildren } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import {
+  FieldArrayWithId,
+  UseFieldArrayRemove,
+  useFormContext,
+} from "react-hook-form";
 import { useMediaQuery } from "react-responsive";
-import type {} from "./FormComponent";
-import { FormType } from "../_hooks/useStoreForm";
+import { TypeStoreInfo } from "@/schema/store.schema";
 
 function TableRow({
   children,
@@ -18,16 +21,14 @@ function TableRow({
 
 interface IProps {
   isEditing: boolean;
+  fields: FieldArrayWithId<TypeStoreInfo, "origins", "id">[];
+  removeOrigin: UseFieldArrayRemove;
 }
 
-export default function Origins({ isEditing }: IProps) {
+export default function Origins({ isEditing, fields, removeOrigin }: IProps) {
   const isLargeScreen = useMediaQuery({ query: "(min-width: 961px)" });
 
-  const form = useFormContext<FormType>();
-  const { fields, remove } = useFieldArray({
-    control: form.control,
-    name: "origins",
-  });
+  const form = useFormContext<TypeStoreInfo>();
 
   return (
     <div className="text-s flex flex-col overflow-hidden rounded-[12px] border border-gray-600 font-medium">
@@ -75,7 +76,7 @@ export default function Origins({ isEditing }: IProps) {
           </TableRow>
           {isEditing && (
             <TableRow className="w-full text-center lg:w-20 lg:flex-shrink-0">
-              <button type="button" onClick={() => remove(idx)}>
+              <button type="button" onClick={() => removeOrigin(idx)}>
                 <Icon iconKey="trash" size={16} className="text-primary" />
               </button>
             </TableRow>

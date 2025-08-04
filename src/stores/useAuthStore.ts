@@ -1,12 +1,10 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { deleteClientCookie } from "@/lib/cookies/client";
 
 interface AuthProps {
   user: UserProfile | null; // 유저 정보
   saveUser: (userInfo: UserProfile) => void; // 유저 정보 저장
   isLoggedIn: boolean; // 로그인 여부
-  logout: () => void; // 로그아웃
   setIsLoggedIn: (value: boolean) => void;
 }
 const useAuthStore = create(
@@ -15,11 +13,6 @@ const useAuthStore = create(
       user: null,
       isLoggedIn: false,
       saveUser: (userInfo) => set({ user: userInfo, isLoggedIn: true }),
-      logout: () => {
-        deleteClientCookie("accessToken");
-        deleteClientCookie("refreshToken");
-        set({ user: null, isLoggedIn: false });
-      },
       setIsLoggedIn: (value) =>
         set((state) => ({ ...state, isLoggedIn: value })),
     }),

@@ -1,8 +1,11 @@
 import { Mutex } from "async-mutex";
 import { AxiosInstance } from "axios";
 import { renewToken } from "../api/auth.api";
-import { getToken, setCookie } from "../cookies";
-import { getClientCookie } from "../cookies/client";
+import {
+  deleteClientCookie,
+  getClientCookie,
+  setClientCookie,
+} from "../cookies/client";
 
 let isRefreshing = false;
 let refreshPromise: Promise<any> | null = null;
@@ -11,13 +14,7 @@ const mutex = new Mutex();
 export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   // NOTE: 요청 인터셉터
   axiosInstance.interceptors.request.use(async (config) => {
-    let token;
-
-    if (typeof window === "undefined" || typeof document === "undefined") {
-      token = await getToken("accessToken");
-    } else {
-      token = getClientCookie("client-accessToken");
-    }
+    const token = getClientCookie("client-accessToken");
 
     if (token) {
       // eslint-disable-next-line no-param-reassign
@@ -40,7 +37,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
         // 갱신 중이면 기다림
         if (isRefreshing && refreshPromise) {
           await refreshPromise;
-          const token = await getToken("accessToken");
+          const token = getClientCookie("client-accessToken");
           originalRequest.headers.Authorization = `Bearer ${token}`;
           return axiosInstance(originalRequest);
         }
@@ -49,7 +46,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
         isRefreshing = true;
         refreshPromise = mutex.runExclusive(async () => {
           try {
-            const refreshToken = await getToken("refreshToken");
+            const refreshToken = getClientCookie("client-refreshToken");
 
             if (process.env.NODE_ENV === "development") {
               // eslint-disable-next-line no-console
@@ -66,8 +63,15 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
               console.log("refresh: success ✅");
             }
 
-            await setCookie("accessToken", accessToken);
+            setClientCookie("client-accessToken", accessToken);
             return accessToken;
+          } catch (err: any) {
+            if (err.response.data.code === "UNAUTHORIZED") {
+              deleteClientCookie("client-accessToken");
+              deleteClientCookie("client-refreshToken");
+              window.location.href = "/logout";
+            }
+            throw err;
           } finally {
             isRefreshing = false;
             refreshPromise = null;

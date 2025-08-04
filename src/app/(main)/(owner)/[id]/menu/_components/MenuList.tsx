@@ -43,6 +43,7 @@ export default function MenuList() {
               },
             }}
             onClick={() => navigate.push(`/${storeId}/menu/category/add`)}
+            aria-label="카테고리 등록 및 수정"
           >
             <SettingsIcon size={18} strokeWidth={1.5} />
           </ResponsiveButton>

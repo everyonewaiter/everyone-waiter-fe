@@ -73,7 +73,7 @@ const buttonVariants = cva(
         variant: "outline",
         color: "grey",
         class:
-          "text-gray-300 border-gray-700 hover:bg-gray-700 hover:text-white",
+          "text-gray-300 border-gray-700 hover:bg-gray-700 hover:text-gray-300",
       },
       {
         variant: "outline",

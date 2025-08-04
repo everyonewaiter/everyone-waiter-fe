@@ -5,10 +5,10 @@ import { cookies } from "next/headers";
 type KeyType = "accessToken" | "refreshToken" | "secretKey" | "role";
 
 const TOKEN_EXPIRATION = {
-  accessToken: 60 * 60 * 3, // 3시간
-  refreshToken: 60 * 60 * 24 * 365, // 1년
-  secretKey: 60 * 30, // 30분
-  role: 60 * 60 * 3,
+  accessToken: 60 * 60 * 12, // 12시간
+  refreshToken: 60 * 60 * 24 * 14, // 2주
+  secretKey: 60 * 60 * 24 * 365, // 1년
+  role: 60 * 60 * 24 * 365, // 1년
 };
 
 // NOTE - accessToken 및 refreshToken 접근
@@ -34,9 +34,9 @@ export async function setCookie(key: KeyType, token: string) {
 }
 
 // NOTE - 역할 설정
-export async function setRole(role: "user" | "admin" | "device" | "guest") {
+export async function setRole(role: AccountPermission) {
   const cookieStore = await cookies();
-  cookieStore.set("@role", role, {
+  cookieStore.set("role", role, {
     httpOnly: false,
     maxAge: TOKEN_EXPIRATION.role,
   });

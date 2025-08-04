@@ -5,13 +5,10 @@ export const emailSchema = z
   .email("유효하지 않은 이메일 형식입니다.")
   .trim()
   .min(1, "이메일을 입력해주세요.");
-export const phoneSchema = z
-  .string()
-  .trim()
-  .min(1, "전화번호를 입력해주세요.")
-  .refine((val) => val === "" || /^01[016789]-\d{3,4}-\d{4}$/.test(val), {
-    message: "유효하지 않은 휴대폰 번호 형식입니다.",
-  });
+export const phoneSchema = z.string().min(1, "전화번호를 입력해주세요.");
+// .refine((val) => val === "" || /^01[016789]-\d{3,4}-\d{4}$/.test(val), {
+//   message: "유효하지 않은 휴대폰 번호 형식입니다.",
+// });
 export const passwordSchema = z
   .string()
   .trim()

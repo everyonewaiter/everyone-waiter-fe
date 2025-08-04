@@ -22,21 +22,22 @@ const useRegistrationList = (page: number = 1) =>
     staleTime: 1000 * 60 * 5,
   });
 
-const useRegistrationDetail = (registrationId: string) =>
-  useQuery({
-    queryKey: storeKeys.registration(registrationId),
-    queryFn: () => registerDetails(JSON.stringify(registrationId)),
-    enabled: !!registrationId,
-    staleTime: 1000 * 60 * 5,
-  });
-
 const useStoresList = (enabled: boolean) =>
   useQuery<{
     stores: { storeId: string; name: string }[];
   }>({
     queryKey: storeKeys.stores(),
     queryFn: getStoreList,
+    placeholderData: keepPreviousData,
     enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+
+const useRegistrationDetail = (registrationId: string) =>
+  useQuery({
+    queryKey: storeKeys.registration(registrationId),
+    queryFn: () => registerDetails(JSON.stringify(registrationId)),
+    enabled: !!registrationId,
     staleTime: 1000 * 60 * 5,
   });
 
@@ -46,6 +47,16 @@ const useStoresDetail = (storeId: string) =>
     queryFn: () => getStoreInfoDetail(storeId),
     enabled: !!storeId,
     staleTime: 1000 * 60 * 5,
+  });
+
+const useRegister = () =>
+  useMutation({
+    mutationFn: registerStore,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: storeKeys.stores(),
+      });
+    },
   });
 
 const useReapply = () =>
@@ -60,16 +71,6 @@ const useReapply = () =>
       });
       queryClient.invalidateQueries({
         queryKey: storeKeys.all(),
-      });
-    },
-  });
-
-const useRegister = () =>
-  useMutation({
-    mutationFn: registerStore,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: storeKeys.stores(),
       });
     },
   });
@@ -89,6 +90,25 @@ const useUpdateInfo = () =>
       queryClient.invalidateQueries({
         queryKey: storeKeys.detail(variables.storeId),
       });
+    },
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({
+        queryKey: storeKeys.detail(variables.storeId),
+      });
+      const prevData = queryClient.getQueryData(
+        storeKeys.detail(variables.storeId)
+      );
+      queryClient.setQueryData(
+        storeKeys.detail(variables.storeId),
+        variables.body
+      );
+      return { prevData };
+    },
+    onError: (_, variables, context) => {
+      queryClient.setQueryData(
+        storeKeys.detail(variables.storeId),
+        context?.prevData
+      );
     },
   });
 

@@ -1,28 +1,19 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useRef, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Input from "@/components/common/Input";
-import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
-import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
-import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
-import { TypeStore, storeSchema } from "@/schema/store.schema";
+import { TypeAddStoreForm, addStoreSchema } from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "@/components/common/Spinner";
 import Logo from "@/components/Logo";
-
-const UploadPhoto = dynamic(
-  () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),
-  {
-    ssr: false,
-  }
-);
+import { Form } from "@/components/common/Form";
+import useCheckLeave from "@/hooks/useCheckLeave";
+import UploadPhoto from "../../(owner)/[id]/store/_components/UploadPhoto";
 
 export default function CreateForm() {
   const navigate = useRouter();
@@ -31,9 +22,10 @@ export default function CreateForm() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const form = useForm<TypeStore>({
-    mode: "onChange",
-    resolver: zodResolver(storeSchema),
+
+  const form = useForm<TypeAddStoreForm>({
+    mode: "onSubmit",
+    resolver: zodResolver(addStoreSchema),
     defaultValues: {
       name: "",
       ceoName: "",
@@ -45,15 +37,17 @@ export default function CreateForm() {
 
   const { mutate } = storesQueries.useRegister();
 
-  const handleSubmit = (data: TypeStore) => {
+  useCheckLeave(form.formState.isDirty);
+
+  const handleSubmit = () => {
     setIsSubmitted(true);
 
     const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("ceoName", data.ceoName);
-    formData.append("address", data.address);
-    formData.append("landline", data.landline);
-    formData.append("license", data.license);
+    formData.append("name", form.getValues("name"));
+    formData.append("ceoName", form.getValues("ceoName"));
+    formData.append("address", form.getValues("address"));
+    formData.append("landline", form.getValues("landline"));
+    formData.append("license", form.getValues("license"));
     if (image) {
       formData.append("file", image);
     }
@@ -75,7 +69,7 @@ export default function CreateForm() {
   const { handleOpenAddress } = useOpenDaumPostcode(form);
 
   return (
-    <div className="flex w-full justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
+    <div className="flex w-full items-start justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
       <div className="hidden flex-col md:flex">
         <Logo
           width={90}
@@ -91,11 +85,11 @@ export default function CreateForm() {
           간단한 정보만 입력하면 바로 시작할 수 있어요!
         </p>
       </div>
-      <div className="flex w-[320px] flex-col gap-[16px] lg:w-[400px]">
+      <div className="flex w-[320px] flex-col items-start justify-start gap-[16px] lg:w-[400px]">
         <h1 className="text-gray-0 mb-8 flex w-full justify-center text-xl font-semibold md:hidden">
           매장 등록
         </h1>
-        <FormProvider {...form}>
+        <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
             className="flex flex-col gap-4"
@@ -117,25 +111,32 @@ export default function CreateForm() {
               form={form}
               name="address"
               label="소재지"
-              placeholder="소재지를 입력해주세요."
+              placeholder="소재지를 선택해주세요."
               className="cursor-pointer placeholder:text-gray-300"
               readOnly
               onClick={handleOpenAddress}
             />
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
               <Label>매장 전화번호</Label>
               <Input
                 {...form.register("landline")}
-                onChange={(e) => {
-                  const onlyNums = e.target.value.replace(/[^0-9]/g, "");
-                  const formatted = phoneNumberPattern(onlyNums);
-                  form.setValue("landline", formatted);
-                }}
+                // onChange={(e) => {
+                //   const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                //   const formatted = phoneNumberPattern(onlyNums);
+                //   form.setValue("landline", formatted);
+                // }}
                 placeholder="매장 전화번호를 입력해주세요"
                 className="placeholder:text-gray-300"
               />
-            </div>
-            <div className="flex flex-col gap-2">
+            </div> */}
+            <LabeledInput
+              form={form}
+              name="landline"
+              label="매장 전화번호"
+              placeholder="전화번호를 입력해주세요."
+              className="placeholder:text-gray-300"
+            />
+            {/* <div className="flex flex-col gap-2">
               <Label>사업자 번호</Label>
               <Input
                 {...form.register("license")}
@@ -147,7 +148,14 @@ export default function CreateForm() {
                 placeholder="사업자 번호를 입력해주세요"
                 className="placeholder:text-gray-300"
               />
-            </div>
+            </div> */}
+            <LabeledInput
+              form={form}
+              name="license"
+              label="사업자 번호"
+              placeholder="사업자 번호를 입력해주세요."
+              className="placeholder:text-gray-300"
+            />
             <UploadPhoto
               ref={fileRef}
               handleFile={handleFile}
@@ -167,7 +175,7 @@ export default function CreateForm() {
               {isSubmitted ? <Spinner /> : "신청하기"}
             </ResponsiveButton>
           </form>
-        </FormProvider>
+        </Form>
       </div>
     </div>
   );

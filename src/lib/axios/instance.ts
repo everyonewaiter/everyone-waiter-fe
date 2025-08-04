@@ -17,6 +17,7 @@ const formInstance = axios.create({
   headers: {
     "Content-Type": "multipart/form-data",
   },
+  withCredentials: true,
   timeout: 5000,
 });
 

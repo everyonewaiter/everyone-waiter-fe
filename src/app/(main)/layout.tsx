@@ -3,6 +3,8 @@ import { PropsWithChildren, Suspense } from "react";
 import Loading from "@/components/Loading";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import Spinner from "@/components/common/Spinner";
+import { deleteCookie, getToken } from "@/lib/cookies";
+import { redirect } from "next/navigation";
 import MobileHeader from "./_components/MobileLayout/MobileHeader";
 import ContentWrapper from "./(owner)/[id]/_components/ContentWrapper";
 import getQueryClient from "../get-query-client";
@@ -20,11 +22,17 @@ export default async function Layout({
   const queryClient = getQueryClient();
 
   const { id } = await params;
+  const token = await getToken("accessToken");
 
   await queryClient.prefetchQuery({
     queryKey: ["store-list"],
     queryFn: getStoreList,
   });
+
+  if (!token) {
+    await deleteCookie("refreshToken");
+    redirect("/login");
+  }
 
   return (
     <div className="flex h-screen w-screen flex-col bg-white md:flex-row md:bg-[#F5F5F5]">

@@ -52,23 +52,34 @@ export default function StoreApplicationModal({
                 isActive={active}
               />
             </div>
-            <div className="mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] lg:mt-5 lg:h-[454px] lg:overflow-y-scroll">
+            <div className="scrollbar-hide mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] lg:mt-5 lg:h-[454px] lg:overflow-y-auto">
               {active === 0 && (
                 <StoreApplyForm
                   isUpdating={isUpdating}
                   isAccepted={isAccepted}
                 />
               )}
-              <PhotoForBusiness
-                isUpdating={isUpdating}
-                isPhotoUpdating={isPhotoUpdating}
-                onResetPhoto={() => setIsPhotoUpdating(true)}
-                imageUrl={item.image}
-              />
+              {active === 1 && (
+                <PhotoForBusiness
+                  isUpdating={isUpdating}
+                  isPhotoUpdating={isPhotoUpdating}
+                  onResetPhoto={() => setIsPhotoUpdating(true)}
+                  imageUrl={item.image}
+                />
+              )}
             </div>
           </ModalWithTitle.Layout>
-          <div className="w-full bg-red-50">
-            {!isAccepted && (
+          <div className="w-full">
+            {isAccepted ? (
+              <ModalWithTitle.Button
+                type="button"
+                color="grey"
+                onClick={() => (isUpdating ? null : setIsUpdating(true))}
+                disabled
+              >
+                승인됨
+              </ModalWithTitle.Button>
+            ) : (
               <ModalWithTitle.Button
                 type={isUpdating ? "submit" : "button"}
                 color={isUpdating ? "primary" : "black"}

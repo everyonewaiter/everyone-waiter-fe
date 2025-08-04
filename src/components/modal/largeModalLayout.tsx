@@ -92,6 +92,7 @@ interface ButtonProps
   color?: string;
   onClick: () => void;
   type?: "submit" | "button";
+  isOutlined?: boolean;
 }
 
 function ModalButton({ children, ...props }: PropsWithChildren<ButtonProps>) {
@@ -106,6 +107,7 @@ function ModalButton({ children, ...props }: PropsWithChildren<ButtonProps>) {
         sm: { buttonSize: "sm", className: "!h-10 !w-full" },
       }}
       color={props.color!}
+      variant={props.isOutlined ? "outline" : "default"}
       {...props}
     >
       {children}

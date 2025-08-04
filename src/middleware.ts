@@ -19,9 +19,6 @@ export function middleware(req: NextRequest) {
 
   // NOTE: 관리자 페이지 접근 제한
   if (isAdminPath) {
-    if (!accessToken) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
     if (permission !== "ADMIN") {
       return NextResponse.rewrite(new URL("/not-found", req.url));
     }
