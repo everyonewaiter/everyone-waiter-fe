@@ -3,25 +3,32 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import cn from "@/lib/utils";
 
 export default function SignupLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const isLogin = pathname === "/login";
 
   return (
-    <div className="relative flex min-h-screen w-screen flex-row items-center justify-center">
-      <div className="relative flex h-full justify-between md:w-[936px] lg:w-[1860px]">
+    <div className="relative flex h-screen w-screen flex-row items-center justify-center">
+      <div className="relative flex h-screen justify-between gap-6 lg:ml-15">
         <div
-          className={`flex flex-col items-center ${pathname === "/login" ? "justify-center" : "lg:justify-center"} py-[40px] md:w-[416px] ${pathname === "/login" ? "md:px-[62px] md:py-8" : "md:justify-start md:px-[62px] md:py-8"} lg:w-[660px] lg:px-[114px] lg:py-16`}
+          className={cn(
+            "scrollbar-hide flex h-full flex-col items-center py-[40px] md:w-[416px] md:overflow-x-hidden md:overflow-y-auto lg:w-[660px] lg:px-[114px] lg:py-16",
+            isLogin
+              ? "justify-center md:px-[62px] md:py-8"
+              : "md:justify-start md:px-[62px] md:py-8 lg:justify-center"
+          )}
         >
           {children}
         </div>
-        <div className="relative hidden h-screen w-full items-center justify-center md:block">
+        <div className="hidden h-screen items-center md:flex lg:pr-6">
           <Image
             src="/images/login-cover.svg"
             alt="onboarding"
-            className="rounded-[24px] object-cover md:fixed md:mt-4 md:h-[568px] md:w-[488px] lg:h-[1032px] lg:w-[1152px]"
-            width={488}
-            height={568}
+            className="h-[calc(100dvh-48px)] w-full rounded-[24px] object-cover"
+            width={1152}
+            height={1032}
             priority
           />
         </div>

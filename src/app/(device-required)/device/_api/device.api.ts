@@ -1,56 +1,10 @@
 import API_PATH from "@/lib/api/paths";
-import { authInstance, instance } from "@/lib/axios/instance";
-
-interface Ids {
-  storeId: string;
-  deviceId: string;
-}
-
-export const getDevices = async (
-  storeId: string
-): Promise<ResWithPagination<Device[]>> => {
-  const response = await instance.get(`${API_PATH.stores}/${storeId}/devices`);
-  return response.data;
-};
-
-export const getDetailDevice = async ({
-  storeId,
-  deviceId,
-}: Ids): Promise<
-  Device & { tableNo: number; ksnetDeviceNo: string; createdAt: string }
-> => {
-  const response = await instance.get(
-    `${API_PATH.stores}/${storeId}/devices/${deviceId}`
-  );
-  return response.data;
-};
-
-export const updateDevice = async ({
-  storeId,
-  deviceId,
-  ...body
-}: Pick<Device, "name" | "purpose" | "paymentType"> & {
-  tableNo: number;
-  ksnetDeviceNo: string;
-} & Ids) => {
-  const response = await instance.put(
-    `${API_PATH.stores}/${storeId}/devices/${deviceId}`,
-    body
-  );
-  return response.data;
-};
-
-export const deleteDevice = async ({ storeId, deviceId }: Ids) => {
-  const response = await instance.delete(
-    `${API_PATH.stores}/${storeId}/devices/${deviceId}`
-  );
-  return response.data;
-};
+import { authInstance, signatureInstance } from "@/lib/axios/instance";
 
 export const addDevice = async ({
   storeId,
   ...body
-}: Omit<Device, "state" | "updatedAt" | "deviceId"> & {
+}: Omit<Device, "state" | "updatedAt" | "deviceId" | "createdAt"> & {
   tableNo: number;
   ksnetDeviceNo: string;
   phoneNumber: string;
@@ -85,5 +39,10 @@ export const sendAuthCodeInDevice = async ({
     `${API_PATH.devices}/send-auth-code`,
     body
   );
+  return response.data;
+};
+
+export const getDeviceDetail = async (): Promise<DeviceDetail> => {
+  const response = await signatureInstance.get(`${API_PATH.devices}`);
   return response.data;
 };

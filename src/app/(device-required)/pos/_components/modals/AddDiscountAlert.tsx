@@ -1,6 +1,9 @@
 "use client";
 
-import Alert from "@/components/common/Alert/Alert";
+import { MinusIcon } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import dynamic from "next/dynamic";
 import {
   Form,
   FormControl,
@@ -12,8 +15,10 @@ import {
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/common/Radio";
-import { MinusIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 interface FormType {
   discount: number | null;
@@ -23,9 +28,17 @@ interface FormType {
 
 interface IProps {
   close: () => void;
+  total: number;
+  onAction: (discountValue: number) => void;
+  initialValue: number;
 }
 
-export default function AddDiscountAlert({ close }: IProps) {
+export default function AddDiscountAlert({
+  close,
+  total,
+  onAction,
+  initialValue,
+}: IProps) {
   const form = useForm<FormType>({
     defaultValues: {
       discount: null,
@@ -34,10 +47,21 @@ export default function AddDiscountAlert({ close }: IProps) {
     },
   });
 
+  useEffect(() => {
+    if (initialValue) {
+      form.setValue("discount", initialValue);
+      form.setValue("result", total - initialValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValue]);
+
   return (
     <Alert
       onClose={close}
-      onAction={() => {}}
+      onAction={() => {
+        onAction(total - form.watch("result")!);
+        close();
+      }}
       buttonColor="black"
       buttonText="할인하기"
       noResponsive
@@ -46,17 +70,18 @@ export default function AddDiscountAlert({ close }: IProps) {
         <div className="flex items-center justify-between">
           <h3 className="text-2xl font-semibold">2번 테이블의 총 주문 금액</h3>
           <span className="text-primary text-2xl font-semibold">
-            {(152000).toLocaleString()}원
+            {total.toLocaleString()}원
           </span>
         </div>
         <div className="flex flex-col">
           <RadioGroup
-            defaultValue="option-one"
             className="flex items-center gap-6"
             value={form.watch("discountType")}
-            onValueChange={(value) =>
-              form.setValue("discountType", value as "fixed" | "percent")
-            }
+            onValueChange={(value) => {
+              form.setValue("discountType", value as "fixed" | "percent");
+              form.setValue("discount", null);
+              form.setValue("result", null);
+            }}
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="fixed" id="fixed" />
@@ -77,62 +102,76 @@ export default function AddDiscountAlert({ close }: IProps) {
                 control={form.control}
                 name="discount"
                 render={({ field }) => (
-                  <>
-                    <FormItem>
-                      <FormLabel className="font-medium">
-                        할인할 금액 입력
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative flex items-center gap-3">
-                          <MinusIcon
-                            size={16}
-                            color="#999"
-                            className="absolute left-4"
-                          />
-                          <Input
-                            {...field}
-                            type="text"
-                            value={field.value || ""}
-                            className="!pl-9 text-base font-medium placeholder:text-gray-300"
-                            placeholder={
-                              form.watch("discountType") === "fixed"
-                                ? "12,000"
-                                : "10"
+                  <FormItem>
+                    <FormLabel className="font-medium">
+                      할인할 금액 입력
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative flex items-center gap-3">
+                        <MinusIcon
+                          size={16}
+                          color="#999"
+                          className="absolute left-4"
+                        />
+                        <Input
+                          {...field}
+                          type="text"
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+
+                            const discount = Number(form.watch("discount"));
+                            const discountType = form.watch("discountType");
+
+                            let result = total;
+
+                            if (discountType === "fixed") {
+                              result -= discount;
+                            } else {
+                              result -= total * (discount / 100);
                             }
-                          />
-                          <strong className="text-xl font-semibold">
-                            {form.watch("discountType") === "fixed"
-                              ? "원"
-                              : "%"}
-                          </strong>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                    <FormItem className="mt-4">
-                      <FormLabel className="font-medium">
-                        할인 후 금액
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative flex items-center gap-3">
-                          <Input
-                            {...field}
-                            type="text"
-                            value={field.value || ""}
-                            className="text-base font-medium placeholder:text-gray-300"
-                            placeholder="할인할 금액을 먼저 입력해주세요."
-                            disabled={!field.value}
-                          />
-                          <strong className="text-xl font-semibold">
-                            {form.watch("discountType") === "fixed"
-                              ? "원"
-                              : "%"}
-                          </strong>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  </>
+
+                            form.setValue("result", result);
+                          }}
+                          className="!pl-9 text-base font-medium placeholder:text-gray-300"
+                          placeholder={
+                            form.watch("discountType") === "fixed"
+                              ? "12,000"
+                              : "10"
+                          }
+                        />
+                        <strong className="text-xl font-semibold">
+                          {form.watch("discountType") === "fixed" ? "원" : "%"}
+                        </strong>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="result"
+                render={({ field }) => (
+                  <FormItem className="mt-4">
+                    <FormLabel className="font-medium">할인 후 금액</FormLabel>
+                    <FormControl>
+                      <div className="relative flex items-center gap-3">
+                        <Input
+                          {...field}
+                          type="text"
+                          value={field.value || ""}
+                          className="text-base font-medium placeholder:text-gray-300"
+                          placeholder="할인할 금액을 먼저 입력해주세요."
+                          disabled={!field.value}
+                        />
+                        <strong className="text-xl font-semibold">
+                          {form.watch("discountType") === "fixed" ? "원" : "%"}
+                        </strong>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
               />
             </Form>
@@ -142,7 +181,7 @@ export default function AddDiscountAlert({ close }: IProps) {
           <span>
             할인된 금액은{" "}
             <strong className="text-primary text-2xl font-semibold">
-              {(124000).toLocaleString()}원
+              {Number(form.watch("result")).toLocaleString()}원
             </strong>{" "}
             입니다.
           </span>

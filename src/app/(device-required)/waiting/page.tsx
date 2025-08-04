@@ -1,11 +1,15 @@
 "use client";
 
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useRouter } from "next/navigation";
-import WaitingSection from "./_components/WaitingSection";
-import useWaiting from "./_queries/useWaiting";
+import dynamic from "next/dynamic";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
+import useWaiting from "./_queries/useWaiting";
+
+const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
+  ssr: false,
+});
 
 export default function Waiting() {
   const navigate = useRouter();

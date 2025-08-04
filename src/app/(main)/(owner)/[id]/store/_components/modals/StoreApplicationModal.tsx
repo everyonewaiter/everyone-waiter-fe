@@ -1,20 +1,20 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import ModalWithTitle from "@/components/modal/largeModalLayout";
 import { ChangeEvent, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import getQueryClient from "@/app/get-query-client";
+import Input from "@/components/common/Input";
+import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
+import ModalWithTitle from "@/components/modal/largeModalLayout";
 import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import formatDate from "@/lib/formatting/formatDate";
-import Label from "@/components/common/Label";
-import Input from "@/components/common/Input";
-import getQueryClient from "@/app/get-query-client";
 import { useStoreContext } from "@/providers/storeProvider";
+import useStores from "../../_queries/useStores";
 import StepIndicator from "../StepIndicator";
 import PhotoForBusiness from "./PhotoForBusiness";
-import useStores from "../../_queries/useStores";
 
 type FormState = Omit<StoreDetail, "updatedAt" | "accountId"> & {
   image: string;
@@ -135,7 +135,6 @@ export default function StoreApplicationModal({
                   label="상호명"
                   placeholder="상호명을 입력해주세요. (20자 이내)"
                   disabled={!isUpdating || isAccepted}
-                  labelDisabled={!isUpdating || isAccepted}
                 />
                 <LabeledInput
                   form={form}
@@ -143,7 +142,6 @@ export default function StoreApplicationModal({
                   label="대표지"
                   placeholder="대표자명을 입력해주세요."
                   disabled={!isUpdating || isAccepted}
-                  labelDisabled={!isUpdating || isAccepted}
                 />
                 <div>
                   <Label className="mb-2" disabled={!isUpdating || isAccepted}>
@@ -164,7 +162,6 @@ export default function StoreApplicationModal({
                   label="소재지"
                   placeholder="소재지를 입력해주세요."
                   disabled={!isUpdating || isAccepted}
-                  labelDisabled={!isUpdating || isAccepted}
                   onClick={() =>
                     isUpdating && !isAccepted ? handleOpenAddress() : null
                   }
@@ -190,7 +187,6 @@ export default function StoreApplicationModal({
                     name="reason"
                     label="반려 사유"
                     disabled
-                    labelDisabled
                     className={
                       isUpdating
                         ? ""

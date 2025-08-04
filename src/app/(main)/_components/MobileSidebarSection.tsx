@@ -1,13 +1,10 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { useQuery } from "@tanstack/react-query";
-import { getComparePath } from "@/utils/getPathname";
 import { useStore } from "zustand";
-import useAuthStore from "@/stores/useAuthStore";
-import MENU_ITEMS from "@/constants/sidebarMenus";
+import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import {
   Select,
   SelectContent,
@@ -15,6 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/common/select";
+import MENU_ITEMS from "@/constants/sidebarMenus";
+import useAuthStore from "@/stores/useAuthStore";
+import { getComparePath } from "@/utils/getPathname";
 import Icon from "../../../components/common/Icon";
 
 interface IProps {

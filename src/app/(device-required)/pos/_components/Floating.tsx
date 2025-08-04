@@ -1,12 +1,24 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Fragment } from "react";
+import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
 import useOverlay from "@/hooks/use-overlay";
-import { Fragment } from "react";
-import MemoAlert from "./modals/MemoAlert";
-import ResendAlert from "./modals/ResendAlert";
+import { useMemoStore } from "../_hooks/useMemoStore";
+import { useOrderStore } from "../_hooks/useOrderStore";
+import { useSelectItemStore } from "../_hooks/useSelectItemStore";
+import usePos from "../_queries/usePos";
+import ReceiptModal from "./modals/ReceiptModal";
+
+const MemoAlert = dynamic(() => import("./modals/MemoAlert"), {
+  ssr: false,
+});
+
+const ResendAlert = dynamic(() => import("./modals/ResendAlert"), {
+  ssr: false,
+});
 
 const FLOATING_ITEMS = [
   {
@@ -22,39 +34,86 @@ const FLOATING_ITEMS = [
     icon: "send",
   },
   {
+    label: "영수증 출력",
+    icon: "receipt",
+  },
+  {
     label: "테이블 목록으로 이동",
     icon: "arrow-turn-right",
   },
-  {
-    label: "저장하기",
-    icon: "save",
-  },
 ];
 
-export default function Floating() {
+interface IProps {
+  hasData: boolean;
+  tableNo: number;
+}
+
+export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
 
+  const { activity } = usePos();
+  const { data } = activity(tableNo);
+
+  const { orders } = useOrderStore();
+  const { selectedOrder } = useSelectItemStore();
+  const { setMemo } = useMemoStore();
+
+  const list = hasData
+    ? FLOATING_ITEMS
+    : FLOATING_ITEMS.filter((el) => el.label.startsWith("테이블"));
+
   const handleAction = (type: string) => {
     if (type === "arrow-turn-right") navigate.push("/pos/tables");
-    else if (type === "rotate") navigate.push("/pos/tables?move=true");
-    else {
+    else if (type === "rotate")
+      navigate.push(`/pos/tables?sourceTableNo=${tableNo}`);
+    else if (type === "book") {
+      const orderNo = data?.orders.findIndex(
+        (el) => el.orderId === selectedOrder?.orderId
+      ) as number;
+
+      if (!selectedOrder || orderNo < 0) {
+        // eslint-disable-next-line  no-alert
+        alert("주문 선택 시 메모를 확인할 수 있습니다.");
+        return;
+      }
+
+      setMemo(selectedOrder.memo);
+
       open(() => (
         <QueryProviders>
-          {type === "book" && <MemoAlert close={close} />}
-          {type === "send" && <ResendAlert close={close} />}
+          {type === "book" && selectedOrder && (
+            <MemoAlert
+              close={close}
+              isOrder={orders.length > 0}
+              orderNo={orderNo + 1}
+              tableNo={tableNo}
+            />
+          )}
+        </QueryProviders>
+      ));
+    } else if (type === "send") {
+      open(() => (
+        <QueryProviders>
+          <ResendAlert close={close} tableNo={tableNo} />
+        </QueryProviders>
+      ));
+    } else {
+      open(() => (
+        <QueryProviders>
+          <ReceiptModal close={close} tableNo={tableNo} />
         </QueryProviders>
       ));
     }
   };
 
   return (
-    <aside className="shadow-floating font-regular text-gray-0 absolute bottom-7 left-1/2 flex h-[76px] w-[885px] -translate-x-1/2 flex-row rounded-[40px] bg-white px-10 py-6 text-xl">
-      {FLOATING_ITEMS.map((item, index, arr) => (
+    <aside className="shadow-floating font-regular text-gray-0 absolute bottom-7 left-1/2 flex h-[76px] -translate-x-1/2 flex-row rounded-[40px] bg-white px-10 py-6 text-xl">
+      {list?.map((item, index, arr) => (
         <Fragment key={item.label}>
           <button
             type="button"
-            className="flex items-center gap-2"
+            className="inline-flex items-center gap-2 whitespace-nowrap"
             onClick={() => handleAction(item.icon)}
           >
             <Icon iconKey={item.icon} className="text-gray-0" />

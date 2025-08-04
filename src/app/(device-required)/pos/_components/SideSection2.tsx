@@ -1,14 +1,18 @@
 "use client";
 
+import { Fragment } from "react";
+import dynamic from "next/dynamic";
+import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/use-overlay";
-import { Fragment } from "react";
-import QueryProviders from "@/app/query-providers";
-import Alert from "@/components/common/Alert/Alert";
 import cn from "@/lib/utils";
-import MenuBox from "./MenuBox";
 import { DUMMY } from "../payments/history/page";
+// import { print } from "../_utils/print-receipt";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 interface IProps {
   selectedRow: DUMMY | null;
@@ -25,7 +29,11 @@ export default function SideSection2({ selectedRow }: IProps) {
 
     openReceipt.open(() => (
       <QueryProviders>
-        <Alert onClose={openReceipt.close} buttonText="출력하기">
+        <Alert
+          onClose={openReceipt.close}
+          buttonText="출력하기"
+          // onAction={}
+        >
           <div className="flex flex-col gap-[6px] py-3">
             <span className="text-gray-0 text-xl font-semibold">
               영수증을 출력하시겠습니까?
@@ -87,7 +95,7 @@ export default function SideSection2({ selectedRow }: IProps) {
           {selectedRow &&
             [1, 2].map((item, index, arr) => (
               <Fragment key={item}>
-                <MenuBox key={item} index={index} />
+                {/* <MenuBox key={item} index={index} /> */}
                 {index < arr.length - 1 && (
                   <div className="my-8 h-[2px] w-full bg-gray-700" />
                 )}

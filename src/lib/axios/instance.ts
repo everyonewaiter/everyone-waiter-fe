@@ -39,6 +39,8 @@ const instance = axios.create({
 
 setupInterceptors(instance);
 setupInterceptors(formInstance);
-setupDeviceInterceptors(signatureInstance);
+if (typeof window !== "undefined") {
+  setupDeviceInterceptors(signatureInstance);
+}
 
 export { instance, formInstance, authInstance, signatureInstance };

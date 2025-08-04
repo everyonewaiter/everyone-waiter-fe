@@ -1,6 +1,7 @@
 "use client";
 
-import getQueryClient from "@/app/get-query-client";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   getRegisters,
@@ -11,8 +12,7 @@ import {
   registerDetails,
   registerStore,
 } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import getQueryClient from "@/app/get-query-client";
 import { storeKeys } from "./keys";
 
 const queryClient = getQueryClient();
@@ -65,13 +65,12 @@ const useStores = () => {
       },
     });
 
-  const storesList = (enabled: boolean) =>
+  const storesList = () =>
     useQuery<{
       stores: { storeId: string; name: string }[];
     }>({
       queryKey: storeKeys.stores(),
       queryFn: getStoreList,
-      enabled,
     });
 
   const storesDetail = (storeId: string) =>

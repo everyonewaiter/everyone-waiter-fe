@@ -1,14 +1,15 @@
-export default function Layout({
-  children,
-  modal,
-}: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}) {
+import type { ReactNode } from "react";
+
+type LayoutProps = {
+  children: ReactNode;
+  // modal?: ReactNode;
+};
+
+export default function Layout({ children }: LayoutProps) {
   return (
     <>
       {children}
-      {modal}
+      {/* {modal} */}
     </>
   );
 }

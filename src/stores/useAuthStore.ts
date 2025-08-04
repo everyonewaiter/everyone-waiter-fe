@@ -1,6 +1,6 @@
-import { deleteCookie } from "@/lib/cookies";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { deleteCookie } from "@/lib/cookies";
 
 interface AuthProps {
   user: UserProfile | null; // 유저 정보

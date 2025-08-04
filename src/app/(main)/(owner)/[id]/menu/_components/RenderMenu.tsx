@@ -1,14 +1,14 @@
 "use client";
 
-import { ScrollArea } from "@/components/common/ScrollArea";
-import DashedBorder from "@/components/DashedBorder";
 import { PlusIcon } from "lucide-react";
-import { useMediaQuery } from "react-responsive";
-import { useRouter } from "next/navigation";
-import { useStoreContext } from "@/providers/storeProvider";
 import dynamic from "next/dynamic";
-import MenuCard from "./MenuCard";
+import { useRouter } from "next/navigation";
+import { useMediaQuery } from "react-responsive";
+import DashedBorder from "@/components/DashedBorder";
+import { ScrollArea } from "@/components/common/ScrollArea";
+import { useStoreContext } from "@/providers/storeProvider";
 import useMenu from "../_queries/useMenu";
+import MenuCard from "./MenuCard";
 
 const Sortable = dynamic(() => import("@/components/Sortable"), {
   ssr: false,
@@ -53,7 +53,9 @@ export default function RenderMenu({
             type="button"
             className="h-full"
             onClick={() =>
-              navigate.push(`/${storeId}/menu/create?hideModal=${isMobile}`)
+              navigate.push(
+                `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
+              )
             }
           >
             <DashedBorder

@@ -1,7 +1,7 @@
-import React, { ChangeEvent, forwardRef, RefObject } from "react";
 import Image from "next/image";
-import cn from "@/lib/utils";
+import React, { ChangeEvent, RefObject, forwardRef } from "react";
 import Icon from "@/components/common/Icon";
+import cn from "@/lib/utils";
 
 interface IProps {
   image?: string;

@@ -1,15 +1,17 @@
 "use client";
 
+// import { useMutation } from "@tanstack/react-query";
+// import { addDevice } from "@/app/(device-required)/device/_api/device.api";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import cn from "@/lib/utils";
 import { useForm } from "react-hook-form";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { useMutation } from "@tanstack/react-query";
-import { addDevice } from "@/app/(device-required)/device/_api/device.api";
-import { useRouter } from "next/navigation";
-import { setSecureItem } from "@/lib/auth/localStorage";
+import { setEncryptedItem } from "@/lib/auth/secureStorage";
+import cn from "@/lib/utils";
+import useMakeDeviceName from "../_hooks/useMakeDeviceName";
+import useDeviceInfo from "../_queries/useDeviceInfo";
 
 type FormValues = {
   deviceName: string;
@@ -24,14 +26,18 @@ const tabs = [
 interface IProps {
   storeId: string;
   phoneNumber: string;
+  storeName: string;
 }
 
-export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
+export default function AddDeviceStep2({
+  storeId,
+  storeName,
+  phoneNumber,
+}: IProps) {
   const navigate = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const now = new Date();
-  const dn = `POS-${now.getFullYear().toString().slice(-2)}${(now.getMonth() + 1).toString().padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}${now.getHours().toString().padStart(2, "0")}${now.getMinutes().toString().padStart(2, "0")}${now.getSeconds().toString().padStart(2, "0")}${now.getMilliseconds().toString().padStart(3, "0")}`;
+  const dn = useMakeDeviceName();
 
   const form = useForm<FormValues>({
     mode: "onChange",
@@ -41,9 +47,8 @@ export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
     },
   });
 
-  const { mutate } = useMutation({
-    mutationFn: addDevice,
-  });
+  const { add } = useDeviceInfo();
+  const { mutate } = add();
 
   const submitHandler = (data: FormValues) => {
     const submitData = {
@@ -57,14 +62,35 @@ export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
     };
 
     mutate(submitData, {
-      onSuccess: (returnData) => {
+      onSuccess: async (returnData) => {
         const { deviceId, secretKey } = returnData;
-        setSecureItem("deviceInfo", {
-          deviceId,
-          name: submitData.name,
-          purpose: submitData.purpose,
+        await setEncryptedItem({
+          key: "@deviceInfo",
+          value: {
+            deviceId,
+            storeId: submitData.storeId,
+            storeName,
+            name: submitData.name,
+            purpose: submitData.purpose,
+          },
+          deviceId: String(deviceId),
+          storeId: submitData.storeId,
         });
-        setSecureItem("secretKey", secretKey);
+
+        await setEncryptedItem({
+          key: "@secretKey",
+          value: secretKey,
+          deviceId: String(deviceId),
+          storeId: submitData.storeId,
+        });
+        localStorage.setItem(
+          "@meta",
+          JSON.stringify({
+            deviceId,
+            storeId: submitData.storeId,
+          })
+        );
+
         navigate.push(activeIndex === 0 ? "/hall" : "/pos");
       },
     });
@@ -104,7 +130,7 @@ export default function AddDeviceStep2({ storeId, phoneNumber }: IProps) {
             form={form}
             label="단말기 번호"
             name="deviceNumber"
-            placeholder="단말기 번호를 입력해주세요."
+            placeholder="단말기 번호를 입력해주세요." // 기본값 DPTOTEST01
           />
           <ResponsiveButton
             type="submit"

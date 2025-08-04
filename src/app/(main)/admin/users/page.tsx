@@ -1,13 +1,13 @@
 "use client";
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import Paginations from "@/components/common/Pagination/Paginations";
-import Searchbar from "@/components/Searchbar";
 import { useEffect, useState } from "react";
+import Searchbar from "@/components/Searchbar";
+import Paginations from "@/components/common/Pagination/Paginations";
 import useDebounce from "@/hooks/useDebounce";
+import useAdmin from "../_hooks/useAdmin";
 import DropdownGroup from "./_components/DropdownGroup";
 import UsersTable from "./_components/UsersTable";
-import useAdmin from "../_hooks/useAdmin";
 
 const permissionObj = {
   전체: "",
@@ -45,7 +45,7 @@ export default function Users() {
     debouncedValue,
     permissionObj[
       active.permission as keyof typeof permissionObj
-    ] as Permission,
+    ] as AccountPermission,
     stateObj[active.status as keyof typeof stateObj] as Status,
     currentPage
   );

@@ -33,3 +33,9 @@ interface MenuDetail extends Menu {
   printEnabled: boolean;
   menuOptionGroups: MenuOptionGroups[];
 }
+
+interface PosMenuData {
+  categoryId: string;
+  name: string;
+  menus: MenuDetail[];
+}

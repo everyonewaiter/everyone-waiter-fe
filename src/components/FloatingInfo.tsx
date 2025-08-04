@@ -1,4 +1,4 @@
-import React, { forwardRef, PropsWithChildren } from "react";
+import React, { PropsWithChildren, forwardRef } from "react";
 
 const FloatingInfo = forwardRef<HTMLDivElement, PropsWithChildren>(
   ({ children }, ref) => (
@@ -8,7 +8,7 @@ const FloatingInfo = forwardRef<HTMLDivElement, PropsWithChildren>(
     >
       <div className="relative inline-block">
         {/* 본체 */}
-        <div className="w-[240px] rounded-2xl bg-red-50 p-3 text-left text-xs whitespace-pre-line text-[#505050] shadow-md">
+        <div className="w-[240px] rounded-2xl p-3 text-left text-xs whitespace-pre-line text-[#505050] shadow-md">
           {children}
         </div>
 

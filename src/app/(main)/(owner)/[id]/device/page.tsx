@@ -1,6 +1,13 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import Button from "@/components/common/Button/Button";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import Checkbox from "@/components/common/Checkbox";
+import Icon from "@/components/common/Icon";
+import Paginations from "@/components/common/Pagination/Paginations";
 import {
   MobileTable,
   MobileTableCell,
@@ -13,23 +20,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/common/Table/Tables";
-import Checkbox from "@/components/common/Checkbox";
-import cn from "@/lib/utils";
 import {
   deviceTranslate,
   paymentTimeTranslate,
   stateTranslate,
 } from "@/constants/translates";
-import transformDate from "@/lib/formatting/transformDate";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Paginations from "@/components/common/Pagination/Paginations";
-import { useState } from "react";
 import useOverlay from "@/hooks/use-overlay";
-import Alert from "@/components/common/Alert/Alert";
-import Button from "@/components/common/Button/Button";
-import Icon from "@/components/common/Icon";
+import transformDate from "@/lib/formatting/transformDate";
+import cn from "@/lib/utils";
 import useControlCheck from "../../../../../hooks/useControlCheck";
 import useDevice from "./_queries/useDevice";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
 
 const itemWidth = {
   이름: "flex flex-1",
@@ -175,7 +179,7 @@ export default function Device() {
                   {stateTranslate[item.state as Status]}
                 </TableCell>
                 <TableCell className={itemWidth["등록 일시"]}>
-                  {transformDate(item.updatedAt)}
+                  {transformDate(item.createdAt)}
                 </TableCell>
               </TableRow>
             ))}

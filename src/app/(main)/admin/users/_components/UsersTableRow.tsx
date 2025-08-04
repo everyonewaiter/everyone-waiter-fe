@@ -1,5 +1,5 @@
-import Checkbox from "@/components/common/Checkbox";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import Checkbox from "@/components/common/Checkbox";
 import { TableCell, TableRow } from "@/components/common/Table/Tables";
 import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
@@ -45,7 +45,7 @@ export default function UsersTableRow({ openModal, ...item }: IProps) {
             item.permission === "ADMIN" ? "!bg-[#FFB70018] !text-[#FFB700]" : ""
           )}
         >
-          {permissionTranslate[item.permission as Permission]}
+          {permissionTranslate[item.permission as AccountPermission]}
         </ResponsiveButton>
       </TableCell>
       <TableCell className="flex-1">-</TableCell>

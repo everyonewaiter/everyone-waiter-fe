@@ -1,10 +1,10 @@
-import Icon from "@/components/common/Icon";
+import getQueryClient from "@/app/get-query-client";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import Icon from "@/components/common/Icon";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
-import getQueryClient from "@/app/get-query-client";
-import useWaiting from "../_queries/useWaiting";
 import useElapsedMinutes from "../_hooks/useElapsedMinutes";
+import useWaiting from "../_queries/useWaiting";
 
 interface IProps extends Waiting {
   close: () => void;
@@ -99,7 +99,7 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
               <span className="text-base">총 호출한 횟수</span>
               <span className="text-lg">{waiting.callCount}회</span>
             </ResponsiveButton>
-            {elapsedLastCall <= 100 && (
+            {Number(elapsedLastCall) <= 100 && (
               <ResponsiveButton
                 variant="outline"
                 color="primary"

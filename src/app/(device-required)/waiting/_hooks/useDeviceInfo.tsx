@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { getSecureItem } from "@/lib/auth/localStorage";
+import { useEffect, useState } from "react";
+import { getDecryptedItem } from "@/lib/auth/secureStorage";
 
 export default function useDeviceInfo() {
   const [deviceInfo, setDeviceInfo] = useState<Pick<
@@ -13,7 +13,12 @@ export default function useDeviceInfo() {
     const fetchDeviceInfo = async () => {
       try {
         setIsLoading(true);
-        const value = await getSecureItem("deviceInfo");
+        const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+        const value = (await getDecryptedItem({
+          key: "@deviceInfo",
+          deviceId: meta.deviceId,
+          storeId: meta.storeId,
+        })) as Device;
         setDeviceInfo(value);
         setError(null);
       } catch (err: any) {

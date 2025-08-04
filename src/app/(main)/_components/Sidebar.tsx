@@ -1,14 +1,13 @@
 "use client";
 
-import useAuthStore from "@/stores/useAuthStore";
-import Image from "next/image";
-import { useStore } from "zustand";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-
-import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useStore } from "zustand";
+import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
+import Icon from "@/components/common/Icon";
 import {
   Select,
   SelectContent,
@@ -17,14 +16,18 @@ import {
   SelectValue,
 } from "@/components/common/select";
 import MENU_ITEMS from "@/constants/sidebarMenus";
+import useAuthStore from "@/stores/useAuthStore";
 import { getComparePath } from "@/utils/getPathname";
-import Icon from "@/components/common/Icon";
 
 export default function Sidebar() {
+  const { prefetch } = useRouter();
+  const pathname = usePathname();
+
+  const [selectedStoreId, setSelectedStoreId] = useState<string>("");
+
   const { user } = useStore(useAuthStore, (state) => state);
   const permission = user?.permission || "USER";
-  const pathname = usePathname();
-  const [selectedStoreId, setSelectedStoreId] = useState<string>("");
+
   const comparePath = getComparePath(pathname, permission);
 
   // OWNER인 경우에만 매장 목록 조회
@@ -108,6 +111,13 @@ export default function Sidebar() {
                           ? `/${selectedStoreId}${item.href}`
                           : item.href
                       }
+                      onMouseEnter={() => {
+                        if (permission === "OWNER") {
+                          prefetch(`/${selectedStoreId}${item.href}`);
+                        } else {
+                          prefetch(item.href);
+                        }
+                      }}
                       className={`flex items-center gap-3 px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
                         isActive ? "text-primary" : "text-gray-300"
                       }`}

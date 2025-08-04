@@ -1,17 +1,16 @@
 import { PropsWithChildren } from "react";
+import { getDevices } from "@/app/(main)/(owner)/[id]/device/_api/device.api";
 import getQueryClient from "@/app/get-query-client";
-import { getDevices } from "@/app/(device-required)/device/_api/device.api";
 import RefLayout from "@/components/modal/RefLayout";
-import ModalButton from "../../_components/ModalButton";
-import ModalTitle from "../../_components/ModalTitle";
 import { deviceKeys } from "../../../device/_queries/keys";
+import ModalTitle from "../../_components/ModalTitle";
 
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{ params: { id: string; deviceId: string } }>) {
+}: PropsWithChildren<{ params: Promise<{ id: string; deviceId: string }> }>) {
   const queryClient = getQueryClient();
-  const { id, deviceId } = params;
+  const { id, deviceId } = await params;
 
   await queryClient.prefetchQuery({
     queryKey: deviceKeys.detail(id, deviceId),
@@ -22,7 +21,6 @@ export default async function Layout({
     <RefLayout className="min-w-[544px]">
       <ModalTitle title="기기 정보" />
       {children}
-      <ModalButton buttonText="확인" />
     </RefLayout>
   );
 }

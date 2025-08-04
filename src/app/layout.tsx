@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
+import ClientLayout from "./(main)/_components/ClientRootLayout";
 import "./globals.css";
-import Script from "next/script";
-import { OverlayStoreProvider } from "@/providers/overlayStoreProvider";
-import QueryProviders from "./query-providers";
+import JQueryScripts from "./(main)/_components/Scripts";
 
 export const metadata: Metadata = {
   title: "모두의 웨이터",
@@ -18,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="preload"
@@ -60,14 +59,14 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-LE0LKNB3BT"
-      />
-      <body className="min-h-screen min-w-screen select-none">
-        <OverlayStoreProvider>
-          <QueryProviders>{children}</QueryProviders>
-        </OverlayStoreProvider>
+
+      <body>
+        <ClientLayout>
+          <JQueryScripts />
+          <main className="min-h-screen min-w-screen select-none">
+            {children}
+          </main>
+        </ClientLayout>
       </body>
     </html>
   );

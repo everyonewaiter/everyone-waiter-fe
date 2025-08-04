@@ -1,6 +1,6 @@
+import { PlusIcon } from "lucide-react";
 import Button from "@/components/common/Button/Button";
 import cn from "@/lib/utils";
-import { PlusIcon } from "lucide-react";
 
 interface IProps {
   completed: boolean;

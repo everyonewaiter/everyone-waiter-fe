@@ -1,8 +1,14 @@
 "use client";
 
-// import { useParams } from "next/navigation";
-// import { useStoreContext } from "@/providers/storeProvider";
-import MenuModal from "@/app/(device-required)/pos/_components/modals/MenuModal";
+import dynamic from "next/dynamic";
+import { useEffect } from "react";
+
+const MenuModal = dynamic(
+  () => import("@/app/(device-required)/pos/_components/modals/MenuModal"),
+  {
+    ssr: false,
+  }
+);
 
 const dummy: MenuDetail | undefined = {
   menuId: "694865267482835533",
@@ -32,16 +38,22 @@ const dummy: MenuDetail | undefined = {
 };
 
 export default function Page() {
-  // const params = useParams();
-  // const menuId = params?.menuId as string;
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
-  // const { storeId } = useStoreContext();
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, []);
 
   return (
-    <MenuModal
-      data={dummy!}
-      type="preview"
-      layoutClassName="!w-[320px] min-!h-[580px] md:!w-[664px] lg:!h-[746px] lg:!w-[1148px]"
-    />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <MenuModal
+        data={dummy!}
+        type="preview"
+        layoutClassName="!w-[320px] min-!h-[580px] md:!w-[664px] lg:!h-[746px] lg:!w-[1148px]"
+      />
+    </div>
   );
 }

@@ -1,12 +1,12 @@
+import { X as CloseIcon } from "lucide-react";
 import {
   ButtonHTMLAttributes,
   PropsWithChildren,
   ReactNode,
   useRef,
 } from "react";
-import useOutsideClick from "@/hooks/useOutSideClick";
 import useEscapeKey from "@/hooks/useEscapeKey";
-import { X as CloseIcon } from "lucide-react";
+import useOutsideClick from "@/hooks/useOutSideClick";
 import cn from "@/lib/utils";
 import ResponsiveButton from "../common/Button/ResponsiveButton";
 

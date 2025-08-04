@@ -1,5 +1,3 @@
-"use client";
-
 import { PropsWithChildren } from "react";
 import RefLayout from "@/components/modal/RefLayout";
 

@@ -13,7 +13,7 @@ import {
 const useAdmin = () => {
   const accountList = (
     searchEmail: string,
-    searchPermission: Permission | "",
+    searchPermission: AccountPermission | "",
     searchState: Status | "",
     page: number = 1
   ) =>

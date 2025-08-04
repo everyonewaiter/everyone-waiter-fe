@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import { useMutation, useQuery } from "@tanstack/react-query";
+import getQueryClient from "@/app/get-query-client";
 import {
   deleteDevice,
   getDetailDevice,
   getDevices,
   updateDevice,
-} from "@/app/(device-required)/device/_api/device.api";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import getQueryClient from "@/app/get-query-client";
+} from "../_api/device.api";
 import { deviceKeys } from "./keys";
 
 const useDevice = () => {
