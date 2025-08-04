@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import ClientLayout from "./(main)/_components/ClientRootLayout";
 import "./globals.css";
 import JQueryScripts from "./(main)/_components/Scripts";
@@ -67,7 +66,6 @@ export default function RootLayout({
           <main className="min-h-screen min-w-screen select-none">
             {children}
           </main>
-          <GoogleAnalytics gaId={String(process.env.NEXT_PUBLIC_GA_ID)} />
         </ClientLayout>
       </body>
     </html>

@@ -16,7 +16,11 @@ export default function QueryProviders({
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname) pageview(pathname);
+    if (pathname) {
+      if (typeof (window as any).gtag === "function") {
+        pageview(pathname);
+      }
+    }
   }, [pathname]);
 
   return (
