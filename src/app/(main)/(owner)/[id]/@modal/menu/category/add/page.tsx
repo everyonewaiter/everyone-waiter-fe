@@ -1,25 +1,25 @@
 "use client";
 
-import { arrayMove } from "@dnd-kit/sortable";
 import { ArrowDownUp, Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FormProvider } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
 import { ScrollArea } from "@/components/common/ScrollArea";
+import Spinner from "@/components/common/Spinner";
 import CategoryForm from "../../../../menu/_components/CategoryForm";
-import useCategories from "../../../../menu/_queries/useCategories";
 import ModalButton from "../../../_components/ModalButton";
 import ModalTitle from "../../../_components/ModalTitle";
 import useCategoryForm from "../../_hooks/useCategoryForm";
+import useCategoryMove from "../../_hooks/useCategoryMove";
 
 const Sortable = dynamic(
   () => import("../../../../../../../../components/Sortable"),
   {
     ssr: false,
-    loading: () => <div>순서 변경 로딩 중...</div>,
+    loading: () => <Spinner />,
   }
 );
 
@@ -29,54 +29,12 @@ export default function Page() {
   const storeId = params?.id as string;
 
   const [changeMove, setChangeMove] = useState(false);
-  const [pendingMoves, setPendingMoves] = useState<
-    { sourceId: string; targetId: string; where: "NEXT" | "PREVIOUS" }[]
-  >([]);
 
-  const { query, move } = useCategories(storeId);
-  const data = query.data?.categories;
+  const {
+    form: { form, watch, setValue },
+  } = useCategoryForm(storeId);
 
-  const { form, setInitialCategories } = useCategoryForm();
-
-  /* eslint-disable react-hooks/exhaustive-deps */
-  useEffect(() => {
-    if (data) {
-      setInitialCategories(data);
-    }
-  }, [data, form]);
-
-  const handleDrag = ({ active, over }: any) => {
-    if (!over) return;
-
-    const categories = form.watch("categories");
-    const oldIndex = categories?.findIndex((c) => c.categoryId === active.id);
-    const newIndex = categories?.findIndex((c) => c.categoryId === over.id);
-
-    if (oldIndex === -1 || newIndex === -1) return;
-
-    const sorted = arrayMove(categories, oldIndex, newIndex);
-
-    form.setValue("categories", sorted);
-    setPendingMoves((prev) => [
-      ...prev,
-      {
-        sourceId: categories[oldIndex].categoryId,
-        targetId: categories[newIndex].categoryId,
-        where: oldIndex < newIndex ? "NEXT" : "PREVIOUS",
-      },
-    ]);
-  };
-
-  const handleSortSave = () => {
-    Promise.all(
-      pendingMoves.map((moveData) =>
-        move.mutate(
-          { storeId, ...moveData },
-          { onSuccess: () => navigate.back() }
-        )
-      )
-    );
-  };
+  const { handleSortSave, handleDrag } = useCategoryMove(storeId);
 
   return (
     <div className="lg h-full md:w-[340px] lg:w-[540px]">
@@ -130,20 +88,25 @@ export default function Page() {
         }
       />
       <ScrollArea className="md:h-[270px] lg:h-[424px]">
-        {changeMove ? (
-          <Sortable
-            items={form.watch("categories").map((field) => field.categoryId)}
-            onDragEnd={handleDrag}
-          >
-            <FormProvider {...form}>
+        <FormProvider {...form}>
+          {changeMove ? (
+            <Sortable
+              items={watch("categories").map((field) => field.categoryId)}
+              onDragEnd={(props) =>
+                handleDrag({
+                  categories: watch("categories"),
+                  setCategories: (val: Category[]) =>
+                    setValue("categories", val),
+                  ...props,
+                })
+              }
+            >
               <CategoryForm changeMove={changeMove} />
-            </FormProvider>
-          </Sortable>
-        ) : (
-          <FormProvider {...form}>
+            </Sortable>
+          ) : (
             <CategoryForm changeMove={changeMove} />
-          </FormProvider>
-        )}
+          )}
+        </FormProvider>
       </ScrollArea>
 
       {!changeMove && (
@@ -168,8 +131,8 @@ export default function Page() {
             }}
             commonClassName="w-full border-none dashed-light"
             onClick={() =>
-              form.setValue("categories", [
-                ...form.watch("categories"),
+              setValue("categories", [
+                ...watch("categories"),
                 { categoryId: "", name: "" },
               ])
             }
@@ -180,11 +143,15 @@ export default function Page() {
         </div>
       )}
 
-      <ModalButton
-        buttonText={changeMove ? "순서 저장하기" : "저장하기"}
-        colorBlack={changeMove}
-        onAction={handleSortSave}
-      />
+      {changeMove && (
+        <ModalButton
+          buttonText="순서 저장하기"
+          colorBlack
+          onAction={() =>
+            handleSortSave(() => navigate.replace(`/${storeId}/menu/category`))
+          }
+        />
+      )}
     </div>
   );
 }

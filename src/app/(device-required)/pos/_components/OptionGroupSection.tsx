@@ -86,7 +86,7 @@ export default function OptionGroupSection({
           (opt) => opt.name !== value
         );
 
-        if (updatedOptions.length > 0) {
+        if (updatedOptions?.length > 0) {
           selected[groupIndex] = {
             ...group,
             orderOptions: updatedOptions,
@@ -120,7 +120,7 @@ export default function OptionGroupSection({
         >
           <p className="text-gray-0 mb-3 text-sm lg:text-lg">{item.name}</p>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-1">
             {type === "order"
               ? item.menuOptions.map((option, index) =>
                   required ? (

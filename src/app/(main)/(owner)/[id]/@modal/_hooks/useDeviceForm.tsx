@@ -2,26 +2,37 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import getQueryClient from "@/app/get-query-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  deviceFormSchema,
+  TypeDeviceForm,
+} from "../../device/_schema/device.schema";
+import { deviceKeys } from "../../device/_queries/keys";
 
-export default function useDeviceForm() {
+export default function useDeviceForm({
+  data,
+  setIsSubmitted,
+}: {
+  data?: Device & {
+    tableNo: number;
+    ksnetDeviceNo: string;
+  };
+  setIsSubmitted: (checked: boolean) => void;
+}) {
   const navigate = useRouter();
   const queryClient = getQueryClient();
 
-  const form = useForm<
-    Omit<Device, "updatedAt" | "storeId" | "deviceId"> & {
-      deviceNumber: string;
-      tableNo: number;
-      createdAt: string;
-    }
-  >({
-    defaultValues: {
-      name: "",
-      createdAt: "",
-      state: "",
-      purpose: "HALL",
-      paymentType: "POSTPAID",
-      tableNo: 0,
-      deviceNumber: "",
+  const form = useForm<TypeDeviceForm>({
+    mode: "onChange",
+    resolver: zodResolver(deviceFormSchema),
+    values: {
+      name: data?.name ?? "",
+      createdAt: data?.createdAt ?? "",
+      state: data?.state || null,
+      purpose: data?.purpose ?? "HALL",
+      paymentType: data?.paymentType ?? "POSTPAID",
+      tableNo: data?.tableNo ?? 0,
+      deviceNumber: data?.ksnetDeviceNo ?? "",
     },
   });
 
@@ -35,25 +46,29 @@ export default function useDeviceForm() {
       } & { storeId: string; deviceId: string },
       unknown
     >,
-    storeId: string,
-    deviceId: string
+    submitData: TypeDeviceForm,
+    id: { storeId: string; deviceId: string }
   ) => {
+    setIsSubmitted(true);
+
     action.mutate(
       {
-        name: form.watch("name"),
-        purpose: form.watch("purpose") as DevicePurpose,
-        paymentType: form.watch("paymentType") as DevicePayment,
-        tableNo: form.watch("tableNo") ?? 0,
-        ksnetDeviceNo: form.watch("deviceNumber"),
-        storeId,
-        deviceId,
+        name: submitData.name,
+        purpose: submitData.purpose,
+        paymentType: submitData.paymentType,
+        tableNo: submitData.tableNo,
+        ksnetDeviceNo: submitData.deviceNumber,
+        ...id,
       },
       {
-        onSuccess: () => {
+        onSuccess: (_, variables) => {
           navigate.back();
-          queryClient.invalidateQueries({ queryKey: ["get-devices"] });
+          queryClient.invalidateQueries({
+            queryKey: deviceKeys.all(variables.storeId),
+          });
         },
         onError: (e) => {
+          setIsSubmitted(false);
           const res = (e as any).response.data;
           if (
             ["ALREADY_USE_DEVICE_NAME", "DEVICE_NOT_FOUND"].includes(res.code)

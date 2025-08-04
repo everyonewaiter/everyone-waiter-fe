@@ -17,7 +17,7 @@ export default function UsersTableRow({ openModal, ...item }: IProps) {
       <TableCell className="flex-[1.3]">
         <span className="hidden lg:block">{item.email}</span>
         <span className="hidden md:block lg:hidden">
-          {item.email.length > 15
+          {item.email?.length > 15
             ? `${item.email.slice(0, 15)}...`
             : item.email}
         </span>
@@ -28,12 +28,12 @@ export default function UsersTableRow({ openModal, ...item }: IProps) {
           responsiveButtons={{
             lg: {
               buttonSize: "md",
-              className: "!h-[37px] !px-5 !py-2 !rounded-[24px]",
+              className: "!h-[37px] !px-5 !py-2 !rounded-[24px] !border-none",
             },
             md: {
               buttonSize: "md",
               className:
-                "!h-[26px] !rounded-[24px] !bg-[#3900B508] !text-[#3900B5] !text-xs !font-regular !px-3 !py-1",
+                "!h-[26px] !rounded-[24px] !bg-[#3900B508] !text-[#3900B5] !text-xs !font-regular !px-3 !py-1 !border-none",
             },
           }}
           commonClassName={cn(

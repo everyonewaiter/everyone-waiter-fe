@@ -2,16 +2,17 @@
 
 /* eslint-disable no-alert */
 /* eslint-disable react/no-unstable-nested-components */
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
-import { TypeSignup } from "@/schema/signup.schema";
-import dynamic from "next/dynamic";
+import Spinner from "@/components/common/Spinner";
 import useSignup from "./_hooks/useSignup";
 import useSignupForm from "./_hooks/useSignupForm";
+import { TypeSignup } from "./_schema/signup.schema";
 
 const ResponsiveButton = dynamic(
   () => import("@/components/common/Button/ResponsiveButton"),
@@ -77,14 +78,14 @@ export default function Signup() {
     }
 
     setAuthTime(300);
-    mutateSendPhoneAuthCode({ phoneNumber });
+    mutateSendPhoneAuthCode.mutate({ phoneNumber });
   };
 
   // NOTE - 인증 확인
   const handleCheckAuth = (value: string) => {
     handleSubmitValue("codeAuth", true);
 
-    mutateVerifyAuthCode(
+    mutateVerifyAuthCode.mutate(
       {
         phoneNumber: form.getValues("phone"),
         code: Number(value),
@@ -229,7 +230,7 @@ export default function Signup() {
             }}
             commonClassName="font-regular w-full"
           >
-            가입하기
+            {disableFormButton ? <Spinner /> : "가입하기"}
           </ResponsiveButton>
         </form>
       </Form>

@@ -4,12 +4,7 @@ import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
 import makeKSCATApprovalREQ from "../_utils/make-approval-req";
 import { print } from "../_utils/print-receipt";
-
-interface FormType {
-  receiptType: string;
-  phoneNumber: string;
-  monthlyPlan: string;
-}
+import { TypePayForm } from "../_schema/pos.schema";
 
 export default function usePayment() {
   const approvePay = useMutation({
@@ -112,19 +107,19 @@ export default function usePayment() {
     tableNo,
     successHandler,
   }: {
-    form: UseFormReturn<FormType, any, FormType>;
+    form: UseFormReturn<TypePayForm, any, TypePayForm>;
     amount: number;
     tableNo: number;
     successHandler: (res: PaymentResponse) => void;
   }) => {
-    const taxValue = Math.floor(amount / 10);
+    const nonTax = Math.floor(amount / 1.1);
     const installment =
       form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
 
     const req = makeKSCATApprovalREQ({
       amount,
-      tax: taxValue,
-      nonTax: amount - taxValue,
+      tax: amount - nonTax,
+      nonTax,
       installment,
       type: "1",
     });
@@ -141,8 +136,8 @@ export default function usePayment() {
           tableNo,
           body: {
             amount,
-            vat: taxValue,
-            supplyAmount: amount - taxValue,
+            vat: amount - nonTax,
+            supplyAmount: nonTax,
             approvalNo: res.APPROVALNO,
             installment,
             cardNo: res.FILLER,
@@ -161,19 +156,17 @@ export default function usePayment() {
   };
 
   const handleCancelCard = async ({
-    activity,
+    totalPaymentPrice,
     successHandler,
   }: {
-    activity: PosTableActivity;
+    totalPaymentPrice: number;
     successHandler?: () => void;
   }) => {
-    const payedPrice = activity.totalPaymentPrice;
-    const tax = Math.floor(payedPrice / 10);
-    const nonTax = payedPrice - tax;
+    const nonTax = Math.floor(totalPaymentPrice / 1.1);
 
     const req = makeKSCATApprovalREQ({
-      amount: payedPrice,
-      tax,
+      amount: totalPaymentPrice,
+      tax: totalPaymentPrice - nonTax,
       nonTax,
       installment: "",
       type: "0",

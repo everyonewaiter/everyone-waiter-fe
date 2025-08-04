@@ -18,6 +18,9 @@ function Input({
         "h-9 rounded-[8px] md:h-9 md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:py-3 lg:pr-3 lg:pl-4 lg:text-sm lg:text-[15px]",
         className
       )}
+      value={
+        props.value === undefined || props.value === null ? "" : props.value
+      }
       {...props}
     />
   );

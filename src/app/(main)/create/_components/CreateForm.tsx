@@ -1,12 +1,11 @@
 "use client";
 
-/* eslint-disable no-nested-ternary */
-import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import useStores from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
+import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
@@ -15,6 +14,8 @@ import useOpenDaumPostcode from "@/hooks/useOpenDaumPostcode";
 import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { TypeStore, storeSchema } from "@/schema/store.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Spinner from "@/components/common/Spinner";
 
 const UploadPhoto = dynamic(
   () => import("@/app/(main)/(owner)/[id]/store/_components/UploadPhoto"),
@@ -24,7 +25,9 @@ const UploadPhoto = dynamic(
 );
 
 export default function CreateForm() {
+  const navigate = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
+
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -40,15 +43,7 @@ export default function CreateForm() {
     },
   });
 
-  const {
-    add: { mutate, error },
-  } = useStores();
-
-  useEffect(() => {
-    if (error?.message) {
-      setIsSubmitted(false);
-    }
-  }, [error]);
+  const { mutate } = storesQueries.useRegister();
 
   const handleSubmit = (data: TypeStore) => {
     setIsSubmitted(true);
@@ -65,6 +60,7 @@ export default function CreateForm() {
 
     mutate(formData, {
       onError: () => setIsSubmitted(false),
+      onSuccess: () => navigate.replace("/create?state=pending"),
     });
   };
 
@@ -117,7 +113,7 @@ export default function CreateForm() {
               name="ceoName"
               label="대표자명"
               placeholder="대표자명 입력해주세요."
-              className="cursor-pointer placeholder:text-gray-300"
+              className="placeholder:text-gray-300"
             />
             <LabeledInput
               form={form}
@@ -137,9 +133,8 @@ export default function CreateForm() {
                   const formatted = phoneNumberPattern(onlyNums);
                   form.setValue("landline", formatted);
                 }}
-                value={form.watch("landline")}
                 placeholder="매장 전화번호를 입력해주세요"
-                className="cursor-pointer placeholder:text-gray-300"
+                className="placeholder:text-gray-300"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -151,15 +146,14 @@ export default function CreateForm() {
                   const formatted = formatBusinessNumber(onlyNums);
                   form.setValue("license", formatted);
                 }}
-                value={form.watch("license")}
                 placeholder="사업자 번호를 입력해주세요"
-                className="cursor-pointer placeholder:text-gray-300"
+                className="placeholder:text-gray-300"
               />
             </div>
             <UploadPhoto
               ref={fileRef}
               handleFile={handleFile}
-              image={imageUrl!}
+              image={imageUrl ?? ""}
               className="h-[140px] max-w-full md:h-40 md:w-[348px] lg:w-100"
             />
             <ResponsiveButton
@@ -172,7 +166,7 @@ export default function CreateForm() {
               disabled={isSubmitted}
               commonClassName="mt-4"
             >
-              신청하기
+              {isSubmitted ? <Spinner /> : "신청하기"}
             </ResponsiveButton>
           </form>
         </FormProvider>

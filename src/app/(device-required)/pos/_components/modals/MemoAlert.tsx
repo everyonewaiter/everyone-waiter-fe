@@ -4,7 +4,7 @@ import Textarea from "@/components/common/TextArea";
 import { useMemoStore } from "../../_hooks/useMemoStore";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
-import useOrder from "../../_queries/useOrder";
+import { orderQueries } from "../../_queries/useOrder";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -25,12 +25,14 @@ export default function MemoAlert({
 }: IProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { memo, setMemo, resetMemo } = useMemoStore();
   const { selectedOrder, setSelectedOrder } = useSelectItemStore();
   const { orders, resetOrders } = useOrderStore();
 
-  const { memoUpdate, order } = useOrder();
+  const memoUpdate = orderQueries.useUpdateMemo();
+  const order = orderQueries.useOrderMenu();
 
   const isReadonly = !isOrder && !isEditing;
   const placeholder =
@@ -57,6 +59,7 @@ export default function MemoAlert({
           resetMemo();
           close();
         },
+        onError: () => setIsSubmitted(false),
       }
     );
   };
@@ -74,11 +77,14 @@ export default function MemoAlert({
           resetMemo();
           close();
         },
+        onError: () => setIsSubmitted(false),
       }
     );
   };
 
   const handleAction = () => {
+    setIsSubmitted(true);
+
     if (isOrder) {
       handleOrder();
     } else if (isEditing) {
@@ -86,7 +92,9 @@ export default function MemoAlert({
     } else {
       setIsEditing(true);
       ref.current?.focus();
-      ref.current?.setSelectionRange(memo.length, memo.length);
+      if (typeof memo === "string") {
+        ref.current?.setSelectionRange(memo.length, memo.length);
+      }
     }
   };
 
@@ -102,6 +110,7 @@ export default function MemoAlert({
     buttonText: getButtonText(),
     onAction: handleAction,
     hasNoCancel: isEditing,
+    isSubmitted,
   };
 
   return (

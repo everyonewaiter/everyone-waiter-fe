@@ -9,7 +9,7 @@ import {
 } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Separator from "@/components/common/separator";
-import { MenuFormType } from "../_types/menuForm.type";
+import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 
 interface IProps {
   type: "requiredOptions" | "optionalOptions";
@@ -18,9 +18,7 @@ interface IProps {
 }
 
 export default function OptionBox({ type, index, isEditing }: IProps) {
-  const form = useFormContext<
-    Omit<MenuFormType, "image"> & { image: File | null }
-  >();
+  const form = useFormContext<TypeMenuForm>();
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,

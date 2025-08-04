@@ -119,6 +119,9 @@ dependencies:
   react-responsive:
     specifier: ^10.0.1
     version: 10.0.1(react@19.1.0)
+  react-spinners:
+    specifier: ^0.17.0
+    version: 0.17.0(react-dom@19.1.0)(react@19.1.0)
   tailwind-merge:
     specifier: ^3.1.0
     version: 3.3.1
@@ -8310,6 +8313,16 @@ packages:
       prop-types: 15.8.1
       react: 19.1.0
       shallow-equal: 3.1.0
+    dev: false
+
+  /react-spinners@0.17.0(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-L/8HTylaBmIWwQzIjMq+0vyaRXuoAevzWoD35wKpNTxxtYXWZp+xtgkfD7Y4WItuX0YvdxMPU79+7VhhmbmuTQ==}
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
     dev: false
 
   /react-style-singleton@2.2.3(@types/react@19.1.8)(react@19.1.0):

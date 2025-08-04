@@ -4,12 +4,20 @@ export const print = ({
   payment,
   stores,
   successHandler,
+  cashReceiptPhoneNo,
 }: {
   type: "kitchen" | "cash-receipt" | "card-receipt";
   activity: PosTableActivity;
-  payment?: PaymentResponse & { installment: string };
+  payment?: {
+    CARDNAME: string;
+    FILLER: string;
+    INSTALLMENT: string;
+    APPROVALNO: string;
+    TRADETIME: string;
+  };
   stores?: PosStore;
   successHandler?: () => void;
+  cashReceiptPhoneNo?: string;
 }) => {
   window.setPosId(1);
   window.checkPrinterStatus();
@@ -345,9 +353,6 @@ export const print = ({
     );
   };
 
-  // eslint-disable-next-line no-console
-  console.log(payment);
-
   const printAddition = () => {
     if (type === "card-receipt") {
       window.printText(
@@ -391,7 +396,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("할부기간", payment?.installment === "일시불" ? payment?.installment : `${payment?.installment}개월`)}\n`,
+        `${formatAlignLeftRight("할부기간", payment?.INSTALLMENT === "일시불" ? payment?.INSTALLMENT : `${payment?.INSTALLMENT}개월`)}\n`,
         0,
         0,
         false,
@@ -473,7 +478,41 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("결제방법", "현금\n\n\n")}\n`,
+        `${formatAlignLeftRight("결제 방법", "현금\n\n\n")}\n`,
+        0,
+        0,
+        false,
+        false,
+        false,
+        0,
+        0
+      );
+      window.printText(
+        `${formatAlignLeftRight("현금 영수증 발급", `${cashReceiptPhoneNo}\n\n\n`)}\n`,
+        0,
+        0,
+        false,
+        false,
+        false,
+        0,
+        0
+      );
+
+      const formatTradeTime = () => {
+        const pad = (num: number) => String(num).padStart(2, "0");
+
+        const year = String(now.getFullYear()).slice(-2);
+        const month = pad(now.getMonth() + 1);
+        const day = pad(now.getDate());
+        const hour = pad(now.getHours());
+        const minute = pad(now.getMinutes());
+        const second = pad(now.getSeconds());
+
+        return `${year}${month}${day}${hour}${minute}${second}`;
+      };
+
+      window.printText(
+        `${formatAlignLeftRight("승인 일시", formatTradeTime())}\n`,
         0,
         0,
         false,
@@ -498,7 +537,6 @@ export const print = ({
   const strSubmit = window.getPosData();
   window.requestPrint("Printer1", strSubmit, (result: unknown) => {
     // eslint-disable-next-line no-console
-    console.log(result);
     if ((result as string).endsWith("success")) {
       successHandler?.();
     }

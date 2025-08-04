@@ -1,7 +1,6 @@
 "use client";
 
 import { MinusIcon } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import {
@@ -15,16 +14,12 @@ import {
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/common/Radio";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { discountSchema, TypeDiscountForm } from "../../_schema/pos.schema";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
-
-interface FormType {
-  discount: number | null;
-  result: number | null;
-  discountType: "fixed" | "percent";
-}
 
 interface IProps {
   close: () => void;
@@ -39,21 +34,21 @@ export default function AddDiscountAlert({
   onAction,
   initialValue,
 }: IProps) {
-  const form = useForm<FormType>({
-    defaultValues: {
-      discount: null,
-      result: null,
-      discountType: "fixed",
-    },
+  const form = useForm<TypeDiscountForm>({
+    mode: "onChange",
+    resolver: zodResolver(discountSchema),
+    defaultValues: initialValue
+      ? {
+          discount: initialValue,
+          result: total - initialValue,
+          discountType: "fixed",
+        }
+      : {
+          discount: null,
+          result: null,
+          discountType: "fixed",
+        },
   });
-
-  useEffect(() => {
-    if (initialValue) {
-      form.setValue("discount", initialValue);
-      form.setValue("result", total - initialValue);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialValue]);
 
   return (
     <Alert
@@ -75,8 +70,8 @@ export default function AddDiscountAlert({
         </div>
         <div className="flex flex-col">
           <RadioGroup
+            {...form.register("discountType")}
             className="flex items-center gap-6"
-            value={form.watch("discountType")}
             onValueChange={(value) => {
               form.setValue("discountType", value as "fixed" | "percent");
               form.setValue("discount", null);

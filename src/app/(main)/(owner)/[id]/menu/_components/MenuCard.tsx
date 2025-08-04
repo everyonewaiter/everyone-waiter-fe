@@ -4,6 +4,7 @@ import Image from "next/image";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
+import { getCdn } from "@/utils/getCdn";
 
 interface IProps extends Menu {
   onToggle?: (value: Menu) => void;
@@ -24,7 +25,7 @@ export default function MenuCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[12px] border md:h-[220px] lg:h-[440px] lg:rounded-[24px]",
+        "relative cursor-pointer overflow-hidden rounded-[12px] border lg:rounded-[24px]",
         isSelected ? "border-primary" : "border-gray-600",
         className
       )}
@@ -37,15 +38,32 @@ export default function MenuCard({
       role="button"
       tabIndex={0}
     >
-      <Image
-        src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${menu.image}`}
-        alt="menu image"
-        width={329}
-        height={440}
-        className="h-full w-full object-cover"
-        priority
-        loading="eager"
-      />
+      <div className="relative aspect-[329/440]">
+        {menu.image ? (
+          <Image
+            src={getCdn(menu.image)}
+            alt={`${menu.image} 메뉴 이미지`}
+            fill
+            className="object-cover"
+            loading="eager"
+            priority
+            onError={() => {
+              // eslint-disable-next-line
+              console.error("이미지 로딩 실패:", getCdn(menu.image));
+            }}
+          />
+        ) : (
+          <div className="center h-full w-full bg-gray-600 pb-20 opacity-50">
+            <Image
+              src="/logo/logo-medium-gray.svg"
+              alt="매뉴 이미지 없음"
+              width={100}
+              height={100}
+              className="opacity-50"
+            />
+          </div>
+        )}
+      </div>
       <div className="absolute top-0 flex h-full w-full flex-col justify-between p-1 lg:p-2">
         {!hideSelect && (
           <Checkbox

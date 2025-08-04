@@ -10,38 +10,54 @@ import getQueryClient from "@/app/get-query-client";
 import { useOptimisticReorderMutation } from "@/hooks/useOptimisticReorder";
 import { categoryKeys } from "./keys";
 
-export default function useCategories(storeId: string) {
-  const queryClient = getQueryClient();
+const queryClient = getQueryClient();
 
-  const query = useQuery({
+const useCategories = (storeId: string) =>
+  useQuery({
     queryKey: categoryKeys.all(storeId),
     queryFn: () => getCategories({ storeId }),
+    enabled: !!storeId,
+    staleTime: 1000 * 60 * 5,
   });
 
-  const add = useMutation({
+const useAddCategory = () =>
+  useMutation({
     mutationFn: makeCategory,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: categoryKeys.all(storeId) });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: categoryKeys.all(variables.storeId),
+      });
     },
   });
 
-  const move = useOptimisticReorderMutation(moveCategory, (_storeId) =>
-    categoryKeys.all(_storeId)
-  );
+const useMoveCategory = (storeId: string) =>
+  useOptimisticReorderMutation(moveCategory, () => categoryKeys.all(storeId));
 
-  const update = useMutation({
+const useUpdateCategory = () =>
+  useMutation({
     mutationFn: updateCategory,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: categoryKeys.all(storeId) });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: categoryKeys.all(variables.storeId),
+      });
     },
   });
 
-  const remove = useMutation({
+const useDeleteCategory = () =>
+  useMutation({
     mutationFn: deleteCategory,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: categoryKeys.all(storeId) });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: categoryKeys.all(variables.storeId),
+      });
     },
   });
 
-  return { query, add, move, update, remove };
-}
+export const categoryQueries = {
+  useAddCategory,
+  useCategories,
+  useDeleteCategory,
+  useMoveCategory,
+  useOptimisticReorderMutation,
+  useUpdateCategory,
+};

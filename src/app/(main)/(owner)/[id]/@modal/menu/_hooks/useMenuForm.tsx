@@ -1,3 +1,4 @@
+import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 import { MenuFormType } from "../_types/menuForm.type";
 
 export const menuDetailToForm = (menu: MenuDetail): MenuFormType => {
@@ -21,7 +22,7 @@ export const menuDetailToForm = (menu: MenuDetail): MenuFormType => {
   };
 };
 
-export const formToRequest = (form: MenuFormType) => {
+export const formToRequest = (form: TypeMenuForm) => {
   const menuOptionGroups = [];
 
   if (form.requiredOptions?.length > 0) {
@@ -57,7 +58,7 @@ export const formToRequest = (form: MenuFormType) => {
   }
 
   return {
-    file: form.image,
+    file: form.imgFile,
     request: {
       name: form.name,
       description: form.description,
@@ -66,6 +67,7 @@ export const formToRequest = (form: MenuFormType) => {
       state: form.state,
       label: form.label,
       printEnabled: form.printEnabled,
+      image: form.imgString,
       menuOptionGroups,
     },
   };

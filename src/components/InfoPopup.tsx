@@ -12,53 +12,67 @@ const popupList = [
     text: "매장 등록 신청 현황",
     url: "/stores",
   },
-  {
-    text: "구독",
-    url: "/subscription",
-  },
+  // {
+  //   text: "구독",
+  //   url: "/subscription",
+  // },
 ];
 
 export default function InfoPopup({ close }: { close: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
   const { storeId } = useStoreContext();
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
-  useModalCloseTriggers({ ref, onClose: close });
+  useModalCloseTriggers({
+    ref,
+    onClose: close,
+  });
+
+  const handleNavigate = (url: string) => {
+    close();
+    navigate.push(url);
+  };
+
+  const handleNavigateToLogin = () => {
+    navigate.push("/login");
+    close();
+  };
 
   return (
     <div
-      className="absolute top-9 right-0 z-[9999] flex w-[160px] flex-col gap-1 rounded-[16px] bg-white p-3 shadow-[0_2px_10px_0_rgba(0,0,0,0.08)] md:top-9 md:right-0 md:w-[170px] lg:top-30 lg:right-16 lg:w-[220px]"
+      className="absolute top-9 right-0 z-[9999] flex w-[160px] flex-col gap-1 rounded-[16px] bg-white p-3 shadow-[0_2px_10px_0_rgba(0,0,0,0.08)] md:top-20 md:right-10 md:w-[190px] lg:top-30 lg:right-16 lg:w-[220px]"
       ref={ref}
       role="menu"
       aria-label="사용자 메뉴"
     >
       <div
-        className="flex h-9 w-full items-center gap-1 rounded-[8px] bg-gray-700 px-2 md:gap-2 lg:h-12 lg:px-4"
+        className="flex h-9 w-full items-center gap-1 overflow-hidden rounded-[8px] bg-gray-700 px-2 md:gap-2 lg:h-12 lg:px-4"
         aria-label="사용자 정보"
       >
         <div
-          className="center flex h-5 w-5 rounded-[16px] border border-gray-500 bg-white lg:h-7 lg:w-7"
+          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[16px] border border-gray-500 bg-white lg:h-7 lg:w-7"
           aria-hidden="true"
         >
           <Icon iconKey="user" size={16} className="h-4 w-4 lg:h-6 lg:w-6" />
         </div>
-        <span className="md:text-s font-regular text-xs text-gray-100 lg:text-[15px]">
+        <span className="min-w-0 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-gray-100 lg:text-sm">
           {user?.email}
         </span>
       </div>
+
       {storeId &&
         popupList.map((item) => (
           <div
             key={item.text}
             role="menuitem"
             tabIndex={0}
-            className="flex h-9 w-full items-center gap-2 rounded-[8px] px-3 lg:px-5"
+            className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-[8px] px-3 lg:px-5"
             aria-label={item.text}
-            onClick={() => navigate.push(item.url)}
+            onClick={() => handleNavigate(`/${storeId}/${item.url}`)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
-                navigate.push(item.url);
+                handleNavigate(`/${storeId}/${item.url}`);
               }
             }}
           >
@@ -70,12 +84,16 @@ export default function InfoPopup({ close }: { close: () => void }) {
       <div
         role="button"
         tabIndex={0}
-        className="flex h-9 w-full items-center gap-2 rounded-[8px] px-3 lg:px-5"
+        className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-[8px] px-3 lg:px-5"
         aria-label="로그아웃"
-        onClick={() => {}}
+        onClick={() => {
+          logout();
+          handleNavigateToLogin();
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
-            // event
+            logout();
+            handleNavigateToLogin();
           }
         }}
       >

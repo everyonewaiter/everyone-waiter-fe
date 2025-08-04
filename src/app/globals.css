@@ -80,11 +80,19 @@
       transform: rotate(0.35deg);
     }
   }
+
+  --animate-pulse: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  @keyframes pulse {
+    50% {
+      opacity: 0.5;
+    }
+  }
 }
 
 @layer {
   body {
     font-family: Pretendard;
+    height: 100%;
   }
 
   button {
@@ -93,6 +101,18 @@
 
   .font-hakgyo {
     font-family: "HakgyoansimDunggeunmisoTTF-B";
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
   }
 }
 

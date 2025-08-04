@@ -5,11 +5,12 @@ import { Fragment } from "react";
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { useMemoStore } from "../_hooks/useMemoStore";
 import { useOrderStore } from "../_hooks/useOrderStore";
 import { useSelectItemStore } from "../_hooks/useSelectItemStore";
-import usePos from "../_queries/usePos";
+import { posQueries } from "../_queries/usePos";
 import ReceiptModal from "./modals/ReceiptModal";
 
 const MemoAlert = dynamic(() => import("./modals/MemoAlert"), {
@@ -52,12 +53,12 @@ export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
 
-  const { activity } = usePos();
-  const { data } = activity(tableNo);
+  const { data } = posQueries.useActivity(tableNo);
 
   const { orders } = useOrderStore();
   const { selectedOrder } = useSelectItemStore();
   const { setMemo } = useMemoStore();
+  const { storeId } = useDeviceContext();
 
   const list = hasData
     ? FLOATING_ITEMS
@@ -101,7 +102,7 @@ export default function Floating({ hasData, tableNo }: IProps) {
     } else {
       open(() => (
         <QueryProviders>
-          <ReceiptModal close={close} tableNo={tableNo} />
+          <ReceiptModal close={close} tableNo={tableNo} storeId={storeId!} />
         </QueryProviders>
       ));
     }
@@ -109,21 +110,22 @@ export default function Floating({ hasData, tableNo }: IProps) {
 
   return (
     <aside className="shadow-floating font-regular text-gray-0 absolute bottom-7 left-1/2 flex h-[76px] -translate-x-1/2 flex-row rounded-[40px] bg-white px-10 py-6 text-xl">
-      {list?.map((item, index, arr) => (
-        <Fragment key={item.label}>
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 whitespace-nowrap"
-            onClick={() => handleAction(item.icon)}
-          >
-            <Icon iconKey={item.icon} className="text-gray-0" />
-            <span>{item.label}</span>
-          </button>
-          {index < arr.length - 1 && (
-            <div className="mx-5 mt-1.5 h-5 w-px bg-gray-600" />
-          )}
-        </Fragment>
-      ))}
+      {Array.isArray(list) &&
+        list?.map((item, index, arr) => (
+          <Fragment key={item.label}>
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 whitespace-nowrap"
+              onClick={() => handleAction(item.icon)}
+            >
+              <Icon iconKey={item.icon} className="text-gray-0" />
+              <span>{item.label}</span>
+            </button>
+            {index < arr.length - 1 && (
+              <div className="mx-5 mt-1.5 h-5 w-px bg-gray-600" />
+            )}
+          </Fragment>
+        ))}
     </aside>
   );
 }

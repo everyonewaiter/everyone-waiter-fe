@@ -7,8 +7,8 @@ import LabeledInput from "@/components/common/LabeledInput";
 import Switch from "@/components/common/Switch";
 import { menuLabelTranslate, menuStateTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
-import useCategories from "../../../menu/_queries/useCategories";
-import { MenuFormType } from "../_types/menuForm.type";
+import { categoryQueries } from "../../../menu/_queries/useCategories";
+import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 
 interface IProps {
   isEditing: boolean;
@@ -17,43 +17,40 @@ interface IProps {
 }
 
 export default function FormSection({ isEditing, storeId, type }: IProps) {
-  const { query } = useCategories(storeId);
-  const categories = query.data?.categories;
+  const { data } = categoryQueries.useCategories(storeId);
 
-  const form = useFormContext<
-    Omit<MenuFormType, "image"> & { image: File | string | null }
-  >();
+  const form = useFormContext<TypeMenuForm>();
 
   const inputGap = "gap-1 lg:gap-2";
   const marginTop = "mt-2 lg:mt-4";
 
   const getCategoryName = () =>
-    categories?.find((el) => el.categoryId === form.watch("category"))?.name;
+    data?.categories?.find((el) => el.categoryId === form.watch("category"))
+      ?.name;
 
   return (
     <section className="flex h-fit basis-[32.81%] rounded-[12px] border border-gray-600 p-4 lg:rounded-[24px] lg:p-6">
-      <form
-        className="flex w-full flex-col"
-        // onSubmit={form.handleSubmit(submitHandler)}
-      >
+      <div className="flex w-full flex-col">
         <div className={cn("flex flex-col", inputGap)}>
           <Label disabled={!isEditing}>카테고리</Label>
           <Dropdown
-            data={categories?.map((el) => el.name) ?? []}
+            data={data?.categories?.map((el) => el.name) ?? []}
             defaultText={
               getCategoryName() ??
-              categories?.[0]?.name ??
+              data?.categories?.[0]?.name ??
               "카테고리를 선택하세요"
             }
             active={getCategoryName() ?? ""}
             setActive={(name: string) => {
-              const id = categories?.find((el) => el.name === name)?.categoryId;
+              const id = data?.categories?.find(
+                (el) => el.name === name
+              )?.categoryId;
               if (id) {
                 form.setValue("category", id);
               }
             }}
-            // TODO: 추후 수정
             disabled={type !== "create"}
+            triggerClassName="!w-fit"
           />
         </div>
         <LabeledInput
@@ -105,7 +102,12 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                   },
                 }}
                 onClick={() =>
-                  isEditing ? form.setValue("label", key as MenuLabel) : null
+                  isEditing
+                    ? form.setValue(
+                        "label",
+                        key as "DEFAULT" | "BEST" | "NEW" | "RECOMMEND"
+                      )
+                    : null
                 }
               >
                 {menuLabelTranslate[key as keyof typeof menuLabelTranslate]}
@@ -187,9 +189,16 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
           <span className="font-regular text-gray-0 text-xs lg:text-sm">
             주방 프린터에 출력하기
           </span>
-          <Switch className="h-5 w-10" />
+          <Switch
+            className="h-5 w-10"
+            checked={form.watch("printEnabled")}
+            onCheckedChange={(checked) =>
+              form.setValue("printEnabled", checked)
+            }
+            disabled={!isEditing}
+          />
         </div>
-      </form>
+      </div>
     </section>
   );
 }

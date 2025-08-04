@@ -1,5 +1,5 @@
 import Alert from "@/components/common/Alert/Alert";
-import useMenu from "../_queries/useMenu";
+import { menuQueries } from "../_queries/useMenu";
 
 interface IProps {
   selected: { menuId: string }[];
@@ -14,14 +14,15 @@ export default function DeleteAlert({
   storeId,
   close,
 }: IProps) {
-  const { remove, multiRemove } = useMenu(storeId);
+  const remove = menuQueries.useDeleteMenu(storeId);
+  const multiRemove = menuQueries.useMultiDelete(storeId);
 
   return (
     <Alert
       onClose={close}
       onAction={() => {
         const fn =
-          selected.length > 1
+          selected?.length > 1
             ? () => multiRemove.mutate({ body: selected, storeId })
             : () =>
                 remove.mutate({

@@ -48,7 +48,7 @@ function MenuModal({
   };
 
   const defaultRequiredOptions: Omit<OrderOptionGroups, "printEnabled">[] =
-    data.menuOptionGroups
+    data?.menuOptionGroups
       .filter((group) => group.type === "MANDATORY")
       .map((group) => ({
         orderOptionGroupId: group.menuOptionGroupId,
@@ -69,8 +69,8 @@ function MenuModal({
   });
 
   const handleTotalPrice = () => {
-    let result = data.price;
-    if (form.watch("required").length > 0) {
+    let result = data?.price;
+    if (form.watch("required")?.length > 0) {
       result += form
         .watch("required")
         .map((el) =>
@@ -78,7 +78,7 @@ function MenuModal({
         )
         .reduce((a, b) => a + b, 0);
     }
-    if (form.watch("optional").length > 0) {
+    if (form.watch("optional")?.length > 0) {
       result += form
         .watch("optional")
         .map((el) =>
@@ -91,15 +91,15 @@ function MenuModal({
 
   const total = form
     .watch("required")
-    .map((el) => el.orderOptions.map((o) => o.price))
+    ?.map((el) => el.orderOptions.map((o) => o.price))
     .flat()
     .reduce((sum, price) => sum + price, 0);
 
-  const MandatoryOptions = data.menuOptionGroups.filter(
+  const MandatoryOptions = data?.menuOptionGroups.filter(
     (el) => el.type === "MANDATORY"
   );
 
-  const OptionalOptions = data.menuOptionGroups.filter(
+  const OptionalOptions = data?.menuOptionGroups.filter(
     (el) => el.type === "OPTIONAL"
   );
 
@@ -125,10 +125,10 @@ function MenuModal({
           if (e.key === "Escape") e.stopPropagation();
         }}
       >
-        <div className="flex h-[160px] overflow-hidden rounded-[16px] bg-green-50 md:h-full md:flex-1 lg:h-full lg:flex-1 lg:rounded-[28px]">
-          {data.image && (
+        <div className="flex h-[160px] overflow-hidden rounded-[16px] md:h-full md:flex-1 lg:h-full lg:flex-1 lg:rounded-[28px]">
+          {data?.image && (
             <Image
-              src={getCdn(data.image)}
+              src={getCdn(data?.image)}
               alt="menu image"
               className="object-cover"
               width={500}
@@ -139,90 +139,113 @@ function MenuModal({
         <div className="flex flex-1 flex-col gap-6">
           <ScrollArea className="flex flex-col md:h-[428px] lg:h-[522px]">
             <div className="flex gap-2">
-              {[data.label, "🌶️".repeat(data.spicy)]
-                .filter(Boolean)
-                .map((key) => (
-                  <ResponsiveButton
-                    variant="outline"
-                    key={key}
-                    responsiveButtons={{
-                      lg: {
-                        buttonSize: "md",
-                        className:
-                          "font-regular !h-10 !rounded-[40px] text-[15px]",
-                      },
-                      md: {
-                        buttonSize: "sm",
-                        className: "!h-8 !rounded-[40px] !px-4 !text-s",
-                      },
-                      sm: {
-                        buttonSize: "sm",
-                        className: "!h-8 !rounded-[40px] !px-4 !text-s",
-                      },
-                    }}
-                  >
-                    {key}
-                  </ResponsiveButton>
-                ))}
+              {data?.label !== "DEFAULT" && (
+                <ResponsiveButton
+                  variant="outline"
+                  responsiveButtons={{
+                    lg: {
+                      buttonSize: "md",
+                      className:
+                        "font-regular !h-10 !rounded-[40px] text-[15px]",
+                    },
+                    md: {
+                      buttonSize: "sm",
+                      className: "!h-8 !rounded-[40px] !px-4 !text-s",
+                    },
+                    sm: {
+                      buttonSize: "sm",
+                      className: "!h-8 !rounded-[40px] !px-4 !text-s",
+                    },
+                  }}
+                >
+                  {data?.label}
+                </ResponsiveButton>
+              )}
+              {data?.spicy && (
+                <ResponsiveButton
+                  variant="outline"
+                  responsiveButtons={{
+                    lg: {
+                      buttonSize: "md",
+                      className:
+                        "font-regular !h-10 !rounded-[40px] text-[15px]",
+                    },
+                    md: {
+                      buttonSize: "sm",
+                      className: "!h-8 !rounded-[40px] !px-4 !text-s",
+                    },
+                    sm: {
+                      buttonSize: "sm",
+                      className: "!h-8 !rounded-[40px] !px-4 !text-s",
+                    },
+                  }}
+                >
+                  {"🌶️".repeat(data?.spicy)}
+                </ResponsiveButton>
+              )}
             </div>
             <div className="mt-4 lg:mt-5">
               <h1 className="text-gray-0 text-lg font-semibold md:text-xl lg:text-3xl lg:font-bold">
-                {data.name}
+                {data?.name}
               </h1>
               <p className="font-regular text-gray-0 mt-[10px] text-sm md:mt-3 lg:mt-4 lg:text-lg">
-                {data.description}
+                {data?.description}
               </p>
               <div className="mt-3 w-full text-right text-2xl font-bold md:mt-5 lg:text-3xl">
-                {data.price.toLocaleString()}원
+                {data?.price.toLocaleString()}원
               </div>
             </div>
             <div className="my-4 h-2 w-full rounded-[8px] bg-gray-700 lg:my-5" />
-            {data?.menuOptionGroups?.length > 0 ? (
+            {Array.isArray(data?.menuOptionGroups) &&
+            data?.menuOptionGroups?.length > 0 ? (
               <FormProvider {...form}>
                 <div className="flex flex-col">
-                  {MandatoryOptions?.length > 0 && (
-                    <OptionGroupSection
-                      data={data.menuOptionGroups.filter(
-                        (el) => el.type === "MANDATORY"
-                      )}
-                      type={type}
-                      required
-                    >
-                      필수 추가 옵션
-                    </OptionGroupSection>
-                  )}
-
-                  {OptionalOptions?.length > 0 && (
-                    <>
-                      {MandatoryOptions && (
-                        <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
-                      )}
+                  {Array.isArray(MandatoryOptions) &&
+                    MandatoryOptions?.length > 0 && (
                       <OptionGroupSection
                         data={data.menuOptionGroups.filter(
-                          (el) => el.type === "OPTIONAL"
+                          (el) => el.type === "MANDATORY"
                         )}
                         type={type}
+                        required
                       >
-                        선택 추가 옵션
+                        필수 추가 옵션
                       </OptionGroupSection>
-                    </>
-                  )}
+                    )}
+
+                  {Array.isArray(OptionalOptions) &&
+                    OptionalOptions?.length > 0 && (
+                      <>
+                        {Array.isArray(MandatoryOptions) &&
+                          MandatoryOptions?.length > 0 && (
+                            <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
+                          )}
+                        <OptionGroupSection
+                          data={data.menuOptionGroups.filter(
+                            (el) => el.type === "OPTIONAL"
+                          )}
+                          type={type}
+                        >
+                          선택 추가 옵션
+                        </OptionGroupSection>
+                      </>
+                    )}
                 </div>
               </FormProvider>
             ) : (
               <div>추가 옵션이 없습니다.</div>
             )}
           </ScrollArea>
-          {type === "order" && data.state !== "SOLD_OUT" && (
+          {type === "order" && data?.state !== "SOLD_OUT" && (
             <Button
               color="primary"
               className="button-xl flex gap-2 !text-[15px] !font-medium"
               onClick={() => {
                 onAddOrderMenu?.({
-                  menuId: data.menuId,
-                  menuName: data.name,
+                  menuId: data?.menuId,
+                  menuName: data?.name,
                   quantity: 1,
-                  totalPrice: data.price + total,
+                  totalPrice: (data?.price || 0) + (total || 0),
                   menuOptionGroups: [
                     ...form.watch("required").map((el) => ({
                       ...el,

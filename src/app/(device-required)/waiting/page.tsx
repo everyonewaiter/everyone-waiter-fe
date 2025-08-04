@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
-import useWaiting from "./_queries/useWaiting";
+import { waitingQueries } from "./_queries/useWaiting";
 
 const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
   ssr: false,
@@ -17,7 +17,7 @@ export default function Waiting() {
   const { handleOpenModal } = useWaitingModal();
 
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
-  const { list } = useWaiting(waitingEnabled);
+  const { data: list } = waitingQueries.useWaitingList(waitingEnabled);
 
   return (
     <div className="min-h-screen w-screen bg-gray-700">

@@ -1,10 +1,13 @@
-import PageTitle from "@/app/(main)/_components/PageTitle";
+import { PropsWithChildren } from "react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({
+  children,
+  // modal,
+}: PropsWithChildren) {
   return (
-    <>
-      <PageTitle title="회원 관리" />
+    <div className="h-full">
       {children}
-    </>
+      {/* {modal} */}
+    </div>
   );
 }

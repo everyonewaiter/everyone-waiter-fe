@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import { useStoreContext } from "@/providers/storeProvider";
 
 const DeleteAlert = dynamic(() => import("./DeleteAlert"), {

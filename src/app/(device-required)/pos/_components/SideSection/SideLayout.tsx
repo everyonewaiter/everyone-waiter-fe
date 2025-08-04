@@ -14,7 +14,7 @@ export default function SideLayout({
   return (
     <aside
       className={cn(
-        "shadow-custom flex min-h-screen w-[648px] flex-col gap-8 rounded-tl-[40px] rounded-bl-[40px] px-8 py-10 pb-8",
+        "shadow-custom flex h-full w-[648px] gap-8 rounded-tl-[40px] rounded-bl-[40px] px-8 py-10 pb-8",
         className
       )}
     >

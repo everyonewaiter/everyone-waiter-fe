@@ -1,24 +1,27 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { deleteCookie } from "@/lib/cookies";
+import { deleteClientCookie } from "@/lib/cookies/client";
 
 interface AuthProps {
   user: UserProfile | null; // 유저 정보
   saveUser: (userInfo: UserProfile) => void; // 유저 정보 저장
-  isLogin: boolean; // 로그인 여부
+  isLoggedIn: boolean; // 로그인 여부
   logout: () => void; // 로그아웃
+  setIsLoggedIn: (value: boolean) => void;
 }
 const useAuthStore = create(
   persist<AuthProps>(
     (set) => ({
       user: null,
-      isLogin: false,
-      saveUser: (userInfo) => set({ user: userInfo, isLogin: true }),
-      logout: async () => {
-        await deleteCookie("accessToken");
-        await deleteCookie("refreshToken");
-        set({ user: null, isLogin: false });
+      isLoggedIn: false,
+      saveUser: (userInfo) => set({ user: userInfo, isLoggedIn: true }),
+      logout: () => {
+        deleteClientCookie("accessToken");
+        deleteClientCookie("refreshToken");
+        set({ user: null, isLoggedIn: false });
       },
+      setIsLoggedIn: (value) =>
+        set((state) => ({ ...state, isLoggedIn: value })),
     }),
     {
       name: "authStore",

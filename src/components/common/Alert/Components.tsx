@@ -51,7 +51,7 @@ function AlertDialogHeader({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex w-full items-center justify-center py-4", className)}
+      className={cn("flex w-full items-center justify-center", className)}
       {...props}
     />
   );
@@ -75,7 +75,7 @@ const AlertDialogTitle = React.forwardRef<
   <AlertDialogPrimitive.Title
     ref={ref}
     className={cn(
-      "w-full text-center text-base font-semibold break-words whitespace-pre-wrap md:text-lg",
+      "w-full text-center text-base font-semibold break-words whitespace-pre-wrap lg:text-lg",
       className
     )}
     {...props}

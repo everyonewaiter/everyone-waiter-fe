@@ -34,7 +34,8 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "next.config.ts",
-    "jest.config.js"
+    "jest.config.js",
+    "src/middleware.ts"
   ],
   "exclude": ["node_modules", "public/scripts"]
 }

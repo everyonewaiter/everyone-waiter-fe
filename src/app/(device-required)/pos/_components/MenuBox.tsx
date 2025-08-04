@@ -1,6 +1,6 @@
-import { PlusIcon } from "lucide-react";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
+import MenuBoxItem from "./MenuBoxItem";
 
 interface IProps extends TableOrder {
   index: number;
@@ -8,6 +8,7 @@ interface IProps extends TableOrder {
   select?: string;
   checked?: boolean;
   onCheckedChange?: () => void;
+  nonInteractive?: boolean;
 }
 
 export default function MenuBox({
@@ -16,58 +17,62 @@ export default function MenuBox({
   select,
   checked,
   onCheckedChange,
+  nonInteractive,
   ...props
 }: IProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-3">
-        <Checkbox
-          className="h-6 w-6"
-          checked={checked}
-          onCheckedChange={onCheckedChange}
-        />
+        {!nonInteractive && (
+          <Checkbox
+            className="h-6 w-6"
+            checked={checked}
+            onCheckedChange={onCheckedChange}
+          />
+        )}
         <strong className="text-2xl font-semibold">{index + 1}</strong>
       </div>
-      {props.orderMenus.map((menu) => (
-        <button
-          type="button"
-          key={menu.orderMenuId}
-          className={cn(
-            "rounded-[12px] border p-4",
-            select === menu.orderMenuId ? "border-primary" : "border-gray-600"
-          )}
-          onClick={() =>
-            select === menu.orderMenuId
-              ? onSelect?.(null)
-              : onSelect?.({ ...menu, orderId: props.orderId })
+      {props.orderMenus.map((menu) => {
+        const isSelected = select === menu.orderMenuId;
+        const isInteractive = !nonInteractive;
+        const handleClick = () => {
+          if (!isInteractive) return;
+          if (isSelected) {
+            onSelect?.(null);
+          } else {
+            onSelect?.({ ...menu, orderId: props.orderId });
           }
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-lg font-medium">{menu.name}</span>
-            <span className="text-right text-lg font-medium">
-              {menu.quantity}개
-            </span>
-          </div>
-          <div className="mt-2 flex flex-col gap-1">
-            {menu.orderOptionGroups.map((el) =>
-              el.orderOptions.map((option: OrderOptions) => (
-                <div
-                  className="flex items-center justify-between"
-                  key={`${menu.name}-${el.orderOptionGroupId}-${option.name}`}
-                >
-                  <span className="flex items-center gap-1 text-base font-medium text-[#2E7BB3]">
-                    <PlusIcon size={18} color="#2E7BB3" strokeWidth={1} />
-                    {option.name}
-                  </span>
-                  <span className="text-right text-base font-medium text-[#2E7BB3]">
-                    {option.price ? `₩ ${option.price.toLocaleString()}` : ""}
-                  </span>
-                </div>
-              ))
+        };
+        const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+          if (!isInteractive) return;
+          if (e.key === "Enter" || e.key === " ") {
+            if (isSelected) {
+              onSelect?.(null);
+            } else {
+              onSelect?.({ ...menu, orderId: props.orderId });
+            }
+          }
+        };
+
+        return (
+          <div
+            key={menu.orderMenuId}
+            className={cn(
+              "rounded-[12px] border p-4",
+              isSelected ? "border-primary" : "border-gray-600",
+              isInteractive ? "cursor-pointer" : "cursor-default"
             )}
+            {...(isInteractive && {
+              role: "button",
+              tabIndex: 0,
+              onClick: handleClick,
+              onKeyDown: handleKeyDown,
+            })}
+          >
+            <MenuBoxItem key={menu.orderMenuId} {...menu} />
           </div>
-        </button>
-      ))}
+        );
+      })}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { getCdn } from "@/utils/getCdn";
 import UploadPhoto from "../UploadPhoto";
 
 interface IProps {
@@ -41,7 +42,7 @@ export default function PhotoForBusiness({
       ) : (
         <div className="mt-5 h-[346px] w-full md:mt-0 lg:h-[457px]">
           <Image
-            src={`${process.env.NEXT_PUBLIC_DEV_CDN}/${imageUrl}`}
+            src={getCdn(imageUrl)}
             alt="사업자 등록증"
             width={380}
             height={457}

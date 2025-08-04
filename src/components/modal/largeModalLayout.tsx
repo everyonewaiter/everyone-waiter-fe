@@ -5,8 +5,7 @@ import {
   ReactNode,
   useRef,
 } from "react";
-import useEscapeKey from "@/hooks/useEscapeKey";
-import useOutsideClick from "@/hooks/useOutSideClick";
+import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import cn from "@/lib/utils";
 import ResponsiveButton from "../common/Button/ResponsiveButton";
 
@@ -28,22 +27,24 @@ export default function ModalWithTitle({
 }: PropsWithChildren<IProps>) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useOutsideClick({
+  useModalCloseTriggers({
     ref,
-    handler: () => {
-      if (!preventOutsideClose) {
+    onClose: () => {
+      if (
+        !preventOutsideClose ||
+        !document.body.classList.contains("disable-modal-close")
+      ) {
         onClose();
       }
     },
   });
-  useEscapeKey({ handler: onClose });
 
   return (
-    <div className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm">
+    <div className="bg-opacity-100 fixed inset-0 z-[9998] flex items-center justify-center backdrop-blur-sm">
       <div
         ref={ref}
         className={cn(
-          "relative h-fit w-[320px] rounded-[30px] bg-white p-5 md:w-[364px] md:p-5 lg:w-[543px] lg:p-8",
+          "relative h-fit w-[320px] overflow-visible rounded-[30px] bg-white p-5 md:w-[364px] md:p-5 lg:w-[543px] lg:p-8",
           className
         )}
       >
@@ -77,7 +78,7 @@ function Layout({
   return (
     <div
       className={cn(
-        "min-h-[362px] overflow-y-scroll md:max-h-87 lg:max-h-145",
+        "scrollbar-hide min-h-[362px] overflow-y-scroll md:max-h-87 lg:max-h-145",
         className
       )}
     >

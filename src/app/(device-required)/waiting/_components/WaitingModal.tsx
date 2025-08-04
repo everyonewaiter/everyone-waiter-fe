@@ -4,7 +4,7 @@ import Icon from "@/components/common/Icon";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
 import useElapsedMinutes from "../_hooks/useElapsedMinutes";
-import useWaiting from "../_queries/useWaiting";
+import { waitingQueries } from "../_queries/useWaiting";
 
 interface IProps extends Waiting {
   close: () => void;
@@ -14,7 +14,7 @@ interface IProps extends Waiting {
 const queryClient = getQueryClient();
 
 export default function WaitingModal({ close, type, ...waiting }: IProps) {
-  const { action } = useWaiting();
+  const action = waitingQueries.useControlWaiting();
   const elapsedCreatedAt = useElapsedMinutes(waiting.createdAt);
   const elapsedLastCall = useElapsedMinutes(waiting.lastCallTime);
 

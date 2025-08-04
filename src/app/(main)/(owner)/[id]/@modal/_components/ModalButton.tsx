@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import cn from "@/lib/utils";
+import Spinner from "@/components/common/Spinner";
 
 interface IProps {
   buttonText: string;
@@ -12,6 +13,7 @@ interface IProps {
   className?: string;
   type?: "submit" | "button";
   onAction?: () => void;
+  isSubmitted?: boolean;
 }
 
 export default function ModalButton({
@@ -21,6 +23,7 @@ export default function ModalButton({
   onlyAction,
   className,
   onAction,
+  isSubmitted,
   type = "button",
 }: IProps) {
   const router = useRouter();
@@ -60,7 +63,7 @@ export default function ModalButton({
           commonClassName={cn("w-full", className)}
           onClick={onAction}
         >
-          {buttonText}
+          {isSubmitted ? <Spinner /> : buttonText}
         </ResponsiveButton>
       )}
     </div>

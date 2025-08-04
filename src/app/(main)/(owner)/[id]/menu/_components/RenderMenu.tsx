@@ -5,19 +5,20 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
 import DashedBorder from "@/components/DashedBorder";
-import { ScrollArea } from "@/components/common/ScrollArea";
 import { useStoreContext } from "@/providers/storeProvider";
-import useMenu from "../_queries/useMenu";
+import Spinner from "@/components/common/Spinner";
+import { Skeleton } from "@/components/common/Skeleton/Skeleton";
+import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
 
 const Sortable = dynamic(() => import("@/components/Sortable"), {
   ssr: false,
-  loading: () => <div>순서 변경 로딩 중...</div>,
+  loading: () => <Spinner />,
 });
 
 const SortableItem = dynamic(() => import("./SortableItem"), {
   ssr: false,
-  loading: () => <div>로딩 중...</div>,
+  loading: () => <Spinner />,
 });
 
 interface IProps {
@@ -39,19 +40,18 @@ export default function RenderMenu({
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const { storeId } = useStoreContext();
-  const { query: menuQuery } = useMenu(storeId);
-  const menu = menuQuery(categoryId).data?.menus;
+  const { data, isLoading } = menuQueries.useMenuList(storeId, categoryId);
 
   const handleNavigate = (menuId: string) =>
-    `/${storeId}/menu/${menuId}?hideModal=${isMobile}&categoryId=${categoryId}`;
+    `/${storeId}/menu/${menuId}/category/${categoryId}?hideModal=${isMobile}`;
 
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
-      <ScrollArea className="h-[550px] md:h-[385px] lg:h-[785px]">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-[16px] lg:h-[440px] lg:gap-x-[32px] lg:gap-y-[40px]">
+      <div className="flex-1">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-x-[10px] md:gap-y-[16px] lg:grid-cols-4 lg:gap-x-[32px] lg:gap-y-[40px]">
           <button
             type="button"
-            className="h-full"
+            className="aspect-[329/440] h-full"
             onClick={() =>
               navigate.push(
                 `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
@@ -70,12 +70,12 @@ export default function RenderMenu({
               <span className="text-base">메뉴 추가</span>
             </DashedBorder>
           </button>
-          {changeSort ? (
+          {data && changeSort && (
             <Sortable
-              items={menu?.map((item) => item.menuId)!}
+              items={data?.menus?.map((item) => item.menuId)!}
               onDragEnd={handleDragEnd}
             >
-              {menu?.map((item) => (
+              {data?.menus?.map((item) => (
                 <SortableItem
                   key={item.menuId}
                   item={item}
@@ -83,8 +83,10 @@ export default function RenderMenu({
                 />
               ))}
             </Sortable>
-          ) : (
-            menu?.map((item) => (
+          )}
+          {data &&
+            !changeSort &&
+            data?.menus?.map((item) => (
               <MenuCard
                 key={item.menuId}
                 onToggle={toggle}
@@ -92,10 +94,16 @@ export default function RenderMenu({
                 onClick={() => navigate.push(handleNavigate(item.menuId))}
                 {...item}
               />
-            ))
-          )}
+            ))}
+          {isLoading &&
+            [0, 1, 2, 3].map((el) => (
+              <Skeleton
+                key={el + 1}
+                className="aspect-[329/440] rounded-[12px] lg:rounded-[24px]"
+              />
+            ))}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }

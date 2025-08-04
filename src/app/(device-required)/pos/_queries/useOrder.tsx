@@ -8,48 +8,68 @@ import {
   orderMenus,
   updateMemo,
 } from "../_api/order.api";
+import { posKeys } from "./keys";
 
-export default function useOrder() {
-  const queryClient = getQueryClient();
+const queryClient = getQueryClient();
 
-  const order = useMutation({
+const useOrderMenu = () =>
+  useMutation({
     mutationFn: orderMenus,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+      queryClient.invalidateQueries({
+        queryKey: posKeys.activity(variables.tableNo),
+      });
     },
   });
 
-  const cancel = useMutation({
+const useCancelOrder = () =>
+  useMutation({
     mutationFn: cancelOrder,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+      queryClient.invalidateQueries({
+        queryKey: posKeys.activity(variables.tableNo),
+      });
     },
   });
 
-  const addDiscount = useMutation({
+const useAddDiscount = () =>
+  useMutation({
     mutationFn: discountOrder,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+      queryClient.invalidateQueries({
+        queryKey: posKeys.activity(variables.tableNo),
+      });
     },
   });
 
-  const complete = useMutation({
+const useCompleteOrder = () =>
+  useMutation({
     mutationFn: completeOrder,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
+      queryClient.invalidateQueries({
+        queryKey: posKeys.activity(variables.tableNo),
+      });
     },
   });
 
-  const staffCalling = useMutation({
+const useCallStaff = () =>
+  useMutation({
     mutationFn: callStaff,
   });
 
-  const memoUpdate = useMutation({
+const useUpdateMemo = () =>
+  useMutation({
     mutationFn: updateMemo,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["table", variables.tableNo] });
     },
   });
 
-  return { order, cancel, addDiscount, complete, staffCalling, memoUpdate };
-}
+export const orderQueries = {
+  useAddDiscount,
+  useCallStaff,
+  useCancelOrder,
+  useCompleteOrder,
+  useOrderMenu,
+  useUpdateMemo,
+};

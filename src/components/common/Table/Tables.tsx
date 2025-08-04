@@ -23,7 +23,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "hidden items-center justify-center !bg-gray-700 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]",
+      "hidden cursor-default items-center justify-center !bg-gray-700 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]",
       className
     )}
     {...props}
@@ -38,7 +38,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "text-s font-regular !text-gray-0 hidden h-full w-full items-center justify-center md:flex lg:text-base lg:font-semibold",
+      "text-s font-regular !text-gray-0 hidden h-full w-full cursor-default items-center justify-center md:flex lg:text-base lg:font-semibold",
       className
     )}
     {...props}

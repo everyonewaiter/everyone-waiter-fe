@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable no-unsafe-optional-chaining */
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
@@ -9,20 +8,17 @@ import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { useRouter } from "next/navigation";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
-import usePos from "../../_queries/usePos";
+import { posQueries } from "../../_queries/usePos";
+import { paySchema, TypePayForm } from "../../_schema/pos.schema";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
-
-interface FormType {
-  receiptType: string;
-  phoneNumber: string;
-  monthlyPlan: string;
-}
 
 declare global {
   interface Window {
@@ -41,6 +37,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
 
   // 분할 계산
   const { selectedOrder } = useSelectItemStore();
+  const { storeId } = useDeviceContext();
   const hasOrderId = selectedOrder?.orderId;
 
   const menus = hasOrderId
@@ -67,7 +64,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     0
   );
 
-  const form = useForm<FormType>({
+  const form = useForm<TypePayForm>({
+    mode: "onChange",
+    resolver: zodResolver(paySchema),
     defaultValues: {
       receiptType: "개인소득공제용",
       phoneNumber: "",
@@ -76,9 +75,8 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   });
 
   const { payCard, payCash } = usePayment();
-  const { activity, storeStatus } = usePos();
-  const { data: activityData } = activity(props.tableNo);
-  const { data: stores } = storeStatus;
+  const { data: activityData } = posQueries.useActivity(props.tableNo);
+  const { data: stores } = posQueries.useStoreInfo(storeId!);
 
   const monthlyPlan = [
     "일시불",
@@ -103,9 +101,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             type: "card-receipt",
             activity: activityData!,
             stores: stores!,
-            payment: { ...res, installment: form.watch("monthlyPlan") },
+            payment: { ...res, INSTALLMENT: form.watch("monthlyPlan") },
             successHandler:
-              props.orders.length > 0
+              props.orders?.length > 0
                 ? () => close()
                 : () => {
                     close();
@@ -134,12 +132,13 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             activity: activityData!,
             stores: stores!,
             successHandler:
-              props.orders.length > 0
+              props.orders?.length > 0
                 ? () => close()
                 : () => {
                     close();
                     navigate.push("/pos/tables");
                   },
+            cashReceiptPhoneNo: form.watch("phoneNumber"),
           });
         },
       });
@@ -158,7 +157,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     >
       <div className="-mt-4 flex w-full flex-col gap-10">
         <div className="flex items-center justify-between">
-          <h3 className="text-[28px] font-semibold">2번 테이블</h3>
+          <h3 className="text-[28px] font-semibold">
+            {props.tableNo}번 테이블
+          </h3>
           <Button
             variant="outline"
             color="primary"
@@ -171,9 +172,13 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           <div className="flex flex-col items-start">
             <Label className="text-[15px] font-medium">결제 정보</Label>
             <strong className="mt-2 text-2xl font-semibold">
-              {menus && menus?.length === 1
-                ? menus?.[0]
-                : `${menus?.[0]} 외 ${menus?.length - 1}개`}
+              {menus && (
+                <strong className="mt-2 text-2xl font-semibold">
+                  {menus.length === 1
+                    ? menus[0]
+                    : `${menus[0]} 외 ${menus.length - 1}개`}
+                </strong>
+              )}
             </strong>
           </div>
           <div className="flex flex-col items-start">
@@ -201,7 +206,12 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                       }
                       variant="outline"
                       className="button-lg w-full !font-medium"
-                      onClick={() => form.setValue("receiptType", key)}
+                      onClick={() =>
+                        form.setValue(
+                          "receiptType",
+                          key as TypePayForm["receiptType"]
+                        )
+                      }
                     >
                       {key}
                     </Button>
@@ -212,10 +222,10 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                 <div className="flex flex-col items-start gap-2">
                   <Label className="text-[15px] font-medium">휴대폰 번호</Label>
                   <Input
+                    {...form.register("phoneNumber")}
                     placeholder={`${form.watch("receiptType") === "개인소득공제용" ? "휴대폰 번호" : "사업자 번호"}를 입력해주세요.`}
                     className="placeholder:font-medium placeholder:text-gray-300"
                     autoFocus
-                    value={form.watch("phoneNumber")}
                     onChange={(e) => {
                       const onlyNums = e.target.value.replace(/[^0-9]/g, "");
                       const formatted = phoneNumberPattern(onlyNums);

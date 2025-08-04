@@ -3,9 +3,10 @@
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
-import useOverlay from "@/hooks/use-overlay";
+import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
-import usePos from "../_queries/usePos";
+import { useDeviceContext } from "@/providers/deviceStoreProvider";
+import { posQueries } from "../_queries/usePos";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -14,30 +15,29 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 export default function OpenStore() {
   const navigate = useRouter();
 
-  const { open, close } = useOverlay();
+  const modal = useOverlay();
+  const { storeId } = useDeviceContext();
 
-  const {
-    store: { open: storeOpen, close: storeClose },
-    storeStatus,
-  } = usePos();
-  const { data: status } = storeStatus;
-  const isStoreOpen = status?.status === "OPEN";
+  const open = posQueries.useOpenStore();
+  const close = posQueries.useCloseStore();
+  const { data } = posQueries.useStoreInfo(storeId!);
+  const isStoreOpen = data?.status === "OPEN";
 
   const handleOpenStore = () => {
     const successHandler = () => {
-      close();
+      modal.close();
       navigate.push("/pos");
     };
 
-    open(() => (
+    modal.open(() => (
       <QueryProviders>
         <Alert
-          onClose={close}
+          onClose={modal.close}
           buttonText={isStoreOpen ? "마감하기" : "오픈하기"}
           onAction={() => {
             if (isStoreOpen)
-              storeClose.mutate(undefined, { onSuccess: successHandler });
-            else storeOpen.mutate(undefined, { onSuccess: successHandler });
+              close.mutate(undefined, { onSuccess: successHandler });
+            else open.mutate(undefined, { onSuccess: successHandler });
           }}
         >
           매장을 {isStoreOpen ? "마감" : "오픈"}하시겠습니까?
