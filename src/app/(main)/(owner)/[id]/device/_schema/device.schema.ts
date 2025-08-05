@@ -1,24 +1,14 @@
 import { commonSchema } from "@/schema";
 import { z } from "zod";
 
-const schema = z.object({
-  name: z.string(),
-  createdAt: z.string(),
-  state: z.nullable(z.enum(["ACTIVE", "INACTIVE"])),
+export const deviceFormSchema = z.object({
+  name: z.string().min(1, "기기 이름은 필수입니다."),
+  createdAt: z.string().optional(),
+  state: z.enum(["ACTIVE", "INACTIVE"]).nullable().optional(),
   purpose: z.enum(["HALL", "POS", "WAITING", "TABLE"]),
   paymentType: z.enum(["POSTPAID", "PREPAID"]),
-  tableNo: z.number(),
+  tableNo: z.coerce.number(),
   deviceNumber: commonSchema.shape.deviceNumber,
-});
-
-export const deviceFormSchema = schema.pick({
-  name: true,
-  createdAt: true,
-  state: true,
-  purpose: true,
-  paymentType: true,
-  tableNo: true,
-  deviceNumber: true,
 });
 
 export type TypeDeviceForm = z.infer<typeof deviceFormSchema>;

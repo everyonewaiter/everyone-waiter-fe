@@ -43,8 +43,8 @@ export default function AddDeviceStep2({
       phoneNumber: phoneNumber.replaceAll("-", ""),
       storeId,
       name: data.deviceName,
-      purpose: purpose === "HALL" ? "HALL" : ("POS" as DevicePurpose),
-      tableNo: 0,
+      purpose,
+      tableNo: 1,
       paymentType: "POSTPAID" as DevicePayment,
     };
 

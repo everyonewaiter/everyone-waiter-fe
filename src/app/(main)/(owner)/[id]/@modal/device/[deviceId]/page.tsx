@@ -37,9 +37,9 @@ export default function DeviceInfoModal() {
     <Form {...form}>
       <form
         className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit((_data) =>
-          submitHandler(update, _data, { storeId, deviceId })
-        )}
+        // onSubmit={form.handleSubmit((_data) =>
+        //   submitHandler(update, _data, { storeId, deviceId })
+        // )}
       >
         <LabeledInput form={form} name="name" label="기기 이름" />
         <LabeledInput form={form} name="createdAt" label="등록일시" disabled />
@@ -66,7 +66,7 @@ export default function DeviceInfoModal() {
             triggerClassName="h-10 lg:h-12 text-sm lg:text-[15px] md:font-regular !w-fit"
           />
         </div>
-        {["HALL", "TABLE"].includes(form.watch("purpose")) && (
+        {["HALL", "TABLE"].includes(data.purpose) && (
           <LabeledInput
             form={form}
             name="tableNo"
@@ -75,8 +75,7 @@ export default function DeviceInfoModal() {
           />
         )}
 
-        {(form.watch("purpose") === "HALL" ||
-          form.watch("purpose") === "TABLE") && (
+        {["HALL", "TABLE"].includes(data.purpose) && (
           <div className="flex flex-col gap-2">
             <Label>결제 방식</Label>
             <Dropdown
@@ -101,8 +100,10 @@ export default function DeviceInfoModal() {
         )}
         <ModalButton
           buttonText="수정"
-          type="submit"
           isSubmitted={isSubmitted}
+          onAction={() =>
+            submitHandler(update, form.getValues(), { storeId, deviceId })
+          }
         />
       </form>
     </Form>

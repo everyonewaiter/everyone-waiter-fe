@@ -2,11 +2,7 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import getQueryClient from "@/app/get-query-client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  deviceFormSchema,
-  TypeDeviceForm,
-} from "../../device/_schema/device.schema";
+import { TypeDeviceForm } from "../../device/_schema/device.schema";
 import { deviceKeys } from "../../device/_queries/keys";
 
 export default function useDeviceForm({
@@ -23,8 +19,8 @@ export default function useDeviceForm({
   const queryClient = getQueryClient();
 
   const form = useForm<TypeDeviceForm>({
-    mode: "onChange",
-    resolver: zodResolver(deviceFormSchema),
+    mode: "onSubmit",
+    // resolver: zodResolver(deviceFormSchema),
     values: {
       name: data?.name ?? "",
       createdAt: data?.createdAt ?? "",
