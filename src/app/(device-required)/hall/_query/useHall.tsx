@@ -1,45 +1,72 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import {
   completeStaffCall,
+  getStaffCalls,
   getWaitingsList,
+  orderList,
   serveMenu,
   serveOrder,
 } from "../_api/hall.api";
 
-export default function useHall() {
-  const queryClient = getQueryClient();
+const queryClient = getQueryClient();
 
-  const list = useQuery({
+const useWaitingList = (hasError: boolean) =>
+  useQuery({
     queryKey: ["waitings-list"],
     queryFn: getWaitingsList,
+    placeholderData: keepPreviousData,
+    refetchInterval: hasError ? false : 60000,
+    retry: false,
   });
 
-  const servingOrder = useMutation({
+const useStaffCallList = (hasError: boolean) =>
+  useQuery({
+    queryKey: ["staff-calls"],
+    queryFn: getStaffCalls,
+    placeholderData: keepPreviousData,
+    refetchInterval: hasError ? false : 60000,
+    retry: false,
+  });
+
+const useOrderList = (served: boolean, hasError: boolean) =>
+  useQuery({
+    queryKey: ["order-list", served],
+    queryFn: () => orderList(served),
+    placeholderData: keepPreviousData,
+    refetchInterval: hasError ? false : 60000,
+    retry: false,
+  });
+
+const useServeOrder = () =>
+  useMutation({
     mutationFn: serveOrder,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["waitings-list"] });
+      queryClient.invalidateQueries({ queryKey: ["order-list"] });
     },
   });
 
-  const servingMenu = useMutation({
+const useServeMenu = () =>
+  useMutation({
     mutationFn: serveMenu,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["waitings-list"] });
+      queryClient.invalidateQueries({ queryKey: ["order-list"] });
     },
   });
 
-  const completeStaff = useMutation({
+const useComompleteStaffCall = () =>
+  useMutation({
     mutationFn: completeStaffCall,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["waitings-list"] });
     },
   });
 
-  return {
-    list,
-    servingOrder,
-    servingMenu,
-    completeStaff,
-  };
-}
+export const hallQueries = {
+  useStaffCallList,
+  useWaitingList,
+  useServeOrder,
+  useServeMenu,
+  useComompleteStaffCall,
+  useOrderList,
+};
