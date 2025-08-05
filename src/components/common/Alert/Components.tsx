@@ -36,7 +36,7 @@ const AlertDialogContent = React.forwardRef<
     <AlertDialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed top-1/2 left-1/2 z-100 flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-6 rounded-[20px] bg-white p-5 md:w-85 md:gap-8 lg:min-w-136 lg:rounded-[30px] lg:p-8",
+        "fixed top-1/2 left-1/2 z-100 flex -translate-x-1/2 -translate-y-1/2 transform flex-col gap-6 rounded-[20px] bg-white p-5 md:w-85 md:gap-8 md:pt-8 lg:min-w-136 lg:rounded-[30px] lg:p-8 lg:pt-12",
         className
       )}
       {...props}
@@ -173,6 +173,7 @@ const AlertDialogCancel = React.forwardRef<
               className: `${customButtonStyle} justify-center items-center`,
             },
           }}
+          commonClassName="cursor-pointer"
           {...props}
         />
       )}
