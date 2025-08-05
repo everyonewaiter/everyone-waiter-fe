@@ -33,7 +33,7 @@ export default function OrderCard({ completed, orderId, ...props }: IProps) {
           </span>
         </div>
         <div className="mt-2 flex flex-col gap-1">
-          {props.orderOptionGroups.map((option: OrderOptionGroups) => (
+          {props.orderOptionGroups.map((option) => (
             <Fragment key={option.orderOptionGroupId}>
               {option.orderOptions.map((o) => (
                 <div
