@@ -1,9 +1,11 @@
+/* eslint-disable no-param-reassign */
+
 import { Mutex } from "async-mutex";
 import { AxiosInstance } from "axios";
 import makeSignature from "@/utils/make-signature";
 import { getDecryptedItem } from "../auth/secureStorage";
 
-type CacheKey = `${string}:${string}:${string}`;
+type CacheKey = `${string}:${string}`;
 
 const signatureMutex = new Mutex();
 
@@ -12,8 +14,8 @@ const signatureCache: Record<
   { timestamp: string; signature: string; createdAt: number }
 > = {};
 
-const getCacheKey = (method: string, uri: string, purpose: string) =>
-  `${method}:${uri}:${purpose}` as const;
+const getCacheKey = (method: string, uri: string) =>
+  `${method}:${uri}` as const;
 
 export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
   if (typeof window === "undefined") return;
@@ -26,7 +28,7 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
 
     // eslint-disable-next-line
     await signatureMutex.runExclusive(async () => {
-      const key = getCacheKey(method, `/v1${uri}`, "POS");
+      const key = getCacheKey(method, `/v1${config.url}`);
       const cached = signatureCache[key];
 
       if (!cached || Date.now() - cached.createdAt > 1000) {
@@ -50,13 +52,15 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
           return config;
         }
 
+        const { purpose } = deviceInfo;
+
         const timestamp = Date.now().toString();
         const signature = makeSignature({
           uri: `/v1${uri}`,
           method,
           secretKey,
           timestamp,
-          purpose: deviceInfo.purpose,
+          purpose,
           name: deviceInfo.name,
           deviceId: deviceInfo.deviceId,
         });
@@ -64,11 +68,11 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
         if (process.env.NODE_ENV === "development") {
           // eslint-disable-next-line no-console
           console.log("🧾 Signing Payload", {
-            method,
             uri: `/v1${uri}`,
+            method,
             secretKey,
             timestamp,
-            purpose: deviceInfo.purpose,
+            purpose,
             name: deviceInfo.name,
             deviceId: deviceInfo.deviceId,
           });
@@ -79,16 +83,10 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
             "x-ew-timestamp": timestamp,
           });
         }
-
-        return {
-          ...config,
-          headers: {
-            ...(config.headers || {}),
-            "x-ew-access-key": deviceInfo.deviceId,
-            "x-ew-signature": signature,
-            "x-ew-timestamp": timestamp,
-          },
-        };
+        config.headers = config.headers || {};
+        config.headers["x-ew-access-key"] = deviceInfo.deviceId;
+        config.headers["x-ew-signature"] = signature;
+        config.headers["x-ew-timestamp"] = timestamp;
       }
     });
 
@@ -111,21 +109,9 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
           (customError as any).code = "NOT_FOUND";
           throw customError;
         }
-      } else if (error.request) {
-        if (process.env.NODE_ENV === "development") {
-          // eslint-disable-next-line no-console
-          console.error("   ❗ No response received.");
-          // eslint-disable-next-line no-console
-          console.error("   URL:", error.config?.url);
-        }
-      } else if (process.env.NODE_ENV === "development") {
-        // eslint-disable-next-line no-console
-        console.error("   Error setting up the request:", error.message);
       }
 
       if (errorMsg !== lastErrorMessage || now - lastErrorTime > 3000) {
-        // eslint-disable-next-line no-console
-        console.error("❌ Axios Response Error:", errorMsg);
         lastErrorMessage = errorMsg;
         lastErrorTime = now;
       }

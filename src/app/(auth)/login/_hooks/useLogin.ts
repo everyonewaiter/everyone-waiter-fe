@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { getAccount, login } from "@/lib/api/auth.api";
 import useAuthStore from "@/stores/useAuthStore";
@@ -18,8 +18,6 @@ export default function useLogin() {
       // 1. 토큰 저장
       setClientCookie("accessToken", response.accessToken);
       setClientCookie("refreshToken", response.refreshToken);
-
-      axios.defaults.headers.common.Authorization = `Bearer ${response.accessToken}`;
 
       // 2. 유저 정보 가져오기
       const profileData = await queryClient.fetchQuery({
