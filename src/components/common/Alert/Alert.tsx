@@ -25,7 +25,7 @@ interface IProps {
   noResponsive?: boolean;
   disabled?: boolean;
   customButtonStyle?: string;
-  isSubmitted: boolean;
+  isSubmitted?: boolean;
 }
 
 function Alert({
@@ -58,7 +58,11 @@ function Alert({
 
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent ref={ref} className={layoutClassName}>
+      <AlertDialogContent
+        ref={ref}
+        className={layoutClassName}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>
             <div>{children}</div>
