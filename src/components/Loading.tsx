@@ -9,7 +9,7 @@ const Lottie = dynamic(() => import("react-lottie"), {
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-1000 bg-black/50">
+    <div className="fixed inset-0 z-1000 bg-black/60">
       <div className="flex h-screen w-screen flex-col items-center justify-center gap-3">
         <Lottie
           options={{
