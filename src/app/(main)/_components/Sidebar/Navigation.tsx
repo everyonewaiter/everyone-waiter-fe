@@ -13,7 +13,13 @@ interface IProps {
 }
 
 export default function Navigation({ initialStoreId, role }: IProps) {
-  const [selectedStoreId, setSelectedStoreId] = useState(initialStoreId);
+  const [selectedStore, setSelectedStore] = useState<{
+    name: string;
+    storeId: string;
+  }>({
+    name: "",
+    storeId: "",
+  });
 
   const { data: storeList } = useQuery({
     queryKey: ["store-list"],
@@ -23,10 +29,16 @@ export default function Navigation({ initialStoreId, role }: IProps) {
   });
 
   useEffect(() => {
-    if (storeList?.stores?.length && !selectedStoreId) {
-      setSelectedStoreId(storeList.stores[0].storeId);
+    if (storeList?.stores?.length) {
+      if (initialStoreId) {
+        setSelectedStore(
+          storeList.stores.find((el) => el.storeId === initialStoreId)!
+        );
+      } else {
+        setSelectedStore(storeList?.stores?.[0]);
+      }
     }
-  }, [storeList, selectedStoreId]);
+  }, [storeList, initialStoreId]);
 
   return (
     <nav>
@@ -38,10 +50,10 @@ export default function Navigation({ initialStoreId, role }: IProps) {
       {role === "OWNER" && storeList && (
         <MainSelect
           stores={storeList?.stores}
-          value={selectedStoreId}
-          onValueChange={(value) => {
-            setSelectedStoreId(value);
-          }}
+          value={selectedStore.name}
+          onValueChange={(value) =>
+            setSelectedStore(storeList.stores.find((el) => el.name === value)!)
+          }
           triggerClassname="text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
         />
       )}
@@ -52,7 +64,7 @@ export default function Navigation({ initialStoreId, role }: IProps) {
           </h1>
         </div>
       )}
-      <SidebarMenu selectedStoreId={selectedStoreId} permission={role} />
+      <SidebarMenu selectedStoreId={selectedStore.storeId} permission={role} />
     </nav>
   );
 }

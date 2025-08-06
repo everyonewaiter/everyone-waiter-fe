@@ -26,9 +26,15 @@ export default function MobileSidebarSection({ onClose }: IProps) {
   const { user } = useStore(useAuthStore, (state) => state);
   const permission = user?.permission || "USER";
   const pathname = usePathname();
-  const [selectedStoreId, setSelectedStoreId] = useState<string>("");
   const comparePath = getComparePath(pathname, permission);
 
+  const [selectedStore, setSelectedStore] = useState<{
+    name: string;
+    storeId: string;
+  }>({
+    name: "",
+    storeId: "",
+  });
   // OWNER인 경우에만 매장 목록 조회
   const { data: storeList } = useQuery({
     queryKey: ["store-list"],
@@ -39,7 +45,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
   // storeList가 있을 때 첫 번째 매장 ID를 기본값으로 설정
   useEffect(() => {
     if (storeList?.stores?.length) {
-      setSelectedStoreId(storeList.stores[0].storeId);
+      setSelectedStore(storeList.stores[0]);
     }
   }, [storeList]);
 
@@ -48,7 +54,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
 
   const handleClick = (href: string) => {
     if (permission === "OWNER") {
-      navigate.push(`/${selectedStoreId}${href}`);
+      navigate.push(`/${selectedStore.storeId}${href}`);
     } else {
       navigate.push(href);
     }
@@ -63,8 +69,12 @@ export default function MobileSidebarSection({ onClose }: IProps) {
       <nav>
         {permission === "OWNER" ? (
           <MainSelect
-            value={selectedStoreId}
-            onValueChange={setSelectedStoreId}
+            value={selectedStore.name}
+            onValueChange={(value) =>
+              setSelectedStore(
+                storeList?.stores?.find((el) => el.name === value)!
+              )
+            }
             triggerClassname="text-sm font-bold text-white"
             stores={storeList?.stores}
           />

@@ -26,9 +26,7 @@ export default function MainSelect({
         triggerClassname
       )}
       triggerPlaceholder="매장 선택"
-      triggerValue={
-        stores?.find((store) => store.storeId === value)?.name || "매장 선택"
-      }
+      triggerValue={value}
       data={stores?.map((el) => ({
         key: el.storeId,
         value: el.name,
