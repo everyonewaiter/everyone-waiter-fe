@@ -1,12 +1,12 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
 import GuideComponent from "@/components/GuideComponent";
-import CreateForm from "./_components/CreateForm";
+import CreatePage from "./_components/CreatePage";
 
-export default function Page() {
-  const searchParams = useSearchParams();
-  const state = searchParams.get("state");
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { state?: string };
+}) {
+  const { state } = searchParams;
 
   switch (state) {
     case "pending":
@@ -36,7 +36,7 @@ export default function Page() {
     default:
       return (
         <div className="flex h-full w-full items-center justify-center md:items-start lg:items-center">
-          <CreateForm />
+          <CreatePage />
         </div>
       );
   }
