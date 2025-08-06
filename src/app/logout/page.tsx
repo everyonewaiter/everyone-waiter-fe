@@ -1,13 +1,17 @@
-// app/logout/page.tsx
+"use client";
+
 import { serverLogout } from "@/lib/actions/logout";
-import { getToken } from "@/lib/cookies";
-import { redirect } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default async function LogoutPage() {
-  const token = await getToken("accessToken");
+export default function LogoutPage() {
+  const navigate = useRouter();
 
-  if (token) redirect("/");
+  useEffect(() => {
+    serverLogout().then(() => {
+      navigate.replace("/login");
+    });
+  }, [navigate]);
 
-  await serverLogout();
-  redirect("/login");
+  return <p>로그아웃 중입니다...</p>;
 }

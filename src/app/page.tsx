@@ -5,11 +5,9 @@ import ClientPage from "./_components/ClientPage";
 
 export default async function Page() {
   const accessToken = await getToken("accessToken");
-  const permission = await getToken("role");
+  const permission = await getToken("permission");
 
-  if (!accessToken || !permission) {
-    redirect("/login");
-  }
+  if (!accessToken) redirect("/login");
   if (permission === "ADMIN") redirect("/admin/users");
 
   return (

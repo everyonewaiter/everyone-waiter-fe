@@ -1,7 +1,6 @@
 "use client";
 
 import Spinner from "@/components/common/Spinner";
-import { setClientCookie } from "@/lib/cookies/client";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import MainSelect from "../MainSelect";
@@ -41,7 +40,6 @@ export default function Navigation({ initialStoreId, role }: IProps) {
           stores={storeList?.stores}
           value={selectedStoreId}
           onValueChange={(value) => {
-            setClientCookie("store", value);
             setSelectedStoreId(value);
           }}
           triggerClassname="text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"

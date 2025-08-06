@@ -1,20 +1,26 @@
-import { Mutex } from "async-mutex";
-import { AxiosInstance } from "axios";
-import { renewToken } from "../api/auth.api";
-import {
-  deleteClientCookie,
-  getClientCookie,
-  setClientCookie,
-} from "../cookies/client";
+/* eslint-disable no-underscore-dangle */
 
-let isRefreshing = false;
+import { Mutex } from "async-mutex";
+import axios, { AxiosInstance } from "axios";
+import { getToken } from "../cookies";
+
 let refreshPromise: Promise<any> | null = null;
 const mutex = new Mutex();
 
 export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   // NOTE: 요청 인터셉터
   axiosInstance.interceptors.request.use(async (config) => {
-    const token = getClientCookie("client-accessToken");
+    let token;
+
+    if (typeof window === "undefined") {
+      token = await getToken("accessToken");
+    } else {
+      token =
+        document.cookie
+          .split("; ")
+          .find((row) => row.startsWith(`accessToken=`))
+          ?.split("=")[1] ?? null;
+    }
 
     if (token) {
       // eslint-disable-next-line no-param-reassign
@@ -30,64 +36,43 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     async (error) => {
       const originalRequest = error.config as any;
 
-      if (error.response?.status === 401 && !originalRequest.retryFlag) {
-        originalRequest.retryFlag = true;
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
 
-        // 갱신 중이면 기다림
-        if (isRefreshing && refreshPromise) {
-          await refreshPromise;
-          const token = getClientCookie("client-accessToken");
-          originalRequest.headers.Authorization = `Bearer ${token}`;
+        if (refreshPromise) {
+          const accessToken = await refreshPromise;
+          if (!accessToken) throw error;
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return axiosInstance(originalRequest);
         }
 
-        // 갱신 시작
-        isRefreshing = true;
         refreshPromise = mutex.runExclusive(async () => {
           try {
-            const refreshToken = getClientCookie("client-refreshToken");
+            const res = await axios.post("/api/refresh");
 
-            if (process.env.NODE_ENV === "development") {
-              // eslint-disable-next-line no-console
-              console.log(`refresh ${refreshToken}`);
+            if (res.status !== 200 || !res.data?.accessToken) {
+              if (typeof window !== "undefined") {
+                window.location.href = "/logout";
+              }
+              return null;
             }
 
-            if (!refreshToken) throw error;
-
-            const response = await renewToken({ refreshToken });
-            const { accessToken } = response;
-
-            if (process.env.NODE_ENV === "development") {
-              // eslint-disable-next-line no-console
-              console.log("refresh: success ✅");
-            }
-
-            setClientCookie("client-accessToken", accessToken);
+            const { accessToken } = await res.data;
             return accessToken;
           } catch (err: any) {
-            if (err.response.data.code === "UNAUTHORIZED") {
-              deleteClientCookie("client-accessToken");
-              deleteClientCookie("client-refreshToken");
+            if (typeof window !== "undefined") {
               window.location.href = "/logout";
             }
             throw err;
           } finally {
-            isRefreshing = false;
             refreshPromise = null;
           }
         });
 
-        const accessToken = await refreshPromise;
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        const newToken = await refreshPromise;
+        if (!newToken) throw error;
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
-      }
-
-      if (error.response?.status === 403) {
-        return Promise.reject(error);
-      }
-
-      if (error.response?.status === 400) {
-        return Promise.reject(error);
       }
 
       return Promise.reject(error);

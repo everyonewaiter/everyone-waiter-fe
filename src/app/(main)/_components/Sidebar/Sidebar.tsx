@@ -7,7 +7,7 @@ interface IProps {
 }
 
 export default async function Sidebar({ initialStoreId }: IProps) {
-  const role = await getToken("role");
+  const role = await getToken("permission");
 
   return (
     <aside className="hidden md:flex md:py-5 md:pr-3 md:pl-5 lg:py-8 lg:pl-[60px]">

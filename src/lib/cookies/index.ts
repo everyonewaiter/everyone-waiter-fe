@@ -2,13 +2,13 @@
 
 import { cookies } from "next/headers";
 
-type KeyType = "accessToken" | "refreshToken" | "secretKey" | "role";
+type KeyType = "accessToken" | "refreshToken" | "secretKey" | "permission";
 
 const TOKEN_EXPIRATION = {
-  accessToken: 60 * 60 * 12, // 12시간
+  accessToken: 60 * 60 * 24 * 14, // 12시간
   refreshToken: 60 * 60 * 24 * 14, // 2주
   secretKey: 60 * 60 * 24 * 365, // 1년
-  role: 60 * 60 * 24 * 365, // 1년
+  permission: 60 * 60 * 24 * 365, // 1년
 };
 
 // NOTE - accessToken 및 refreshToken 접근
@@ -28,16 +28,7 @@ export async function deleteCookie(key: KeyType) {
 export async function setCookie(key: KeyType, token: string) {
   const cookieStore = await cookies();
   cookieStore.set(key, token, {
-    httpOnly: true,
+    httpOnly: key === "refreshToken",
     maxAge: TOKEN_EXPIRATION[key],
-  });
-}
-
-// NOTE - 역할 설정
-export async function setRole(role: AccountPermission) {
-  const cookieStore = await cookies();
-  cookieStore.set("role", role, {
-    httpOnly: false,
-    maxAge: TOKEN_EXPIRATION.role,
   });
 }

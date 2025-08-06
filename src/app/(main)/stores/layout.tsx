@@ -12,7 +12,7 @@ export default async function Layout({
   params,
 }: PropsWithChildren<{ params: Promise<{ id: string }> }>) {
   const queryClient = getQueryClient();
-  const role = await getToken("role");
+  const role = await getToken("permission");
   const { id } = await params;
 
   const pageTitle = getPageTitle(`/${id}`, role);
