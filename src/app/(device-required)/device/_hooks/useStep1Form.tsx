@@ -1,11 +1,10 @@
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { step1Schema, TypeDeviceStep1Form } from "../_schema/device.schema";
+import { TypeDeviceStep1Form } from "../_schema/device.schema";
 
 export default function useStep1Form() {
   const form = useForm<TypeDeviceStep1Form>({
     mode: "onChange",
-    resolver: zodResolver(step1Schema),
+    // resolver: zodResolver(step1Schema),
     defaultValues: {
       phone: "",
       authNumber: "",

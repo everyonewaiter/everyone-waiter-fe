@@ -45,7 +45,7 @@ interface TableOrderMenu {
   served: boolean;
   servedTime: string;
   printEnabled: boolean;
-  orderOptionGroups: OrderOptionGruops[];
+  orderOptionGroups: OrderOptionGroups[];
 }
 
 type OrderCategory = "INITIAL" | "ADDITIONAL";

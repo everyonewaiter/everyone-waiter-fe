@@ -33,6 +33,9 @@ const useUpdateDevice = () =>
       queryClient.invalidateQueries({
         queryKey: deviceKeys.all(variables.storeId),
       });
+      queryClient.invalidateQueries({
+        queryKey: deviceKeys.detail(variables.storeId, variables.deviceId),
+      });
     },
   });
 

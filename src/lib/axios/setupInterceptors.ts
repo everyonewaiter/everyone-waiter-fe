@@ -28,7 +28,6 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-      const e = error as any;
       const originalRequest = error.config as any;
 
       if (error.response?.status === 401 && !originalRequest.retryFlag) {
@@ -88,8 +87,6 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
       }
 
       if (error.response?.status === 400) {
-        // eslint-disable-next-line no-console
-        console.error(e.response.data.message);
         return Promise.reject(error);
       }
 

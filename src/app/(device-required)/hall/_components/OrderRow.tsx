@@ -6,27 +6,35 @@ import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
 import dynamic from "next/dynamic";
 import OrderCard from "./OrderCard";
+import { hallQueries } from "../_query/useHall";
 
 const CompleteAllModal = dynamic(() => import("./CompleteAllModal"), {
   ssr: false,
 });
 
-interface IProps {
+interface IProps extends HallOrder {
   completed?: boolean;
 }
 
-export default function OrderRow({ completed }: IProps) {
+export default function OrderRow({ completed, ...props }: IProps) {
   const { open, close } = useOverlay();
+
+  const serve = hallQueries.useServeOrder();
 
   const handleCompleteAll = () => {
     open(() => (
       <CompleteAllModal
         close={close}
         type="all-complete"
-        onComplete={() => {}}
+        onComplete={() => {
+          serve.mutate({ orderId: props.orderId }, { onSuccess: close });
+        }}
+        tableNo={props.tableNo}
       />
     ));
   };
+
+  const getTime = (date: string) => date.split(" ")[1].slice(0, 5);
 
   return (
     <div
@@ -42,11 +50,11 @@ export default function OrderRow({ completed }: IProps) {
         )}
       >
         <div className="center rounded-[12px] border border-gray-600 p-3 text-lg font-medium text-gray-300">
-          주문 시간 PM 02:23
+          주문 시간 PM {getTime(props.createdAt)}
         </div>
         {completed && (
           <div className="center mt-[10px] rounded-[12px] border border-gray-600 p-3 text-lg font-medium text-gray-300">
-            완료 시간 PM 02:25
+            완료 시간 PM {getTime(props.servedTime)}
           </div>
         )}
         <div className="center w-full flex-1 flex-col gap-3">
@@ -63,7 +71,9 @@ export default function OrderRow({ completed }: IProps) {
           >
             테이블 번호
           </span>
-          <strong className="text-4xl font-bold">03</strong>
+          <strong className="text-4xl font-bold">
+            {String(props.tableNo).padStart(2, "0")}
+          </strong>
         </div>
         {!completed && (
           <Button
@@ -76,15 +86,20 @@ export default function OrderRow({ completed }: IProps) {
         )}
       </section>
       <section className="flex h-full w-full flex-col gap-4 overflow-hidden rounded-[24px] border border-gray-500 p-6">
-        <div className="w-full rounded-[12px] bg-gray-700 px-5 py-3">메모:</div>
+        <div className="w-full rounded-[12px] bg-gray-700 px-5 py-3">
+          메모: {props.memo}
+        </div>
         <div className="flex w-full flex-1 flex-col">
           <ScrollArea className="h-full w-full">
             <div className="flex w-max gap-[10px]">
-              <OrderCard completed={completed!} />
-              <OrderCard completed={completed!} />
-              <OrderCard completed={completed!} />
-              <OrderCard completed={completed!} />
-              <OrderCard completed={completed!} />
+              {props.orderMenus.map((menu) => (
+                <OrderCard
+                  key={menu.orderMenuId}
+                  completed={completed}
+                  orderId={props.orderId}
+                  {...menu}
+                />
+              ))}
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>

@@ -24,6 +24,7 @@ interface IProps {
   layoutClassName?: string;
   noResponsive?: boolean;
   disabled?: boolean;
+  customButtonStyle?: string;
   isSubmitted?: boolean;
 }
 
@@ -38,6 +39,7 @@ function Alert({
   buttonColor = "primary",
   noResponsive,
   disabled,
+  customButtonStyle = "",
   isSubmitted,
 }: PropsWithChildren<IProps>) {
   const ref = useRef<HTMLDivElement>(null);
@@ -56,7 +58,11 @@ function Alert({
 
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent ref={ref} className={layoutClassName}>
+      <AlertDialogContent
+        ref={ref}
+        className={layoutClassName}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>
             <div>{children}</div>
@@ -70,6 +76,7 @@ function Alert({
               className="flex-[0.6]"
               hasNoAction={hasNoAction}
               noResponsive={noResponsive}
+              customButtonStyle={customButtonStyle}
             >
               <span>닫기</span>
             </AlertDialogCancel>
@@ -81,6 +88,7 @@ function Alert({
               noResponsive={noResponsive}
               className="flex-1"
               disabled={disabled}
+              customButtonStyle={customButtonStyle}
             >
               {isSubmitted ? <Spinner /> : <span>{buttonText}</span>}
             </AlertDialogAction>

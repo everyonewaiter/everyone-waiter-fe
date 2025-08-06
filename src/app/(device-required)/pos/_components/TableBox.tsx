@@ -33,11 +33,9 @@ export default function TableBox({
       role="button"
       tabIndex={0}
       className={cn(
-        "flex h-[320px] w-[432px] flex-col justify-between rounded-[24px] border-[2px] p-7 text-left",
+        "flex h-[320px] w-[432px] cursor-pointer flex-col justify-between rounded-[24px] border-[2px] p-7 text-left",
         props.orderMenuCount > 0 ? "border-primary" : "border-gray-500",
-        isMoving && hasAnimation
-          ? "animate-wiggle cursor-pointer"
-          : "cursor-default"
+        isMoving && hasAnimation ? "animate-wiggle" : ""
       )}
       onClick={onClick}
       onKeyDown={(e) => {
