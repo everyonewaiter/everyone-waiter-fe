@@ -142,7 +142,7 @@ export const print = ({
           0,
           0
         );
-        menu.orderOptionGroups.forEach((option: OrderOptionGroups) => {
+        menu.orderOptionGroups.forEach((option) => {
           option.orderOptions.forEach((o) => {
             window.printText(
               `${formatReceiptRow(`└ ${option.name}`, o.name, "", "")}\n`,
@@ -276,7 +276,7 @@ export const print = ({
           0,
           0
         );
-        menu.orderOptionGroups.forEach((option: OrderOptionGroups) => {
+        menu.orderOptionGroups.forEach((option) => {
           option.orderOptions.forEach((o) => {
             window.printText(
               `${formatReceiptRow(`└ ${o.name}`, "", "", o.price ? `${o.price.toLocaleString()}` : "")}\n`,

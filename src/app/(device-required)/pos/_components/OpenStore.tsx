@@ -18,8 +18,8 @@ export default function OpenStore() {
   const modal = useOverlay();
   const { storeId } = useDeviceContext();
 
-  const open = posQueries.useOpenStore();
-  const close = posQueries.useCloseStore();
+  const storeOpen = posQueries.useOpenStore();
+  const storeClose = posQueries.useCloseStore();
   const { data } = posQueries.useStoreInfo(storeId!);
   const isStoreOpen = data?.status === "OPEN";
 
@@ -36,8 +36,8 @@ export default function OpenStore() {
           buttonText={isStoreOpen ? "마감하기" : "오픈하기"}
           onAction={() => {
             if (isStoreOpen)
-              close.mutate(undefined, { onSuccess: successHandler });
-            else open.mutate(undefined, { onSuccess: successHandler });
+              storeClose.mutate(undefined, { onSuccess: successHandler });
+            else storeOpen.mutate(undefined, { onSuccess: successHandler });
           }}
         >
           매장을 {isStoreOpen ? "마감" : "오픈"}하시겠습니까?

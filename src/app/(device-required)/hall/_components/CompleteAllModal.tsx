@@ -5,20 +5,28 @@ interface IProps {
   close: () => void;
   type: "all-complete" | "single-complete";
   onComplete: () => void;
+  tableNo: number;
+  text?: string;
 }
 
-export default function CompleteAllModal({ close, type, onComplete }: IProps) {
+export default function CompleteAllModal({
+  close,
+  type,
+  onComplete,
+  tableNo,
+  text,
+}: IProps) {
   return (
     <ModalWithTitle onClose={close} topRightComponent={null}>
       <div className="center flex-col gap-1 rounded-[16px] border border-gray-600 py-4">
         <span className="text-gray-0 text-xl font-semibold">테이블 번호</span>
-        <strong className="text-gray-0 text-3xl font-bold">01</strong>
+        <strong className="text-gray-0 text-3xl font-bold">
+          {String(tableNo).padStart(2, "0")}
+        </strong>
       </div>
       {type === "single-complete" && (
         <div className="center mt-2 flex-col gap-1 rounded-[16px] border border-gray-600 py-4">
-          <span className="text-gray-0 text-lg font-semibold">
-            물 더 주세요.
-          </span>
+          <span className="text-gray-0 text-lg font-semibold">{text}</span>
         </div>
       )}
       <div className="center mt-6 flex flex-col gap-3">
