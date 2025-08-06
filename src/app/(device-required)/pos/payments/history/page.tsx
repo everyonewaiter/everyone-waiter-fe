@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import DatePicker from "@/components/common/DatePicker";
