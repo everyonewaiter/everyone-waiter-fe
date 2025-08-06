@@ -1,12 +1,12 @@
 import GuideComponent from "@/components/GuideComponent";
 import CreatePage from "./_components/CreatePage";
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams: { state?: string };
+  searchParams: Promise<{ state?: string }>;
 }) {
-  const { state } = searchParams;
+  const { state } = await searchParams;
 
   switch (state) {
     case "pending":
