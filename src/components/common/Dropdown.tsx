@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import dynamic from "next/dynamic";
 import {
   DropdownMenu,
@@ -68,7 +67,8 @@ export default function Dropdown({
             e.stopPropagation();
           }}
         >
-          <div
+          <button
+            type="button"
             className={cn(
               "flex h-8 w-fit items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 hover:border-gray-400 md:h-[38px] md:pr-3 md:pl-4",
               "font-regular text-gray-0 text-xs lg:text-sm",
@@ -83,6 +83,7 @@ export default function Dropdown({
                 setIsOpen((prev) => !prev);
               }
             }}
+            tabIndex={disabled ? -1 : 0}
           >
             <span className="text-s text-gray-0 whitespace-nowrap md:text-sm">
               {active || defaultText}
@@ -100,7 +101,7 @@ export default function Dropdown({
                 className="h-4 w-4 text-gray-200 lg:h-6 lg:w-6"
               />
             )}
-          </div>
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"

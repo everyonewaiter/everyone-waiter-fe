@@ -173,7 +173,7 @@ function FormErrorMessage({ className, ...props }: React.ComponentProps<"p">) {
   }
 
   return (
-    <p
+    <span
       data-slot="form-message"
       id={formMessageId}
       className={cn(
@@ -184,7 +184,7 @@ function FormErrorMessage({ className, ...props }: React.ComponentProps<"p">) {
     >
       <Info className="stroke-status-error mb-[1px] h-4 w-4" />
       {body}
-    </p>
+    </span>
   );
 }
 
