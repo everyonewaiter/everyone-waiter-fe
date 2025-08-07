@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import POSHeader from "./POSHeader";
 
 export default function POSHeader2() {

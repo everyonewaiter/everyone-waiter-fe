@@ -1,4 +1,4 @@
-import { arrayMove } from "@dnd-kit/sortable";
+import { arrayMove } from "@/components/dnd/index";
 import { QueryClient, QueryKey, useMutation } from "@tanstack/react-query";
 
 interface MoveParams {

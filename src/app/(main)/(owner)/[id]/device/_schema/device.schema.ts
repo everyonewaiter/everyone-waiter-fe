@@ -1,4 +1,4 @@
-import { commonSchema } from "@/schema";
+import { deviceNumberSchema } from "@/schema";
 import { z } from "zod";
 
 export const deviceFormSchema = z.object({
@@ -8,7 +8,7 @@ export const deviceFormSchema = z.object({
   purpose: z.enum(["HALL", "POS", "WAITING", "TABLE"]),
   paymentType: z.enum(["POSTPAID", "PREPAID"]),
   tableNo: z.coerce.number(),
-  deviceNumber: commonSchema.shape.deviceNumber,
+  deviceNumber: deviceNumberSchema,
 });
 
 export type TypeDeviceForm = z.infer<typeof deviceFormSchema>;

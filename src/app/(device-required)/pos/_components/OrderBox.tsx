@@ -1,4 +1,4 @@
-import { PlusIcon } from "lucide-react";
+import { PlusIcon } from "@/components/common/Icon/index";
 import cn from "@/lib/utils";
 
 interface IProps extends CustomOrder {

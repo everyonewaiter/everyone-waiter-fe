@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { arrayMove } from "@dnd-kit/sortable";
+import { arrayMove } from "@/components/dnd/index";
 import { menuQueries } from "../_queries/useMenu";
 import { menuListSchema, TypeMenuList } from "../_schema/menu.schema";
 

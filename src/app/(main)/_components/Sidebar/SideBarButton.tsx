@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { Menu } from "@/components/common/Icon/index";
 import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/useOverlay";
 import MobileSidebar from "../MobileLayout/MobileSidebar";

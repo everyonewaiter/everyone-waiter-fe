@@ -1,6 +1,6 @@
 "use client";
 
-import { MinusIcon } from "lucide-react";
+import { MinusIcon } from "@/components/common/Icon/index";
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import {

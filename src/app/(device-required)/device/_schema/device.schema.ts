@@ -1,9 +1,9 @@
-import { commonSchema } from "@/schema";
+import { phoneSchema, authNumberSchema } from "@/schema";
 import z from "zod";
 
 const schema = z.object({
-  phone: commonSchema.shape.phone,
-  authNumber: commonSchema.shape.authNumber,
+  phone: phoneSchema,
+  authNumber: authNumberSchema,
   deviceName: z.string(),
 });
 

@@ -1,13 +1,13 @@
 "use client";
 
-import { ChevronsRight } from "lucide-react";
+import { ChevronsRight } from "@/components/common/Icon/index";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import useOverlay from "@/hooks/useOverlay";
 import { posQueries } from "../../_queries/usePos";
 import POSHeader from "../POSHeader";

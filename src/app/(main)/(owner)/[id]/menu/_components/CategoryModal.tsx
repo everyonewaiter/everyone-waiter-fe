@@ -1,5 +1,5 @@
-import { arrayMove } from "@dnd-kit/sortable";
-import { ArrowDownUp, Plus } from "lucide-react";
+import { arrayMove } from "@/components/dnd/index";
+import { ArrowDownUp, Plus } from "@/components/common/Icon/index";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";

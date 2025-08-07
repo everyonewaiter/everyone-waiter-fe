@@ -29,7 +29,7 @@ export default function SignupLayout({ children }: { children: ReactNode }) {
             className="h-[calc(100dvh-48px)] w-full rounded-[24px] object-cover"
             width={1152}
             height={1032}
-            loading="lazy"
+            priority
           />
         </div>
       </div>

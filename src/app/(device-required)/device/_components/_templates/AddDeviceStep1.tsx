@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Dropdown from "@/components/common/Dropdown";
 import { Form } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import useOverlay from "@/hooks/useOverlay";
+import Spinner from "@/components/common/Spinner";
+import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
+import SkeletonInput from "@/components/common/Skeleton/SkeletonInput";
 import { deviceQueries } from "../../_queries/useDeviceInfo";
 import useStep1Form from "../../_hooks/useStep1Form";
 import PhoneInput from "../PhoneInput";
@@ -18,13 +20,18 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
 
+const Dropdown = dynamic(() => import("@/components/common/Dropdown"), {
+  ssr: false,
+  loading: () => <Spinner />,
+});
+
 interface IProps {
   onNextStep: ({
     storeId,
     name,
     phoneNumber,
   }: {
-    storeId: bigint;
+    storeId: string;
     name: string;
     phoneNumber: string;
   }) => void;
@@ -36,7 +43,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
   } = useStep1Form();
   const { state, dispatch } = useAuthReducer();
 
-  const [stores, setStores] = useState<{ storeId: bigint; name: string }[]>();
+  const [stores, setStores] = useState<{ storeId: string; name: string }[]>();
   const [active, setActive] = useState("매장을 선택해주세요.");
 
   const send = deviceQueries.useSendAuth();
@@ -136,13 +143,15 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
               isSubmitted={state.isSubmitted}
             />
             {state.isSubmitted && (
-              <AuthInput
-                control={form.control}
-                onClick={handleCheckAuth}
-                authTime={state.authTime}
-                isSubmitted={state.isSubmitted}
-                disabled={state.disables.requestNumCheck}
-              />
+              <Suspense fallback={<SkeletonGroup />}>
+                <AuthInput
+                  control={form.control}
+                  onClick={handleCheckAuth}
+                  authTime={state.authTime}
+                  isSubmitted={state.isSubmitted}
+                  disabled={state.disables.requestNumCheck}
+                />
+              </Suspense>
             )}
           </div>
           {Array.isArray(stores) && stores.length > 0 && (
@@ -154,17 +163,19 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
                 </div>
               )}
               {stores.length > 1 && (
-                <div className="flex w-full flex-col gap-2">
-                  <Label disabled>매장 선택</Label>
-                  <Dropdown
-                    data={stores.map((el) => el.name)}
-                    defaultText="매장을 선택해주세요."
-                    active={active}
-                    setActive={setActive}
-                    triggerClassName="!h-9 lg:!h-12 rounded-[8px] lg:rounded-[12px] w-full"
-                    className="w-70 md:!w-[324px] lg:!w-120"
-                  />
-                </div>
+                <Suspense fallback={<SkeletonInput />}>
+                  <div className="flex w-full flex-col gap-2">
+                    <Label disabled>매장 선택</Label>
+                    <Dropdown
+                      data={stores.map((el) => el.name)}
+                      defaultText="매장을 선택해주세요."
+                      active={active}
+                      setActive={setActive}
+                      triggerClassName="!h-9 lg:!h-12 rounded-[8px] lg:rounded-[12px] w-full"
+                      className="w-70 md:!w-[324px] lg:!w-120"
+                    />
+                  </div>
+                </Suspense>
               )}
             </div>
           )}

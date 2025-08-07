@@ -1,5 +1,5 @@
 // NOTE - 기본 가운데 뜨는 모달
-import { X as CloseIcon } from "lucide-react";
+import { CloseIcon } from "@/components/common/Icon/index";
 import { ReactNode, useRef } from "react";
 import useEscapeKey from "@/hooks/useEscapeKey";
 import useOutsideClick from "@/hooks/useOutSideClick";

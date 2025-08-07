@@ -1,39 +1,22 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import useAuthStore from "@/stores/useAuthStore";
-import { getClientCookie } from "@/lib/cookies/client";
-import { storesQueries } from "./(main)/(owner)/[id]/store/_queries/useStores";
+import { redirect } from "next/navigation";
+import { getToken } from "@/lib/cookies";
 import FirstLoading from "./(main)/_components/FirstLoading";
+import ClientPage from "./_components/ClientPage";
 
-export default function Page() {
-  const navigate = useRouter();
-  const { setIsLoggedIn } = useAuthStore();
-  const accessToken = getClientCookie("accessToken");
+export default async function Page() {
+  const accessToken = await getToken("accessToken");
+  const permission = await getToken("permission");
 
-  const { data, isLoading } = storesQueries.useStoresList(!!accessToken);
-  const firstStoreId = data?.stores?.[0]?.storeId;
+  if (!accessToken) redirect("/login");
+  if (permission === "ADMIN") redirect("/admin/users");
 
-  useEffect(() => {
-    if (accessToken) {
-      setIsLoggedIn(!!accessToken);
-    }
-  }, [accessToken, setIsLoggedIn]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      if (!accessToken) {
-        navigate.replace("/login");
-      } else if (!firstStoreId) {
-        navigate.replace("/user");
-      } else {
-        navigate.replace(`/${firstStoreId}`);
-      }
-    }
-  }, [isLoading, accessToken, firstStoreId, navigate]);
-
-  if (isLoading) return <FirstLoading />;
-
-  return null;
+  return (
+    <>
+      <FirstLoading />
+      <ClientPage
+        token={accessToken}
+        permission={permission as AccountPermission}
+      />
+    </>
+  );
 }

@@ -1,10 +1,27 @@
+import getQueryClient from "@/app/get-query-client";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import FormComponent from "./_components/FormComponent";
+import { storeKeys } from "./_queries/keys";
+import { getStoreInfoDetail } from "./_api/stores.api";
 
-export default function StoreInfo() {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const queryClient = getQueryClient();
+
+  const { id } = await params;
+
+  const storeDetail = await queryClient.fetchQuery({
+    queryKey: storeKeys.detail(id),
+    queryFn: () => getStoreInfoDetail(id),
+  });
+
   return (
-    <div className="flex w-80 flex-col md:w-[480px]">
+    <div className="flex w-80 flex-col md:w-[272px] lg:w-[480px]">
       <div className="min-h-full justify-center">
-        <div className="mt-10 flex h-full w-full flex-col items-center md:mt-6 lg:mt-10">
+        <div className="flex h-full w-full flex-col items-center md:mt-6 lg:mt-10">
           <div className="w-full">
             <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
               매장 정보
@@ -13,7 +30,9 @@ export default function StoreInfo() {
               <span>등록된 매장 정보를 확인할 수 있습니다.</span>
               <span>변경된 정보가 있다면 언제든지 수정해 주세요.</span>
             </div>
-            <FormComponent />
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              <FormComponent data={storeDetail} />
+            </HydrationBoundary>
           </div>
         </div>
       </div>

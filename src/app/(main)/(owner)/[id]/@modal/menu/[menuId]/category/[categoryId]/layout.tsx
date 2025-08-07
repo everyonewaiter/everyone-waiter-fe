@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { ReactNode } from "react";
 import getQueryClient from "@/app/get-query-client";
 import { menuKeys } from "@/app/(main)/(owner)/[id]/menu/_queries/keys";
 import { getMenuDetail } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
@@ -7,7 +7,7 @@ import ClientRefWrapper from "../../../_components/Wrapper";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string; menuId: string; categoryId: string };
+  params: Promise<{ id: string; menuId: string; categoryId: string }>;
 }) {
   const { id: storeId, menuId, categoryId } = await params;
 
@@ -34,9 +34,10 @@ export async function generateMetadata({
 export default async function Layout({
   children,
   params,
-}: PropsWithChildren<{
+}: {
+  children: ReactNode;
   params: Promise<{ id: string; menuId: string; categoryId: string }>;
-}>) {
+}) {
   const { id: storeId, menuId, categoryId } = await params;
 
   const queryClient = getQueryClient();

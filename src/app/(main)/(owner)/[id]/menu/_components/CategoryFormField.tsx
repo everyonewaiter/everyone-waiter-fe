@@ -1,5 +1,4 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable, CSS } from "@/components/dnd/index";
 import { Controller, useFormContext } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import {
@@ -8,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/common/Form";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import Input from "@/components/common/Input";
 import cn from "@/lib/utils";
 import { useStoreContext } from "@/providers/storeProvider";

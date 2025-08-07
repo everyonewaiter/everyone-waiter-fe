@@ -4,18 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useStore } from "zustand";
+import dynamic from "next/dynamic";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/common/select";
 import MENU_ITEMS from "@/constants/sidebarMenus";
 import useAuthStore from "@/stores/useAuthStore";
 import { getComparePath } from "@/utils/getPathname";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
+import cn from "@/lib/utils";
+
+const MainSelect = dynamic(() => import("../MainSelect"), {
+  ssr: false,
+});
 
 interface IProps {
   onClose: () => void;
@@ -27,9 +26,15 @@ export default function MobileSidebarSection({ onClose }: IProps) {
   const { user } = useStore(useAuthStore, (state) => state);
   const permission = user?.permission || "USER";
   const pathname = usePathname();
-  const [selectedStoreId, setSelectedStoreId] = useState<string>("");
   const comparePath = getComparePath(pathname, permission);
 
+  const [selectedStore, setSelectedStore] = useState<{
+    name: string;
+    storeId: string;
+  }>({
+    name: "",
+    storeId: "",
+  });
   // OWNER인 경우에만 매장 목록 조회
   const { data: storeList } = useQuery({
     queryKey: ["store-list"],
@@ -40,7 +45,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
   // storeList가 있을 때 첫 번째 매장 ID를 기본값으로 설정
   useEffect(() => {
     if (storeList?.stores?.length) {
-      setSelectedStoreId(storeList.stores[0].storeId);
+      setSelectedStore(storeList.stores[0]);
     }
   }, [storeList]);
 
@@ -49,35 +54,37 @@ export default function MobileSidebarSection({ onClose }: IProps) {
 
   const handleClick = (href: string) => {
     if (permission === "OWNER") {
-      navigate.push(`/${selectedStoreId}${href}`);
+      navigate.push(`/${selectedStore.storeId}${href}`);
     } else {
       navigate.push(href);
     }
     onClose();
   };
 
+  const commonStyle =
+    "bg-primary flex w-full items-center justify-between rounded-xl";
+
   return (
     <div className={`${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}>
       <nav>
         {permission === "OWNER" ? (
-          <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
-            <SelectTrigger className="bg-primary flex w-full items-center justify-between rounded-xl text-sm font-bold text-white">
-              <SelectValue placeholder="매장 선택">
-                {storeList?.stores.find(
-                  (store) => store.storeId === selectedStoreId
-                )?.name || "매장 선택"}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {storeList?.stores.map((store) => (
-                <SelectItem key={store.storeId} value={store.storeId}>
-                  {store.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <MainSelect
+            value={selectedStore.name}
+            onValueChange={(value) =>
+              setSelectedStore(
+                storeList?.stores?.find((el) => el.name === value)!
+              )
+            }
+            triggerClassname="text-sm font-bold text-white"
+            stores={storeList?.stores}
+          />
         ) : (
-          <div className="bg-primary flex w-full items-center justify-between rounded-xl py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5">
+          <div
+            className={cn(
+              commonStyle,
+              "py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5"
+            )}
+          >
             <h1 className="text-[15px] font-bold text-white lg:text-[18px]">
               관리자
             </h1>

@@ -4,8 +4,11 @@ import { useState } from "react";
 
 export default function useDeviceUI() {
   const [step, setStep] = useState(0);
-  const [storeId, setStoreId] = useState(BigInt(0));
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [device, setDevice] = useState({
+    storeId: "",
+    phoneNumber: "",
+    storeName: "",
+  });
 
-  return { step, setStep, storeId, setStoreId, phoneNumber, setPhoneNumber };
+  return { step, setStep, device, setDevice };
 }

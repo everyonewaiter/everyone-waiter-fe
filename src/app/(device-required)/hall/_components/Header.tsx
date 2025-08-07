@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button/Button";
+import Logo from "@/components/Logo";
 import cn from "@/lib/utils";
 import { hallQueries } from "../_query/useHall";
 
@@ -25,14 +25,8 @@ export default function Header({ href }: IProps) {
         )}
         onClick={() => (href ? navigate.push(href!) : null)}
       >
-        <Image
-          src="/logo/logo-medium.svg"
-          alt="logo"
-          width={60}
-          height={60}
-          priority
-        />
-        <h1 className="font-hakgyo text-primary text-[16px] md:text-2xl">
+        <Logo width={60} height={60} />
+        <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
           모두의 웨이터
         </h1>
       </button>

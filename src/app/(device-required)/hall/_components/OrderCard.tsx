@@ -1,4 +1,4 @@
-import { PlusIcon } from "lucide-react";
+import { PlusIcon } from "@/components/common/Icon/index";
 import Button from "@/components/common/Button/Button";
 import cn from "@/lib/utils";
 import { Fragment } from "react";

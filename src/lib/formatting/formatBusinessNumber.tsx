@@ -1,11 +1,11 @@
 const formatBusinessNumber = (value: string) => {
-  let formatted = value;
+  const onlyNums = value.replace(/[^0-9]/g, "");
 
-  if (formatted.length > 5) {
-    formatted = `${formatted.slice(0, 3)}-${formatted.slice(3, 5)}-${formatted.slice(5, 10)}`;
+  if (onlyNums.length > 5) {
+    return `${onlyNums.slice(0, 3)}-${onlyNums.slice(3, 5)}-${onlyNums.slice(5, 10)}`;
   }
 
-  return formatted;
+  return onlyNums;
 };
 
 export default formatBusinessNumber;

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import ClientLayout from "./(main)/_components/ClientRootLayout";
 import "./globals.css";
 import JQueryScripts from "./(main)/_components/Scripts";
@@ -11,28 +12,64 @@ export const metadata: Metadata = {
   },
 };
 
+const hakgyo = localFont({
+  src: [
+    {
+      path: "../../public/fonts/HakgyoansimDunggeunmiso-B.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-hakgyo",
+  display: "swap",
+});
+
+const pretendard = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Pretendard-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-pretendard",
+  display: "swap",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${hakgyo.variable} ${pretendard.variable}`}
+      suppressHydrationWarning
+    >
       <head>
-        <link
-          rel="preload"
-          as="image"
-          href="/logo/logo-with-text.svg"
-          type="image/svg+xml"
-        />
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
 
         {/* Apple Touch Icon for iOS */}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-        {/* Favicon (fallback) */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-
-        {/* Manifest icons for Android & PWA */}
+        {/* Manifest icons for Android */}
         <link
           rel="icon"
           type="image/png"
@@ -45,19 +82,7 @@ export default function RootLayout({
           sizes="512x512"
           href="/icon-512x512.png"
         />
-
-        {/* Font */}
-        <link
-          rel="preload"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/dynamic-subset-variable.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/dynamic-subset-variable.css"
-          rel="stylesheet"
-        />
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_BASE_URL} />
       </head>
 
       <body>

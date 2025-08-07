@@ -1,11 +1,11 @@
 "use client";
 
-import { X as CloseIcon } from "lucide-react";
-import Image from "next/image";
+import { CloseIcon } from "@/components/common/Icon/index";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import { useStoreContext } from "@/providers/storeProvider";
+import Logo from "@/components/Logo";
 import MobileSidebarSection from "./MobileSidebarSection";
 
 interface IProps {
@@ -35,18 +35,11 @@ export default function MobileSidebar({ onClose }: IProps) {
               onClose();
             }}
           >
-            <Image
-              src="/logo/logo-medium.svg"
-              alt="모두의 웨이터 로고"
-              width={40}
-              height={40}
-            />
-            <Image
-              src="/logo/logo-text.svg"
-              alt="모두의 웨이터 텍스트"
-              width={106}
-              height={19}
-            />
+            <Logo width={40} height={40} />
+
+            <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
+              모두의 웨이터
+            </h1>
           </button>
           <button type="button" onClick={onClose}>
             <CloseIcon color="#222" width={24} height={24} strokeWidth="1.5" />

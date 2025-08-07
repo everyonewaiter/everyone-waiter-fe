@@ -1,12 +1,17 @@
-import { commonSchema } from "@/schema";
+import {
+  emailSchema,
+  phoneSchema,
+  authNumberSchema,
+  passwordSchema,
+} from "@/schema";
 import z from "zod";
 
 export const signupSchema = z
   .object({
-    email: commonSchema.shape.email,
-    phone: commonSchema.shape.phone,
-    authNumber: commonSchema.shape.authNumber,
-    password: commonSchema.shape.password,
+    email: emailSchema,
+    phone: phoneSchema,
+    authNumber: authNumberSchema,
+    password: passwordSchema,
     confirm: z.string().optional(),
   })
   .refine((data) => data.password === data.confirm, {

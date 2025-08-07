@@ -2,7 +2,7 @@
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { cva } from "class-variance-authority";
-import { Circle } from "lucide-react";
+import { Circle } from "@/components/common/Icon/index";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 import cn from "@/lib/utils";
 

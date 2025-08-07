@@ -1,5 +1,5 @@
 import Button from "@/components/common/Button/Button";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import { paymentTimeTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
 import useElapsedMinutes from "../../waiting/_hooks/useElapsedMinutes";

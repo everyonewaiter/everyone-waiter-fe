@@ -22,17 +22,34 @@ export default function Icon({
   > | null>(null);
 
   useEffect(() => {
+    let mounted = true;
     import(`@/assets/icons/${iconKey}.svg`)
-      .then((mod) => setIconComponent(() => mod.default))
-      .catch(() => setIconComponent(null));
+      .then((mod) => mounted && setIconComponent(() => mod.default))
+      .catch(() => mounted && setIconComponent(null));
+
+    return () => {
+      mounted = false;
+    };
   }, [iconKey]);
 
-  if (!IconComponent) return null;
+  if (!IconComponent) {
+    return (
+      <div
+        style={{ width: size - 3 }}
+        className="inline-block shrink-0 rounded bg-gray-700/30"
+      />
+    );
+  }
+
   return (
     <IconComponent
       width={size}
       height={size}
-      className={cn(isActive ? "text-primary" : "text-gray-300", className)}
+      className={cn(
+        "shrink-0",
+        isActive ? "text-primary" : "text-gray-300",
+        className
+      )}
       {...props}
     />
   );

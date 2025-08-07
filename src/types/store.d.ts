@@ -37,8 +37,8 @@ interface Settings {
 }
 
 interface StoreInfoDetail extends Omit<StoreForm, "file"> {
-  accountId: bigint;
-  storeId: bigint;
+  accountId: string;
+  storeId: string;
   image: string;
   status: StoreStatus;
   lastOpenedAt: string;

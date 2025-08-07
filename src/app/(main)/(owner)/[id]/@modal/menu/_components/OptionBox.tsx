@@ -1,4 +1,4 @@
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "@/components/common/Icon/index";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import {

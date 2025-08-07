@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays as CalendarIcon } from "lucide-react";
+import { CalendarDays as CalendarIcon } from "@/components/common/Icon/index";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
@@ -10,9 +10,11 @@ import {
   PopoverTrigger,
 } from "@/components/common/Popover";
 import cn from "@/lib/utils";
+import Spinner from "./Spinner";
 
 const Calendar = dynamic(() => import("@/components/common/Calender"), {
   ssr: false,
+  loading: () => <Spinner />,
 });
 
 interface IProps {
@@ -24,13 +26,19 @@ export default function DatePicker({ date, onSetDate }: IProps) {
   const [open, setOpen] = useState(false);
 
   const handleOpenChange = (newOpen: boolean) => {
-    if (newOpen) {
-      document.body.classList.add("disable-modal-close");
-    } else {
-      document.body.classList.remove("disable-modal-close");
-    }
+    document.body.classList.toggle("disable-modal-close", newOpen);
     setOpen(newOpen);
   };
+
+  const formattedDate = date
+    ? date
+        .toLocaleDateString("ko-KR", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })
+        .replace(/\.$/, "")
+    : null;
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
@@ -44,34 +52,26 @@ export default function DatePicker({ date, onSetDate }: IProps) {
           )}
         >
           {date ? (
-            <span className="text-gray-0">
-              {date
-                .toLocaleDateString("ko-KR", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })
-                .split(" ")
-                .join("")
-                .slice(0, -1)}
-            </span>
+            <span className="text-gray-0">{formattedDate}</span>
           ) : (
             <span className="text-[16px] text-gray-200">YYYY.MM.DD</span>
           )}
           <CalendarIcon className="absolute right-3 size-6 text-gray-500" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="!z-[10000] mt-2 ml-15 w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date!}
-          onSelect={(day) => {
-            onSetDate(day ?? null);
-            setOpen(false);
-          }}
-          initialFocus
-        />
-      </PopoverContent>
+      {open && (
+        <PopoverContent className="!z-[10000] mt-2 ml-15 w-auto p-0">
+          <Calendar
+            mode="single"
+            selected={date!}
+            onSelect={(day) => {
+              onSetDate(day ?? null);
+              setOpen(false);
+            }}
+            initialFocus
+          />
+        </PopoverContent>
+      )}
     </Popover>
   );
 }

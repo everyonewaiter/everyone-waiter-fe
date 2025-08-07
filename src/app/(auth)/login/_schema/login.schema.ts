@@ -1,9 +1,9 @@
-import { commonSchema } from "@/schema";
+import { emailSchema, passwordSchema } from "@/schema";
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  email: commonSchema.shape.email,
-  password: commonSchema.shape.password,
+  email: emailSchema,
+  password: passwordSchema,
 });
 
 export type TypeLogin = z.infer<typeof loginSchema>;

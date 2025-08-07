@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { commonSchema } from ".";
+import { phoneSchema } from ".";
 
 const fileSchema =
   typeof window !== "undefined"
@@ -17,16 +17,19 @@ const fileSchema =
     : z.any();
 
 export const storeSchema = z.object({
-  name: z.string().min(1, "잘못된 형식입니다.").max(20, "잘못된 형식입니다."),
+  name: z
+    .string()
+    .min(1, "상호명을 입력해주세요.")
+    .max(20, "20자까지 입력할 수 있습니다."),
   ceoName: z
     .string()
-    .min(1, "잘못된 형식입니다.")
+    .min(1, "대표자명을 입력해주세요")
     .regex(/^[a-zA-Z가-힣]+$/, "한글 또는 영문만 가능합니다."),
-  address: z.string().min(1, "잘못된 형식입니다."),
-  landline: commonSchema.shape.phone,
-  license: z.string().min(1, "잘못된 형식입니다."),
-  reason: z.string().min(1, "잘못된 형식입니다."),
-  image: z.union([fileSchema, z.string(), z.null()]),
+  address: z.string().min(1, "소재지를 선택해주세요."),
+  landline: phoneSchema,
+  license: z.string().min(1, "사업자 번호를 입력해주세요."),
+  reason: z.string().min(1, "매장 전화번호를 입력해주세요."),
+  image: z.union([fileSchema, z.string()]),
   origins: z.array(
     z.object({
       item: z.string().min(1).max(10),
@@ -47,14 +50,24 @@ export const CategorySchema = storeSchema.pick({
   name: true,
 });
 
-export const addStoreSchema = storeSchema.pick({
-  name: true,
-  ceoName: true,
-  address: true,
-  landline: true,
-  license: true,
-  image: true,
-});
+export const addStoreSchema = storeSchema
+  .pick({
+    name: true,
+    ceoName: true,
+    address: true,
+    landline: true,
+    license: true,
+    image: true,
+  })
+  .superRefine((data, ctx) => {
+    if (!data.image) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["image"],
+        message: "이미지를 업로드해주세요.",
+      });
+    }
+  });
 
 export type TypeStore = z.infer<typeof storeSchema>;
 export type TypeCategory = z.infer<typeof CategorySchema>;

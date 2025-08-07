@@ -1,6 +1,6 @@
 import getQueryClient from "@/app/get-query-client";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
 import useElapsedMinutes from "../_hooks/useElapsedMinutes";

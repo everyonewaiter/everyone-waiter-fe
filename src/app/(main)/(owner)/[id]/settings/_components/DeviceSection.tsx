@@ -6,7 +6,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/common/Form";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import Input from "@/components/common/Input";
 import { useFormContext } from "react-hook-form";
 import QueryProviders from "@/app/query-providers";

@@ -1,41 +1,27 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UseMutationResult } from "@tanstack/react-query";
-
-export interface FormType {
-  name: string;
-  license: string;
-  address: string;
-  origins: CountryOfOriginItem[];
-}
+import { storeInfoSchema, TypeStoreInfo } from "@/schema/store.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function useStoreForm(data: StoreInfoDetail, storeId: string) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const form = useForm<FormType>({
-    defaultValues: {
-      name: "",
-      license: "",
-      address: "",
-      origins: [],
+  const form = useForm<TypeStoreInfo>({
+    mode: "onSubmit",
+    resolver: zodResolver(storeInfoSchema),
+    values: {
+      name: data.name,
+      license: data.license,
+      address: data.address,
+      origins: data.setting.countryOfOrigins ?? [],
     },
   });
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "origins",
   });
-
-  useEffect(() => {
-    if (data) {
-      form.reset({
-        name: data.name,
-        license: data.license,
-        address: data.address,
-        origins: data.setting.countryOfOrigins ?? [],
-      });
-    }
-  }, [data, form]);
 
   const submitHandler = (
     action: UseMutationResult<any, Error, any, unknown>,
@@ -65,12 +51,11 @@ export default function useStoreForm(data: StoreInfoDetail, storeId: string) {
     );
   };
 
-  const createNewItem = {
-    item: "",
-    origin: "",
-  };
-
-  const appendOrigin = () => append(createNewItem);
+  const appendOrigin = () =>
+    append({
+      item: "",
+      origin: "",
+    });
 
   return {
     form,
@@ -79,5 +64,6 @@ export default function useStoreForm(data: StoreInfoDetail, storeId: string) {
     setIsSubmitted,
     submitHandler,
     appendOrigin,
+    removeOrigin: remove,
   };
 }

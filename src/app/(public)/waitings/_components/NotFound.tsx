@@ -1,5 +1,5 @@
 import Button from "@/components/common/Button/Button";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import Image from "next/image";
 
 export default function NotFound() {

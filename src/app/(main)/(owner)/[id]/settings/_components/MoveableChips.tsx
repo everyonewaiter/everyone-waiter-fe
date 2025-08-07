@@ -1,7 +1,6 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable, CSS } from "@/components/dnd/index";
 import { PropsWithChildren } from "react";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 
 interface IProps {
   onDelete: () => void;

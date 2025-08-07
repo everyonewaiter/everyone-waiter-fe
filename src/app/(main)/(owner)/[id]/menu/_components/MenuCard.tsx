@@ -47,10 +47,7 @@ export default function MenuCard({
             className="object-cover"
             loading="eager"
             priority
-            onError={() => {
-              // eslint-disable-next-line
-              console.error("이미지 로딩 실패:", getCdn(menu.image));
-            }}
+            sizes="(max-width: 768px) 100vw, 300px"
           />
         ) : (
           <div className="center h-full w-full bg-gray-600 pb-20 opacity-50">
@@ -73,6 +70,7 @@ export default function MenuCard({
             onClick={(e) => {
               e.stopPropagation();
             }}
+            aria-label={`${menu.name} 메뉴 선택`}
           />
         )}
         <div className="mt-auto flex flex-col gap-1 rounded-[12px] bg-white p-2 lg:gap-2 lg:rounded-[20px] lg:px-5 lg:py-4">

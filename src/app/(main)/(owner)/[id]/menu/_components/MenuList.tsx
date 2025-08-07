@@ -1,6 +1,6 @@
 "use client";
 
-import { SettingsIcon } from "lucide-react";
+import { SettingsIcon } from "@/components/common/Icon/index";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -43,6 +43,7 @@ export default function MenuList() {
               },
             }}
             onClick={() => navigate.push(`/${storeId}/menu/category/add`)}
+            aria-label="카테고리 등록 및 수정"
           >
             <SettingsIcon size={18} strokeWidth={1.5} />
           </ResponsiveButton>

@@ -6,6 +6,7 @@ const withAnalyzer = withBundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+  productionBrowserSourceMaps: true,
   /* config options here */
   output: "standalone",
   images: {

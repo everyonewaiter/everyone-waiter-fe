@@ -1,17 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/dynamic-subset-variable.css");
-
-@font-face {
-  font-family: "HakgyoansimDunggeunmisoTTF-B";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-B.woff2")
-    format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
 @theme {
   /* Colors */
   --color-primary: #f22020;
@@ -91,7 +80,7 @@
 
 @layer {
   body {
-    font-family: Pretendard;
+    font-family: var(--font-pretendard);
     height: 100%;
   }
 
@@ -100,7 +89,11 @@
   }
 
   .font-hakgyo {
-    font-family: "HakgyoansimDunggeunmisoTTF-B";
+    font-family: var(--font-hakgyo);
+  }
+
+  .font-pretendard {
+    font-family: var(--font-pretendard);
   }
 
   /* Chrome, Safari, Edge, Opera */

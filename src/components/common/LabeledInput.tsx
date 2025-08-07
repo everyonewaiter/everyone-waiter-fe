@@ -60,22 +60,27 @@ export default function LabeledInput<T extends FieldValues>({
                 type={type}
                 placeholder={placeholder}
                 className={cn(
-                  "flex grow-1 placeholder:text-gray-300",
-                  inputClassname
+                  "flex grow placeholder:text-gray-300",
+                  inputClassname,
+                  props.readOnly ? "cursor-default" : "cursor-text"
                 )}
                 hasError={!!errorMessage}
                 {...restProps}
                 {...field}
+                value={field.value ?? ""}
               />
             </FormControl>
             {rightComponent?.(field)}
           </div>
 
-          {errorMessage && <FormErrorMessage>{errorMessage}</FormErrorMessage>}
-          {defaultMessage && !errorMessage && (
-            <FormDescription className="lg:text-s text-xs text-gray-400 md:text-xs">
-              {defaultMessage}
-            </FormDescription>
+          {errorMessage ? (
+            <FormErrorMessage>{errorMessage}</FormErrorMessage>
+          ) : (
+            defaultMessage && (
+              <FormDescription className="lg:text-s text-xs text-gray-400 md:text-xs">
+                {defaultMessage}
+              </FormDescription>
+            )
           )}
         </FormItem>
       )}

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import useOverlay from "@/hooks/useOverlay";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { useMemoStore } from "../_hooks/useMemoStore";

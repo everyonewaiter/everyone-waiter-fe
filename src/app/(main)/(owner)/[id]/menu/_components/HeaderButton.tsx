@@ -1,8 +1,8 @@
-import { ArrowDownUp } from "lucide-react";
+import { ArrowDownUp } from "@/components/common/Icon/index";
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 import useOverlay from "@/hooks/useOverlay";
 import { useStoreContext } from "@/providers/storeProvider";
 

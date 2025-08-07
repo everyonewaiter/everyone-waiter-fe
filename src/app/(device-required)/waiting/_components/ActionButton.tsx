@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, PropsWithChildren } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon";
+import Icon from "@/components/common/Icon/Icon";
 
 interface IProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color"> {

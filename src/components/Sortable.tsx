@@ -6,11 +6,9 @@ import {
   closestCenter,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import {
   SortableContext,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+} from "@/components/dnd/index";
 import { PropsWithChildren } from "react";
 
 interface IProps {

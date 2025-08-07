@@ -5,7 +5,8 @@ import { useRef } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import { useStoreContext } from "@/providers/storeProvider";
 import useAuthStore from "@/stores/useAuthStore";
-import Icon from "./common/Icon";
+import { serverLogout } from "@/lib/actions/logout";
+import Icon from "./common/Icon/Icon";
 
 const popupList = [
   {
@@ -22,7 +23,7 @@ export default function InfoPopup({ close }: { close: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
   const { storeId } = useStoreContext();
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
 
   useModalCloseTriggers({
     ref,
@@ -32,11 +33,6 @@ export default function InfoPopup({ close }: { close: () => void }) {
   const handleNavigate = (url: string) => {
     close();
     navigate.push(url);
-  };
-
-  const handleNavigateToLogin = () => {
-    navigate.push("/login");
-    close();
   };
 
   return (
@@ -81,26 +77,17 @@ export default function InfoPopup({ close }: { close: () => void }) {
             </span>
           </div>
         ))}
-      <div
-        role="button"
-        tabIndex={0}
-        className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-[8px] px-3 lg:px-5"
-        aria-label="로그아웃"
-        onClick={() => {
-          logout();
-          handleNavigateToLogin();
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            logout();
-            handleNavigateToLogin();
-          }
-        }}
-      >
-        <span className="text-s font-regular text-gray-300 lg:text-sm">
-          로그아웃
-        </span>
-      </div>
+      <form action={serverLogout}>
+        <button
+          type="submit"
+          className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-[8px] px-3 lg:px-5"
+          aria-label="로그아웃"
+        >
+          <span className="text-s font-regular text-gray-300 lg:text-sm">
+            로그아웃
+          </span>
+        </button>
+      </form>
     </div>
   );
 }

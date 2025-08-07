@@ -77,18 +77,10 @@ export default function UserPage() {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         className="my-8"
-        move={{
-          fastbackward: {
-            hasMore: data?.hasPrevious!,
-            target: data?.fastBackwardPage,
-          },
-          backward: { hasMore: data?.hasPrevious! },
-          forward: { hasMore: data?.hasNext! },
-          fastforward: {
-            hasMore: data?.hasNext!,
-            target: data?.fastForwardPage,
-          },
-        }}
+        hasNext={data?.hasNext}
+        hasPrevious={data?.hasPrevious}
+        fastForwardTarget={data?.fastForwardPage}
+        fastBackwardTarget={data?.fastBackwardPage}
       />
     </div>
   );

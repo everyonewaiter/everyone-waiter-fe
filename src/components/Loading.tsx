@@ -1,25 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Lottie from "react-lottie";
+import dynamic from "next/dynamic";
+import riceWhite from "@/assets/json/rice-white.json";
+
+const Lottie = dynamic(() => import("react-lottie"), {
+  ssr: false,
+});
 
 export default function Loading() {
-  const [data, setData] = useState<any>(null);
-
-  useEffect(() => {
-    import("@/assets/json/rice-white.json").then((res) => {
-      setData(res.default);
-    });
-  }, []);
-
   return (
-    <div className="fixed inset-0 z-1000 bg-black/50">
+    <div className="fixed inset-0 z-1000 bg-black/60">
       <div className="flex h-screen w-screen flex-col items-center justify-center gap-3">
         <Lottie
           options={{
             loop: true,
             autoplay: true,
-            animationData: data,
+            animationData: riceWhite,
             rendererSettings: {
               preserveAspectRatio: "xMidYMid slice",
             },
