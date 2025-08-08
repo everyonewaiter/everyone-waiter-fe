@@ -8,17 +8,18 @@ export const emailSchema = z
 export const phoneSchema = z
   .string()
   .min(1, "전화번호를 입력해주세요.")
-  .refine((val) => /^01[016789]-\d{4}-\d{4}$/.test(val), {
+  .refine((val) => val.length < 1 || /^01[016789]-\d{4}-\d{4}$/.test(val), {
     message: "유효하지 않은 휴대폰 번호 형식입니다.",
   });
 
 export const passwordSchema = z
   .string()
+  .trim()
   .min(1, { message: "비밀번호를 입력해주세요." })
   .refine(
     (val) =>
       val.length < 1 ||
-      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+\-=/;'?:",.<>[\]\\{}|])[A-Za-z\d~!@#$%^&*()_+\-=/;'?:",.<>[\]\\{}|]{8,}$/.test(
         val
       ),
     {
