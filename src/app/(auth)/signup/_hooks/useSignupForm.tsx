@@ -27,12 +27,10 @@ export default function useSignupForm({
     data,
     action,
     onSuccess,
-    onError,
   }: {
     data: TypeSignup;
     action: UseMutationResult<any, Error, Account, unknown>;
     onSuccess: () => void;
-    onError: () => void;
   }) => {
     setFormButtonDisabled(true);
 
@@ -44,10 +42,7 @@ export default function useSignupForm({
       },
       {
         onSuccess: () => onSuccess(),
-        onError: () => {
-          setFormButtonDisabled(false);
-          onError();
-        },
+        onError: () => setFormButtonDisabled(false),
       }
     );
   };

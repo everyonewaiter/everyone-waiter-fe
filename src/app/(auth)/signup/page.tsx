@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Controller } from "react-hook-form";
 import { Form, FormErrorMessage } from "@/components/common/Form";
@@ -47,7 +47,15 @@ export default function Signup() {
   });
 
   const { mutateSendPhoneAuthCode, mutateVerifyAuthCode, mutateSignup } =
-    useSignup({ form });
+    useSignup({ form, onDispatch: dispatch });
+
+  useEffect(() => {
+    if (state.authExpired) {
+      form.setError("authNumber", {
+        message: "인증 유효 시간이 경과하였습니다.",
+      });
+    }
+  }, [state.authExpired, form]);
 
   // NOTE - 인증 요청
   const handleAuthentication = (phoneNumber: string) => {
@@ -57,10 +65,7 @@ export default function Signup() {
     // 알림톡 발송
     mutateSendPhoneAuthCode.mutate(
       { phoneNumber },
-      {
-        onSuccess: () => dispatch({ type: "AUTH_REQUEST_SUCCESS" }),
-        onError: () => dispatch({ type: "AUTH_REQUEST_FAIL" }),
-      }
+      { onSuccess: () => dispatch({ type: "AUTH_REQUEST_SUCCESS" }) }
     );
   };
 
@@ -79,11 +84,8 @@ export default function Signup() {
           // eslint-disable-next-line no-alert
           alert("인증되었습니다.");
           dispatch({ type: "VERIFY_SUCCESS" });
-        },
-        onError: () => {
-          // eslint-disable-next-line no-alert
-          alert("인증에 실패했습니다.");
-          dispatch({ type: "VERIFY_FAIL" });
+          form.clearErrors("phone");
+          form.clearErrors("authNumber");
         },
       }
     );
@@ -96,7 +98,6 @@ export default function Signup() {
       onSuccess: () => {
         navigate.push(`/signup/completed?email=${data.email}`);
       },
-      onError: () => {},
     });
   };
 
@@ -192,7 +193,7 @@ export default function Signup() {
               )}
             />
             <FormErrorMessage>
-              {form.formState.errors.phone?.message?.toString()}
+              {form.formState.errors.authNumber?.message?.toString()}
             </FormErrorMessage>
           </div>
           <LabeledInput

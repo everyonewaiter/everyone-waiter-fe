@@ -13,9 +13,11 @@ const initialState = {
   startTimer: false,
 
   hasRequestedAuth: false,
+  hasExceededAuthRequest: false,
+  authExpired: false,
 };
 
-type Action =
+export type SignupAction =
   | { type: "CLICK_PHONE_AUTH_BTN" } // 버튼1 눌렀다 -> 로딩 시작
   | { type: "AUTH_REQUEST_SUCCESS" } // 인증코드 발송 성공
   | { type: "AUTH_REQUEST_FAIL" } // 인증코드 발송 실패
@@ -23,14 +25,15 @@ type Action =
   | { type: "VERIFY_SUCCESS" } // 인증 성공
   | { type: "VERIFY_FAIL" } // 인증 실패
   | { type: "DECREASE_TIME" } // 타이머 설정 (300초 - 5분)
-  | { type: "RESET" }; // 타이머 초기화
+  | { type: "RESET" } // 타이머 초기화
+  | { type: "EXCEEDED" }; // 요청 횟수 초과 (5번)
 
 export default function useSignupReducer() {
   const INIT_TIME = 300;
 
   function reducer(
     state: typeof initialState,
-    action: Action
+    action: SignupAction
   ): typeof initialState {
     switch (action.type) {
       case "CLICK_PHONE_AUTH_BTN":
@@ -50,6 +53,7 @@ export default function useSignupReducer() {
           authBtnDisabled: false,
           authTime: INIT_TIME,
           startTimer: true,
+          authExpired: false,
         };
       case "AUTH_REQUEST_FAIL":
         return {
@@ -78,16 +82,30 @@ export default function useSignupReducer() {
           ...state,
           authBtnLoading: false,
           authDisabled: false,
-          startTimer: false,
         };
-      case "DECREASE_TIME":
+      case "DECREASE_TIME": {
+        const next = Math.max(0, state.authTime - 1);
+        const expired = next === 0;
         return {
           ...state,
-          authTime: Math.max(0, state.authTime - 1),
+          authTime: next,
           startTimer: state.authTime - 1 > 0,
+          authDisabled: expired ? true : state.authDisabled,
+          authBtnDisabled: expired ? true : state.authBtnDisabled,
+          authExpired: expired ? true : state.authExpired,
+        };
+      }
+      case "EXCEEDED":
+        return {
+          ...initialState,
+          phoneDisabled: true,
+          hasExceededAuthRequest: true,
         };
       case "RESET":
-        return initialState;
+        return {
+          ...initialState,
+          hasExceededAuthRequest: false,
+        };
       default:
         return state;
     }
