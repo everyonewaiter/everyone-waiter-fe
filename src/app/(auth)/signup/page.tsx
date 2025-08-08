@@ -60,7 +60,6 @@ export default function Signup() {
   // NOTE - 인증 요청
   const handleAuthentication = (phoneNumber: string) => {
     dispatch({ type: "CLICK_PHONE_AUTH_BTN" });
-    dispatch({ type: "DECREASE_TIME" });
 
     // 알림톡 발송
     mutateSendPhoneAuthCode.mutate(
@@ -76,7 +75,7 @@ export default function Signup() {
     // 휴대폰 + 인증번호 인증
     mutateVerifyAuthCode.mutate(
       {
-        phoneNumber: form.watch("phone"),
+        phoneNumber: form.watch("phone").split("-").join(""),
         code: Number(value),
       },
       {
@@ -142,10 +141,7 @@ export default function Signup() {
                     placeholder={`휴대폰 번호를 입력해주세요.${isPC ? "" : " (-없이 숫자만 입력)"}`}
                     onChange={(e) => {
                       const formatted = phoneNumberPattern(e.target.value);
-                      form.setValue("phone", formatted, {
-                        shouldValidate: true,
-                        shouldTouch: true,
-                      });
+                      form.setValue("phone", formatted);
                     }}
                     hasError={!!form.formState.errors.phone}
                   />
@@ -159,7 +155,9 @@ export default function Signup() {
                       lg: { buttonSize: "lg", className: "w-[120px]" },
                     }}
                     disabled={!form.watch("phone") || state.phoneBtnDisabled}
-                    onClick={() => handleAuthentication(field.value!)}
+                    onClick={() =>
+                      handleAuthentication(field.value.split("-").join(""))
+                    }
                   >
                     {phoneBtnLabel}
                   </ResponsiveButton>

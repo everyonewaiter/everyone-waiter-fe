@@ -19,14 +19,17 @@ const useSignup = ({ form, onDispatch }: IProps) => {
     mutationFn: sendAuthCode,
     onError: (error) => {
       const { code } = (error as any).response.data;
-      if ((error as any).response.status === 400) {
-        if (code === "EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER") {
-          onDispatch({ type: "EXCEEDED" });
-          form.setError("phone", {
-            message:
-              "일일 인증 가능 횟수를 초과했습니다. 24시간 후 다시 시도해주세요.",
-          });
-        }
+      if (code === "EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER") {
+        onDispatch({ type: "EXCEEDED" });
+        form.setError("phone", {
+          message:
+            "일일 인증 가능 횟수를 초과했습니다. 24시간 후 다시 시도해주세요.",
+        });
+      } else if (code === "ALREADY_USE_PHONE_NUMBER") {
+        form.setError("phone", {
+          message: "이미 사용중인 휴대폰 번호입니다.",
+        });
+        onDispatch({ type: "RESET" });
       }
     },
   });
