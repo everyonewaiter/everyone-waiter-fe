@@ -16,6 +16,7 @@ interface Props {
   authTime: number;
   isSubmitted: boolean;
   disabled: boolean;
+  loading: boolean;
 }
 
 export default function AuthInput({
@@ -24,6 +25,7 @@ export default function AuthInput({
   onClick,
   isSubmitted,
   disabled,
+  loading,
 }: Props) {
   const form = useFormContext<TypeDeviceStep1Form>();
 
@@ -66,7 +68,7 @@ export default function AuthInput({
                 lg: { buttonSize: "lg", className: "w-[120px]" },
               }}
             >
-              {isSubmitted ? <Spinner /> : "확인"}
+              {loading && isSubmitted ? <Spinner /> : "확인"}
             </ResponsiveButton>
           </div>
           <FormErrorMessage />

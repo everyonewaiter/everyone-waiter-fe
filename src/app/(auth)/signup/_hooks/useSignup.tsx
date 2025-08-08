@@ -6,35 +6,53 @@ import {
   sendAuthCode,
   verifyAuthCode,
 } from "@/lib/api/auth.api";
+import { SignupAction } from "./useSignupReducer";
 import { TypeSignup } from "../_schema/signup.schema";
 
-interface IUseSignup {
+interface IProps {
   form: UseFormReturn<TypeSignup>;
-  setCodeSubmited: (value: boolean) => void;
-  setAuthTime: (value: number) => void;
+  onDispatch: (type: SignupAction) => void;
 }
 
-const useSignup = ({ form, setCodeSubmited, setAuthTime }: IUseSignup) => {
+const useSignup = ({ form, onDispatch }: IProps) => {
   const mutateSendPhoneAuthCode = useMutation({
     mutationFn: sendAuthCode,
     onError: (error) => {
-      const { code, message } = (error as any).response.data;
-      if ((error as any).response.status === 400) {
-        if (code === "UNMATCHED_VERIFICATION_CODE") {
-          form.setError("authNumber", { message });
-        } else if (code === "ALREADY_VERIFIED_PHONE_NUMBER") {
-          alert(message);
-          setCodeSubmited(true);
-        } else if (code === "EXPIRED_VERIFICATION_CODE") {
-          alert(message);
-          setAuthTime(0);
-        }
+      const { code } = (error as any).response.data;
+      if (code === "EXCEED_MAXIMUM_VERIFICATION_PHONE_NUMBER") {
+        onDispatch({ type: "EXCEEDED" });
+        form.setError("phone", {
+          message:
+            "일일 인증 가능 횟수를 초과했습니다. 24시간 후 다시 시도해주세요.",
+        });
+      } else if (code === "ALREADY_USE_PHONE_NUMBER") {
+        form.setError("phone", {
+          message: "이미 사용중인 휴대폰 번호입니다.",
+        });
+        onDispatch({ type: "RESET" });
       }
     },
   });
 
   const mutateVerifyAuthCode = useMutation({
     mutationFn: verifyAuthCode,
+    onError: (error) => {
+      const { code } = (error as any).response.data;
+      if (code === "ALREADY_VERIFIED_PHONE_NUMBER") {
+        onDispatch({ type: "VERIFY_SUCCESS" });
+        alert("휴대폰 번호 인증이 이미 완료되었습니다.");
+      } else if (code === "EXPIRED_VERIFICATION_CODE") {
+        onDispatch({ type: "VERIFY_FAIL" });
+        form.setError("authNumber", {
+          message: "유효하지 않은 인증 번호입니다.",
+        });
+      } else if (code === "EXPIRED_VERIFICATION_PHONE_NUMBER") {
+        onDispatch({ type: "VERIFY_FAIL" });
+        form.setError("phone", {
+          message: "휴대폰 인증 번호가 만료되었습니다.",
+        });
+      }
+    },
   });
 
   const mutateSignup = useMutation({
@@ -43,13 +61,17 @@ const useSignup = ({ form, setCodeSubmited, setAuthTime }: IUseSignup) => {
       const { code, message } = (error as any).response.data;
       if ((error as any).response.status === 400) {
         if (code === "ALREADY_USE_EMAIL") {
-          form.setError("email", { message });
+          form.setError("email", { message: "이미 사용중인 이메일입니다." });
         } else if (code === "ALREADY_USE_PHONE_NUMBER") {
-          form.setError("phone", { message });
+          onDispatch({ type: "RESET" });
+          form.setError("phone", {
+            message: "이미 사용중인 휴대폰 번호입니다.",
+          });
         } else if (code === "EXPIRED_VERIFICATION_PHONE_NUMBER") {
-          form.setError("phone", { message });
-        } else {
-          throw new Error(message);
+          onDispatch({ type: "RESET" });
+          form.setError("phone", {
+            message: "휴대폰 인증 번호가 만료되었습니다.",
+          });
         }
       } else {
         throw new Error(message);

@@ -2,29 +2,42 @@ import { z } from "zod";
 
 export const emailSchema = z
   .string()
-  .email("유효하지 않은 이메일 형식입니다.")
-  .trim()
-  .min(1, "이메일을 입력해주세요.");
-export const phoneSchema = z.string().min(1, "전화번호를 입력해주세요.");
-// .refine((val) => val === "" || /^01[016789]-\d{3,4}-\d{4}$/.test(val), {
-//   message: "유효하지 않은 휴대폰 번호 형식입니다.",
-// });
+  .min(1, { message: "이메일을 입력해주세요." })
+  .email({ message: "유효하지 않은 이메일 형식입니다." });
+
+export const phoneSchema = z
+  .string()
+  .min(1, "전화번호를 입력해주세요.")
+  .refine((val) => /^01[016789]-\d{4}-\d{4}$/.test(val), {
+    message: "유효하지 않은 휴대폰 번호 형식입니다.",
+  });
+
 export const passwordSchema = z
   .string()
-  .trim()
-  .min(8, "영문, 숫자, 특수문자를 조합하여 8자리 이상이어야 합니다.")
-  .regex(
-    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
-    "영문, 숫자, 특수문자를 조합하여 8자리 이상이어야 합니다."
+  .min(1, { message: "비밀번호를 입력해주세요." })
+  .refine(
+    (val) =>
+      val.length < 1 ||
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(
+        val
+      ),
+    {
+      message: "영문, 숫자, 특수문자를 조합하여 8자리 이상이어야 합니다.",
+    }
   );
-export const authNumberSchema = z
-  .string()
-  .trim()
-  .min(6, "인증 번호는 6자리 숫자여야 합니다.")
-  .max(6, "인증 번호는 6자리 숫자여야 합니다.")
-  .refine((val) => !val || /^\d{6}$/.test(val), {
-    message: "인증 번호는 6자리 숫자여야 합니다.",
-  });
+
+export const authNumberSchema = (isAuthActive: boolean) =>
+  isAuthActive
+    ? z
+        .string()
+        .trim()
+        .min(6, "인증 번호는 6자리 숫자여야 합니다.")
+        .max(6, "인증 번호는 6자리 숫자여야 합니다.")
+        .refine((val) => !val || /^\d{6}$/.test(val), {
+          message: "인증 번호는 6자리 숫자여야 합니다.",
+        })
+    : z.string();
+
 export const deviceNumberSchema = z
   .string()
   .trim()
