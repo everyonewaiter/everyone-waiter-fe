@@ -3,6 +3,7 @@ import { PropsWithChildren } from "react";
 import getQueryClient from "@/app/get-query-client";
 import PageTitle from "@/app/(main)/_components/PageTitle/PageTitle";
 import PAGE_TITLES from "@/constants/pageTitles";
+import { notFound } from "next/navigation";
 import { getStoreList } from "./_api/stores.api";
 
 export default async function Layout({
@@ -11,6 +12,8 @@ export default async function Layout({
 }: PropsWithChildren<{ params: Promise<{ id: string }> }>) {
   const queryClient = getQueryClient();
   const { id } = await params;
+
+  if (!id) notFound();
 
   await queryClient.prefetchQuery({
     queryKey: ["store-list"],

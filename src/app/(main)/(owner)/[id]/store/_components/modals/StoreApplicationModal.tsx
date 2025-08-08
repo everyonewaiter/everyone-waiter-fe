@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import { useStoreContext } from "@/providers/storeProvider";
 import { Form } from "@/components/common/Form";
 import Spinner from "@/components/common/Spinner";
 import StoreApplyForm from "../StoreApplyForm";
@@ -14,16 +13,16 @@ import useStoreApplyForm from "../../_hooks/useStoreApplyForm";
 interface IProps extends StoreDetail {
   close: () => void;
   isAccepted: boolean;
+  storeId: string;
 }
 
 export default function StoreApplicationModal({
   close,
   isAccepted,
+  storeId,
   ...item
 }: IProps) {
   const navigate = useRouter();
-
-  const { storeId } = useStoreContext();
 
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);

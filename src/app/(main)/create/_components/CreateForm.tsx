@@ -37,7 +37,7 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="flex flex-col gap-4"
+      className="flex w-[320px] flex-col gap-4 md:w-[348px] lg:w-[400px]"
     >
       <LabeledInput
         form={form}
@@ -68,6 +68,13 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
             handleOpenAddress();
           }
         }}
+      />
+      <LabeledInput
+        form={form}
+        name="detailAddress"
+        label="상세 주소"
+        placeholder="상세 주소를 입력해주세요."
+        className="placeholder:text-gray-300"
       />
       <div className="flex flex-col gap-2">
         <Label>매장 전화번호</Label>

@@ -28,7 +28,7 @@ export default function CreatePage() {
           간단한 정보만 입력하면 바로 시작할 수 있어요!
         </p>
       </div>
-      <div className="flex w-[320px] flex-col items-start justify-start gap-[16px] lg:w-[400px]">
+      <div className="flex flex-col items-start justify-start gap-[16px]">
         <h1 className="text-gray-0 mb-8 flex w-full justify-center text-xl font-semibold md:hidden">
           매장 등록
         </h1>

@@ -27,10 +27,10 @@ export default function ClientPage({ token, permission }: IProps) {
         router.replace("/admin/users");
       } else if (!token) {
         router.replace("/login");
-      } else if (!firstStoreId) {
-        router.replace("/user");
-      } else {
+      } else if (firstStoreId) {
         router.replace(`/${firstStoreId}`);
+      } else {
+        router.replace("/main");
       }
     }
     // eslint-disable-next-line

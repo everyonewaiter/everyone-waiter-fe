@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
-import { useStoreContext } from "@/providers/storeProvider";
 import useAuthStore from "@/stores/useAuthStore";
 import { serverLogout } from "@/lib/actions/logout";
 import Icon from "./common/Icon/Icon";
@@ -19,10 +18,15 @@ const popupList = [
   // },
 ];
 
-export default function InfoPopup({ close }: { close: () => void }) {
+interface IProps {
+  close: () => void;
+  storeId?: string;
+}
+
+export default function InfoPopup({ close, storeId }: IProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
   const navigate = useRouter();
-  const { storeId } = useStoreContext();
   const { user } = useAuthStore();
 
   useModalCloseTriggers({
@@ -57,26 +61,31 @@ export default function InfoPopup({ close }: { close: () => void }) {
         </span>
       </div>
 
-      {storeId &&
-        popupList.map((item) => (
-          <div
-            key={item.text}
-            role="menuitem"
-            tabIndex={0}
-            className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-[8px] px-3 lg:px-5"
-            aria-label={item.text}
-            onClick={() => handleNavigate(`/${storeId}/${item.url}`)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                handleNavigate(`/${storeId}/${item.url}`);
-              }
-            }}
-          >
-            <span className="text-s font-regular text-gray-300 lg:text-sm">
-              {item.text}
-            </span>
-          </div>
-        ))}
+      {popupList.map((item) => (
+        <div
+          key={item.text}
+          role="menuitem"
+          tabIndex={0}
+          className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-[8px] px-3 lg:px-5"
+          aria-label={item.text}
+          onClick={() =>
+            handleNavigate(
+              pathname.startsWith("/main")
+                ? `/main/${item.url}`
+                : `/${storeId}/${item.url}`
+            )
+          }
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              handleNavigate(`/${storeId}/${item.url}`);
+            }
+          }}
+        >
+          <span className="text-s font-regular text-gray-300 lg:text-sm">
+            {item.text}
+          </span>
+        </div>
+      ))}
       <form action={serverLogout}>
         <button
           type="submit"
