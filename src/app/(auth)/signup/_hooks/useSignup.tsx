@@ -10,11 +10,9 @@ import { TypeSignup } from "../_schema/signup.schema";
 
 interface IUseSignup {
   form: UseFormReturn<TypeSignup>;
-  setCodeSubmited: (value: boolean) => void;
-  setAuthTime: (value: number) => void;
 }
 
-const useSignup = ({ form, setCodeSubmited, setAuthTime }: IUseSignup) => {
+const useSignup = ({ form }: IUseSignup) => {
   const mutateSendPhoneAuthCode = useMutation({
     mutationFn: sendAuthCode,
     onError: (error) => {
@@ -24,10 +22,8 @@ const useSignup = ({ form, setCodeSubmited, setAuthTime }: IUseSignup) => {
           form.setError("authNumber", { message });
         } else if (code === "ALREADY_VERIFIED_PHONE_NUMBER") {
           alert(message);
-          setCodeSubmited(true);
         } else if (code === "EXPIRED_VERIFICATION_CODE") {
           alert(message);
-          setAuthTime(0);
         }
       }
     },

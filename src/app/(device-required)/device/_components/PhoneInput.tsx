@@ -9,6 +9,7 @@ import {
 import Input from "@/components/common/Input";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import Spinner from "@/components/common/Spinner";
 import { TypeDeviceStep1Form } from "../_schema/device.schema";
 
 interface Props {
@@ -16,12 +17,14 @@ interface Props {
   onClick: () => void;
   disabled: boolean;
   isSubmitted: boolean;
+  loading: boolean;
 }
 
 export default function PhoneInput({
   control,
   onClick,
   disabled,
+  loading,
   isSubmitted,
 }: Props) {
   const form = useFormContext<TypeDeviceStep1Form>();
@@ -59,7 +62,9 @@ export default function PhoneInput({
               disabled={disabled}
               onClick={onClick}
             >
-              {isSubmitted ? "재인증" : "인증요청"}
+              {loading && <Spinner />}
+              {!loading && isSubmitted && "재인증"}
+              {isSubmitted && !isSubmitted && "인증요청"}
             </ResponsiveButton>
           </div>
           <FormErrorMessage />

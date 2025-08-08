@@ -1,18 +1,23 @@
 "use client";
 
-/* eslint-disable no-alert */
-/* eslint-disable react/no-unstable-nested-components */
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { Form } from "@/components/common/Form";
+import { Controller } from "react-hook-form";
+import { Form, FormErrorMessage } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
+import Input from "@/components/common/Input";
+import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
+import Label from "@/components/common/Label";
+import { personalInformationTerms } from "@/constants/personalInformationTerms";
 import useSignup from "./_hooks/useSignup";
 import useSignupForm from "./_hooks/useSignupForm";
 import { TypeSignup } from "./_schema/signup.schema";
+import useSignupReducer from "./_hooks/useSignupReducer";
+import AuthButton from "./_components/AuthButton";
 
 const ResponsiveButton = dynamic(
   () => import("@/components/common/Button/ResponsiveButton"),
@@ -32,79 +37,73 @@ export default function Signup() {
   const navigate = useRouter();
 
   const [checked, setChecked] = useState(false);
-  const [authTime, setAuthTime] = useState(300);
+
+  const { state, dispatch } = useSignupReducer();
 
   const isPC = useMediaQuery({ query: "(max-width: 1920px)" });
 
-  const {
-    form,
-    submitHandler,
-    disableFormButton,
-    isSubmitted,
-    handleSubmitValue,
-  } = useSignupForm();
+  const { form, submitHandler, disableFormButton } = useSignupForm({
+    isAuthActive: state.authDisabled,
+  });
 
   const { mutateSendPhoneAuthCode, mutateVerifyAuthCode, mutateSignup } =
-    useSignup({
-      form,
-      setCodeSubmited: (value) => handleSubmitValue("codeAuth", value),
-      setAuthTime,
-    });
-
-  // NOTE - 타이머
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAuthTime((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          handleSubmitValue("phoneAuth", false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isSubmitted.phoneAuth, handleSubmitValue]);
+    useSignup({ form });
 
   // NOTE - 인증 요청
   const handleAuthentication = (phoneNumber: string) => {
-    handleSubmitValue("phoneAuth", true);
+    dispatch({ type: "CLICK_PHONE_AUTH_BTN" });
+    dispatch({ type: "DECREASE_TIME" });
 
-    const phoneRegex = /^\d{10,11}$/;
-    if (!phoneRegex.test(phoneNumber)) {
-      alert("올바른 전화번호를 입력해주세요. (숫자만 10-11자리)");
-      return;
-    }
-
-    setAuthTime(300);
-    mutateSendPhoneAuthCode.mutate({ phoneNumber });
+    // 알림톡 발송
+    mutateSendPhoneAuthCode.mutate(
+      { phoneNumber },
+      {
+        onSuccess: () => dispatch({ type: "AUTH_REQUEST_SUCCESS" }),
+        onError: () => dispatch({ type: "AUTH_REQUEST_FAIL" }),
+      }
+    );
   };
 
   // NOTE - 인증 확인
   const handleCheckAuth = (value: string) => {
-    handleSubmitValue("codeAuth", true);
+    dispatch({ type: "CLICK_AUTH_CODE_BTN" });
 
+    // 휴대폰 + 인증번호 인증
     mutateVerifyAuthCode.mutate(
       {
-        phoneNumber: form.getValues("phone"),
+        phoneNumber: form.watch("phone"),
         code: Number(value),
       },
       {
         onSuccess: () => {
+          // eslint-disable-next-line no-alert
           alert("인증되었습니다.");
-          setAuthTime(0);
-          handleSubmitValue("phoneAuth", true);
+          dispatch({ type: "VERIFY_SUCCESS" });
+        },
+        onError: () => {
+          // eslint-disable-next-line no-alert
+          alert("인증에 실패했습니다.");
+          dispatch({ type: "VERIFY_FAIL" });
         },
       }
     );
   };
 
   const handleSubmmit = (data: TypeSignup) => {
-    submitHandler(data, mutateSignup, () =>
-      navigate.push(`/signup/completed?email=${data.email}`)
-    );
+    submitHandler({
+      data,
+      action: mutateSignup,
+      onSuccess: () => {
+        navigate.push(`/signup/completed?email=${data.email}`);
+      },
+      onError: () => {},
+    });
   };
+
+  const phoneBtnLabel = useMemo(() => {
+    if (state.phoneBtnLoading) return <Spinner />;
+    return state.hasRequestedAuth ? "재인증" : "인증 요청";
+  }, [state.phoneBtnLoading, state.hasRequestedAuth]);
 
   return (
     <>
@@ -129,60 +128,73 @@ export default function Signup() {
             placeholder="이메일을 입력해주세요."
             defaultMessage="이메일 인증 절차가 남아 있어요. 정확한 이메일을 입력해주세요!"
           />
-          <LabeledInput
-            form={form}
-            name="phone"
-            label="휴대폰 번호"
-            placeholder={`휴대폰 번호를 입력해주세요.${isPC ? "" : " (-없이 숫자만 입력)"}`}
-            rightComponent={(field) => (
-              <ResponsiveButton
-                type="button"
-                variant="default"
-                color="black"
-                responsiveButtons={{
-                  sm: { buttonSize: "sm", className: "w-[120px]" },
-                  md: { buttonSize: "sm", className: "w-[94px]" },
-                  lg: { buttonSize: "lg", className: "w-[120px]" },
-                }}
-                disabled={
-                  (!isSubmitted.phoneAuth && !form.watch("phone")?.length) ||
-                  isSubmitted.codeAuth
-                }
-                onClick={() => handleAuthentication(field.value!)}
-              >
-                {isSubmitted.phoneAuth ? "재인증" : "인증요청"}
-              </ResponsiveButton>
-            )}
-          />
-          <LabeledInput
-            form={form}
-            name="authNumber"
-            label="인증 번호"
-            placeholder="인증 번호를 입력해주세요."
-            rightComponent={(field) => (
-              <>
-                {isSubmitted.phoneAuth && !authTime && (
-                  <div className="font-regular absolute top-1/2 right-0 -translate-y-1/2 transform text-[15px] text-gray-200 transition-all duration-300 ease-in-out sm:right-25 sm:mt-[-2px]">
-                    {" "}
-                    {`${String(Math.floor(authTime / 60)).padStart(2, "0")}:${String(authTime % 60).padStart(2, "0")}`}
-                  </div>
-                )}
-                <ResponsiveButton
-                  type="button"
-                  color="black"
-                  disabled={!isSubmitted.phoneAuth || isSubmitted.codeAuth}
-                  onClick={() => handleCheckAuth(field.value!)}
-                  responsiveButtons={{
-                    sm: { buttonSize: "sm", className: "w-[120px]" },
-                    md: { buttonSize: "sm", className: "w-[94px]" },
-                    lg: { buttonSize: "lg", className: "w-[120px]" },
-                  }}
-                >
-                  확인
-                </ResponsiveButton>
-              </>
-            )}
-          />
+          <div className="flex flex-col gap-2">
+            <Label>휴대폰 번호</Label>
+            <Controller
+              name="phone"
+              control={form.control}
+              disabled={state.phoneDisabled}
+              render={({ field }) => (
+                <div className="flex items-center gap-3">
+                  <Input
+                    {...field}
+                    placeholder={`휴대폰 번호를 입력해주세요.${isPC ? "" : " (-없이 숫자만 입력)"}`}
+                    onChange={(e) => {
+                      const formatted = phoneNumberPattern(e.target.value);
+                      form.setValue("phone", formatted, {
+                        shouldValidate: true,
+                        shouldTouch: true,
+                      });
+                    }}
+                    hasError={!!form.formState.errors.phone}
+                  />
+                  <ResponsiveButton
+                    type="button"
+                    variant="default"
+                    color="black"
+                    responsiveButtons={{
+                      sm: { buttonSize: "sm", className: "w-[120px]" },
+                      md: { buttonSize: "sm", className: "w-[94px]" },
+                      lg: { buttonSize: "lg", className: "w-[120px]" },
+                    }}
+                    disabled={!form.watch("phone") || state.phoneBtnDisabled}
+                    onClick={() => handleAuthentication(field.value!)}
+                  >
+                    {phoneBtnLabel}
+                  </ResponsiveButton>
+                </div>
+              )}
+            />
+            <FormErrorMessage>
+              {form.formState.errors.phone?.message?.toString()}
+            </FormErrorMessage>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>인증 번호</Label>
+            <Controller
+              name="authNumber"
+              control={form.control}
+              disabled={state.authDisabled}
+              render={({ field }) => (
+                <div className="flex items-center gap-3">
+                  <Input
+                    {...field}
+                    placeholder="인증 번호를 입력해주세요."
+                    hasError={!!form.formState.errors.authNumber}
+                  />
+                  <AuthButton
+                    authTime={state.authTime}
+                    loading={state.authBtnLoading}
+                    disabled={state.authBtnDisabled}
+                    onCheckAuth={() => handleCheckAuth(field.value)}
+                  />
+                </div>
+              )}
+            />
+            <FormErrorMessage>
+              {form.formState.errors.phone?.message?.toString()}
+            </FormErrorMessage>
+          </div>
           <LabeledInput
             form={form}
             type="password"
@@ -200,12 +212,7 @@ export default function Signup() {
           />
           <div className="flex h-auto w-full flex-col gap-6 rounded-[10px] border border-gray-600 p-4">
             <span className="text-s font-regular text-[#767676]">
-              회원가입을 통해 수집한 회원의 정보는 서비스 제공에 관한 계약 성립
-              및 이행(회원 및 본인식 및 본인의사 확인 등), 새로운 기능 정보
-              안내(제공), 회원 관리(불만처리 등 민원처리, 고지사항 전달 등)의
-              목적으로 수집되어 이용됩니다. 또한, 이용자의 개인정보는 제3자에게
-              제공되지 않으며, 수집 및 이용목적이 달성된 후에는 지체 없이
-              파기됩니다.
+              {personalInformationTerms}
             </span>
 
             <div className="flex items-center gap-2">
@@ -222,7 +229,9 @@ export default function Signup() {
           <ResponsiveButton
             type="submit"
             color="primary"
-            disabled={!checked || disableFormButton}
+            disabled={
+              !checked || disableFormButton || !form.watch("authNumber")
+            }
             responsiveButtons={{
               lg: { buttonSize: "lg" },
               md: { buttonSize: "md", className: "my-6" },

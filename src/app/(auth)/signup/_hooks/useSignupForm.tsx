@@ -4,23 +4,36 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TypeSignup, signupSchema } from "../_schema/signup.schema";
 
-export default function useSignupForm() {
+export default function useSignupForm({
+  isAuthActive,
+}: {
+  isAuthActive: boolean;
+}) {
   const [formButtonDisabled, setFormButtonDisabled] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState({
-    phoneAuth: false,
-    codeAuth: false,
-  });
 
   const form = useForm<TypeSignup>({
-    mode: "onChange",
-    resolver: zodResolver(signupSchema),
+    mode: "onSubmit",
+    resolver: zodResolver(signupSchema(isAuthActive)),
+    defaultValues: {
+      email: "",
+      phone: "",
+      authNumber: "",
+      password: "",
+      confirm: "",
+    },
   });
 
-  const submitHandler = (
-    data: TypeSignup,
-    action: UseMutationResult<any, Error, Account, unknown>,
-    successHandler: () => void
-  ) => {
+  const submitHandler = ({
+    data,
+    action,
+    onSuccess,
+    onError,
+  }: {
+    data: TypeSignup;
+    action: UseMutationResult<any, Error, Account, unknown>;
+    onSuccess: () => void;
+    onError: () => void;
+  }) => {
     setFormButtonDisabled(true);
 
     action.mutate(
@@ -30,21 +43,18 @@ export default function useSignupForm() {
         phoneNumber: data.phone,
       },
       {
-        onSuccess: successHandler,
-        onError: () => setFormButtonDisabled(false),
+        onSuccess: () => onSuccess(),
+        onError: () => {
+          setFormButtonDisabled(false);
+          onError();
+        },
       }
     );
-  };
-
-  const handleSubmitValue = (key: keyof typeof isSubmitted, value: boolean) => {
-    setIsSubmitted((prev) => ({ ...prev, [key]: value }));
   };
 
   return {
     form,
     submitHandler,
     disableFormButton: formButtonDisabled,
-    isSubmitted,
-    handleSubmitValue,
   };
 }
