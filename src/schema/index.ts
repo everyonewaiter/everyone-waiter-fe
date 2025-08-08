@@ -14,6 +14,7 @@ export const phoneSchema = z
 
 export const passwordSchema = z
   .string()
+  .trim()
   .min(1, { message: "비밀번호를 입력해주세요." })
   .refine(
     (val) =>
