@@ -1,5 +1,5 @@
 import API_PATH from "@/lib/api/paths";
-import { authInstance } from "@/lib/axios/instance";
+import { authInstance, instance } from "@/lib/axios/instance";
 import axios from "axios";
 
 export const createAccount = async (body: Account) => {
@@ -76,7 +76,7 @@ export const renewToken = async ({
 };
 
 export const getAccount = async (token: string): Promise<UserProfile> => {
-  const response = await axios.get(`${API_PATH.account}/me`, {
+  const response = await instance.get(`${API_PATH.account}/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

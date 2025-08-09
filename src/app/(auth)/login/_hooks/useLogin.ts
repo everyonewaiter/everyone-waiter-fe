@@ -12,24 +12,18 @@ export default function useLogin() {
   const [isPending, startTransition] = useTransition();
 
   async function loginUser(email: string, password: string) {
-    startTransition(async () => {
-      try {
-        const { profileData, storeList } = await serverLogin(email, password);
+    const { profileData, storeList } = await serverLogin(email, password);
 
-        saveUser(profileData);
+    saveUser(profileData);
 
-        if (profileData.permission === "ADMIN") {
-          router.push("/admin/users");
-        } else if (storeList?.stores?.length > 0) {
-          router.push(`/${storeList.stores[0].storeId}`);
-        } else {
-          router.push("/main");
-        }
-      } catch (e) {
-        // eslint-disable-next-line
-        console.error("Login failed:", e);
-      }
+    startTransition(() => {
+      if (profileData.permission === "ADMIN") router.push("/admin/users");
+      else if (storeList?.stores?.length > 0)
+        router.push(`/${storeList.stores[0].storeId}`);
+      else router.push("/main");
     });
+
+    return { profileData, storeList };
   }
 
   return { loginUser, isPending };
