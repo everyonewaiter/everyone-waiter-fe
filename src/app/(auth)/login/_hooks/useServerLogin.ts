@@ -5,16 +5,16 @@ import { login, getAccount } from "@/lib/api/auth.api";
 import { setCookie } from "@/lib/cookies";
 
 export async function serverLogin(email: string, password: string) {
-  const response = await login({ email, password });
+  const { accessToken, refreshToken } = await login({ email, password });
 
-  setCookie("accessToken", response.accessToken);
-  setCookie("refreshToken", response.refreshToken);
+  setCookie("accessToken", accessToken);
+  setCookie("refreshToken", refreshToken);
 
-  const profileData = await getAccount();
+  const profileData = await getAccount(accessToken);
 
   setCookie("permission", profileData.permission);
 
-  const storeList = await getStoreList();
+  const storeList = await getStoreList(accessToken);
 
   return { profileData, storeList };
 }

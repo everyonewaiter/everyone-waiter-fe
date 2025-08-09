@@ -1,5 +1,6 @@
 import API_PATH from "@/lib/api/paths";
 import { authInstance, formInstance, instance } from "@/lib/axios/instance";
+import axios from "axios";
 
 export const registerStore = async (body: FormData) => {
   const response = await formInstance.post(
@@ -52,10 +53,18 @@ export const reapplyRegistrationWithImage = async ({
 };
 
 // 매장 목록
-export const getStoreList = async (): Promise<{
+export const getStoreList = async (
+  token?: string
+): Promise<{
   stores: { storeId: string; name: string }[];
 }> => {
-  const response = await instance.get(`${API_PATH.stores}`);
+  const client = token
+    ? axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+        headers: { Authorization: `Bearer ${token}` },
+      })
+    : instance;
+  const response = await client.get(API_PATH.stores);
   return response.data;
 };
 
