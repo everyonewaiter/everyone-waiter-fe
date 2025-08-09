@@ -23,7 +23,7 @@ export default function Navigation({ initialStoreId, role }: IProps) {
 
   const { data: storeList } = useQuery({
     queryKey: ["store-list"],
-    queryFn: getStoreList,
+    queryFn: () => getStoreList(),
     enabled: role === "OWNER",
     staleTime: 1000 * 60,
   });
