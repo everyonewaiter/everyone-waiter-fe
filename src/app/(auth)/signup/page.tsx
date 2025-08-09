@@ -176,13 +176,20 @@ export default function Signup() {
               disabled={state.authDisabled}
               render={({ field }) => (
                 <div className="flex items-center gap-3">
-                  <Input
-                    {...field}
-                    placeholder="인증 번호를 입력해주세요."
-                    hasError={!!form.formState.errors.authNumber}
-                  />
+                  <div className="relative w-full">
+                    <Input
+                      {...field}
+                      placeholder="인증 번호를 입력해주세요."
+                      hasError={!!form.formState.errors.authNumber}
+                      className="!pr-10 md:!pr-13 lg:!pr-15"
+                    />
+                    {state.startTimer && (
+                      <div className="font-regular absolute top-5 right-3 mt-[-2px] -translate-y-1/2 transform text-xs text-gray-200 transition-all duration-300 ease-in-out md:top-5 md:right-4 lg:top-6.5 lg:right-3 lg:text-[15px]">
+                        {`${String(Math.floor(state.authTime / 60)).padStart(2, "0")}:${String(state.authTime % 60).padStart(2, "0")}`}
+                      </div>
+                    )}
+                  </div>
                   <AuthButton
-                    authTime={state.authTime}
                     loading={state.authBtnLoading}
                     disabled={state.authBtnDisabled}
                     onCheckAuth={() => handleCheckAuth(field.value)}

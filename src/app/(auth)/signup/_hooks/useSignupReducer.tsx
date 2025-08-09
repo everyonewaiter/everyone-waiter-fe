@@ -88,8 +88,8 @@ export default function useSignupReducer() {
         const expired = next === 0;
         return {
           ...state,
-          authTime: INIT_TIME,
-          startTimer: true,
+          authTime: next,
+          startTimer: !expired,
           authDisabled: expired ? true : state.authDisabled,
           authBtnDisabled: expired ? true : state.authBtnDisabled,
           authExpired: expired ? true : state.authExpired,
