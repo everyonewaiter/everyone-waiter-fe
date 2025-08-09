@@ -12,7 +12,7 @@ export default function CreatePage() {
   useCheckLeave(form.formState.isDirty);
 
   return (
-    <div className="flex w-full items-start justify-between rounded-[32px] bg-white p-8 md:w-[722px] lg:w-[888px]">
+    <div className="flex items-start justify-between rounded-[32px] bg-white md:w-[722px] md:p-8 lg:w-[888px]">
       <div className="hidden flex-col md:flex">
         <Logo
           width={90}
@@ -29,7 +29,7 @@ export default function CreatePage() {
         </p>
       </div>
       <div className="flex flex-col items-start justify-start gap-[16px]">
-        <h1 className="text-gray-0 mb-8 flex w-full justify-center text-xl font-semibold md:hidden">
+        <h1 className="text-gray-0 flex w-full justify-center text-xl font-semibold md:hidden">
           매장 등록
         </h1>
         <Form {...form}>

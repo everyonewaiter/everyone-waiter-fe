@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { Controller, useFormContext } from "react-hook-form";
 import LabeledInput from "@/components/common/LabeledInput";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -14,14 +13,7 @@ import formatBusinessNumber from "@/lib/formatting/formatBusinessNumber";
 import { FormErrorMessage } from "@/components/common/Form";
 import cn from "@/lib/utils";
 import useControlImage from "../_hooks/useControlImage";
-
-const UploadPhoto = dynamic(
-  () => import("../../(owner)/[id]/store/_components/UploadPhoto"),
-  {
-    ssr: false,
-    loading: () => <Spinner />,
-  }
-);
+import UploadPhoto from "../../(owner)/[id]/store/_components/UploadPhoto";
 
 interface IProps {
   isSubmitted: boolean;
@@ -33,6 +25,8 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
 
   const { imageUrl, handleFile, fileRef } = useControlImage();
   const { handleOpenAddress } = useOpenDaumPostcode(form);
+
+  console.log(form.watch("image"));
 
   return (
     <form
@@ -126,6 +120,7 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
           handleFile={(value) =>
             handleFile(value, (v) => form.setValue("image", v))
           }
+          // imageFile={form.watch("image")}
           image={imageUrl ?? ""}
           className={cn(
             "h-[140px] max-w-full md:h-40 md:w-[348px] lg:w-100",

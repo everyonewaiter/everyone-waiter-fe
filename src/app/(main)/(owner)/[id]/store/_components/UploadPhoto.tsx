@@ -1,25 +1,25 @@
 import Image from "next/image";
-import React, { ChangeEvent, RefObject, forwardRef } from "react";
+import React, { ChangeEvent, RefObject, forwardRef, useState } from "react";
 import Icon from "@/components/common/Icon/Icon";
 import cn from "@/lib/utils";
+import LicensePreview from "./modals/LicensePreview";
 
 interface IProps {
   image?: string;
+  // imageFile?: File;
   handleFile: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
 
 const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
-  ({ image, handleFile, className }, ref) => (
-    <button
-      type="button"
-      className={cn(
-        `flex border-spacing-4 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[16px] border-1 border-dashed border-gray-500 bg-gray-700 ${image ? "" : "p-6"}`,
-        className
-      )}
-      onClick={() => (ref as RefObject<HTMLInputElement>).current?.click()}
-    >
-      {image ? (
+  ({ image, handleFile, className }, ref) => {
+    const [open, setOpen] = useState(false);
+
+    const handlePreview = () => setOpen(true);
+
+    let previewContent = null;
+    if (image) {
+      previewContent = (
         <Image
           src={image}
           alt="사업자 등록중"
@@ -27,7 +27,9 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
           height={160}
           className={cn("object-cover", className)}
         />
-      ) : (
+      );
+    } else {
+      previewContent = (
         <>
           <Icon
             iconKey="file-attach"
@@ -40,6 +42,34 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
           <span className="lg:text-s font-regular mt-1 text-xs text-gray-300">
             JPG, PNG, PDF로 제출 가능합니다.
           </span>
+        </>
+      );
+    }
+
+    return (
+      <>
+        {open && (
+          <LicensePreview
+            onClose={() => setOpen(false)}
+            onClickUpdate={() =>
+              (ref as RefObject<HTMLInputElement>).current?.click()
+            }
+            image={image!}
+          />
+        )}
+        <button
+          type="button"
+          className={cn(
+            `flex border-spacing-4 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[16px] border-1 border-dashed border-gray-500 bg-gray-700 ${image ? "" : "p-6"}`,
+            className
+          )}
+          onClick={() =>
+            image
+              ? handlePreview()
+              : (ref as RefObject<HTMLInputElement>).current?.click()
+          }
+        >
+          {previewContent}
           <input
             ref={ref}
             type="file"
@@ -47,10 +77,10 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
             accept=".jpg, .jpeg, .png, .pdf"
             onChange={handleFile}
           />
-        </>
-      )}
-    </button>
-  )
+        </button>
+      </>
+    );
+  }
 );
 
 export default UploadPhoto;
