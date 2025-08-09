@@ -47,3 +47,20 @@ export const deviceNumberSchema = z
   .refine((val) => !val || /^[A-Z0-9]{10}$/.test(val), {
     message: "기기 번호는 영문, 숫자를 조합한 10자리여야 합니다.",
   });
+
+const fileSchema =
+  typeof window !== "undefined"
+    ? z
+        .instanceof(File)
+        .refine(
+          (file) =>
+            ["image/jpeg", "image/png", "application/pdf"].includes(
+              file.type
+            ) || /\.(jpe?g|png|pdf)$/i.test(file.name),
+          {
+            message: "jpg, png, pdf만 업로드할 수 있습니다.",
+          }
+        )
+    : z.any();
+
+export const imageSchema = z.union([fileSchema, z.string()]);

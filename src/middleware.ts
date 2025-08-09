@@ -18,15 +18,18 @@ export function middleware(req: NextRequest) {
   const isAdminPath = pathname.startsWith("/admin");
 
   // NOTE: 관리자 페이지 접근 제한
-  if (isAdminPath) {
-    if (permission !== "ADMIN") {
-      return NextResponse.rewrite(new URL("/not-found", req.url));
-    }
+  if (isAdminPath && permission !== "ADMIN") {
+    return NextResponse.rewrite(new URL("/not-found", req.url));
   }
 
   // NOTE: 로그인한 상태에서 auth 페이지 접근 금지
   if (accessToken && authPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  // NOTE: 로그인 상태가 아닐 때 main에 접근했을 경우
+  if (pathname.startsWith("/main") && !accessToken) {
+    return NextResponse.rewrite(new URL("/not-found", req.url));
   }
 
   // NOTE: 웨이팅 상태가 아닐 떄 접근했을 경우

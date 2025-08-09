@@ -23,7 +23,7 @@ export default function useLogin() {
         } else if (storeList?.stores?.length > 0) {
           router.push(`/${storeList.stores[0].storeId}`);
         } else {
-          router.push("/user");
+          router.push("/main");
         }
       } catch (e) {
         // eslint-disable-next-line

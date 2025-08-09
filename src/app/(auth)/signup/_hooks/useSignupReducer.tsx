@@ -73,6 +73,10 @@ export default function useSignupReducer() {
       case "VERIFY_SUCCESS":
         return {
           ...state,
+          phoneDisabled: true,
+          authDisabled: true,
+          authBtnDisabled: true,
+          phoneBtnDisabled: true,
           authBtnLoading: false,
           startTimer: false,
           authTime: 0,
@@ -88,8 +92,8 @@ export default function useSignupReducer() {
         const expired = next === 0;
         return {
           ...state,
-          authTime: INIT_TIME,
-          startTimer: true,
+          authTime: next,
+          startTimer: !expired,
           authDisabled: expired ? true : state.authDisabled,
           authBtnDisabled: expired ? true : state.authBtnDisabled,
           authExpired: expired ? true : state.authExpired,

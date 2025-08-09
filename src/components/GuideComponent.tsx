@@ -37,7 +37,7 @@ export default function GuideComponent({
         alt="매장이 등록되어있지 않습니다"
         width={image.size}
         height={image.size}
-        className="h-[90px] w-[90px] md:h-[100px] md:w-[100px] lg:h-[160px] lg:w-[160px]"
+        className="h-[160px] w-[160px] md:h-[100px] md:w-[100px] lg:h-[160px] lg:w-[160px]"
         priority
       />
       <div className="flex w-full flex-col gap-6 text-center lg:gap-8">
@@ -47,7 +47,7 @@ export default function GuideComponent({
               {title.split("\\n").map((line) => (
                 <span
                   key={line}
-                  className="text-gray-0 text-base font-semibold md:text-lg lg:text-2xl"
+                  className="text-gray-0 text-lg font-semibold lg:text-2xl"
                 >
                   {line}
                   <br />

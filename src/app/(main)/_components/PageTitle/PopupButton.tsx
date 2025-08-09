@@ -4,17 +4,14 @@ import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon/Icon";
 import InfoPopup from "@/components/InfoPopup";
 import useOverlay from "@/hooks/useOverlay";
-import { StoreProvider } from "@/providers/storeProvider";
 
-export default function PopupButton({ storeId }: { storeId: string }) {
+export default function PopupButton({ storeId }: { storeId?: string }) {
   const { open, close } = useOverlay();
 
   const handleOpenPopup = () => {
     open(() => (
       <QueryProviders>
-        <StoreProvider storeId={storeId}>
-          <InfoPopup close={close} />
-        </StoreProvider>
+        <InfoPopup close={close} storeId={storeId} />
       </QueryProviders>
     ));
   };
