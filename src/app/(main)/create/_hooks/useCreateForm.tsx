@@ -30,7 +30,7 @@ export default function useCreateForm() {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("ceoName", data.ceoName);
-    formData.append("address", data.address);
+    formData.append("address", `${data.address} ${data.detailAddress}`);
     formData.append("landline", data.landline);
     formData.append("license", data.license);
     if (data.image) {
