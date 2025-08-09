@@ -27,7 +27,7 @@ const useStoresList = (enabled: boolean) =>
     stores: { storeId: string; name: string }[];
   }>({
     queryKey: storeKeys.stores(),
-    queryFn: getStoreList,
+    queryFn: () => getStoreList(),
     placeholderData: keepPreviousData,
     enabled,
     staleTime: 1000 * 60 * 5,

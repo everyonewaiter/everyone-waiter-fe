@@ -26,8 +26,6 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
   const { imageUrl, handleFile, fileRef } = useControlImage();
   const { handleOpenAddress } = useOpenDaumPostcode(form);
 
-  console.log(form.watch("image"));
-
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}

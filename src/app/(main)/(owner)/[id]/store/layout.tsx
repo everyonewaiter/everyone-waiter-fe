@@ -17,7 +17,7 @@ export default async function Layout({
 
   await queryClient.prefetchQuery({
     queryKey: ["store-list"],
-    queryFn: getStoreList,
+    queryFn: () => getStoreList(),
   });
 
   return (

@@ -38,7 +38,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
   // OWNER인 경우에만 매장 목록 조회
   const { data: storeList } = useQuery({
     queryKey: ["store-list"],
-    queryFn: getStoreList,
+    queryFn: () => getStoreList(),
     enabled: permission === "OWNER",
   });
 
