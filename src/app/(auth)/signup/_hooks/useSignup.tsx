@@ -1,4 +1,5 @@
 /* eslint-disable no-alert */
+import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import {
@@ -58,24 +59,35 @@ const useSignup = ({ form, onDispatch }: IProps) => {
   const mutateSignup = useMutation({
     mutationFn: createAccount,
     onError: (error) => {
-      const { code, message } = (error as any).response.data;
-      if ((error as any).response.status === 400) {
-        if (code === "ALREADY_USE_EMAIL") {
-          form.setError("email", { message: "이미 사용중인 이메일입니다." });
-        } else if (code === "ALREADY_USE_PHONE_NUMBER") {
-          onDispatch({ type: "RESET" });
-          form.setError("phone", {
-            message: "이미 사용중인 휴대폰 번호입니다.",
-          });
-        } else if (code === "EXPIRED_VERIFICATION_PHONE_NUMBER") {
-          onDispatch({ type: "RESET" });
-          form.setError("phone", {
-            message: "휴대폰 인증 번호가 만료되었습니다.",
-          });
+      if (!axios.isAxiosError(error)) return;
+
+      const { code, message } = error.response?.data as {
+        code: string;
+        message: string;
+      };
+      if (error.response?.status === 400) {
+        switch (code) {
+          case "ALREADY_USE_EMAIL":
+            form.setError("email", { message: "이미 사용중인 이메일입니다." });
+            return;
+          case "ALREADY_USED_PHONE_NUMBER":
+          case "ALREADY_USE_PHONE_NUMBER":
+            onDispatch({ type: "RESET" });
+            form.setError("phone", {
+              message: "이미 사용중인 휴대폰 번호입니다.",
+            });
+            return;
+          case "EXPIRED_VERIFICATION_PHONE_NUMBER":
+            onDispatch({ type: "RESET" });
+            form.setError("phone", {
+              message: "휴대폰 인증 번호가 만료되었습니다.",
+            });
+            return;
+          default:
+            form.setError("root", { message });
         }
-      } else {
-        throw new Error(message);
       }
+      form.setError("root", { message });
     },
   });
 

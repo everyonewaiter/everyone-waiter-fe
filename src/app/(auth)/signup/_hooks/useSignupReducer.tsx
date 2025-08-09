@@ -73,6 +73,10 @@ export default function useSignupReducer() {
       case "VERIFY_SUCCESS":
         return {
           ...state,
+          phoneDisabled: true,
+          authDisabled: true,
+          authBtnDisabled: true,
+          phoneBtnDisabled: true,
           authBtnLoading: false,
           startTimer: false,
           authTime: 0,
