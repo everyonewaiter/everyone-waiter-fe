@@ -38,7 +38,5 @@ export async function setCookie(key: KeyType, token: string) {
     httpOnly: key === "refreshToken",
     maxAge: TOKEN_EXPIRATION[key],
     path: "/",
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
   });
 }

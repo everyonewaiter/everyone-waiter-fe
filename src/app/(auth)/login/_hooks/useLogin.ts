@@ -6,7 +6,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import { getAccount } from "@/lib/api/auth.api";
 import { setClientCookie } from "@/lib/cookies/client";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { serverLogin } from "../_actions/serverlogin";
+import { serverLogin } from "../utils/serverlogin";
 
 export default function useLogin() {
   const { saveUser } = useAuthStore();
@@ -25,6 +25,7 @@ export default function useLogin() {
     startTransition(async () => {
       saveUser(profileData);
       setClientCookie("permission", profileData.permission);
+      setClientCookie("accessToken", accessToken);
 
       if (profileData.permission === "ADMIN") {
         router.push("/admin/users");
