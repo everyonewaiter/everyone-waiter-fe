@@ -6,7 +6,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import { getAccount } from "@/lib/api/auth.api";
 import { setClientCookie } from "@/lib/cookies/client";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { serverLogin } from "./useServerLogin";
+import { serverLogin } from "../_actions/serverlogin";
 
 export default function useLogin() {
   const { saveUser } = useAuthStore();
@@ -15,14 +15,14 @@ export default function useLogin() {
   const [isPending, startTransition] = useTransition();
 
   async function loginUser(email: string, password: string) {
+    const { accessToken } = await serverLogin(email, password);
+
+    const [profileData, storeList] = await Promise.all([
+      getAccount(accessToken),
+      getStoreList(accessToken),
+    ]);
+
     startTransition(async () => {
-      const { accessToken } = await serverLogin(email, password);
-
-      const [profileData, storeList] = await Promise.all([
-        getAccount(accessToken),
-        getStoreList(accessToken),
-      ]);
-
       saveUser(profileData);
       setClientCookie("permission", profileData.permission);
 
