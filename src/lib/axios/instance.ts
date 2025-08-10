@@ -2,10 +2,11 @@ import axios from "axios";
 import { setupDeviceInterceptors } from "./setupDeviceInterceptors";
 import { setupInterceptors } from "./setupInterceptors";
 
-axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1`;
 
 // NOTE - 로그인/회원가입 등 토큰이 필요 없는 instance
 const authInstance = axios.create({
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -14,6 +15,7 @@ const authInstance = axios.create({
 
 // NOTE - formData 관련 Instance
 const formInstance = axios.create({
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "multipart/form-data",
   },
@@ -23,11 +25,13 @@ const formInstance = axios.create({
 
 // NOTE - 기기용 instance
 const signatureInstance = axios.create({
+  baseURL: BASE_URL,
   timeout: 5000,
 });
 
 // NOTE - 일반 instance
 const instance = axios.create({
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

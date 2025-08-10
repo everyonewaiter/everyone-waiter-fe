@@ -40,10 +40,17 @@ export const verifyAuthCode = async ({
   return response.data;
 };
 
-export const login = async (
-  body: Omit<Account, "phoneNumber">
-): Promise<{ accessToken: string; refreshToken: string }> => {
-  const response = await authInstance.post(`${API_PATH.account}/sign-in`, body);
+export const login = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}): Promise<{ accessToken: string; refreshToken: string }> => {
+  const response = await authInstance.post(`${API_PATH.account}/sign-in`, {
+    email,
+    password,
+  });
   return response.data;
 };
 
