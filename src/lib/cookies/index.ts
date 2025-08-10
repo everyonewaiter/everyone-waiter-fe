@@ -36,7 +36,7 @@ export async function setCookie(key: KeyType, token: string) {
   const cookieStore = await cookies();
   cookieStore.set(key, token, {
     httpOnly: key === "refreshToken",
-    secure: key === "refreshToken",
+    secure: process.env.NODE_ENV === "production",
     maxAge: TOKEN_EXPIRATION[key],
     path: "/",
     sameSite: "lax",

@@ -40,8 +40,6 @@ export default function Login() {
             form.setError("email", { type: "value", message });
             form.setError("password", { type: "value", message });
             form.setFocus("email");
-          } else {
-            throw new Error(e);
           }
         },
         onSettled: () => setIsSubmitted(false),

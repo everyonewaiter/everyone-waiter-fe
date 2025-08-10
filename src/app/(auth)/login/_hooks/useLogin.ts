@@ -13,7 +13,11 @@ export default function useLogin() {
   const { saveUser } = useAuthStore();
   const router = useRouter();
 
-  return useMutation({
+  return useMutation<
+    { accessToken: string },
+    AxiosError<ErrorResponse>,
+    { email: string; password: string }
+  >({
     mutationFn: async ({
       email,
       password,
