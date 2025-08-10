@@ -18,7 +18,6 @@ const TOKEN_EXPIRATION = {
 // NOTE - accessToken 및 refreshToken 접근
 export async function getToken(key: KeyType) {
   const cookieStore = await cookies();
-
   return cookieStore.get(key)?.value;
 }
 
@@ -32,13 +31,10 @@ export async function deleteCookie(key: KeyType) {
 }
 
 // NOTE - 쿠키 설정
-export async function setCookie(key: KeyType, token: string) {
-  const cookieStore = await cookies();
-  cookieStore.set(key, token, {
+export async function setCookie(key: KeyType, value: string) {
+  const cookie = await cookies();
+  cookie.set(key, value, {
     httpOnly: key === "refreshToken",
-    secure: process.env.NODE_ENV === "production",
     maxAge: TOKEN_EXPIRATION[key],
-    path: "/",
-    sameSite: "lax",
   });
 }

@@ -6,8 +6,7 @@ import { getAccount, login } from "@/lib/api/auth.api";
 import { setClientCookie } from "@/lib/cookies/client";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { saveRefresh } from "../_utils/saveRefresh";
+import axios, { AxiosError } from "axios";
 
 export default function useLogin() {
   const { saveUser } = useAuthStore();
@@ -26,7 +25,13 @@ export default function useLogin() {
       password: string;
     }) => {
       const { accessToken, refreshToken } = await login({ email, password });
-      await saveRefresh(refreshToken);
+
+      await axios.post(
+        "/api/auth/set-token",
+        { refreshToken },
+        { withCredentials: true }
+      );
+
       return { accessToken };
     },
     onSuccess: async ({ accessToken }) => {
