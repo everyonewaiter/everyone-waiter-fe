@@ -51,12 +51,9 @@ export default function useLogin() {
       // 4. 리다이렉트
       if (profileData.permission === "ADMIN") {
         router.push("/admin/users");
-      } else if (
-        profileData.permission === "OWNER" &&
-        storeList?.stores?.length > 0
-      ) {
+      } else if (profileData.permission === "OWNER") {
         router.push(`/${storeList.stores[0].storeId}`);
-      } else {
+      } else if (profileData.permission === "USER") {
         router.push("/main");
       }
     },
