@@ -25,7 +25,10 @@ export async function getToken(key: KeyType) {
 // NOTE - 로그아웃
 export async function deleteCookie(key: KeyType) {
   const cookieStore = await cookies();
-  cookieStore.delete(key);
+  cookieStore.delete({
+    name: key,
+    path: "/",
+  });
 }
 
 // NOTE - 쿠키 설정
@@ -34,5 +37,8 @@ export async function setCookie(key: KeyType, token: string) {
   cookieStore.set(key, token, {
     httpOnly: key === "refreshToken",
     maxAge: TOKEN_EXPIRATION[key],
+    path: "/",
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
   });
 }

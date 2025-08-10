@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
 import { getAccount } from "@/lib/api/auth.api";
+import { setClientCookie } from "@/lib/cookies/client";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { serverLogin } from "./useServerLogin";
 
@@ -17,10 +18,13 @@ export default function useLogin() {
     startTransition(async () => {
       const { accessToken } = await serverLogin(email, password);
 
-      const profileData = await getAccount(accessToken);
-      const storeList = await getStoreList(accessToken);
+      const [profileData, storeList] = await Promise.all([
+        getAccount(accessToken),
+        getStoreList(accessToken),
+      ]);
 
       saveUser(profileData);
+      setClientCookie("permission", profileData.permission);
 
       if (profileData.permission === "ADMIN") {
         router.push("/admin/users");
