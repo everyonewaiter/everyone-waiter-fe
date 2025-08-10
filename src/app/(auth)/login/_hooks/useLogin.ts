@@ -1,32 +1,45 @@
 "use client";
 
-import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/useAuthStore";
-import { getAccount } from "@/lib/api/auth.api";
+import { getAccount, login } from "@/lib/api/auth.api";
 import { setClientCookie } from "@/lib/cookies/client";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { serverLogin } from "../utils/serverlogin";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { saveRefresh } from "../_utils/saveRefresh";
 
 export default function useLogin() {
   const { saveUser } = useAuthStore();
   const router = useRouter();
 
-  const [isPending, startTransition] = useTransition();
-
-  async function loginUser(email: string, password: string) {
-    const { accessToken } = await serverLogin(email, password);
-
-    const [profileData, storeList] = await Promise.all([
-      getAccount(accessToken),
-      getStoreList(accessToken),
-    ]);
-
-    startTransition(async () => {
-      saveUser(profileData);
-      setClientCookie("permission", profileData.permission);
+  return useMutation({
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => {
+      const { accessToken, refreshToken } = await login({ email, password });
+      await saveRefresh(refreshToken);
+      return { accessToken };
+    },
+    onSuccess: async ({ accessToken }) => {
+      // 1. 토큰 저장
       setClientCookie("accessToken", accessToken);
 
+      // 2. 유저, 스토어 정보 가져오기
+      const [profileData, storeList] = await Promise.all([
+        getAccount(accessToken),
+        getStoreList(accessToken),
+      ]);
+
+      // 3. 유저 정보 저장
+      saveUser(profileData);
+      setClientCookie("permission", profileData.permission);
+
+      // 4. 리다이렉트
       if (profileData.permission === "ADMIN") {
         router.push("/admin/users");
       } else if (
@@ -37,8 +50,9 @@ export default function useLogin() {
       } else {
         router.push("/main");
       }
-    });
-  }
-
-  return { loginUser, isPending };
+    },
+    onError: (error: AxiosError<ErrorResponse>) => {
+      throw new Error(error.message);
+    },
+  });
 }

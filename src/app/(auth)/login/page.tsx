@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
@@ -13,7 +14,8 @@ import SignupLayout from "../signup/layout";
 import useLogin from "./_hooks/useLogin";
 
 export default function Login() {
-  const { isPending, loginUser } = useLogin();
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const login = useLogin();
 
   const form = useForm<TypeLogin>({
     mode: "onChange",
@@ -25,21 +27,26 @@ export default function Login() {
   });
 
   const submitHandler = async (formData: TypeLogin) => {
-    try {
-      await loginUser(formData.email, formData.password);
-    } catch (e: any) {
-      if ((e as any).response.data.code.startsWith("FAILED")) {
-        form.setError("email", {
-          type: "value",
-          message: (e as any).response.data.message,
-        });
-        form.setError("password", {
-          type: "value",
-          message: (e as any).response.data.message,
-        });
-        form.setFocus("email");
+    setIsSubmitted(true);
+    login.mutate(
+      { email: formData.email, password: formData.password },
+      {
+        onError: (e: any) => {
+          const code = e?.response?.data?.code as string | undefined;
+          const message =
+            e?.response?.data?.message ?? e?.message ?? "로그인 실패";
+
+          if (typeof code === "string" && code?.startsWith("FAILED")) {
+            form.setError("email", { type: "value", message });
+            form.setError("password", { type: "value", message });
+            form.setFocus("email");
+          } else {
+            throw new Error(e);
+          }
+        },
+        onSettled: () => setIsSubmitted(false),
       }
-    }
+    );
   };
 
   return (
@@ -54,7 +61,7 @@ export default function Login() {
       />
       <Form {...form}>
         <form
-          aria-busy={isPending}
+          aria-busy={isSubmitted}
           className="mt-12 flex w-[320px] flex-col md:w-[292px] lg:w-[432px]"
           onSubmit={form.handleSubmit(submitHandler)}
         >
@@ -65,7 +72,7 @@ export default function Login() {
               type="email"
               label="이메일"
               placeholder="이메일을 입력해주세요."
-              readOnly={isPending}
+              readOnly={isSubmitted}
               autoComplete="username"
             />
             <LabeledInput
@@ -74,7 +81,7 @@ export default function Login() {
               name="password"
               label="비밀번호"
               placeholder="비밀번호를 입력해주세요."
-              readOnly={isPending}
+              readOnly={isSubmitted}
               autoComplete="current-password"
             />
           </div>
@@ -85,10 +92,10 @@ export default function Login() {
               md: { buttonSize: "sm" },
               lg: { buttonSize: "lg" },
             }}
-            disabled={isPending || form.formState.isSubmitting}
+            disabled={isSubmitted || form.formState.isSubmitting}
             commonClassName="w-full mt-8"
           >
-            {isPending ? <Spinner /> : "로그인"}
+            {isSubmitted ? <Spinner /> : "로그인"}
           </ResponsiveButton>
         </form>
       </Form>
