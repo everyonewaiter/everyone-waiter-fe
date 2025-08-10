@@ -2,11 +2,10 @@ import { login } from "@/lib/api/auth.api";
 import { setCookie } from "@/lib/cookies";
 
 export async function serverLogin(email: string, password: string) {
-  const res = await login({ email, password });
-  const { accessToken, refreshToken } = res;
+  const response = await login({ email, password });
 
-  setCookie("accessToken", accessToken);
-  setCookie("refreshToken", refreshToken);
+  await setCookie("accessToken", response.accessToken);
+  await setCookie("refreshToken", response.refreshToken);
 
-  return { accessToken };
+  return { accessToken: response.accessToken };
 }
