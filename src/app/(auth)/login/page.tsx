@@ -25,9 +25,13 @@ export default function Login() {
   });
 
   const submitHandler = async (formData: TypeLogin) => {
+    // eslint-disable-next-line no-console
+    console.log(formData);
     try {
-      loginUser(formData.email, formData.password);
+      await loginUser(formData.email, formData.password);
     } catch (e: any) {
+      // eslint-disable-next-line no-console
+      console.log(e);
       if ((e as any).response.data.code.startsWith("FAILED")) {
         form.setError("email", {
           type: "value",
@@ -85,7 +89,7 @@ export default function Login() {
               md: { buttonSize: "sm" },
               lg: { buttonSize: "lg" },
             }}
-            disabled={isPending}
+            disabled={isPending || form.formState.isSubmitting}
             commonClassName="w-full mt-8"
           >
             {isPending ? <Spinner /> : "로그인"}

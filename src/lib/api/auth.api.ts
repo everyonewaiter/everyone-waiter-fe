@@ -40,19 +40,29 @@ export const verifyAuthCode = async ({
   return response.data;
 };
 
-export const login = async ({
+export async function login({
   email,
   password,
 }: {
   email: string;
   password: string;
-}): Promise<{ accessToken: string; refreshToken: string }> => {
-  const response = await authInstance.post(`${API_PATH.account}/sign-in`, {
-    email,
-    password,
-  });
-  return response.data;
-};
+}) {
+  try {
+    const url = `${API_PATH.account}/sign-in`;
+    // eslint-disable-next-line no-console
+    console.log("[login] ->", authInstance.defaults.baseURL + url, { email });
+
+    const res = await authInstance.post(url, { email, password });
+    return res.data;
+  } catch (err: any) {
+    // eslint-disable-next-line no-console
+    console.error("[login] error:", {
+      status: err?.response?.status,
+      data: err?.response?.data,
+    });
+    throw err;
+  }
+}
 
 export const sendAuthMail = async (body: Pick<Account, "email">) => {
   const response = await authInstance.post(
