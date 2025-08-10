@@ -15,7 +15,6 @@ import Label from "@/components/common/Label";
 import { personalInformationTerms } from "@/constants/personalInformationTerms";
 import useSignup from "./_hooks/useSignup";
 import useSignupForm from "./_hooks/useSignupForm";
-import { TypeSignup } from "./_schema/signup.schema";
 import useSignupReducer from "./_hooks/useSignupReducer";
 import AuthButton from "./_components/AuthButton";
 
@@ -90,12 +89,11 @@ export default function Signup() {
     );
   };
 
-  const handleSubmmit = (data: TypeSignup) => {
+  const handleSubmmit = () => {
     submitHandler({
-      data,
       action: mutateSignup,
       onSuccess: () => {
-        navigate.push(`/signup/completed?email=${data.email}`);
+        navigate.push(`/signup/completed?email=${form.watch("email")}`);
       },
     });
   };

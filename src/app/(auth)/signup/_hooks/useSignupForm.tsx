@@ -24,11 +24,9 @@ export default function useSignupForm({
   });
 
   const submitHandler = ({
-    data,
     action,
     onSuccess,
   }: {
-    data: TypeSignup;
     action: UseMutationResult<any, Error, Account, unknown>;
     onSuccess: () => void;
   }) => {
@@ -36,9 +34,9 @@ export default function useSignupForm({
 
     action.mutate(
       {
-        email: data.email,
-        password: data.password,
-        phoneNumber: data.phone,
+        email: form.watch("email"),
+        password: form.watch("password"),
+        phoneNumber: form.watch("phone").split("-").join(""),
       },
       {
         onSuccess: () => onSuccess(),
