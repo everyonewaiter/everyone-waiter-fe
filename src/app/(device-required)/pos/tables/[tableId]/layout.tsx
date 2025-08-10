@@ -1,5 +1,3 @@
-"use server";
-
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import { getTableActivity } from "../../_api/pos.api";

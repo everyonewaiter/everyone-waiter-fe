@@ -1,10 +1,10 @@
 import dynamic from "next/dynamic";
 import { PropsWithChildren, Suspense } from "react";
+import { redirect } from "next/navigation";
 import Loading from "@/components/Loading";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import Spinner from "@/components/common/Spinner";
 import { getToken } from "@/lib/cookies";
-import { serverLogout } from "@/lib/actions/logout";
 import MobileHeader from "./_components/MobileLayout/MobileHeader";
 import ContentWrapper from "./(owner)/[id]/_components/ContentWrapper";
 import getQueryClient from "../get-query-client";
@@ -29,9 +29,7 @@ export default async function Layout({
     queryFn: () => getStoreList(),
   });
 
-  if (!token) {
-    await serverLogout();
-  }
+  if (!token) redirect("/");
 
   return (
     <div className="flex h-screen w-screen flex-col bg-white md:flex-row md:bg-[#F5F5F5]">

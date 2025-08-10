@@ -1,12 +1,23 @@
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
 
 import { Mutex } from "async-mutex";
 import axios, { AxiosInstance } from "axios";
 import { getToken } from "../cookies";
-import { getClientCookie } from "../cookies/client";
+import { getClientCookie, setClientCookie } from "../cookies/client";
 
 let refreshPromise: Promise<any> | null = null;
 const mutex = new Mutex();
+
+const client = axios.create();
+
+const logout = async () => {
+  try {
+    await client.post("/api/auth/logout", {}, { withCredentials: true });
+  } finally {
+    window.location.href = "/login";
+  }
+};
 
 export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   // NOTE: 요청 인터셉터
@@ -20,7 +31,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     }
 
     if (token) {
-      // eslint-disable-next-line no-param-reassign
+      config.headers = config.headers ?? {};
       config.headers.Authorization = `Bearer ${token}`;
     }
 
@@ -36,6 +47,10 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
       if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
+        if (typeof window === "undefined") {
+          return Promise.reject(error);
+        }
+
         if (refreshPromise) {
           const accessToken = await refreshPromise;
           if (!accessToken) throw error;
@@ -45,22 +60,24 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
 
         refreshPromise = mutex.runExclusive(async () => {
           try {
-            const res = await axios.post("/api/refresh");
+            const res = await client.post(
+              "/api/refresh",
+              {},
+              { withCredentials: true }
+            );
 
-            if (res.status !== 200 || !res.data?.accessToken) {
-              if (typeof window !== "undefined") {
-                window.location.href = "/logout";
-              }
-              return null;
+            const newToken = res.data?.accessToken;
+
+            if (!newToken) {
+              await logout();
+              return await Promise.reject(error);
             }
 
-            const { accessToken } = await res.data;
-            return accessToken;
+            setClientCookie("accessToken", newToken);
+            return newToken;
           } catch (err: any) {
-            if (typeof window !== "undefined") {
-              window.location.href = "/logout";
-            }
-            throw err;
+            await logout();
+            return null;
           } finally {
             refreshPromise = null;
           }
@@ -68,6 +85,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
 
         const newToken = await refreshPromise;
         if (!newToken) throw error;
+        originalRequest.headers = originalRequest.headers ?? {};
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
       }
