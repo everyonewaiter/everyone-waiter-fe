@@ -3,6 +3,7 @@
 import { Mutex } from "async-mutex";
 import axios, { AxiosInstance } from "axios";
 import { getToken } from "../cookies";
+import { getClientCookie } from "../cookies/client";
 
 let refreshPromise: Promise<any> | null = null;
 const mutex = new Mutex();
@@ -15,11 +16,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     if (typeof window === "undefined") {
       token = await getToken("accessToken");
     } else {
-      token =
-        document.cookie
-          .split("; ")
-          .find((row) => row.startsWith(`accessToken=`))
-          ?.split("=")[1] ?? null;
+      token = getClientCookie("accessToken");
     }
 
     if (token) {

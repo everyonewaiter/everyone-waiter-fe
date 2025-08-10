@@ -2,7 +2,11 @@
 
 import { cookies } from "next/headers";
 
-type KeyType = "accessToken" | "refreshToken" | "secretKey" | "permission";
+export type KeyType =
+  | "accessToken"
+  | "refreshToken"
+  | "secretKey"
+  | "permission";
 
 const TOKEN_EXPIRATION = {
   accessToken: 60 * 60 * 24 * 14, // 12시간
