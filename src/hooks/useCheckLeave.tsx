@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export default function useLeaveGuard(shouldBlock: boolean) {
-  const router = useRouter();
-
   useEffect(() => {
     if (!shouldBlock) return;
 
@@ -31,25 +28,10 @@ export default function useLeaveGuard(shouldBlock: boolean) {
     };
     window.addEventListener("popstate", onPopState);
 
-    const originalPush = router.push;
-    const originalReplace = router.replace;
-    (router as any).push = (href: string, opts?: any) =>
-      // eslint-disable-next-line no-alert
-      !shouldBlock || window.confirm(msg)
-        ? originalPush(href, opts)
-        : undefined;
-    (router as any).replace = (href: string, opts?: any) =>
-      // eslint-disable-next-line no-alert
-      !shouldBlock || window.confirm(msg)
-        ? originalReplace(href, opts)
-        : undefined;
-
     // eslint-disable-next-line consistent-return
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
       window.removeEventListener("popstate", onPopState);
-      (router as any).push = originalPush;
-      (router as any).replace = originalReplace;
     };
-  }, [shouldBlock, router]);
+  }, [shouldBlock]);
 }

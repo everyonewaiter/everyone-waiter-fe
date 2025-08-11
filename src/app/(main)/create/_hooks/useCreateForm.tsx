@@ -1,13 +1,18 @@
-import { addStoreSchema, TypeAddStoreForm } from "@/schema/store.schema";
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { getClientCookie } from "@/lib/cookies/client";
+import { addStoreSchema, TypeAddStoreForm } from "@/schema/store.schema";
 import { storesQueries } from "../../(owner)/[id]/store/_queries/useStores";
 
 export default function useCreateForm() {
   const navigate = useRouter();
   const { mutate } = storesQueries.useRegister();
+
+  const permission = getClientCookie("permission");
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -40,7 +45,10 @@ export default function useCreateForm() {
 
     mutate(formData, {
       onError: () => setIsSubmitted(false),
-      onSuccess: () => navigate.replace("/create?state=pending"),
+      onSuccess: () =>
+        navigate.replace(
+          `${permission === "USER" ? "/main" : ""}/create?state=pending`
+        ),
     });
   };
 

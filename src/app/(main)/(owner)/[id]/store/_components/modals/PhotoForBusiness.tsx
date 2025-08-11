@@ -1,70 +1,72 @@
 import Image from "next/image";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { getCdn } from "@/utils/getCdn";
-import UploadPhoto from "../UploadPhoto";
 
 interface IProps {
-  isPhotoUpdating: boolean;
-  onResetPhoto: () => void;
   isUpdating: boolean;
-  imageUrl: string;
+  image: string;
+  onSetImage: (value: string) => void;
 }
 
 export default function PhotoForBusiness({
   isUpdating,
-  onResetPhoto,
-  isPhotoUpdating,
-  imageUrl,
+  image,
+  onSetImage,
 }: IProps) {
   const fileRef = useRef<HTMLInputElement>(null);
-  const [image, setImage] = useState("");
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
-    }
+    if (!file) return;
+    if (image.startsWith("blob:")) URL.revokeObjectURL(image);
+    onSetImage(URL.createObjectURL(file));
   };
 
+  const isBlob = image.startsWith("blob:") || image.startsWith("data:");
+
   return (
-    <div className="mb-10 flex w-full flex-col items-center justify-center md:px-12">
-      {/* 예시 이미지 */}
-      {isPhotoUpdating ? (
-        <div className="h-[346px] w-full lg:h-[457px]">
-          <UploadPhoto
-            ref={fileRef}
-            handleFile={handleFile}
-            image={image!}
-            className="mt-5 h-[346px] w-[280px] md:mt-0 md:h-[260px] md:w-[216px] lg:h-[457px] lg:w-[380px]"
+    <div className="flex w-full flex-col items-center justify-center md:px-12">
+      <div className="mt-5 flex w-full flex-col items-center md:mt-0">
+        {isBlob ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={image}
+            alt="사업자 등록증"
+            className="h-full rounded-[16px] border border-gray-600 object-cover md:h-[260px] md:w-[210px] lg:h-[437px] lg:w-[360px]"
           />
-        </div>
-      ) : (
-        <div className="mt-5 h-[346px] w-full md:mt-0 lg:h-[457px]">
+        ) : (
           <Image
-            src={getCdn(imageUrl)}
+            src={getCdn(image)}
             alt="사업자 등록증"
             width={380}
             height={457}
-            className="h-full rounded-[16px] border border-gray-600 md:h-[260px] md:w-[216px] lg:h-[457px] lg:w-[380px]"
+            className="h-full rounded-[16px] border border-gray-600 md:h-[260px] md:w-[216px] lg:h-[437px] lg:w-[360px]"
           />
-          {isUpdating && (
-            <ResponsiveButton
-              color="black"
-              variant="outline"
-              onClick={onResetPhoto}
-              responsiveButtons={{
-                lg: { buttonSize: "md" },
-                md: { buttonSize: "sm" },
-                sm: { buttonSize: "sm" },
-              }}
-              commonClassName="mb-5 mt-3 w-full"
-            >
-              초기화하기
-            </ResponsiveButton>
-          )}
-        </div>
-      )}
+        )}
+        <input
+          ref={fileRef}
+          type="file"
+          hidden
+          accept=".jpg, .jpeg, .png, .pdf"
+          onChange={handleFile}
+        />
+        {isUpdating && (
+          <ResponsiveButton
+            color="black"
+            variant="outline"
+            onClick={() => fileRef.current?.click()}
+            responsiveButtons={{
+              lg: { buttonSize: "md" },
+              md: { buttonSize: "sm" },
+              sm: { buttonSize: "sm" },
+            }}
+            commonClassName="md:mb-0 lg:mb-5 mt-3 !w-full"
+          >
+            변경하기
+          </ResponsiveButton>
+        )}
+      </div>
     </div>
   );
 }

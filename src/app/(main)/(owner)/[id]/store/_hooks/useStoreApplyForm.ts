@@ -1,6 +1,9 @@
-import { storeSchema, TypeStore } from "@/schema/store.schema";
+import {
+  registrationSchema,
+  TypeRegistrationForm,
+} from "@/schema/store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { storesQueries } from "../_queries/useStores";
 
@@ -8,9 +11,19 @@ export default function useStoreApplyForm(
   data: StoreDetail,
   close: () => void
 ) {
-  const form = useForm<TypeStore>({
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const form = useForm<TypeRegistrationForm>({
     mode: "onChange",
-    resolver: zodResolver(storeSchema),
+    resolver: zodResolver(registrationSchema),
+    defaultValues: {
+      ceoName: data.ceoName,
+      name: data.name,
+      landline: data.landline,
+      license: data.license,
+      address: data.address,
+      image: data.image,
+    },
   });
 
   useEffect(() => {
@@ -24,7 +37,7 @@ export default function useStoreApplyForm(
   const reapplyWithImg = storesQueries.useReapplyWithImg();
 
   const handleReapplyWithImage = (
-    result: TypeStore,
+    result: TypeRegistrationForm,
     reapplyImgHandler: () => void
   ) => {
     const formData = new FormData();
@@ -40,26 +53,25 @@ export default function useStoreApplyForm(
         registrationId: data.registrationId.toString(),
         body: formData,
       },
-      { onSuccess: reapplyImgHandler }
+      { onSuccess: reapplyImgHandler, onError: () => setIsSubmitted(false) }
     );
   };
 
-  const handleReapply = (result: TypeStore) => {
+  const handleReapply = (result: TypeRegistrationForm) => {
     reapply.mutate(
       {
         registrationId: data.registrationId.toString(),
         ...result,
       },
-      { onSuccess: () => close() }
+      { onSuccess: () => close(), onError: () => setIsSubmitted(false) }
     );
   };
 
   const handleSubmit = (
-    result: TypeStore,
-    prevHandler: () => void,
+    result: TypeRegistrationForm,
     reapplyImgHandler: () => void
   ) => {
-    prevHandler();
+    setIsSubmitted(true);
 
     if (typeof result.image === "string") {
       handleReapply(result);
@@ -68,5 +80,5 @@ export default function useStoreApplyForm(
     }
   };
 
-  return { form, submit: handleSubmit };
+  return { form, submit: handleSubmit, isSubmitted };
 }

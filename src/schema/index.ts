@@ -8,9 +8,14 @@ export const emailSchema = z
 export const phoneSchema = z
   .string()
   .min(1, "전화번호를 입력해주세요.")
-  .refine((val) => val.length < 1 || /^01[016789]-\d{4}-\d{4}$/.test(val), {
-    message: "유효하지 않은 휴대폰 번호 형식입니다.",
-  });
+  .refine(
+    (val) =>
+      val.length < 1 ||
+      /^(01[016789]-\d{4}-\d{4}|02-\d{4}-\d{4}|0\d{2}-\d{3}-\d{4})$/.test(val),
+    {
+      message: "유효하지 않은 전화번호 형식입니다.",
+    }
+  );
 
 export const passwordSchema = z
   .string()

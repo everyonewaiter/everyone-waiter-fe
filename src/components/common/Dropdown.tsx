@@ -118,7 +118,7 @@ export default function Dropdown({
           onClick={(e) => e.stopPropagation()}
         >
           <Suspense fallback={<Spinner />}>
-            <div className="w-full">
+            <div className="flex w-full flex-col gap-1">
               {data?.map((item) => (
                 <DropdownMenuItem
                   key={item}

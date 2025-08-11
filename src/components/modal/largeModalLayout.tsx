@@ -49,7 +49,7 @@ export default function ModalWithTitle({
         )}
       >
         {title && (
-          <div className="flex items-center justify-between pb-6 md:pb-5 lg:pb-8">
+          <div className="flex items-center justify-between pb-5">
             <h1 className="text-gray-0 font-semibold md:text-base lg:text-2xl">
               {title}
             </h1>
@@ -90,12 +90,14 @@ function Layout({
 interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color"> {
   color?: string;
-  onClick: () => void;
-  type?: "submit" | "button";
   isOutlined?: boolean;
 }
 
-function ModalButton({ children, ...props }: PropsWithChildren<ButtonProps>) {
+function ModalButton({
+  children,
+  type,
+  ...props
+}: PropsWithChildren<ButtonProps>) {
   return (
     <ResponsiveButton
       responsiveButtons={{
@@ -108,6 +110,7 @@ function ModalButton({ children, ...props }: PropsWithChildren<ButtonProps>) {
       }}
       color={props.color!}
       variant={props.isOutlined ? "outline" : "default"}
+      type={type ?? "button"}
       {...props}
     >
       {children}
