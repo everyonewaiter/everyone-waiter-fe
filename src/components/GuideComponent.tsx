@@ -12,7 +12,6 @@ interface IProps {
     size: number;
   };
   gap?: string;
-  isFromHome?: boolean;
   buttonText?: string;
   href: string;
 }
@@ -22,7 +21,6 @@ export default function GuideComponent({
   subtitle,
   image,
   gap,
-  isFromHome,
   buttonText,
   href,
 }: IProps) {
@@ -78,7 +76,7 @@ export default function GuideComponent({
           }}
           commonClassName="w-full relative"
         >
-          {buttonText || (isFromHome ? "매장 등록하기" : " 내 신청 현황 보기")}
+          {buttonText || "매장 등록하기"}
         </ResponsiveButton>
       </div>
     </div>
