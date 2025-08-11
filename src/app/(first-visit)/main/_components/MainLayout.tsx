@@ -9,10 +9,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
     <>
       <header className="hidden flex-col items-center justify-between md:flex md:gap-4 md:px-6 md:pt-5 lg:gap-6 lg:px-15 lg:pt-10">
         <div className="flex w-full items-center justify-between">
-          <Link
-            href="/main"
-            className="flex w-full items-center md:gap-3 lg:gap-5"
-          >
+          <Link href="/main" className="flex items-center md:gap-3 lg:gap-5">
             <Logo
               width={60}
               height={60}

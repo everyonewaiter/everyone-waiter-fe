@@ -86,17 +86,19 @@ export default function Page() {
                   />
                 </div>
               ))}
-              <div className="flex flex-col gap-2">
-                <Label>반려 사유 선택</Label>
-                <Dropdown
-                  data={REJECT_REASONS}
-                  defaultText=""
-                  setActive={setActive}
-                  active={active}
-                  triggerClassName="!w-full rounded-[12px] !h-12 font-400"
-                  className="!font-medium lg:w-[476px]"
-                />
-              </div>
+
+              {data?.status !== "APPROVE" && (
+                <div className="flex flex-col gap-2">
+                  <Label>반려 사유 선택</Label>
+                  <Dropdown
+                    data={REJECT_REASONS}
+                    defaultText=""
+                    setActive={setActive}
+                    active={active}
+                    triggerClassName="h-9 rounded-[8px] md:h-9 md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:py-3 lg:pr-3 lg:pl-4 lg:text-sm lg:text-[15px] justify-between"
+                  />
+                </div>
+              )}
               <div className="mb-8 flex flex-col gap-2">
                 <Label>사업자 등록증</Label>
                 {data?.image && (
@@ -119,42 +121,44 @@ export default function Page() {
           </div>
         )}
       </div>
-      <div className="flex flex-row items-center justify-between gap-2 pt-6 md:pt-5 lg:gap-3 lg:pt-8">
-        <ResponsiveButton
-          type="button"
-          color="grey"
-          responsiveButtons={{
-            lg: {
-              buttonSize: "xl",
-              className: "!text-lg !font-semibold !h-14",
-            },
-            md: { buttonSize: "sm", className: "!h-9" },
-            sm: { buttonSize: "sm", className: "!h-10" },
-          }}
-          commonClassName="w-full"
-          onClick={() => submitHandler("reject")}
-          disabled={isSubmitted}
-        >
-          반려하기
-        </ResponsiveButton>
-        <ResponsiveButton
-          type="button"
-          color="primary"
-          responsiveButtons={{
-            lg: {
-              buttonSize: "xl",
-              className: "!text-lg !font-semibold !h-14",
-            },
-            md: { buttonSize: "sm", className: "!h-10" },
-            sm: { buttonSize: "sm", className: "!h-10" },
-          }}
-          commonClassName="w-full"
-          onClick={() => submitHandler("approve")}
-          disabled={isSubmitted}
-        >
-          승인하기
-        </ResponsiveButton>
-      </div>
+      {(data?.status === "APPLY" || data?.status === "REAPPLY") && (
+        <div className="flex flex-row items-center justify-between gap-2 pt-6 md:pt-5 lg:gap-3 lg:pt-8">
+          <ResponsiveButton
+            type="button"
+            color="grey"
+            responsiveButtons={{
+              lg: {
+                buttonSize: "xl",
+                className: "!text-lg !font-semibold !h-14",
+              },
+              md: { buttonSize: "sm", className: "!h-9" },
+              sm: { buttonSize: "sm", className: "!h-10" },
+            }}
+            commonClassName="w-full"
+            onClick={() => submitHandler("reject")}
+            disabled={isSubmitted}
+          >
+            반려하기
+          </ResponsiveButton>
+          <ResponsiveButton
+            type="button"
+            color="primary"
+            responsiveButtons={{
+              lg: {
+                buttonSize: "xl",
+                className: "!text-lg !font-semibold !h-14",
+              },
+              md: { buttonSize: "sm", className: "!h-10" },
+              sm: { buttonSize: "sm", className: "!h-10" },
+            }}
+            commonClassName="w-full"
+            onClick={() => submitHandler("approve")}
+            disabled={isSubmitted}
+          >
+            승인하기
+          </ResponsiveButton>
+        </div>
+      )}
     </div>
   );
 }
