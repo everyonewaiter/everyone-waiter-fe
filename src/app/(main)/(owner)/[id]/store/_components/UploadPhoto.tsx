@@ -9,10 +9,11 @@ interface IProps {
   // imageFile?: File;
   handleFile: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  preventPreview?: boolean;
 }
 
 const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
-  ({ image, handleFile, className }, ref) => {
+  ({ image, handleFile, className, preventPreview }, ref) => {
     const [open, setOpen] = useState(false);
 
     const handlePreview = () => setOpen(true);
@@ -64,7 +65,7 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
             className
           )}
           onClick={() =>
-            image
+            image && preventPreview
               ? handlePreview()
               : (ref as RefObject<HTMLInputElement>).current?.click()
           }

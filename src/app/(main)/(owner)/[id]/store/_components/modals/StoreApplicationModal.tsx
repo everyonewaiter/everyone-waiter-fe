@@ -26,21 +26,16 @@ export default function StoreApplicationModal({
 
   const [active, setActive] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isPhotoUpdating, setIsPhotoUpdating] = useState(false);
+  const [image, setImage] = useState(item.image);
 
-  const { form, submit } = useStoreApplyForm(item, close);
+  const { form, submit, isSubmitted } = useStoreApplyForm(item, close);
 
   return (
     <ModalWithTitle onClose={close} title="매장 등록 신청 현황">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit((data) =>
-            submit(
-              data,
-              () => setIsSubmitted(true),
-              () => navigate.push(`/${storeId}`)
-            )
+            submit(data, () => navigate.push(`/${storeId}`))
           )}
         >
           <ModalWithTitle.Layout>
@@ -61,36 +56,41 @@ export default function StoreApplicationModal({
               {active === 1 && (
                 <PhotoForBusiness
                   isUpdating={isUpdating}
-                  isPhotoUpdating={isPhotoUpdating}
-                  onResetPhoto={() => setIsPhotoUpdating(true)}
-                  imageUrl={item.image}
+                  image={image}
+                  onSetImage={setImage}
                 />
               )}
             </div>
           </ModalWithTitle.Layout>
-          <div className="w-full">
-            {isAccepted ? (
-              <ModalWithTitle.Button
-                type="button"
-                color="grey"
-                onClick={() => (isUpdating ? null : setIsUpdating(true))}
-                disabled
-              >
-                승인됨
-              </ModalWithTitle.Button>
-            ) : (
-              <ModalWithTitle.Button
-                type={isUpdating ? "submit" : "button"}
-                color={isUpdating ? "primary" : "black"}
-                onClick={() => (isUpdating ? null : setIsUpdating(true))}
-                disabled={isSubmitted}
-              >
-                {isUpdating && !isSubmitted && "재신청하기"}
-                {!isUpdating && !isSubmitted && "수정하고 재신청하기"}
-                {isSubmitted && <Spinner />}
-              </ModalWithTitle.Button>
-            )}
-          </div>
+          {item.status === "REJECT" && (
+            <div className="w-full md:pt-4 lg:pt-0">
+              {isAccepted && (
+                <ModalWithTitle.Button type="button" color="grey" disabled>
+                  승인됨
+                </ModalWithTitle.Button>
+              )}
+              {isUpdating ? (
+                <ModalWithTitle.Button
+                  type="submit"
+                  color="primary"
+                  disabled={isSubmitted}
+                >
+                  {isSubmitted ? <Spinner /> : "재신청하기"}
+                </ModalWithTitle.Button>
+              ) : (
+                <ModalWithTitle.Button
+                  type="button"
+                  color="black"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsUpdating(true);
+                  }}
+                >
+                  수정하고 재신청하기
+                </ModalWithTitle.Button>
+              )}
+            </div>
+          )}
         </form>
       </Form>
     </ModalWithTitle>

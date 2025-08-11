@@ -25,6 +25,15 @@ export const storeSchema = z.object({
   createdAt: z.string(),
 });
 
+export const registrationSchema = storeSchema.pick({
+  name: true,
+  ceoName: true,
+  address: true,
+  license: true,
+  landline: true,
+  image: true,
+});
+
 export const storeInfoSchema = storeSchema.pick({
   name: true,
   address: true,
@@ -56,6 +65,7 @@ export const addStoreSchema = storeSchema
     }
   });
 
+export type TypeRegistrationForm = z.infer<typeof registrationSchema>;
 export type TypeStore = z.infer<typeof storeSchema>;
 export type TypeCategory = z.infer<typeof CategorySchema>;
 export type TypeStoreInfo = z.infer<typeof storeInfoSchema>;
