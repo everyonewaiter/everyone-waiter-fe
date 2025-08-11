@@ -1,75 +1,67 @@
-"use client";
+import { sendAuthMail, verifyEmail } from "@/lib/api/auth.api";
+import { redirect } from "next/navigation";
+import Resend from "./_components/Resend";
 
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
-import { useMutation } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { verifyEmail } from "@/lib/api/auth.api";
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ token?: string; email: string }>;
+}) {
+  const { token, email } = (await searchParams) as {
+    token: string;
+    email: string;
+  };
 
-export default function Page() {
-  const navigate = useRouter();
-  const searchParams = useSearchParams();
-  const accessToken = searchParams.get("token");
-  const [errorCode, setErrorCode] = useState<number | null>(null);
-
-  const { mutate } = useMutation({
-    mutationFn: verifyEmail,
-    onSuccess: () => {
-      alert("인증되었습니다.");
-      navigate.push("/login");
-    },
-    onError: (error) => {
-      const { code, message } = (error as any).response.data;
-      if ((error as any).response.status === 400) {
-        if (code === "ALREADY_VERIFIED_EMAIL") {
-          alert(message);
-          navigate.push("/login");
-        } else if (code === "EXPIRED_VERIFICATION_EMAIL") {
-          setErrorCode(400);
+  const handleResend = () => {
+    sendAuthMail({ email })
+      .then(() => redirect("/login"))
+      .catch((e) => {
+        const errorCode = (e as any)?.response?.data?.code;
+        if (errorCode === "ALREADY_VERIFIED_EMAIL") {
+          // eslint-disable-next-line
+          alert("이미 이메일 인증이 완료된 계정입니다.");
+          redirect("/login");
+        } else if (errorCode === "ACCOUNT_NOT_FOUND") {
+          // eslint-disable-next-line
+          alert("잘못된 접근입니다. 이메일을 확인해주세요.");
+          redirect("/login");
         }
-      } else if ((error as any).response.status === 404) {
-        setErrorCode(404);
-      } else {
-        setErrorCode((error as any).response.status);
-      }
-    },
-  });
+      });
+  };
 
-  useEffect(() => {
-    if (accessToken) {
-      mutate({ token: accessToken });
+  if (!token) {
+    return (
+      <Resend
+        title="잘못된 접근입니다."
+        subtitle="아래 재발송 버튼을 눌러 인증 이메일을 다시 받아보세요."
+        onClick={handleResend}
+      />
+    );
+  }
+
+  try {
+    await verifyEmail({ token });
+    // eslint-disable-next-line
+    alert("인증 되었습니다.");
+    redirect("/login");
+  } catch (error) {
+    const code = (error as any)?.response?.data.code;
+    if (code === "EXPIRED_VERIFICATION_EMAIL" || code === "ACCOUNT_NOT_FOUND") {
+      return (
+        <Resend
+          title="잘못된 접근입니다."
+          subtitle="아래 재발송 버튼을 눌러 인증 메일을 다시 받아보세요."
+          onClick={handleResend}
+        />
+      );
     }
-  }, [searchParams, accessToken]);
 
-  if (![400, 404].includes(errorCode!)) return null;
+    if (code === "ALREADY_VERIFIED_EMAIL") {
+      // eslint-disable-next-line
+      alert("이미 이메일 인증이 완료된 계정입니다.");
+      redirect("/login");
+    }
 
-  return (
-    <>
-      <div className="flex flex-col gap-2 text-center">
-        <strong className="text-gray-0 text-2xl font-semibold sm:text-lg">
-          {errorCode === 400 && "이메일 인증 유효기간이 만료되었습니다."}
-          {errorCode === 404 && "이메일 인증이 되지 않았어요!"}
-        </strong>
-        <span className="font-regular text-base whitespace-pre-line text-gray-300 sm:text-sm">
-          {errorCode === 400 &&
-            "아래 재발송 버튼을 눌러 인증 메일을 다시 받아보세요."}
-          {errorCode === 404 &&
-            "회원가입을 완료한 뒤, 하루가 지났다면\n아래 재발송 버튼을 눌러, 이메일 인증을 완료해주세요."}
-        </span>
-      </div>
-      <ResponsiveButton
-        type="button"
-        responsiveButtons={{
-          lg: { buttonSize: "lg" },
-          md: { buttonSize: "md" },
-          sm: { buttonSize: "md" },
-        }}
-        commonClassName="mt-8 font-regular"
-      >
-        이메일 재발송하기
-      </ResponsiveButton>
-    </>
-  );
+    redirect("/login");
+  }
 }

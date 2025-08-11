@@ -112,6 +112,7 @@ export default function Signup() {
           className="mb-5 md:h-[94px] md:w-[154px] lg:h-[124px] lg:w-[200px]"
           width={154}
           height={94}
+          priority
         />
       </div>
       <Form {...form}>

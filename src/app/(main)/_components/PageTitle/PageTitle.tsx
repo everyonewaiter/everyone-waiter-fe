@@ -9,7 +9,7 @@ const PopupButton = dynamic(() => import("./PopupButton"), {
 
 interface IProps {
   initialTitle?: string;
-  storeId: string;
+  storeId?: string;
   className?: string;
 }
 

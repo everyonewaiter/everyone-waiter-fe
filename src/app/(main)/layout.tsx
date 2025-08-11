@@ -23,13 +23,14 @@ export default async function Layout({
 
   const { id } = await params;
   const token = await getToken("accessToken");
+  const permission = await getToken("permission");
 
   await queryClient.prefetchQuery({
     queryKey: ["store-list"],
     queryFn: () => getStoreList(),
   });
 
-  if (!token) redirect("/");
+  if (!token || permission !== "OWNER") redirect("/");
 
   return (
     <div className="flex h-screen w-screen flex-col bg-white md:flex-row md:bg-[#F5F5F5]">

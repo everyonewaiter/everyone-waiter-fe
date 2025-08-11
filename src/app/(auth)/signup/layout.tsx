@@ -30,6 +30,8 @@ export default function SignupLayout({ children }: { children: ReactNode }) {
             width={1152}
             height={1032}
             priority
+            fetchPriority="high"
+            sizes="(min-width:1024px) 50vw, 100vw"
           />
         </div>
       </div>

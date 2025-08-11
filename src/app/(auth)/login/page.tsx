@@ -41,8 +41,8 @@ export default function Login() {
             form.setError("password", { type: "value", message });
             form.setFocus("email");
           }
+          setIsSubmitted(false);
         },
-        onSettled: () => setIsSubmitted(false),
       }
     );
   };

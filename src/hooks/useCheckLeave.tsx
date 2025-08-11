@@ -1,56 +1,55 @@
 "use client";
 
-/* eslint-disable */
-
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function useCheckLeave(isActive: boolean) {
+export default function useLeaveGuard(shouldBlock: boolean) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isActive) {
-      // 항상 cleanup 함수를 반환해서 ESLint 경고 방지
-      return () => {};
-    }
+    if (!shouldBlock) return;
 
-    const warningMessage = "작성하던 내용이 모두 사라집니다. 계속하시겠습니까?";
+    const msg = "작성하던 내용이 모두 사라집니다. 계속하시겠습니까?";
 
-    // 1. 새로고침 / 창 닫기 방지
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = warningMessage;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
     };
+    window.addEventListener("beforeunload", onBeforeUnload);
 
-    // 2. 브라우저 뒤로가기 방지
-    const handlePopState = () => {
-      const confirmLeave = window.confirm(warningMessage);
-      if (!confirmLeave) {
-        history.pushState(null, "", window.location.href);
+    window.history.pushState({ guard: true }, "", window.location.href);
+
+    const onPopState = () => {
+      // eslint-disable-next-line no-alert
+      const ok = window.confirm(msg);
+      if (ok) {
+        window.removeEventListener("popstate", onPopState);
+        window.history.back();
+      } else {
+        window.history.forward();
       }
     };
+    window.addEventListener("popstate", onPopState);
 
-    // 3. router.push 인터셉트
     const originalPush = router.push;
-    const guardedPush = (href: string) => {
-      const confirmLeave = window.confirm(warningMessage);
-      if (confirmLeave) {
-        originalPush(href);
-      }
-    };
+    const originalReplace = router.replace;
+    (router as any).push = (href: string, opts?: any) =>
+      // eslint-disable-next-line no-alert
+      !shouldBlock || window.confirm(msg)
+        ? originalPush(href, opts)
+        : undefined;
+    (router as any).replace = (href: string, opts?: any) =>
+      // eslint-disable-next-line no-alert
+      !shouldBlock || window.confirm(msg)
+        ? originalReplace(href, opts)
+        : undefined;
 
-    // 이벤트 등록
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("popstate", handlePopState);
-    history.pushState(null, "", window.location.href);
-
-    // router.push를 가드로 교체
-    (router as any).push = guardedPush;
-
+    // eslint-disable-next-line consistent-return
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      window.removeEventListener("popstate", onPopState);
       (router as any).push = originalPush;
+      (router as any).replace = originalReplace;
     };
-  }, [isActive, router]);
+  }, [shouldBlock, router]);
 }
