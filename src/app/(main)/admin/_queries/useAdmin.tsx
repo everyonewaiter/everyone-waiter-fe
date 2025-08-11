@@ -11,6 +11,7 @@ import {
   updateDetailAccount,
 } from "../_api/admin.api";
 import { accountKeys } from "./keys";
+import { storeKeys } from "../../(owner)/[id]/store/_queries/keys";
 
 const queryClient = getQueryClient();
 
@@ -71,6 +72,9 @@ const useRejectStore = () =>
       queryClient.invalidateQueries({
         queryKey: accountKeys.storeDetail(variables.id),
       });
+      queryClient.invalidateQueries({
+        queryKey: storeKeys.list(1),
+      });
     },
   });
 
@@ -81,6 +85,9 @@ const useApproveStore = () =>
       queryClient.invalidateQueries({ queryKey: accountKeys.allToApprove() });
       queryClient.invalidateQueries({
         queryKey: accountKeys.storeDetail(variables.id),
+      });
+      queryClient.invalidateQueries({
+        queryKey: storeKeys.list(1),
       });
     },
   });
