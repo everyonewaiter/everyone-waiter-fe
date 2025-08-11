@@ -21,6 +21,7 @@ export default function useCreateForm() {
       landline: "",
       license: "",
       image: "",
+      detailAddress: "",
     },
   });
 
