@@ -1,6 +1,7 @@
 import { KeyType } from "./index";
 
 export function getClientCookie(key: KeyType) {
+  if (typeof document === "undefined") return null;
   return (
     document.cookie
       .split("; ")
