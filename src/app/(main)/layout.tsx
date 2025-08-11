@@ -30,7 +30,7 @@ export default async function Layout({
     queryFn: () => getStoreList(),
   });
 
-  if (!token || permission !== "OWNER") redirect("/");
+  if (!token || permission === "USER") redirect("/");
 
   return (
     <div className="flex h-screen w-screen flex-col bg-white md:flex-row md:bg-[#F5F5F5]">
