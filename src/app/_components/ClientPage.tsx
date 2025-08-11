@@ -12,21 +12,21 @@ interface IProps {
 
 export default function ClientPage({ token, permission }: IProps) {
   const navigate = useRouter();
-  const { setIsLoggedIn } = useAuthStore();
+  const { setIsLoggedIn, setFirstStoreId } = useAuthStore();
 
   const { data, isLoading } = storesQueries.useStoresList(!!token);
   const firstStoreId = data?.stores?.[0]?.storeId;
 
   useEffect(() => {
     setIsLoggedIn(!!token);
-  }, [token, setIsLoggedIn]);
+    setFirstStoreId(firstStoreId!);
+    // eslint-disable-next-line
+  }, [token]);
 
   useEffect(() => {
     if (!isLoading) {
       if (permission === "ADMIN") {
         navigate.replace("/admin/users");
-      } else if (!token) {
-        navigate.replace("/login");
       } else if (permission === "OWNER") {
         navigate.replace(`/${firstStoreId}`);
       } else if (permission === "USER") {

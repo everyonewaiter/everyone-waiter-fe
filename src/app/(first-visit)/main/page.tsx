@@ -1,10 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
 import GuideComponent from "@/components/GuideComponent";
 import Loading from "@/components/Loading";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import useAuthStore from "@/stores/useAuthStore";
 import MainLayout from "./_components/MainLayout";
 
 export default function Page() {
@@ -14,6 +15,12 @@ export default function Page() {
     isLoading,
     isError,
   } = storesQueries.useRegistrationList();
+
+  const { firstStoreId } = useAuthStore();
+
+  if (firstStoreId) {
+    navigate.push("/main/stores");
+  }
 
   useEffect(() => {
     if (!isLoading && (registerData?.count ?? 0) > 1) {
@@ -62,7 +69,8 @@ export default function Page() {
             subtitle="관리자의 승인이 완료될 때까지 1~2일 소요될\n예정이니 양해 부탁드립니다."
             image={{ url: "/gif/hourglass.gif", size: 160 }}
             gap="gap-[5px]"
-            href={`/main/stores?id=${registerData?.content?.[0].registrationId}`}
+            href="/main/stores"
+            buttonText="내 신청 현황 보러가기"
           />
         )}
         {!isLoading && firstStatus === "REJECT" && (
@@ -72,6 +80,7 @@ export default function Page() {
             image={{ url: "/gif/rejected.gif", size: 160 }}
             gap="gap-[5px]"
             href="/main/stores"
+            buttonText="내 신청 현황 보러가기"
           />
         )}
       </div>

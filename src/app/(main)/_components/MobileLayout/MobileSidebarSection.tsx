@@ -24,7 +24,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
   const navigate = useRouter();
 
   const { user } = useStore(useAuthStore, (state) => state);
-  const permission = user?.permission || "USER";
+  const permission = user?.permission || "OWNER";
   const pathname = usePathname();
   const comparePath = getComparePath(pathname, permission);
 
