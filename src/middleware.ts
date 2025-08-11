@@ -22,12 +22,12 @@ export function middleware(req: NextRequest) {
 
   // NOTE: userPaths 외 접근 제한
   if (permission === "USER" && !accessToken) {
-    return NextResponse.redirect(new URL("/not-found", req.url));
+    return NextResponse.redirect(new URL("/main"));
   }
 
   // NOTE: 관리자 페이지 외 접근 제한
   if (permission === "ADMIN" && !accessToken) {
-    return NextResponse.redirect(new URL("/not-found", req.url));
+    return NextResponse.redirect("/admin/users");
   }
 
   return NextResponse.next();
