@@ -11,7 +11,7 @@ interface IProps {
 }
 
 export default function ClientPage({ token, permission }: IProps) {
-  const router = useRouter();
+  const navigate = useRouter();
   const { setIsLoggedIn } = useAuthStore();
 
   const { data, isLoading } = storesQueries.useStoresList(!!token);
@@ -24,13 +24,15 @@ export default function ClientPage({ token, permission }: IProps) {
   useEffect(() => {
     if (!isLoading) {
       if (permission === "ADMIN") {
-        router.replace("/admin/users");
+        navigate.replace("/admin/users");
       } else if (!token) {
-        router.replace("/login");
-      } else if (firstStoreId) {
-        router.replace(`/${firstStoreId}`);
+        navigate.replace("/login");
+      } else if (permission === "OWNER") {
+        navigate.replace(`/${firstStoreId}`);
+      } else if (permission === "USER") {
+        navigate.replace("/main");
       } else {
-        router.replace("/main");
+        navigate.replace("/login");
       }
     }
     // eslint-disable-next-line
