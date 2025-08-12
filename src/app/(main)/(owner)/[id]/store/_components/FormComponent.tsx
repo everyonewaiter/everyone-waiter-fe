@@ -33,7 +33,7 @@ export default function FormComponent({ data }: IProps) {
     removeOrigin,
   } = useStoreForm(data!, data.storeId);
 
-  useCheckLeave(isEditing);
+  useCheckLeave(form.formState.isDirty);
 
   const handleSubmit = () => {
     submitHandler(updateInfo, () => {
@@ -53,22 +53,29 @@ export default function FormComponent({ data }: IProps) {
             form={form}
             label="상호명"
             name="name"
-            readOnly
+            disabled
             placeholder="상호명"
           />
           <LabeledInput
             form={form}
             label="사업자 번호"
             name="license"
-            readOnly
+            disabled
             placeholder="사업자 번호"
           />
           <LabeledInput
             form={form}
             label="주소"
             name="address"
-            readOnly
+            disabled
             placeholder="주소"
+          />
+          <LabeledInput
+            form={form}
+            label="매장 전화번호"
+            name="landline"
+            disabled={!isEditing}
+            placeholder="매장 전화번호"
           />
           <Label>원산지</Label>
           {isEditing || fields?.length > 0 ? (

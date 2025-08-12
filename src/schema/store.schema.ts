@@ -38,6 +38,7 @@ export const storeInfoSchema = storeSchema.pick({
   name: true,
   address: true,
   license: true,
+  landline: true,
   origins: true,
 });
 

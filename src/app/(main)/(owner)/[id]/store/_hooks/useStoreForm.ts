@@ -8,11 +8,12 @@ export default function useStoreForm(data: StoreInfoDetail, storeId: string) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const form = useForm<TypeStoreInfo>({
-    mode: "onSubmit",
+    mode: "onChange",
     resolver: zodResolver(storeInfoSchema),
     values: {
       name: data.name,
       license: data.license,
+      landline: data.landline,
       address: data.address,
       origins: data.setting.countryOfOrigins ?? [],
     },
@@ -34,7 +35,7 @@ export default function useStoreForm(data: StoreInfoDetail, storeId: string) {
       {
         storeId,
         body: {
-          landline: data?.landline!,
+          landline: form.watch("landline"),
           setting: {
             ...data?.setting!,
             countryOfOrigins: origins.map((el) => ({
