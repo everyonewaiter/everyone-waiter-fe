@@ -58,35 +58,15 @@ export default function Signup() {
 
   // NOTE - 인증 요청
   const handleAuthentication = (phoneNumber: string) => {
-    dispatch({ type: "CLICK_PHONE_AUTH_BTN" });
-
-    // 알림톡 발송
-    mutateSendPhoneAuthCode.mutate(
-      { phoneNumber },
-      { onSuccess: () => dispatch({ type: "AUTH_REQUEST_SUCCESS" }) }
-    );
+    mutateSendPhoneAuthCode.mutate({ phoneNumber });
   };
 
   // NOTE - 인증 확인
   const handleCheckAuth = (value: string) => {
-    dispatch({ type: "CLICK_AUTH_CODE_BTN" });
-
-    // 휴대폰 + 인증번호 인증
-    mutateVerifyAuthCode.mutate(
-      {
-        phoneNumber: form.watch("phone").split("-").join(""),
-        code: Number(value),
-      },
-      {
-        onSuccess: () => {
-          // eslint-disable-next-line no-alert
-          alert("인증되었습니다.");
-          dispatch({ type: "VERIFY_SUCCESS" });
-          form.clearErrors("phone");
-          form.clearErrors("authNumber");
-        },
-      }
-    );
+    mutateVerifyAuthCode.mutate({
+      phoneNumber: form.watch("phone").split("-").join(""),
+      code: Number(value),
+    });
   };
 
   const handleSubmmit = () => {

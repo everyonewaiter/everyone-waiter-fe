@@ -86,6 +86,8 @@ export default function useSignupReducer() {
           ...state,
           authBtnLoading: false,
           authDisabled: false,
+          authBtnDisabled: false,
+          phoneBtnDisabled: false,
         };
       case "DECREASE_TIME": {
         const next = Math.max(0, state.authTime - 1);
