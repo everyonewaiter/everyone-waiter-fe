@@ -15,10 +15,10 @@ import Origins from "./Origins";
 import useStoreForm from "../_hooks/useStoreForm";
 
 interface IProps {
-  data: StoreInfoDetail;
+  storeId: string;
 }
 
-export default function FormComponent({ data }: IProps) {
+export default function FormComponent({ storeId }: IProps) {
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -31,7 +31,7 @@ export default function FormComponent({ data }: IProps) {
     submitHandler,
     appendOrigin,
     removeOrigin,
-  } = useStoreForm(data!, data.storeId);
+  } = useStoreForm(storeId);
 
   useCheckLeave(form.formState.isDirty);
 
@@ -123,7 +123,7 @@ export default function FormComponent({ data }: IProps) {
               >
                 <Plus className="h-5 w-5 text-gray-400" />
               </ResponsiveButton>
-              <div className="flex gap-2">
+              <div className="mt-6 flex items-center gap-2 md:mt-8">
                 <ResponsiveButton
                   type="button"
                   variant="outline"
@@ -131,16 +131,15 @@ export default function FormComponent({ data }: IProps) {
                   responsiveButtons={{
                     sm: {
                       buttonSize: "sm",
-                      className: "mt-6 !h-[34px] !gap-2 items-center md:hidden",
+                      className: "!h-[34px] !gap-2 items-center",
                     },
                     md: {
                       buttonSize: "sm",
-                      className:
-                        "!h-[34px] hidden md:flex items-center !gap-1 mt-6",
+                      className: "items-center !gap-1",
                     },
                     lg: {
                       buttonSize: "lg",
-                      className: "mt-8 !font-medium border-gray-0",
+                      className: "!font-medium border-gray-0",
                     },
                   }}
                   disabled={isSubmitted}
@@ -153,15 +152,15 @@ export default function FormComponent({ data }: IProps) {
                   responsiveButtons={{
                     sm: {
                       buttonSize: "sm",
-                      className: "flex mt-6 !h-[34px] !gap-2 items-center",
+                      className: "!h-[34px] !gap-2 items-center",
                     },
                     md: {
                       buttonSize: "sm",
-                      className: "!h-[34px] flex items-center !gap-1",
+                      className: "items-center !gap-1",
                     },
                     lg: {
                       buttonSize: "lg",
-                      className: "mt-8",
+                      className: "!font-medium border-gray-0",
                     },
                   }}
                   commonClassName="w-full"
