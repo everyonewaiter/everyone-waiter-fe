@@ -41,7 +41,7 @@ export default function Page() {
   return (
     <div className="h-full w-full">
       <div className="mt-10 flex w-full flex-col items-center overflow-y-scroll md:mt-5 md:h-[calc(100%-45px)] lg:mt-10 lg:h-[calc(100%-100px)]">
-        <div className="w-80 md:w-[272px] lg:w-120">
+        <div className="w-80 md:w-120">
           <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">
             카테고리
           </h1>

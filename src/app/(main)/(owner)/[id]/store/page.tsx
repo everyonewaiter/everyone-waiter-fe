@@ -13,13 +13,13 @@ export default async function Page({
 
   const { id } = await params;
 
-  const storeDetail = await queryClient.fetchQuery({
+  await queryClient.prefetchQuery({
     queryKey: storeKeys.detail(id),
     queryFn: () => getStoreInfoDetail(id),
   });
 
   return (
-    <div className="flex w-80 flex-col md:w-[272px] lg:w-[480px]">
+    <div className="flex w-80 flex-col md:w-[480px]">
       <div className="min-h-full justify-center">
         <div className="flex h-full w-full flex-col items-center md:mt-6 lg:mt-10">
           <div className="w-full">
@@ -31,7 +31,7 @@ export default async function Page({
               <span>변경된 정보가 있다면 언제든지 수정해 주세요.</span>
             </div>
             <HydrationBoundary state={dehydrate(queryClient)}>
-              <FormComponent data={storeDetail} />
+              <FormComponent storeId={id} />
             </HydrationBoundary>
           </div>
         </div>
