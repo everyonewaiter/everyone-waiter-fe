@@ -86,11 +86,7 @@ const useReapplyWithImg = () =>
 const useUpdateInfo = () =>
   useMutation({
     mutationFn: putUpdateStore,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: storeKeys.detail(variables.storeId),
-      });
-    },
+
     onMutate: async (variables) => {
       await queryClient.cancelQueries({
         queryKey: storeKeys.detail(variables.storeId),
@@ -103,6 +99,11 @@ const useUpdateInfo = () =>
         variables.body
       );
       return { prevData };
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: storeKeys.detail(variables.storeId),
+      });
     },
     onError: (_, variables, context) => {
       queryClient.setQueryData(

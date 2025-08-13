@@ -4,7 +4,7 @@ import cn from "@/lib/utils";
 import Button, { ButtonColors } from "./Button";
 import buttonVariants from "./styles";
 
-type ButtonSize = "sm" | "md" | "lg" | "xl" | "custom";
+export type ButtonSize = "sm" | "md" | "lg" | "xl" | "custom";
 type ScreenSize = "sm" | "md" | "lg";
 
 interface IProps
