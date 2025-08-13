@@ -1,9 +1,10 @@
 "use client";
 
 import { Document, Page, pdfjs } from "react-pdf";
+import { useEffect, useRef, useState } from "react";
 
 interface IProps {
-  file: string;
+  file: string | File;
 }
 
 export default function PdfViewer({ file }: IProps) {
@@ -12,9 +13,36 @@ export default function PdfViewer({ file }: IProps) {
     import.meta.url
   ).toString();
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState<number>(0);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return () => {};
+    const measure = () => setWidth(el.clientWidth);
+    measure();
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(measure);
+      ro.observe(el);
+      return () => ro.disconnect();
+    }
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
   return (
-    <Document file={file}>
-      <Page pageNumber={0} />
-    </Document>
+    <div
+      ref={containerRef}
+      className="w-full overflow-hidden rounded-[16px] border border-gray-600 object-cover"
+    >
+      <Document file={file}>
+        <Page
+          pageNumber={1}
+          width={Math.max(100, width)}
+          renderTextLayer={false}
+          renderAnnotationLayer={false}
+        />
+      </Document>
+    </div>
   );
 }

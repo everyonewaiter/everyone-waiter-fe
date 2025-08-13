@@ -25,7 +25,7 @@ export default async function Layout({
       <PageTitle initialTitle={PAGE_TITLES.OWNER.store} storeId={id} />
 
       <div className="h-full w-full lg:overflow-y-auto">
-        <div className="flex h-full w-full items-start justify-center py-6 md:items-center lg:items-start lg:py-10">
+        <div className="flex h-full w-full items-start justify-center py-6 lg:py-10">
           {children}
         </div>
       </div>

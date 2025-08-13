@@ -119,6 +119,7 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
             handleFile(value, (v) => form.setValue("image", v))
           }
           image={imageUrl ?? ""}
+          imageFile={form.watch("image")}
           className={cn(
             "h-[140px] max-w-full md:h-40 md:w-[348px] lg:w-100",
             form.formState.errors.image ? "border-primary" : ""

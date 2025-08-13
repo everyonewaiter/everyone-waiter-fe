@@ -10,23 +10,20 @@ interface IProps {
   imageFile?: File;
   handleFile: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  preventPreview?: boolean;
 }
 
 const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
-  ({ image, handleFile, className, imageFile, preventPreview }, ref) => {
+  ({ image, handleFile, className, imageFile }, ref) => {
     const [open, setOpen] = useState(false);
 
-    const handlePreview = () => setOpen(true);
-
     let previewContent = null;
-    if (imageFile?.type.includes("pdf")) {
-      previewContent = <PdfViewer file={image!} />;
+    if (imageFile?.type?.includes("pdf")) {
+      previewContent = <PdfViewer file={imageFile} />;
     } else if (image) {
       previewContent = (
         <Image
           src={image}
-          alt="사업자 등록중"
+          alt="사업자 등록증"
           width={400}
           height={160}
           className={cn("object-cover", className)}
@@ -59,6 +56,7 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
               (ref as RefObject<HTMLInputElement>).current?.click()
             }
             image={image!}
+            type={imageFile?.type.includes("pdf") ? "pdf" : "image"}
           />
         )}
         <button
@@ -68,8 +66,8 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
             className
           )}
           onClick={() =>
-            image && preventPreview
-              ? handlePreview()
+            image
+              ? setOpen(true)
               : (ref as RefObject<HTMLInputElement>).current?.click()
           }
         >
