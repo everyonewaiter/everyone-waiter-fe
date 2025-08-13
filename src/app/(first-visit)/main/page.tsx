@@ -1,11 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
 import GuideComponent from "@/components/GuideComponent";
 import Loading from "@/components/Loading";
-import useAuthStore from "@/stores/useAuthStore";
+import { getClientCookie, setClientCookie } from "@/lib/cookies/client";
 import MainLayout from "./_components/MainLayout";
 
 export default function Page() {
@@ -15,18 +14,9 @@ export default function Page() {
     isLoading,
     isError,
   } = storesQueries.useRegistrationList();
+  const { data: stores } = storesQueries.useStoresList(true);
 
-  const { firstStoreId } = useAuthStore();
-
-  if (firstStoreId) {
-    navigate.push("/main/stores");
-  }
-
-  useEffect(() => {
-    if (!isLoading && (registerData?.count ?? 0) > 1) {
-      navigate.replace("/");
-    }
-  }, [isLoading, registerData?.count, navigate]);
+  const permission = getClientCookie("permission");
 
   if (isLoading) {
     return (
@@ -34,6 +24,14 @@ export default function Page() {
         <Loading />
       </div>
     );
+  }
+
+  if (
+    (permission === "USER" && stores?.stores?.length! > 0) ||
+    permission === "OWNER"
+  ) {
+    setClientCookie("permission", "OWNER");
+    navigate.replace(`/${stores?.stores[0].storeId}`);
   }
 
   if (isError) {
