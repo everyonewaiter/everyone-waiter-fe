@@ -2,24 +2,27 @@ import Image from "next/image";
 import React, { ChangeEvent, RefObject, forwardRef, useState } from "react";
 import Icon from "@/components/common/Icon/Icon";
 import cn from "@/lib/utils";
+import PdfViewer from "@/app/(main)/create/_components/PdfViewer";
 import LicensePreview from "./modals/LicensePreview";
 
 interface IProps {
   image?: string;
-  // imageFile?: File;
+  imageFile?: File;
   handleFile: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   preventPreview?: boolean;
 }
 
 const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
-  ({ image, handleFile, className, preventPreview }, ref) => {
+  ({ image, handleFile, className, imageFile, preventPreview }, ref) => {
     const [open, setOpen] = useState(false);
 
     const handlePreview = () => setOpen(true);
 
     let previewContent = null;
-    if (image) {
+    if (imageFile?.type.includes("pdf")) {
+      previewContent = <PdfViewer file={image!} />;
+    } else if (image) {
       previewContent = (
         <Image
           src={image}
