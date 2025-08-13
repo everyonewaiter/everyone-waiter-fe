@@ -3,7 +3,7 @@
 
 import { Mutex } from "async-mutex";
 import axios, { AxiosInstance } from "axios";
-import { getToken } from "../cookies";
+import { getToken, setCookie } from "../cookies";
 import { getClientCookie, setClientCookie } from "../cookies/client";
 
 let refreshPromise: Promise<any> | null = null;
@@ -44,28 +44,47 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     async (error) => {
       const originalRequest = error.config as any;
 
-      if (error.response?.status === 401 && !originalRequest._retry) {
+      if (
+        error.response?.status === 401 &&
+        !originalRequest._retry &&
+        !String(originalRequest?.url || "").includes("/api/refresh")
+      ) {
         originalRequest._retry = true;
-
-        if (typeof window === "undefined") {
-          return Promise.reject(error);
-        }
 
         if (refreshPromise) {
           const accessToken = await refreshPromise;
           if (!accessToken) throw error;
+          originalRequest.headers = originalRequest.headers ?? {};
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return axiosInstance(originalRequest);
         }
 
         refreshPromise = mutex.runExclusive(async () => {
           try {
+            if (typeof window === "undefined") {
+              // SSR
+              const res = await fetch("/api/refresh", {
+                method: "POST",
+                cache: "no-store",
+              });
+              if (!res.ok) return null;
+              const { accessToken } = await res.json().catch(() => {});
+
+              if (!accessToken) {
+                await logout();
+                return await Promise.reject(error);
+              }
+
+              await setCookie("accessToken", accessToken);
+              return accessToken;
+            }
+            // csr
+
             const res = await client.post(
               "/api/refresh",
               {},
               { withCredentials: true }
             );
-
             const newToken = res.data?.accessToken;
 
             if (!newToken) {
