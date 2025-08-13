@@ -46,7 +46,7 @@ export default function FormComponent({ storeId }: IProps) {
     <div className="my-8 flex w-full flex-col md:my-6 lg:my-10">
       <Form {...form}>
         <form
-          className="flex flex-col gap-3 lg:gap-4"
+          className="flex flex-col gap-3 md:gap-4"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
           <LabeledInput
@@ -184,8 +184,8 @@ export default function FormComponent({ storeId }: IProps) {
               className: "mt-6 !h-[34px] !gap-2 items-center md:hidden",
             },
             md: {
-              buttonSize: "sm",
-              className: "!h-[34px] hidden md:flex items-center !gap-1 mt-6",
+              buttonSize: "md",
+              className: "!h-10 hidden md:flex items-center !gap-1 mt-6",
             },
             lg: {
               buttonSize: "lg",
