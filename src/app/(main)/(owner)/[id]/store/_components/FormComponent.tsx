@@ -206,6 +206,7 @@ export default function FormComponent({ storeId }: IProps) {
               className: "mt-7 !font-medium border-gray-0",
             },
           }}
+          commonClassName="hover:!bg-white hover:!text-gray-0"
           onClick={isEditing ? undefined : () => setIsEditing(true)}
         >
           <Icon iconKey="edit" size={20} className="text-gray-0" />
