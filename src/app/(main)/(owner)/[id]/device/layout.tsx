@@ -18,9 +18,11 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PageTitle initialTitle={PAGE_TITLES.OWNER.device} storeId={id} />
+      <div className="flex h-full flex-col">
+        <PageTitle initialTitle={PAGE_TITLES.OWNER.device} storeId={id} />
 
-      {children}
+        <div className="h-full">{children}</div>
+      </div>
     </HydrationBoundary>
   );
 }
