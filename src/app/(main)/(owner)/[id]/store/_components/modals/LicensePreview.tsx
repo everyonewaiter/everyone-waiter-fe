@@ -1,8 +1,14 @@
-import PdfViewer from "@/app/(main)/create/_components/PdfViewer";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { CloseIcon } from "@/components/common/Icon";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
-import Image from "next/image";
+import Spinner from "@/components/common/Spinner";
+
+const PdfViewer = dynamic(
+  () => import("@/app/(main)/create/_components/PdfViewer"),
+  { ssr: false, loading: () => <Spinner /> }
+);
 
 interface IProps {
   onClose: () => void;

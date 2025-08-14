@@ -1,9 +1,21 @@
+"use client";
+
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import React, { ChangeEvent, RefObject, forwardRef, useState } from "react";
 import Icon from "@/components/common/Icon/Icon";
 import cn from "@/lib/utils";
-import PdfViewer from "@/app/(main)/create/_components/PdfViewer";
+import Spinner from "@/components/common/Spinner";
+
 import LicensePreview from "./modals/LicensePreview";
+
+const PdfViewer = dynamic(
+  () => import("@/app/(main)/create/_components/PdfViewer"),
+  {
+    ssr: false,
+    loading: () => <Spinner />,
+  }
+);
 
 interface IProps {
   image?: string;
