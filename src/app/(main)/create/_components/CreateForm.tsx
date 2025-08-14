@@ -42,14 +42,13 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
         name="ceoName"
         label="대표자명"
         placeholder="대표자명 입력해주세요."
-        className="placeholder:text-gray-300"
       />
       <LabeledInput
         form={form}
         name="address"
         label="소재지"
         placeholder="소재지를 선택해주세요."
-        className="cursor-pointer placeholder:text-gray-300 focus:border-2 focus:border-blue-500 focus:pl-[15px]"
+        className="cursor-pointer focus:border-2 focus:border-blue-500 focus:pl-[15px]"
         readOnly
         onClick={handleOpenAddress}
         role="button"
@@ -66,7 +65,6 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
         name="detailAddress"
         label="상세 주소"
         placeholder="상세 주소를 입력해주세요."
-        className="placeholder:text-gray-300"
       />
       <div className="flex flex-col gap-2">
         <Label>매장 전화번호</Label>
@@ -77,7 +75,6 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
             <Input
               {...field}
               placeholder="전화번호를 입력해주세요."
-              className="placeholder:text-gray-300"
               onChange={(e) => {
                 const formatted = phoneNumberPattern(e.target.value);
                 form.setValue("landline", formatted);
@@ -99,7 +96,6 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
             <Input
               {...field}
               placeholder="사업자 번호를 입력해주세요."
-              className="placeholder:text-gray-300"
               onChange={(e) => {
                 const formatted = formatBusinessNumber(e.target.value);
                 form.setValue("license", formatted);

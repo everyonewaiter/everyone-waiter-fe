@@ -1,24 +1,25 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { Controller } from "react-hook-form";
+import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { Form } from "@/components/common/Form";
+import { Form, FormErrorMessage } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import useOverlay from "@/hooks/useOverlay";
 import Spinner from "@/components/common/Spinner";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
 import SkeletonInput from "@/components/common/Skeleton/SkeletonInput";
+import useAuthReducer from "@/hooks/useAuthReducer";
 import { deviceQueries } from "../../_queries/useDeviceInfo";
 import useStep1Form from "../../_hooks/useStep1Form";
-import PhoneInput from "../PhoneInput";
-import AuthInput from "../AuthInput";
-import useAuthReducer from "../../_hooks/useAuthReducer";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
+
 const Dropdown = dynamic(() => import("@/components/common/Dropdown"), {
   ssr: false,
   loading: () => <Spinner />,
@@ -36,13 +37,15 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
   const { state, dispatch } = useAuthReducer();
 
   const { form } = useStep1Form({ isAuthActive: state.authDisabled });
-  const { watch, reset, setError, control } = form;
+
+  const { useSendAuth, useVerifyPhone } = deviceQueries.useHandleDevice({
+    onDispatch: dispatch,
+    form,
+  });
 
   const [stores, setStores] = useState<{ storeId: string; name: string }[]>();
   const [active, setActive] = useState("매장을 선택해주세요.");
-
-  const send = deviceQueries.useSendAuth();
-  const verify = deviceQueries.useVerifyPhone();
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { open, close } = useOverlay();
   const handleOpenAlert = () => {
@@ -55,84 +58,146 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
     ));
   };
 
-  const handleAuthentication = () => {
-    dispatch({ type: "CLICK_AUTH_BTN" });
+  const mutateSendPhoneAuthCode = useSendAuth();
+  const mutateVerifyAuthCode = useVerifyPhone(handleOpenAlert, (data) => {
+    setStores(data.stores);
+    if (data.stores.length === 1) setActive(data.stores[0].name);
+    // eslint-disable-next-line
+    alert("인증되었습니다.");
+    dispatch({ type: "VERIFY_SUCCESS" });
+    form.clearErrors("phone");
+    form.clearErrors("authNumber");
+  });
 
-    const digits = watch("phone").replaceAll("-", "");
-    send.mutate(
-      { phoneNumber: digits },
-      {
-        onError: (e: any) => {
-          setError("phone", e);
-          dispatch({ type: "RESET" });
-        },
-      }
-    );
+  useEffect(() => {
+    if (state.authExpired) {
+      form.setError("phone", {
+        message: "인증 유효 시간이 경과하였습니다. 재인증 해주세요.",
+      });
+    }
+  }, [state.authExpired, form]);
+
+  const handleAuthentication = (phoneNumber: string) => {
+    mutateSendPhoneAuthCode.mutate({ phoneNumber });
   };
 
-  const handleCheckAuth = () => {
-    const phoneNumber = watch("phone").replaceAll("-", "");
-    const code = Number(watch("authNumber"));
-
-    verify.mutate(
-      { phoneNumber, code },
-      {
-        onSuccess: (data) => {
-          if (
-            !data ||
-            !Array.isArray(data.stores) ||
-            data.stores.length === 0
-          ) {
-            handleOpenAlert();
-            reset();
-            dispatch({ type: "RESET" });
-          } else {
-            setStores(data.stores);
-            if (data.stores.length === 1) setActive(data.stores[0].name);
-            dispatch({ type: "VERIFY_SUCCESS" });
-          }
-        },
-        onError: () => dispatch({ type: "VERIFY_FAIL" }),
-      }
-    );
+  const handleCheckAuth = (value: string) => {
+    mutateVerifyAuthCode.mutate({
+      phoneNumber: form.watch("phone").replaceAll("-", ""),
+      code: Number(value),
+    });
   };
-
-  const nextDisabled = !(state.phoneDisabled && state.authDisabled);
 
   const handleSubmit = () => {
+    setIsSubmitted(true);
     const matchedStore = stores?.find((el) => el.name === active);
     if (!matchedStore) {
       handleOpenAlert();
+      setIsSubmitted(false);
     } else {
-      onNextStep({ ...matchedStore, phoneNumber: watch("phone") });
+      onNextStep({ ...matchedStore, phoneNumber: form.watch("phone") });
     }
   };
+
+  const phoneBtnLabel = useMemo(() => {
+    if (state.phoneBtnLoading) return <Spinner />;
+    return state.hasRequestedAuth ? "재인증" : "인증 요청";
+  }, [state.phoneBtnLoading, state.hasRequestedAuth]);
 
   return (
     <div className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="relative flex flex-col gap-4">
-            <PhoneInput
-              control={control}
-              onClick={handleAuthentication}
-              disabled={state.phoneDisabled}
-              isSubmitted={state.hasRequestedAuth}
-              loading={state.phoneBtnLoading}
-            />
+            <div className="flex flex-col gap-2">
+              <Label>휴대폰 번호</Label>
+              <Controller
+                name="phone"
+                control={form.control}
+                disabled={state.phoneDisabled}
+                render={({ field }) => (
+                  <div className="flex items-center gap-3">
+                    <Input
+                      {...field}
+                      placeholder="사장님 계정에 등록된 전화번호를 입력해주세요."
+                      onChange={(e) => {
+                        const formatted = phoneNumberPattern(e.target.value);
+                        form.setValue("phone", formatted);
+                      }}
+                      disabled={state.phoneDisabled}
+                      hasError={!!form.formState.errors.phone}
+                      maxLength={13}
+                    />
+                    <ResponsiveButton
+                      type="button"
+                      variant="default"
+                      color="black"
+                      responsiveButtons={{
+                        sm: { buttonSize: "sm", className: "!w-[80px]" },
+                        md: { buttonSize: "sm", className: "w-[94px]" },
+                        lg: { buttonSize: "lg", className: "w-[120px]" },
+                      }}
+                      disabled={!form.watch("phone") || state.phoneBtnDisabled}
+                      onClick={() =>
+                        handleAuthentication(field.value.split("-").join(""))
+                      }
+                    >
+                      {phoneBtnLabel}
+                    </ResponsiveButton>
+                  </div>
+                )}
+              />
+              <FormErrorMessage>
+                {form.formState.errors.phone?.message?.toString()}
+              </FormErrorMessage>
+            </div>
 
-            {!state.authDisabled && (
-              <Suspense fallback={<SkeletonGroup />}>
-                <AuthInput
-                  control={control}
-                  onClick={handleCheckAuth}
-                  authTime={state.authTime}
-                  disabled={state.authBtnDisabled}
-                  loading={state.authBtnLoading}
-                  isSubmitted={state.hasRequestedAuth}
+            <Suspense fallback={<SkeletonGroup />}>
+              <div className="flex flex-col gap-2">
+                <Label>인증 번호</Label>
+                <Controller
+                  name="authNumber"
+                  control={form.control}
+                  disabled={state.authDisabled}
+                  render={({ field }) => (
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-full">
+                        <Input
+                          {...field}
+                          placeholder="인증 번호를 입력해주세요."
+                          hasError={!!form.formState.errors.authNumber}
+                          className="!pr-10 md:!pr-13 lg:!pr-15"
+                          disabled={state.authDisabled}
+                          maxLength={6}
+                          minLength={6}
+                        />
+                        {state.startTimer && (
+                          <div className="font-regular absolute top-5 right-3 mt-[-2px] -translate-y-1/2 transform text-xs text-gray-200 transition-all duration-300 ease-in-out md:top-5 md:right-4 lg:top-6.5 lg:right-3 lg:text-[15px]">
+                            {`${String(Math.floor(state.authTime / 60)).padStart(2, "0")}:${String(state.authTime % 60).padStart(2, "0")}`}
+                          </div>
+                        )}
+                      </div>
+                      <ResponsiveButton
+                        type="button"
+                        color="black"
+                        disabled={state.authBtnDisabled}
+                        onClick={() => handleCheckAuth(field.value)}
+                        responsiveButtons={{
+                          sm: { buttonSize: "sm", className: "!px-[27px]" },
+                          md: { buttonSize: "sm", className: "w-[94px]" },
+                          lg: { buttonSize: "lg", className: "w-[120px]" },
+                        }}
+                      >
+                        {state.authBtnLoading ? <Spinner /> : "확인"}
+                      </ResponsiveButton>
+                    </div>
+                  )}
                 />
-              </Suspense>
-            )}
+                <FormErrorMessage>
+                  {form.formState.errors.authNumber?.message?.toString()}
+                </FormErrorMessage>
+              </div>
+            </Suspense>
           </div>
 
           {Array.isArray(stores) && stores.length > 0 && (
@@ -144,15 +209,14 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
                 </div>
               ) : (
                 <Suspense fallback={<SkeletonInput />}>
-                  <div className="flex w-full flex-col gap-2">
+                  <div className="mt-4 flex w-full flex-col gap-2">
                     <Label disabled>매장 선택</Label>
                     <Dropdown
-                      data={stores.map((el) => el.name)}
+                      data={stores?.map((el) => el.name)!}
                       defaultText="매장을 선택해주세요."
                       active={active}
                       setActive={setActive}
-                      triggerClassName="!h-9 lg:!h-12 rounded-[8px] lg:rounded-[12px] w-full"
-                      className="w-70 md:!w-[324px] lg:!w-120"
+                      triggerClassName="!h-9 lg:!h-12 justify-between rounded-[8px]"
                     />
                   </div>
                 </Suspense>
@@ -168,9 +232,9 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
               lg: { buttonSize: "lg" },
             }}
             commonClassName="mt-5 lg:mt-8 w-full"
-            disabled={nextDisabled}
+            disabled={!form.watch("authNumber") || isSubmitted}
           >
-            다음
+            {isSubmitted ? <Spinner /> : "다음"}
           </ResponsiveButton>
         </form>
       </Form>

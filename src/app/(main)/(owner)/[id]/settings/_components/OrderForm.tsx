@@ -32,7 +32,7 @@ export default function OrderForm({ onAction }: IProps) {
           <div className="flex items-center gap-[6px]">
             <FormControl>
               <Input
-                className="!h-9 w-full !rounded-[10px] placeholder:text-xs placeholder:text-gray-300"
+                className="!h-9 w-full !rounded-[10px] placeholder:text-xs"
                 placeholder="옵션명을 입력해주세요."
                 {...field}
               />

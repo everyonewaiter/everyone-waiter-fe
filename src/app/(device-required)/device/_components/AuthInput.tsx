@@ -52,7 +52,6 @@ export default function AuthInput({
                     }
                   }}
                   placeholder="인증 번호를 입력해주세요."
-                  className="cursor-pointer placeholder:text-gray-300"
                 />
               </FormControl>
             </div>

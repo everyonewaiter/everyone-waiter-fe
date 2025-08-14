@@ -18,6 +18,7 @@ interface Props {
   disabled: boolean;
   isSubmitted: boolean;
   loading: boolean;
+  btnDisabled: boolean;
 }
 
 export default function PhoneInput({
@@ -26,6 +27,7 @@ export default function PhoneInput({
   disabled,
   loading,
   isSubmitted,
+  btnDisabled,
 }: Props) {
   const form = useFormContext<TypeDeviceStep1Form>();
 
@@ -35,7 +37,7 @@ export default function PhoneInput({
       name="phone"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>휴대폰 번호</FormLabel>
+          <FormLabel labelDisabled={disabled}>휴대폰 번호</FormLabel>
           <div className="flex gap-3">
             <FormControl>
               <Input
@@ -46,7 +48,8 @@ export default function PhoneInput({
                   form.setValue("phone", formatted, { shouldValidate: true });
                 }}
                 placeholder="사장님 계정에 등록된 전화번호를 입력해주세요."
-                className="cursor-pointer placeholder:text-gray-300"
+                className=""
+                disabled={disabled}
               />
             </FormControl>
 
@@ -59,12 +62,13 @@ export default function PhoneInput({
                 md: { buttonSize: "sm", className: "w-[94px]" },
                 lg: { buttonSize: "lg", className: "w-[120px]" },
               }}
-              disabled={disabled}
+              disabled={btnDisabled}
               onClick={onClick}
+              commonClassName="!text-white"
             >
               {loading && <Spinner />}
               {!loading && isSubmitted && "재인증"}
-              {isSubmitted && !isSubmitted && "인증요청"}
+              {!loading && !isSubmitted && "인증요청"}
             </ResponsiveButton>
           </div>
           <FormErrorMessage />

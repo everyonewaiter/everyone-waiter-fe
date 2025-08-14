@@ -224,7 +224,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                   <Input
                     {...form.register("phoneNumber")}
                     placeholder={`${form.watch("receiptType") === "개인소득공제용" ? "휴대폰 번호" : "사업자 번호"}를 입력해주세요.`}
-                    className="placeholder:font-medium placeholder:text-gray-300"
+                    className="placeholder:font-medium"
                     autoFocus
                     onChange={(e) => {
                       const onlyNums = e.target.value.replace(/[^0-9]/g, "");

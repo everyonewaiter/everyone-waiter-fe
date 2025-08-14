@@ -17,7 +17,7 @@ const initialState = {
   authExpired: false,
 };
 
-export type SignupAction =
+export type ReducerAction =
   | { type: "CLICK_PHONE_AUTH_BTN" } // 버튼1 눌렀다 -> 로딩 시작
   | { type: "AUTH_REQUEST_SUCCESS" } // 인증코드 발송 성공
   | { type: "AUTH_REQUEST_FAIL" } // 인증코드 발송 실패
@@ -28,12 +28,12 @@ export type SignupAction =
   | { type: "RESET" } // 타이머 초기화
   | { type: "EXCEEDED" }; // 요청 횟수 초과 (5번)
 
-export default function useSignupReducer() {
+export default function useAuthReducer() {
   const INIT_TIME = 300;
 
   function reducer(
     state: typeof initialState,
-    action: SignupAction
+    action: ReducerAction
   ): typeof initialState {
     switch (action.type) {
       case "CLICK_PHONE_AUTH_BTN":

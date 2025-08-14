@@ -60,7 +60,7 @@ export default function LabeledInput<T extends FieldValues>({
                 type={type}
                 placeholder={placeholder}
                 className={cn(
-                  "flex grow placeholder:text-gray-300",
+                  "flex grow",
                   inputClassname,
                   props.readOnly ? "cursor-default" : "cursor-text"
                 )}
