@@ -152,54 +152,52 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
               </FormErrorMessage>
             </div>
 
-            {state.hasRequestedAuth && (
-              <Suspense fallback={<SkeletonGroup />}>
-                <div className="flex flex-col gap-2">
-                  <Label>인증 번호</Label>
-                  <Controller
-                    name="authNumber"
-                    control={form.control}
-                    disabled={state.authDisabled}
-                    render={({ field }) => (
-                      <div className="flex items-center gap-3">
-                        <div className="relative w-full">
-                          <Input
-                            {...field}
-                            placeholder="인증 번호를 입력해주세요."
-                            hasError={!!form.formState.errors.authNumber}
-                            className="!pr-10 md:!pr-13 lg:!pr-15"
-                            disabled={state.authDisabled}
-                            maxLength={6}
-                            minLength={6}
-                          />
-                          {state.startTimer && (
-                            <div className="font-regular absolute top-5 right-3 mt-[-2px] -translate-y-1/2 transform text-xs text-gray-200 transition-all duration-300 ease-in-out md:top-5 md:right-4 lg:top-6.5 lg:right-3 lg:text-[15px]">
-                              {`${String(Math.floor(state.authTime / 60)).padStart(2, "0")}:${String(state.authTime % 60).padStart(2, "0")}`}
-                            </div>
-                          )}
-                        </div>
-                        <ResponsiveButton
-                          type="button"
-                          color="black"
-                          disabled={state.authBtnDisabled}
-                          onClick={() => handleCheckAuth(field.value)}
-                          responsiveButtons={{
-                            sm: { buttonSize: "sm", className: "!px-[27px]" },
-                            md: { buttonSize: "sm", className: "w-[94px]" },
-                            lg: { buttonSize: "lg", className: "w-[120px]" },
-                          }}
-                        >
-                          {state.authBtnLoading ? <Spinner /> : "확인"}
-                        </ResponsiveButton>
+            <Suspense fallback={<SkeletonGroup />}>
+              <div className="flex flex-col gap-2">
+                <Label>인증 번호</Label>
+                <Controller
+                  name="authNumber"
+                  control={form.control}
+                  disabled={state.authDisabled}
+                  render={({ field }) => (
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-full">
+                        <Input
+                          {...field}
+                          placeholder="인증 번호를 입력해주세요."
+                          hasError={!!form.formState.errors.authNumber}
+                          className="!pr-10 md:!pr-13 lg:!pr-15"
+                          disabled={state.authDisabled}
+                          maxLength={6}
+                          minLength={6}
+                        />
+                        {state.startTimer && (
+                          <div className="font-regular absolute top-5 right-3 mt-[-2px] -translate-y-1/2 transform text-xs text-gray-200 transition-all duration-300 ease-in-out md:top-5 md:right-4 lg:top-6.5 lg:right-3 lg:text-[15px]">
+                            {`${String(Math.floor(state.authTime / 60)).padStart(2, "0")}:${String(state.authTime % 60).padStart(2, "0")}`}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  />
-                  <FormErrorMessage>
-                    {form.formState.errors.authNumber?.message?.toString()}
-                  </FormErrorMessage>
-                </div>
-              </Suspense>
-            )}
+                      <ResponsiveButton
+                        type="button"
+                        color="black"
+                        disabled={state.authBtnDisabled}
+                        onClick={() => handleCheckAuth(field.value)}
+                        responsiveButtons={{
+                          sm: { buttonSize: "sm", className: "!px-[27px]" },
+                          md: { buttonSize: "sm", className: "w-[94px]" },
+                          lg: { buttonSize: "lg", className: "w-[120px]" },
+                        }}
+                      >
+                        {state.authBtnLoading ? <Spinner /> : "확인"}
+                      </ResponsiveButton>
+                    </div>
+                  )}
+                />
+                <FormErrorMessage>
+                  {form.formState.errors.authNumber?.message?.toString()}
+                </FormErrorMessage>
+              </div>
+            </Suspense>
           </div>
 
           {Array.isArray(stores) && stores.length > 0 && (
