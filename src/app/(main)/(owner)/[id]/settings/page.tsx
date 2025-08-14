@@ -20,8 +20,8 @@ export default function Settings() {
   const { updateSetting, settingData } = useSettings(storeId);
 
   return (
-    <div className="flex flex-col gap-8 md:w-[480px]">
-      <div className="flex flex-col gap-2 md:gap-3">
+    <div className="flex flex-col gap-8 md:mt-6 md:w-[480px] lg:mt-10">
+      <div className="flex flex-col">
         <h1 className="text-gray-0 text-lg font-semibold lg:text-2xl">설정</h1>
       </div>
       <FormProvider {...form}>

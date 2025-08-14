@@ -24,8 +24,8 @@ export default async function Layout({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <PageTitle initialTitle={PAGE_TITLES.OWNER.store} storeId={id} />
 
-      <div className="h-full w-full lg:overflow-y-auto">
-        <div className="flex h-full w-full items-start justify-center py-6 lg:py-10">
+      <div className="w-full lg:overflow-y-auto">
+        <div className="flex w-full items-start justify-center pt-6 lg:pt-10">
           {children}
         </div>
       </div>

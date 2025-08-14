@@ -9,10 +9,8 @@ import { categoryKeys } from "./_queries/keys";
 export default async function Layout({
   children,
   params,
-  // modal,
 }: PropsWithChildren<{
   params: Promise<{ id: string }>;
-  // modal: ReactNode;
 }>) {
   const { id } = await params;
   const queryClient = getQueryClient();
@@ -23,11 +21,10 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PageTitle initialTitle={PAGE_TITLES.OWNER.menu} storeId={id} />
+      <div className="flex h-full flex-col">
+        <PageTitle initialTitle={PAGE_TITLES.OWNER.menu} storeId={id} />
 
-      <div className="relative flex w-full flex-col md:h-full">
-        <div className="">{children}</div>
-        {/* {modal} */}
+        <div className="relative flex h-full w-full flex-col">{children}</div>
       </div>
     </HydrationBoundary>
   );
