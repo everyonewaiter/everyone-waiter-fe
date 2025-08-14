@@ -150,7 +150,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   }
 
   return (
-    <p
+    <div
       data-slot="form-message"
       id={formMessageId}
       className={cn(
@@ -160,7 +160,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
       {...props}
     >
       {props.children}
-    </p>
+    </div>
   );
 }
 
