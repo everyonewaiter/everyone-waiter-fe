@@ -148,7 +148,7 @@ export default function FormComponent({ storeId }: IProps) {
                       className: "!h-[34px] !gap-2 items-center",
                     },
                     md: {
-                      buttonSize: "sm",
+                      buttonSize: "md",
                       className: "items-center !gap-1",
                     },
                     lg: {
@@ -169,7 +169,7 @@ export default function FormComponent({ storeId }: IProps) {
                       className: "!h-[34px] !gap-2 items-center",
                     },
                     md: {
-                      buttonSize: "sm",
+                      buttonSize: "md",
                       className: "items-center !gap-1",
                     },
                     lg: {
@@ -206,8 +206,8 @@ export default function FormComponent({ storeId }: IProps) {
               className: "mt-7 !font-medium border-gray-0",
             },
           }}
-          commonClassName="hover:!bg-white hover:!text-gray-0"
           onClick={isEditing ? undefined : () => setIsEditing(true)}
+          commonClassName="hover:!bg-white hover:!text-gray-0"
         >
           <Icon iconKey="edit" size={20} className="text-gray-0" />
           <span>수정하기</span>

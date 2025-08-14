@@ -110,9 +110,9 @@ export default function OptionGroupSection({
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[15px] font-semibold lg:text-base">
+      <div className="text-[15px] font-semibold lg:text-base">
         {children} {required && <span className="text-primary">*</span>}
-      </p>
+      </div>
       {data.map((item) => (
         <div
           className="rounded-[12px] bg-gray-700 p-3 lg:p-4"

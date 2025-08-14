@@ -1,29 +1,41 @@
+"use client";
+
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import React, { ChangeEvent, RefObject, forwardRef, useState } from "react";
 import Icon from "@/components/common/Icon/Icon";
 import cn from "@/lib/utils";
+import Spinner from "@/components/common/Spinner";
+
 import LicensePreview from "./modals/LicensePreview";
+
+const PdfViewer = dynamic(
+  () => import("@/app/(main)/create/_components/PdfViewer"),
+  {
+    ssr: false,
+    loading: () => <Spinner />,
+  }
+);
 
 interface IProps {
   image?: string;
-  // imageFile?: File;
+  imageFile?: File;
   handleFile: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  preventPreview?: boolean;
 }
 
 const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
-  ({ image, handleFile, className, preventPreview }, ref) => {
+  ({ image, handleFile, className, imageFile }, ref) => {
     const [open, setOpen] = useState(false);
 
-    const handlePreview = () => setOpen(true);
-
     let previewContent = null;
-    if (image) {
+    if (imageFile?.type?.includes("pdf")) {
+      previewContent = <PdfViewer file={imageFile} />;
+    } else if (image) {
       previewContent = (
         <Image
           src={image}
-          alt="사업자 등록중"
+          alt="사업자 등록증"
           width={400}
           height={160}
           className={cn("object-cover", className)}
@@ -56,6 +68,7 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
               (ref as RefObject<HTMLInputElement>).current?.click()
             }
             image={image!}
+            type={imageFile?.type.includes("pdf") ? "pdf" : "image"}
           />
         )}
         <button
@@ -65,8 +78,8 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
             className
           )}
           onClick={() =>
-            image && preventPreview
-              ? handlePreview()
+            image
+              ? setOpen(true)
               : (ref as RefObject<HTMLInputElement>).current?.click()
           }
         >
