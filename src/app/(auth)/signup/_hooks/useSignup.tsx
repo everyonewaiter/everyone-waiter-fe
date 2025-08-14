@@ -7,12 +7,12 @@ import {
   sendAuthCode,
   verifyAuthCode,
 } from "@/lib/api/auth.api";
-import { SignupAction } from "./useSignupReducer";
+import { ReducerAction } from "@/hooks/useAuthReducer";
 import { TypeSignup } from "../_schema/signup.schema";
 
 interface IProps {
   form: UseFormReturn<TypeSignup>;
-  onDispatch: (type: SignupAction) => void;
+  onDispatch: (type: ReducerAction) => void;
 }
 
 const useSignup = ({ form, onDispatch }: IProps) => {

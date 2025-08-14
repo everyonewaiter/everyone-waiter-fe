@@ -13,9 +13,9 @@ import Input from "@/components/common/Input";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import Label from "@/components/common/Label";
 import { personalInformationTerms } from "@/constants/personalInformationTerms";
+import useAuthReducer from "@/hooks/useAuthReducer";
 import useSignup from "./_hooks/useSignup";
 import useSignupForm from "./_hooks/useSignupForm";
-import useSignupReducer from "./_hooks/useSignupReducer";
 import AuthButton from "./_components/AuthButton";
 
 const ResponsiveButton = dynamic(
@@ -37,7 +37,7 @@ export default function Signup() {
 
   const [checked, setChecked] = useState(false);
 
-  const { state, dispatch } = useSignupReducer();
+  const { state, dispatch } = useAuthReducer();
 
   const isPC = useMediaQuery({ query: "(max-width: 1920px)" });
 
