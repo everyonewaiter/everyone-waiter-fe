@@ -87,10 +87,14 @@ const useSignup = ({ form, onDispatch }: IProps) => {
         form.setError("authNumber", {
           message: "유효하지 않은 인증 번호입니다.",
         });
-      } else if (code === "EXPIRED_VERIFICATION_PHONE_NUMBER") {
+        return;
+      }
+
+      if (code === "EXPIRED_VERIFICATION_PHONE_NUMBER") {
         form.setError("phone", {
           message: "휴대폰 인증 번호가 만료되었습니다.",
         });
+        return;
       }
 
       form.setError("authNumber", {
@@ -120,8 +124,9 @@ const useSignup = ({ form, onDispatch }: IProps) => {
         return;
       }
 
+      onDispatch({ type: "RESET" });
+
       if (code === "ALREADY_USE_PHONE_NUMBER") {
-        onDispatch({ type: "RESET" });
         form.setError("phone", {
           message: "이미 사용중인 휴대폰 번호입니다.",
         });
@@ -129,10 +134,10 @@ const useSignup = ({ form, onDispatch }: IProps) => {
       }
 
       if (code === "EXPIRED_VERIFICATION_PHONE_NUMBER") {
-        onDispatch({ type: "RESET" });
         form.setError("phone", {
           message: "휴대폰 인증 번호가 만료되었습니다.",
         });
+        return;
       }
 
       // eslint-disable-next-line no-alert

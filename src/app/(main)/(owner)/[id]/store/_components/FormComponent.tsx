@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { FormProvider } from "react-hook-form";
+import { Controller, FormProvider } from "react-hook-form";
 import { Plus } from "@/components/common/Icon/index";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { Form } from "@/components/common/Form";
+import { Form, FormLabel } from "@/components/common/Form";
 import Icon from "@/components/common/Icon/Icon";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
 import useCheckLeave from "@/hooks/useCheckLeave";
+import Input from "@/components/common/Input";
+import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { storesQueries } from "../_queries/useStores";
 import Origins from "./Origins";
 import useStoreForm from "../_hooks/useStoreForm";
@@ -32,7 +34,7 @@ export default function FormComponent({ storeId }: IProps) {
     submitHandler,
     appendOrigin,
     removeOrigin,
-  } = useStoreForm(details!, details?.storeId as string);
+  } = useStoreForm(storeId);
 
   useCheckLeave(form.formState.isDirty);
 
@@ -47,7 +49,7 @@ export default function FormComponent({ storeId }: IProps) {
     <div className="my-8 flex w-full flex-col md:my-6 lg:my-10">
       <Form {...form}>
         <form
-          className="flex flex-col gap-3 lg:gap-4"
+          className="flex flex-col gap-3 md:gap-4"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
           <LabeledInput
@@ -71,12 +73,24 @@ export default function FormComponent({ storeId }: IProps) {
             disabled
             placeholder="주소"
           />
-          <LabeledInput
-            form={form}
-            label="매장 전화번호"
+          <Controller
             name="landline"
-            disabled={!isEditing}
-            placeholder="매장 전화번호"
+            control={form.control}
+            render={({ field }) => (
+              <div className="flex flex-col gap-2">
+                <FormLabel labelDisabled={!isEditing}>매장 전화번호</FormLabel>
+                <Input
+                  {...field}
+                  placeholder="매장 전화번호"
+                  onChange={(e) => {
+                    const formatted = phoneNumberPattern(e.target.value);
+                    form.setValue("landline", formatted);
+                  }}
+                  disabled={!isEditing}
+                  hasError={!!form.formState.errors.landline}
+                />
+              </div>
+            )}
           />
           <Label>원산지</Label>
           {isEditing || fields?.length > 0 ? (
@@ -185,14 +199,15 @@ export default function FormComponent({ storeId }: IProps) {
               className: "mt-6 !h-[34px] !gap-2 items-center md:hidden",
             },
             md: {
-              buttonSize: "sm",
-              className: "!h-[34px] hidden md:flex items-center !gap-1 mt-6",
+              buttonSize: "md",
+              className: "!h-10 hidden md:flex items-center !gap-1 mt-6",
             },
             lg: {
               buttonSize: "lg",
               className: "mt-7 !font-medium border-gray-0",
             },
           }}
+          commonClassName="hover:!bg-white hover:!text-gray-0"
           onClick={isEditing ? undefined : () => setIsEditing(true)}
           commonClassName="hover:!bg-white hover:!text-gray-0"
         >
