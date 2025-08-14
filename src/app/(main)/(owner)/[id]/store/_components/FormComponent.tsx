@@ -24,7 +24,6 @@ export default function FormComponent({ storeId }: IProps) {
   const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { data: details } = storesQueries.useStoresDetail(storeId);
   const updateInfo = storesQueries.useUpdateInfo();
 
   const {
@@ -207,7 +206,6 @@ export default function FormComponent({ storeId }: IProps) {
               className: "mt-7 !font-medium border-gray-0",
             },
           }}
-          commonClassName="hover:!bg-white hover:!text-gray-0"
           onClick={isEditing ? undefined : () => setIsEditing(true)}
           commonClassName="hover:!bg-white hover:!text-gray-0"
         >
