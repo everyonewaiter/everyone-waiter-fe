@@ -81,7 +81,7 @@ export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
             <div className="mt-2 flex items-center gap-[6px]">
               <FormControl>
                 <Input
-                  className="!h-9 w-full !rounded-[10px] placeholder:text-xs placeholder:text-gray-300"
+                  className="!h-9 w-full !rounded-[10px] placeholder:text-xs"
                   placeholder="기기 번호를 입력해주세요."
                   {...field}
                   hasError={!!form.formState.errors.deviceNumber}

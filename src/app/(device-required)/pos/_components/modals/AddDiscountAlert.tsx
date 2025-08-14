@@ -128,7 +128,7 @@ export default function AddDiscountAlert({
 
                             form.setValue("result", result);
                           }}
-                          className="!pl-9 text-base font-medium placeholder:text-gray-300"
+                          className="!pl-9 text-base font-medium"
                           placeholder={
                             form.watch("discountType") === "fixed"
                               ? "12,000"
@@ -156,7 +156,7 @@ export default function AddDiscountAlert({
                           {...field}
                           type="text"
                           value={field.value || ""}
-                          className="text-base font-medium placeholder:text-gray-300"
+                          className="text-base font-medium"
                           placeholder="할인할 금액을 먼저 입력해주세요."
                           disabled={!field.value}
                         />

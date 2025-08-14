@@ -62,7 +62,6 @@ export default function StoreApplyForm({ isUpdating, isAccepted }: IProps) {
               <Input
                 {...field}
                 placeholder="사업자 번호를 입력해주세요."
-                className="placeholder:text-gray-300"
                 onChange={handleBusinessNumber}
                 disabled={!isUpdating || isAccepted}
               />
@@ -93,7 +92,6 @@ export default function StoreApplyForm({ isUpdating, isAccepted }: IProps) {
               <Input
                 {...field}
                 placeholder="신청일을 입력해주세요."
-                className="placeholder:text-gray-300"
                 onChange={handleDate}
                 disabled={!isUpdating || isAccepted}
               />

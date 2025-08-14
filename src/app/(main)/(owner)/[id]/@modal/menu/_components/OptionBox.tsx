@@ -36,7 +36,6 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
               <FormControl>
                 <Input
                   placeholder="옵션명을 입력해주세요."
-                  className="placeholder:text-gray-300"
                   disabled={!isEditing}
                   {...field}
                 />
@@ -60,7 +59,6 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
                     <FormControl>
                       <Input
                         placeholder="하위 옵션명을 입력해주세요."
-                        className="placeholder:text-gray-300"
                         disabled={!isEditing}
                         {...nameField}
                       />
@@ -76,7 +74,7 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
                     <FormControl>
                       <Input
                         placeholder="ex. 33,000"
-                        className="!pr-10 placeholder:text-gray-300"
+                        className="!pr-10"
                         type="number"
                         disabled={!isEditing}
                         {...priceField}
