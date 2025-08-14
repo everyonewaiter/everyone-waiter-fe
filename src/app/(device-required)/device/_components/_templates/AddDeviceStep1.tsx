@@ -71,8 +71,8 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
 
   useEffect(() => {
     if (state.authExpired) {
-      form.setError("authNumber", {
-        message: "인증 유효 시간이 경과하였습니다.",
+      form.setError("phone", {
+        message: "인증 유효 시간이 경과하였습니다. 재인증 해주세요.",
       });
     }
   }, [state.authExpired, form]);
@@ -126,6 +126,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
                       }}
                       disabled={state.phoneDisabled}
                       hasError={!!form.formState.errors.phone}
+                      maxLength={13}
                     />
                     <ResponsiveButton
                       type="button"
@@ -151,7 +152,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
               </FormErrorMessage>
             </div>
 
-            {!state.authDisabled && (
+            {state.hasRequestedAuth && (
               <Suspense fallback={<SkeletonGroup />}>
                 <div className="flex flex-col gap-2">
                   <Label>인증 번호</Label>
@@ -168,6 +169,8 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
                             hasError={!!form.formState.errors.authNumber}
                             className="!pr-10 md:!pr-13 lg:!pr-15"
                             disabled={state.authDisabled}
+                            maxLength={6}
+                            minLength={6}
                           />
                           {state.startTimer && (
                             <div className="font-regular absolute top-5 right-3 mt-[-2px] -translate-y-1/2 transform text-xs text-gray-200 transition-all duration-300 ease-in-out md:top-5 md:right-4 lg:top-6.5 lg:right-3 lg:text-[15px]">

@@ -50,8 +50,8 @@ export default function Signup() {
 
   useEffect(() => {
     if (state.authExpired) {
-      form.setError("authNumber", {
-        message: "인증 유효 시간이 경과하였습니다.",
+      form.setError("phone", {
+        message: "인증 유효 시간이 경과하였습니다. 재인증 해주세요.",
       });
     }
   }, [state.authExpired, form]);
