@@ -15,7 +15,5 @@ export default function Guard({ children }: PropsWithChildren) {
     }
   }, [token, storeId, navigate]);
 
-  if (!(token && storeId)) return null;
-
   return children;
 }
