@@ -85,14 +85,14 @@ const useSignup = ({ form, onDispatch }: IProps) => {
 
       if (code === "EXPIRED_VERIFICATION_CODE") {
         form.setError("authNumber", {
-          message: "유효하지 않은 인증 번호입니다.",
+          message: "인증 번호가 만료되었습니다.",
         });
         return;
       }
 
-      if (code === "EXPIRED_VERIFICATION_PHONE_NUMBER") {
+      if (code === "UNMATCHED_VERIFICATION_CODE") {
         form.setError("phone", {
-          message: "휴대폰 인증 번호가 만료되었습니다.",
+          message: "인증 번호가 일치하지 않습니다.",
         });
         return;
       }
