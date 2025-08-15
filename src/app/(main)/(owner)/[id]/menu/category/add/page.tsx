@@ -1,17 +1,5 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useStoreContext } from "@/providers/storeProvider";
+import MenuList from "../../_components/MenuList";
 
 export default function Page() {
-  const navigate = useRouter();
-
-  const { storeId } = useStoreContext();
-
-  useEffect(() => {
-    navigate.replace(`/${storeId}/menu/category/add`);
-  }, [storeId, navigate]);
-
-  return null;
+  return <MenuList />;
 }
