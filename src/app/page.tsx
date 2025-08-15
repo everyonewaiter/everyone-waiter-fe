@@ -13,14 +13,10 @@ export default async function Page() {
   if (permission === "USER") redirect("/main");
 
   if (permission === "OWNER") {
-    try {
-      const { stores } = await getStoreList(accessToken);
-      const firstStoreId = stores?.[0]?.storeId;
-      if (firstStoreId) redirect(`/${firstStoreId}`);
-      notFound();
-    } catch {
-      redirect("/main");
-    }
+    const { stores } = await getStoreList(accessToken);
+    const firstStoreId = stores?.[0]?.storeId;
+    if (firstStoreId) redirect(`/${firstStoreId}`);
+    notFound();
   }
 
   notFound();
