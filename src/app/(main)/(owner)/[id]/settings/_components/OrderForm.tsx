@@ -7,14 +7,14 @@ import {
 } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import { useFormContext } from "react-hook-form";
-import { TypeSettingsForm } from "../_schema/settings.schema";
+import { TypeSettingsOptionForm } from "../_schema/settings.schema";
 
 interface IProps {
   onAction: (value: string) => void;
 }
 
 export default function OrderForm({ onAction }: IProps) {
-  const form = useFormContext<TypeSettingsForm>();
+  const form = useFormContext<TypeSettingsOptionForm>();
 
   const handleAddOptionText = () => {
     const value = form.getValues("optionText");
@@ -35,6 +35,11 @@ export default function OrderForm({ onAction }: IProps) {
                 className="!h-9 w-full !rounded-[10px] placeholder:text-xs"
                 placeholder="옵션명을 입력해주세요."
                 {...field}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleAddOptionText();
+                  }
+                }}
               />
             </FormControl>
 

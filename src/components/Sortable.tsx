@@ -7,7 +7,7 @@ import {
   useSensor,
   useSensors,
   SortableContext,
-  verticalListSortingStrategy,
+  rectSortingStrategy,
 } from "@/components/dnd/index";
 import { PropsWithChildren } from "react";
 
@@ -29,7 +29,7 @@ export default function Sortable({
       collisionDetection={closestCenter}
       onDragEnd={onDragEnd}
     >
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+      <SortableContext items={items} strategy={rectSortingStrategy}>
         {children}
       </SortableContext>
     </DndContext>

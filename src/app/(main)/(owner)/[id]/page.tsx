@@ -21,11 +21,16 @@ export default async function Page({
   });
 
   return (
-    <div className="mt-5 h-full md:mt-0">
-      <PageTitle initialTitle={PAGE_TITLES.OWNER.init} storeId={id as string} />
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <StoreList storeId={id} />
-      </HydrationBoundary>
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <div className="flex h-full flex-col">
+        <PageTitle
+          initialTitle={PAGE_TITLES.OWNER.init}
+          storeId={id as string}
+        />
+        <div className="flex h-full w-full pt-6 lg:pt-10">
+          <StoreList storeId={id} />
+        </div>
+      </div>
+    </HydrationBoundary>
   );
 }

@@ -93,7 +93,7 @@ export default function StoreList({ storeId }: IProps) {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full w-full flex-col">
       <div className="flex w-full flex-1 flex-col pt-8">
         {!pathname.startsWith("/main") && <AddButton />}
         {isMobile ? (

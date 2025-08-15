@@ -1,10 +1,15 @@
-import { useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "@/components/common/Spinner";
 import { arrayMove } from "@/components/dnd/index";
 import Switch from "@/components/common/Switch";
-import { TypeSettingsForm } from "../_schema/settings.schema";
+import { Form } from "@/components/common/Form";
+import {
+  optionSchema,
+  TypeSettingsOptionForm,
+} from "../_schema/settings.schema";
 import useSettings from "../_queries/useSettings";
 import OrderForm from "./OrderForm";
 
@@ -31,7 +36,10 @@ export default function OrderSection({
   showOrderTotalPrice,
   storeId,
 }: IProps) {
-  const form = useFormContext<TypeSettingsForm>();
+  const form = useForm<TypeSettingsOptionForm>({
+    mode: "onSubmit",
+    resolver: zodResolver(optionSchema),
+  });
 
   const [items, setItems] = useState<string[]>([]);
 
@@ -42,9 +50,8 @@ export default function OrderSection({
       const oldIndex = items.indexOf(active.id);
       const newIndex = items.indexOf(over.id);
       const changeSort = arrayMove(items, oldIndex, newIndex);
-      updateSetting({ staffCallOptions: changeSort }, () =>
-        setItems(changeSort)
-      );
+      setItems(changeSort);
+      updateSetting({ staffCallOptions: changeSort });
     }
   };
 
@@ -85,20 +92,26 @@ export default function OrderSection({
               최대 12개
             </span>
           </span>
-          <OrderForm
-            onAction={(value) => {
-              const nextItems = [...items, value];
-              updateSetting({ staffCallOptions: nextItems }, () => {
-                setItems(nextItems);
-                form.reset();
-              });
-            }}
-          />
+          <Form {...form}>
+            <OrderForm
+              onAction={(value) => {
+                const nextItems = [...items, value];
+                updateSetting({ staffCallOptions: nextItems }, () => {
+                  setItems(nextItems);
+                  form.reset();
+                });
+              }}
+            />
+          </Form>
         </div>
         <Sortable items={items} onDragEnd={handleDrag}>
-          <div className="flex flex-wrap gap-2">
+          <div className="-m-1 flex flex-wrap">
             {items?.map((id) => (
-              <MoveableChips key={id} id={id} onDelete={() => {}}>
+              <MoveableChips
+                key={id}
+                id={id}
+                onDelete={() => setItems(items.filter((item) => item !== id))}
+              >
                 {id}
               </MoveableChips>
             ))}

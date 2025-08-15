@@ -1,4 +1,4 @@
-import { useSortable, CSS } from "@/components/dnd/index";
+import { useSortable } from "@/components/dnd/index";
 import { PropsWithChildren } from "react";
 import Icon from "@/components/common/Icon/Icon";
 
@@ -15,18 +15,28 @@ export default function MoveableChips({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
+  const translate = transform
+    ? `translate3d(${Math.round(transform.x)}px, ${Math.round(
+        transform.y
+      )}px, 0)`
+    : undefined;
+
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: translate,
     transition,
-  };
+    willChange: "transform",
+    WebkitFontSmoothing: "antialiased",
+    MozOsxFontSmoothing: "grayscale",
+    backfaceVisibility: "hidden",
+  } as React.CSSProperties;
 
   return (
     <div
       ref={setNodeRef}
-      className="flex flex-row items-center gap-0.5"
+      className="m-1 flex w-fit flex-none flex-row items-center gap-2 select-none"
       style={style}
     >
-      <div className="text-gray-0 font-regular flex h-[30px] flex-row items-center justify-center gap-[6px] rounded-[20px] bg-gray-700 px-3 py-[6px] text-xs md:rounded-[12px] lg:rounded-[20px]">
+      <div className="text-gray-0 font-regular flex h-[30px] flex-row items-center justify-center gap-[6px] rounded-[20px] bg-gray-700 px-3 py-[6px] text-xs whitespace-nowrap md:rounded-[12px] lg:rounded-[20px]">
         {children}
         <button
           type="button"
