@@ -8,6 +8,7 @@ const schema = z.object({
         .string()
         .min(1, "카테고리 이름을 입력해주세요.")
         .max(20, "카테고리 이름은 20자 이하여야 합니다."),
+      isUpdated: z.boolean(),
     })
   ),
 });
