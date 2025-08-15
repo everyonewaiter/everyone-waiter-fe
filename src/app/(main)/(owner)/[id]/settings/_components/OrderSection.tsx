@@ -20,7 +20,7 @@ const Sortable = dynamic(() => import("@/components/Sortable"), {
 
 const MoveableChips = dynamic(() => import("./MoveableChips"), {
   ssr: false,
-  loading: () => <Spinner />,
+  loading: () => null,
 });
 
 interface IProps {
@@ -110,7 +110,12 @@ export default function OrderSection({
               <MoveableChips
                 key={id}
                 id={id}
-                onDelete={() => setItems(items.filter((item) => item !== id))}
+                onDelete={() => {
+                  const newItems = items.filter((item) => item !== id);
+                  updateSetting({ staffCallOptions: newItems }, () => {
+                    setItems(newItems);
+                  });
+                }}
               >
                 {id}
               </MoveableChips>
