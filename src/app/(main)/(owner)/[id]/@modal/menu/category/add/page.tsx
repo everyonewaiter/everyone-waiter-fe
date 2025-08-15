@@ -110,7 +110,7 @@ export default function Page() {
       </ScrollArea>
 
       {!changeMove && (
-        <div className="flex flex-col md:mb-6 lg:mb-8">
+        <div className="flex flex-col">
           <ResponsiveButton
             type="button"
             variant="outline"
@@ -129,7 +129,7 @@ export default function Page() {
                 className: "mt-4",
               },
             }}
-            commonClassName="w-full border-none dashed-light"
+            commonClassName="w-full dashed-light"
             onClick={() =>
               setValue("categories", [
                 ...watch("categories"),

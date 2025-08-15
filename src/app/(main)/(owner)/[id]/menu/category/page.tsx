@@ -1,14 +1,15 @@
 "use client";
 
-import { Plus } from "@/components/common/Icon/index";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
+import { Plus } from "@/components/common/Icon/index";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
+import Spinner from "@/components/common/Spinner";
 import { useStoreContext } from "@/providers/storeProvider";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { categoryQueries } from "../_queries/useCategories";
 import {
   categoryFormSchema,
@@ -20,6 +21,9 @@ export default function Page() {
   const { storeId } = useStoreContext();
 
   const { data } = categoryQueries.useCategories(storeId);
+  const addCategory = categoryQueries.useAddCategory();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<TypeCategoryForm>({
     mode: "onChange",
@@ -27,16 +31,36 @@ export default function Page() {
     defaultValues: { categories: [] },
   });
 
+  const hasInitialized = useRef(false);
   useEffect(() => {
-    form.reset({ categories: data?.categories });
+    if (!hasInitialized.current && data?.categories) {
+      form.reset({ categories: data.categories });
+      hasInitialized.current = true;
+    }
   }, [data?.categories, form]);
 
-  const { fields } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control: form.control,
     name: "categories",
   });
 
-  const submitHandler = () => {};
+  const submitHandler = async (formData: {
+    categories: { name: string }[];
+  }) => {
+    try {
+      setIsSubmitting(true);
+      const promises = formData.categories
+        .filter((category) => category.name)
+        .map((category) =>
+          addCategory.mutateAsync({ categoryName: category.name, storeId })
+        );
+
+      await Promise.all(promises);
+      navigate.push(`/${storeId}/menu`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="h-full w-full">
@@ -57,17 +81,18 @@ export default function Page() {
               >
                 {fields?.map((item, index) => (
                   <LabeledInput
-                    key={item.name}
+                    key={item.categoryId}
                     form={form}
                     label={`카테고리${index + 1}`}
                     name={`categories.${index}.name`}
-                    readOnly
                   />
                 ))}
 
-                <div>
+                <div className="flex flex-col gap-10">
                   <ResponsiveButton
                     type="button"
+                    variant="outline"
+                    color="grey"
                     responsiveButtons={{
                       sm: {
                         buttonSize: "sm",
@@ -83,14 +108,40 @@ export default function Page() {
                         className: "mt-8",
                       },
                     }}
-                    commonClassName="dashed-light bg-white border-none w-full text-gray-300 !font-medium"
+                    commonClassName="dashed-light bg-white w-full text-gray-300 !font-medium"
                     onClick={() =>
-                      navigate.push(`/${storeId}/menu/category/add`)
+                      append({
+                        categoryId: String(form.watch("categories").length + 1),
+                        name: "",
+                      })
                     }
+                    disabled={isSubmitting}
                   >
                     <Plus strokeWidth={1.5} size={18} />
                     <span>카테고리 추가</span>
                   </ResponsiveButton>
+                  {fields.length > 0 && (
+                    <ResponsiveButton
+                      type="submit"
+                      responsiveButtons={{
+                        sm: {
+                          buttonSize: "sm",
+                          className: "mt-4 gap-2 items-center rounded-[12px]",
+                        },
+                        md: {
+                          buttonSize: "sm",
+                          className: "gap-1 !text-s",
+                        },
+                        lg: {
+                          buttonSize: "lg",
+                          className: "mt-8",
+                        },
+                      }}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? <Spinner /> : "확인"}
+                    </ResponsiveButton>
+                  )}
                 </div>
               </form>
             </Form>
