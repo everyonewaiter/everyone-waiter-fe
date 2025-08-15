@@ -1,5 +1,9 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import {
+  Form,
   FormControl,
   FormErrorMessage,
   FormField,
@@ -8,12 +12,13 @@ import {
 } from "@/components/common/Form";
 import Icon from "@/components/common/Icon/Icon";
 import Input from "@/components/common/Input";
-import { useFormContext } from "react-hook-form";
 import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/useOverlay";
 import Alert from "@/components/common/Alert/Alert";
-import { useEffect } from "react";
-import { TypeSettingsForm } from "../_schema/settings.schema";
+import {
+  deviceNumberSchema,
+  TypeSettingsDeviceForm,
+} from "../_schema/settings.schema";
 
 interface IProps {
   ksnetDeviceNo?: string;
@@ -21,22 +26,23 @@ interface IProps {
 }
 
 export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
-  const form = useFormContext<TypeSettingsForm>();
+  const form = useForm<TypeSettingsDeviceForm>({
+    mode: "onSubmit",
+    resolver: zodResolver(deviceNumberSchema),
+  });
 
   const { open, close } = useOverlay();
 
   useEffect(() => {
     if (ksnetDeviceNo) {
-      form.setValue("deviceNumber", ksnetDeviceNo as string);
+      form.reset({ deviceNumber: ksnetDeviceNo });
     }
     // eslint-disable-next-line
   }, [ksnetDeviceNo]);
 
-  const handleUpdateDeviceNumber = () => {
-    const number = form.watch("deviceNumber");
-
-    if (number === ksnetDeviceNo) return;
-    if (number.startsWith("DPTOTEST")) {
+  const handleUpdateDeviceNumber = (data: TypeSettingsDeviceForm) => {
+    if (data.deviceNumber === ksnetDeviceNo) return;
+    if (data.deviceNumber.startsWith("DPTOTEST")) {
       open(() => (
         <QueryProviders>
           <Alert
@@ -53,7 +59,7 @@ export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
             }}
           >
             <div className="mt-2">
-              {number}은 테스트용 기기입니다.
+              {data.deviceNumber}은 테스트용 기기입니다.
               <br />
               <span className="text-xs !font-medium text-gray-400">
                 결제 및 취소가 제대로 이루어지지 않을 수 있습니다.
@@ -62,6 +68,9 @@ export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
           </Alert>
         </QueryProviders>
       ));
+    } else {
+      form.setValue("deviceNumber", ksnetDeviceNo || "");
+      close();
     }
   };
 
@@ -73,59 +82,62 @@ export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
       <p className="mt-3 text-sm font-medium text-gray-100 md:mt-4">
         매장 기기 번호
       </p>
-      <FormField
-        control={form.control}
-        name="deviceNumber"
-        render={({ field }) => (
-          <FormItem>
-            <div className="mt-2 flex items-center gap-[6px]">
-              <FormControl>
-                <Input
-                  className="!h-9 w-full !rounded-[10px] placeholder:text-xs"
-                  placeholder="기기 번호를 입력해주세요."
-                  {...field}
-                  hasError={!!form.formState.errors.deviceNumber}
-                />
-              </FormControl>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleUpdateDeviceNumber)}>
+          <FormField
+            control={form.control}
+            name="deviceNumber"
+            render={({ field }) => (
+              <FormItem>
+                <div className="mt-2 flex items-center gap-[6px]">
+                  <FormControl>
+                    <Input
+                      className="!h-9 w-full !rounded-[10px] placeholder:text-xs"
+                      placeholder="기기 번호를 입력해주세요."
+                      {...field}
+                      hasError={!!form.formState.errors.deviceNumber}
+                    />
+                  </FormControl>
 
-              <ResponsiveButton
-                type="button"
-                color="black"
-                responsiveButtons={{
-                  lg: {
-                    buttonSize: "sm",
-                    className: "relative gap-0 !w-[71px]",
-                  },
-                  md: {
-                    buttonSize: "sm",
-                    className: "flex",
-                  },
-                  sm: {
-                    buttonSize: "sm",
-                    className: "flex",
-                  },
-                }}
-                onClick={handleUpdateDeviceNumber}
-              >
-                등록
-              </ResponsiveButton>
-            </div>
-            <FormErrorMessage className="mb-[1.5px]" />
-            {!form.formState.errors.deviceNumber &&
-              (form.watch("deviceNumber").startsWith("DPTOTEST") ||
-                ksnetDeviceNo?.startsWith("DPTOTEST")) && (
-                <FormMessage>
-                  <Icon
-                    iconKey="alert-triangle"
-                    size={16}
-                    className="stroke-3 text-gray-400"
-                  />
-                  테스트용 기기입니다.
-                </FormMessage>
-              )}
-          </FormItem>
-        )}
-      />
+                  <ResponsiveButton
+                    type="submit"
+                    color="black"
+                    responsiveButtons={{
+                      lg: {
+                        buttonSize: "sm",
+                        className: "relative gap-0 !w-[71px]",
+                      },
+                      md: {
+                        buttonSize: "sm",
+                        className: "flex",
+                      },
+                      sm: {
+                        buttonSize: "sm",
+                        className: "flex",
+                      },
+                    }}
+                  >
+                    등록
+                  </ResponsiveButton>
+                </div>
+                <FormErrorMessage className="mb-[1.5px]" />
+                {!form.formState.errors.deviceNumber &&
+                  (form.watch("deviceNumber")?.startsWith("DPTOTEST") ||
+                    ksnetDeviceNo?.startsWith("DPTOTEST")) && (
+                    <FormMessage>
+                      <Icon
+                        iconKey="alert-triangle"
+                        size={16}
+                        className="stroke-3 text-gray-400"
+                      />
+                      테스트용 기기입니다.
+                    </FormMessage>
+                  )}
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
     </div>
   );
 }

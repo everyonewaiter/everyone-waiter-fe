@@ -31,7 +31,7 @@ export default function Page() {
     permission === "OWNER"
   ) {
     setClientCookie("permission", "OWNER");
-    navigate.replace(`/${stores?.stores[0].storeId}`);
+    navigate.push(`/${stores?.stores[0].storeId}`);
   }
 
   if (isError) {
