@@ -71,10 +71,10 @@ export default function Dropdown({
             type="button"
             className={cn(
               "flex h-8 w-fit items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 hover:border-gray-400 md:h-[38px] md:pr-3 md:pl-4",
-              "font-regular text-gray-0 text-xs lg:text-sm",
+              "font-regular text-xs lg:text-sm",
               disabled
                 ? "pointer-events-none cursor-not-allowed bg-[#F5F5F5] text-gray-300 placeholder:text-gray-400"
-                : "",
+                : "text-gray-0",
               triggerClassName
             )}
             onClick={() => (disabled ? null : setIsOpen((prev) => !prev))}
@@ -85,7 +85,7 @@ export default function Dropdown({
             }}
             tabIndex={disabled ? -1 : 0}
           >
-            <span className="text-s text-gray-0 whitespace-nowrap md:text-sm">
+            <span className="text-sm whitespace-nowrap md:text-[13px] lg:text-[15px]">
               {active || defaultText}
             </span>
             {isOpen ? (

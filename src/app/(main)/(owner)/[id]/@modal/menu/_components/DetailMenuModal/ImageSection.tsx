@@ -5,28 +5,25 @@ import Image from "next/image";
 import cn from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import { getCdn } from "@/utils/getCdn";
+import { FormErrorMessage } from "@/components/common/Form";
 import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
 
 interface IProps {
-  previewUrl: string | null;
   isEditing: boolean;
-  onSetPreviewUrl: (value: string) => void;
 }
 
-export default function ImageSection({
-  previewUrl,
-  isEditing,
-  onSetPreviewUrl,
-}: IProps) {
+export default function ImageSection({ isEditing }: IProps) {
   const fileRef = useRef<HTMLInputElement | null>(null);
-
-  const { watch, setValue } = useFormContext<TypeMenuForm>();
+  const { watch, setValue, formState } = useFormContext<TypeMenuForm>();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setValue("imgFile", file);
-      onSetPreviewUrl(URL.createObjectURL(file));
+      setValue("imgFile", file, { shouldDirty: true, shouldValidate: true });
+      setValue("imgString", URL.createObjectURL(file), {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
     }
   };
 
@@ -35,20 +32,40 @@ export default function ImageSection({
       <div
         className={cn(
           "overflow-hidden rounded-[12px] md:h-[280px] lg:h-[478px] lg:rounded-[24px]",
-          previewUrl || watch("imgString") ? "" : "border border-gray-500"
+          watch("imgString") ? "" : "border border-gray-500",
+          formState.errors.imgString ? "border-status-error" : ""
         )}
       >
-        {(previewUrl || watch("imgString")) && (
+        {watch("imgString") ? (
           <Image
-            src={previewUrl || getCdn(watch("imgString"))}
+            src={
+              watch("imgString").startsWith("blob")
+                ? watch("imgString")
+                : getCdn(watch("imgString"))
+            }
             alt="menu image"
             width={364}
             height={478}
             loading="lazy"
-            className="h-full w-full bg-red-50 object-cover"
+            className="h-full w-full object-cover"
           />
+        ) : (
+          <div className="center h-full w-full">
+            <Image
+              src="/logo/logo-medium-gray.svg"
+              alt="매뉴 이미지 없음"
+              width={100}
+              height={100}
+              className="opacity-10"
+            />
+          </div>
         )}
       </div>
+      {isEditing && formState.errors.imgString && (
+        <FormErrorMessage>
+          {formState.errors.imgString?.message?.toString()}
+        </FormErrorMessage>
+      )}
       {isEditing && (
         <>
           <button

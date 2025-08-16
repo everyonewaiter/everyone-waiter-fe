@@ -2,17 +2,19 @@ import * as z from "zod";
 
 const schema = z.object({
   menuId: z.string().optional(),
-  imgFile: z.any().nullable(),
-  imgString: z.string(),
+  imgFile: z.any(),
+  imgString: z.string().min(1, { message: "이미지를 등록해주세요." }),
   image: z.string(),
   category: z.string(),
-  name: z.string(),
+  name: z.string().min(1, { message: "메뉴명을 입력해주세요." }),
   description: z.string().optional(),
-  price: z.number(),
+  price: z.string({ message: "가격을 입력해주세요." }).regex(/^[0-9,]+$/, {
+    message: "가격은 숫자와 콤마만 입력할 수 있습니다.",
+  }),
   spicy: z.number().min(1).max(3),
   state: z.enum(["DEFAULT", "HIDE", "SOLD_OUT"]).optional(),
   label: z.enum(["BEST", "NEW", "DEFAULT", "RECOMMEND"]).optional(),
-  printEnabled: z.boolean().optional(),
+  printEnabled: z.boolean(),
   requiredOptions: z.array(
     z.object({
       name: z.string(),
@@ -52,7 +54,8 @@ export const menuFormSchema = schema
     requiredOptions: true,
     optionalOptions: true,
   })
-  .required();
+  .required()
+  .partial({ imgFile: true });
 
 export const menuListSchema = z.object({
   menus: z.array(

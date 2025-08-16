@@ -15,12 +15,14 @@ export default function Header({ onNavigate }: IProps) {
           메뉴의 세부 정보를 입력하고 옵션을 설정해 주세요.
         </p>
       </div>
-      <Icon
-        iconKey="close"
-        size={32}
-        className="h-6 w-6 text-black md:h-8 md:w-8"
-        onClick={onNavigate}
-      />
+      <button type="button">
+        <Icon
+          iconKey="close"
+          size={32}
+          className="h-6 w-6 text-black md:h-8 md:w-8"
+          onClick={onNavigate}
+        />
+      </button>
     </div>
   );
 }

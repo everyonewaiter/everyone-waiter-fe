@@ -1,5 +1,5 @@
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Dropdown from "@/components/common/Dropdown";
 import Label from "@/components/common/Label";
@@ -7,6 +7,8 @@ import LabeledInput from "@/components/common/LabeledInput";
 import Switch from "@/components/common/Switch";
 import { menuLabelTranslate, menuStateTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
+import Input from "@/components/common/Input";
+import { FormErrorMessage } from "@/components/common/Form";
 import { categoryQueries } from "../../../menu/_queries/useCategories";
 import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 
@@ -30,9 +32,11 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
 
   return (
     <section className="flex h-fit basis-[32.81%] rounded-[12px] border border-gray-600 p-4 lg:rounded-[24px] lg:p-6">
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-col gap-2">
         <div className={cn("flex flex-col", inputGap)}>
-          <Label disabled={!isEditing}>카테고리</Label>
+          <Label disabled={!isEditing} className="mb-1">
+            카테고리
+          </Label>
           <Dropdown
             data={data?.categories?.map((el) => el.name) ?? []}
             defaultText={
@@ -50,7 +54,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
               }
             }}
             disabled={type !== "create"}
-            triggerClassName="!w-fit"
+            triggerClassName="justify-between lg:rounded-[12px] md:rounded-[8px]"
           />
         </div>
         <LabeledInput
@@ -69,15 +73,33 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
           containerClassName={cn(inputGap, marginTop)}
           placeholder="메뉴 설명을 입력해주세요."
         />
-        <LabeledInput
-          form={form}
-          name="price"
-          label="가격"
-          disabled={!isEditing}
-          containerClassName={cn(inputGap, marginTop)}
-          placeholder="가격을 입력해주세요."
-          onChange={(e) => form?.setValue("price", Number(e.target.value))}
-        />
+        <div className="mt-1 flex flex-col gap-2">
+          <Label disabled={!isEditing}>가격</Label>
+          <Controller
+            name="price"
+            control={form.control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="가격을 입력해주세요."
+                onChange={(e) => {
+                  const digitsOnly = e.target.value.replace(/[^0-9]/g, "");
+                  if (digitsOnly === "" || digitsOnly === "0") {
+                    form.setValue("price", "");
+                    return;
+                  }
+                  const numeric = Number(digitsOnly);
+                  form.setValue("price", numeric.toLocaleString());
+                }}
+                disabled={!isEditing}
+                hasError={!!form.formState.errors.price}
+              />
+            )}
+          />
+          <FormErrorMessage>
+            {form.formState.errors.price?.message?.toString()}
+          </FormErrorMessage>
+        </div>
         <div className={cn("flex flex-col gap-2", marginTop)}>
           <Label>태그</Label>
           <div className="flex items-center gap-2">
