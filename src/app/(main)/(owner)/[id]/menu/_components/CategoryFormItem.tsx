@@ -20,12 +20,14 @@ interface IProps {
   index: number;
   optionState: "move" | "delete" | null;
   initialCategoriesRef: RefObject<Category[]>;
+  sortableId?: string;
 }
 
 export default function CategoryFormItem({
   index,
   optionState,
   categoryId,
+  sortableId,
 }: IProps) {
   const { storeId } = useStoreContext();
   const form = useFormContext<TypeCategoryForm>();
@@ -40,7 +42,7 @@ export default function CategoryFormItem({
     setActivatorNodeRef,
     transform,
     transition,
-  } = useSortable({ id: categoryId });
+  } = useSortable({ id: sortableId ?? categoryId });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -68,7 +70,10 @@ export default function CategoryFormItem({
 
   const handleUpdate = () => {
     // NOTE 카테고리 아이디가 없으면 (새로 추가됨) -> isUpdated로 변경하지 않음
-    if (form.getValues(`categories.${index}.categoryId`)) {
+    if (
+      form.getValues(`categories.${index}.categoryId`) &&
+      !form.getValues(`categories.${index}.isAdded`)
+    ) {
       form.setValue(`categories.${index}.isUpdated`, true);
     }
   };

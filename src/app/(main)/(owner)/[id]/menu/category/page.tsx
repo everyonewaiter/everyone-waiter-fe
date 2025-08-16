@@ -11,10 +11,7 @@ import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
 import { useStoreContext } from "@/providers/storeProvider";
 import { categoryQueries } from "../_queries/useCategories";
-import {
-  categoryFormSchema,
-  TypeCategoryForm,
-} from "../_schema/category.schema";
+import { categorySchema, TypeCategory } from "../_schema/category.schema";
 
 export default function Page() {
   const navigate = useRouter();
@@ -25,9 +22,9 @@ export default function Page() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<TypeCategoryForm>({
+  const form = useForm<TypeCategory>({
     mode: "onChange",
-    resolver: zodResolver(categoryFormSchema),
+    resolver: zodResolver(categorySchema),
     defaultValues: { categories: [] },
   });
 
