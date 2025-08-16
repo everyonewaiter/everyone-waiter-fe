@@ -51,7 +51,7 @@ export default function DetailMenuModal({
   const { handleSubmit } = useHandleMenuSubmit({
     storeId,
     type,
-    data: {
+    originData: {
       menuId: data?.menuId,
       image: data?.image,
     },
@@ -66,7 +66,9 @@ export default function DetailMenuModal({
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit(() => handleSubmit(handleAfterAction))}
+        onSubmit={form.handleSubmit((formData) =>
+          handleSubmit(formData, handleAfterAction)
+        )}
         className="scrollbar-hide flex h-full w-full flex-col md:gap-5 lg:gap-8"
       >
         {/* 헤더 */}
@@ -112,8 +114,6 @@ export default function DetailMenuModal({
               <ModalButton
                 isEditing={isEditing}
                 onSetEditing={onSetEditing}
-                type={type}
-                onSetIsSubmitted={setIsSubmitted}
                 isSubmitted={isSubmitted}
                 {...data}
               />
@@ -126,8 +126,6 @@ export default function DetailMenuModal({
           <ModalButton
             isEditing={isEditing}
             onSetEditing={onSetEditing}
-            type={type}
-            onSetIsSubmitted={setIsSubmitted}
             isSubmitted={isSubmitted}
             {...data}
           />

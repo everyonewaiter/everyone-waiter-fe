@@ -6,7 +6,7 @@ import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 interface IProps {
   storeId: string;
   type: "create" | "update";
-  data: {
+  originData: {
     menuId?: string;
     image?: string;
   };
@@ -16,7 +16,7 @@ interface IProps {
 export default function useHandleMenuSubmit({
   storeId,
   type,
-  data,
+  originData,
   onSetIsSubmitted,
 }: IProps) {
   const form = useFormContext<TypeMenuForm>();
@@ -26,6 +26,7 @@ export default function useHandleMenuSubmit({
   const updateWithoutImg = menuQueries.useUpdateWithoutImage(storeId);
 
   const handleSubmit = (
+    data: TypeMenuForm,
     handleAfter: () => {
       onSuccess: () => void;
       onError: () => void;
@@ -33,29 +34,28 @@ export default function useHandleMenuSubmit({
   ) => {
     onSetIsSubmitted(true);
 
-    const values = form.getValues();
-    const { request } = formToRequest(values);
+    const { request } = formToRequest(data);
 
     if (type === "create") {
       add.mutate(
         {
           storeId,
-          categoryId: form.watch("category"),
+          categoryId: data.category,
           body: {
-            file: form.getValues("imgFile") as File,
+            file: data.imgFile as File,
             request,
           },
         },
         { ...handleAfter() }
       );
     } else if (type === "update") {
-      if (form.watch("imgFile") && data?.image !== form.watch("imgString")) {
+      if (data.imgFile && originData?.image !== data.imgString) {
         updateWithImg.mutate(
           {
             storeId,
-            menuId: data?.menuId as string,
+            menuId: originData?.menuId as string,
             body: {
-              file: form.watch("imgFile") as File,
+              file: data.imgFile as File,
               request,
             },
           },
@@ -65,7 +65,7 @@ export default function useHandleMenuSubmit({
         updateWithoutImg.mutate(
           {
             storeId,
-            menuId: data?.menuId as string,
+            menuId: originData?.menuId as string,
             body: request,
           },
           { ...handleAfter() }
