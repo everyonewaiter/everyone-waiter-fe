@@ -52,8 +52,8 @@ export default function Navigation({ role }: IProps) {
           onValueChange={(value) => {
             const store = storeList.stores.find((el) => el.name === value);
             setSelectedStore(store!);
-            navigate.push(`/${store?.storeId}`);
-            // navigate.refresh();
+            const p = pathname.split("/");
+            navigate.push(`/${store?.storeId}/${p.slice(2).join("/")}`);
           }}
           triggerClassname="text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
         />
