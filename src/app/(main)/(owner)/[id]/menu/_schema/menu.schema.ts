@@ -8,11 +8,13 @@ const schema = z.object({
   category: z.string(),
   name: z.string().min(1, { message: "메뉴명을 입력해주세요." }),
   description: z.string().optional(),
-  price: z.string({ message: "가격을 입력해주세요." }).regex(/^[\d,]$/),
+  price: z.string({ message: "가격을 입력해주세요." }).regex(/^[0-9,]+$/, {
+    message: "가격은 숫자와 콤마만 입력할 수 있습니다.",
+  }),
   spicy: z.number().min(1).max(3),
   state: z.enum(["DEFAULT", "HIDE", "SOLD_OUT"]).optional(),
   label: z.enum(["BEST", "NEW", "DEFAULT", "RECOMMEND"]).optional(),
-  printEnabled: z.boolean().optional(),
+  printEnabled: z.boolean(),
   requiredOptions: z.array(
     z.object({
       name: z.string(),
