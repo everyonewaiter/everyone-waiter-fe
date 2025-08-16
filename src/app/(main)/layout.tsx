@@ -15,13 +15,9 @@ const Sidebar = dynamic(() => import("./_components/Sidebar/Sidebar"), {
   loading: () => <Spinner />,
 });
 
-export default async function Layout({
-  children,
-  params,
-}: PropsWithChildren<{ params: Promise<{ id: string }> }>) {
+export default async function Layout({ children }: PropsWithChildren) {
   const queryClient = getQueryClient();
 
-  const { id } = await params;
   const token = await getToken("accessToken");
   const permission = await getToken("permission");
 
@@ -35,7 +31,7 @@ export default async function Layout({
   return (
     <div className="flex h-screen w-screen flex-col bg-white md:flex-row md:bg-[#F5F5F5]">
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Sidebar initialStoreId={id} />
+        <Sidebar />
       </HydrationBoundary>
       <div className="flex flex-1 flex-col overflow-x-hidden md:py-5 md:pr-5 md:pl-0 lg:py-8">
         <MobileHeader />

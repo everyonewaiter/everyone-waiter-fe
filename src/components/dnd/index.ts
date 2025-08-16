@@ -11,5 +11,6 @@ export {
   useSortable,
   verticalListSortingStrategy,
   rectSortingStrategy,
+  horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 export { CSS } from "@dnd-kit/utilities";

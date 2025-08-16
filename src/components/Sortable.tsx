@@ -7,19 +7,22 @@ import {
   useSensor,
   useSensors,
   SortableContext,
-  rectSortingStrategy,
+  verticalListSortingStrategy,
 } from "@/components/dnd/index";
+import { SortingStrategy } from "@dnd-kit/sortable";
 import { PropsWithChildren } from "react";
 
 interface IProps {
   items: any[];
   onDragEnd: (event: any) => void;
+  sortingStrategy?: SortingStrategy;
 }
 
 export default function Sortable({
   items,
   onDragEnd,
   children,
+  sortingStrategy,
 }: PropsWithChildren<IProps>) {
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -29,7 +32,10 @@ export default function Sortable({
       collisionDetection={closestCenter}
       onDragEnd={onDragEnd}
     >
-      <SortableContext items={items} strategy={rectSortingStrategy}>
+      <SortableContext
+        items={items}
+        strategy={sortingStrategy ?? verticalListSortingStrategy}
+      >
         {children}
       </SortableContext>
     </DndContext>

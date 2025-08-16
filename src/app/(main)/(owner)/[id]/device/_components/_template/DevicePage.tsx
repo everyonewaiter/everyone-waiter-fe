@@ -189,6 +189,9 @@ export default function DevicePage() {
             </TableBody>
           </Table>
         </div>
+        {!data?.content.length && (
+          <div className="center h-full">기기 목록이 존재하지 않습니다.</div>
+        )}
         <div className="flex flex-col gap-5 md:hidden">
           {data?.content.map((item: Device, index: number) => (
             <div className="flex flex-col gap-2" key={item.deviceId}>

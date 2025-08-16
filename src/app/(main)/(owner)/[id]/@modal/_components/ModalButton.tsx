@@ -7,6 +7,7 @@ import Spinner from "@/components/common/Spinner";
 
 interface IProps {
   buttonText: string;
+  secondaryText?: string;
   colorBlack?: boolean;
   onlyClose?: boolean;
   onlyAction?: boolean;
@@ -14,15 +15,18 @@ interface IProps {
   type?: "submit" | "button";
   onAction?: () => void;
   isSubmitted?: boolean;
+  onClose?: () => void;
 }
 
 export default function ModalButton({
   buttonText,
+  secondaryText,
   colorBlack,
   onlyClose,
   onlyAction,
   className,
   onAction,
+  onClose,
   isSubmitted,
   type = "button",
 }: IProps) {
@@ -42,10 +46,10 @@ export default function ModalButton({
             md: { buttonSize: "sm", className: "!h-9 !w-[90px]" },
             sm: { buttonSize: "sm", className: "!h-10 !w-[100px]" },
           }}
-          commonClassName={onlyClose ? "w-full flex flex-1" : ""}
-          onClick={() => router.back()}
+          commonClassName={onlyClose ? "flex-1" : ""}
+          onClick={() => (onClose ? onClose() : router.back())}
         >
-          닫기
+          {secondaryText || "닫기"}
         </ResponsiveButton>
       )}
       {!onlyClose && (

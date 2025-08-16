@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "@/components/common/Spinner";
-import { arrayMove } from "@/components/dnd/index";
+import { arrayMove, rectSortingStrategy } from "@/components/dnd/index";
 import Switch from "@/components/common/Switch";
 import { Form } from "@/components/common/Form";
 import {
@@ -104,7 +104,11 @@ export default function OrderSection({
             />
           </Form>
         </div>
-        <Sortable items={items} onDragEnd={handleDrag}>
+        <Sortable
+          items={items}
+          onDragEnd={handleDrag}
+          sortingStrategy={rectSortingStrategy}
+        >
           <div className="-m-1 flex flex-wrap">
             {items?.map((id) => (
               <MoveableChips

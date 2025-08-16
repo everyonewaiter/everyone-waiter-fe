@@ -1,156 +1,176 @@
 "use client";
 
-import { ArrowDownUp, Plus } from "@/components/common/Icon/index";
-import dynamic from "next/dynamic";
+import { FormProvider } from "react-hook-form";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { FormProvider } from "react-hook-form";
+import { Plus } from "@/components/common/Icon/index";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import Icon from "@/components/common/Icon/Icon";
-import { ScrollArea } from "@/components/common/ScrollArea";
-import Spinner from "@/components/common/Spinner";
-import CategoryForm from "../../../../menu/_components/CategoryForm";
 import ModalButton from "../../../_components/ModalButton";
 import ModalTitle from "../../../_components/ModalTitle";
-import useCategoryForm from "../../_hooks/useCategoryForm";
+import { categoryQueries } from "../../../../menu/_queries/useCategories";
+import CategoryForm from "../../../../menu/_components/CategoryForm";
+import ModalHeader from "./_components/ModalHeader";
 import useCategoryMove from "../../_hooks/useCategoryMove";
-
-const Sortable = dynamic(
-  () => import("../../../../../../../../components/Sortable"),
-  {
-    ssr: false,
-    loading: () => <Spinner />,
-  }
-);
 
 export default function Page() {
   const navigate = useRouter();
   const params = useParams();
   const storeId = params?.id as string;
 
-  const [changeMove, setChangeMove] = useState(false);
+  const [optionState, setOptionState] = useState<"move" | "delete" | null>(
+    null
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
-    form: { form, watch, setValue },
-  } = useCategoryForm(storeId);
+    form,
+    handleSortSave,
+    handleDrag,
+    initialRef,
+    resetMoves,
+    isSortSubmitting,
+    categories,
+  } = useCategoryMove(storeId);
 
-  const { handleSortSave, handleDrag } = useCategoryMove(storeId);
+  console.log(categories);
+
+  const update = categoryQueries.useUpdateCategory();
+  const add = categoryQueries.useAddCategory();
+
+  const handleSave = async () => {
+    setIsSubmitting(true);
+    const current = (form.getValues("categories") || []).map((c) => ({
+      ...c,
+      name: (c.name || "").trim(),
+    }));
+
+    const initial = initialRef.current || [];
+    const initialById = new Map(initial.map((c) => [c.categoryId, c]));
+
+    const toCreate = current.filter((c) => c.isAdded && c.name);
+    const toUpdate = current.filter(
+      (c) =>
+        c.categoryId &&
+        initialById.get(c.categoryId)?.name !== c.name &&
+        c.isUpdated &&
+        c.name
+    );
+
+    await Promise.all([
+      ...toCreate.map((c) =>
+        add.mutateAsync({ storeId, categoryName: c.name })
+      ),
+      ...toUpdate.map((c) =>
+        update.mutateAsync({
+          storeId,
+          categoryId: c.categoryId!,
+          categoryName: c.name,
+        })
+      ),
+    ])
+      .then(() => navigate.push(`/${storeId}/menu`))
+      .catch(() => setIsSubmitting(false));
+  };
+
+  const getTitle = () => {
+    if (optionState === "move") return "카테고리 순서 변경";
+    if (optionState === "delete") return "카테고리 삭제";
+    return "카테고리";
+  };
 
   return (
     <div className="lg h-full md:w-[340px] lg:w-[540px]">
       <ModalTitle
-        title="카테고리"
+        title={getTitle()}
         topRightComponent={
-          !changeMove && (
-            <>
-              <ResponsiveButton
-                color="grey"
-                responsiveButtons={{
-                  lg: {
-                    buttonSize: "md",
-                    className: "!rounded-[24px] !px-4 !py-2",
-                  },
-                }}
-                commonClassName="hidden lg:flex"
-                onClick={() => setChangeMove(true)}
-              >
-                <ArrowDownUp
-                  size={18}
-                  strokeWidth={1.5}
-                  className="md:h-3 md:w-3 lg:h-[18px] lg:w-[18px]"
-                />
-                <span className="lg:text-base">순서 변경</span>
-              </ResponsiveButton>
-              <div className="flex items-center gap-4 lg:hidden">
-                <button
-                  type="button"
-                  className="flex items-center gap-1"
-                  onClick={() => setChangeMove(true)}
-                >
-                  <ArrowDownUp
-                    size={16}
-                    strokeWidth={1.5}
-                    className="text-gray-300"
-                  />
-                  <span className="text-sm text-gray-300">순서 변경</span>
-                </button>
-                <button type="button" className="flex items-center gap-1">
-                  <Icon
-                    iconKey="trash"
-                    className="text-status-error"
-                    size={16}
-                  />
-                  <span className="text-status-error text-sm">삭제</span>
-                </button>
-              </div>
-            </>
-          )
+          <ModalHeader
+            optionState={optionState}
+            setOptionState={setOptionState}
+          />
         }
       />
-      <ScrollArea className="md:h-[270px] lg:h-[424px]">
-        <FormProvider {...form}>
-          {changeMove ? (
-            <Sortable
-              items={watch("categories").map((field) => field.categoryId)}
-              onDragEnd={(props) =>
-                handleDrag({
-                  categories: watch("categories"),
-                  setCategories: (val: Category[]) =>
-                    setValue("categories", val),
-                  ...props,
-                })
-              }
-            >
-              <CategoryForm changeMove={changeMove} />
-            </Sortable>
-          ) : (
-            <CategoryForm changeMove={changeMove} />
-          )}
-        </FormProvider>
-      </ScrollArea>
+      <FormProvider {...form}>
+        <CategoryForm
+          optionState={optionState}
+          initialCategoriesRef={initialRef}
+          handleDrag={handleDrag}
+        />
+      </FormProvider>
 
-      {!changeMove && (
-        <div className="flex flex-col md:mb-6 lg:mb-8">
-          <ResponsiveButton
-            type="button"
-            variant="outline"
-            color="grey"
-            responsiveButtons={{
-              sm: {
-                buttonSize: "sm",
-                className: "mt-6 h-[34px] gap-2 items-center",
-              },
-              md: {
-                buttonSize: "sm",
-                className: "items-center gap-1 !text-s !font-medium mt-4",
-              },
-              lg: {
-                buttonSize: "lg",
-                className: "mt-4",
-              },
-            }}
-            commonClassName="w-full border-none dashed-light"
-            onClick={() =>
-              setValue("categories", [
-                ...watch("categories"),
-                { categoryId: "", name: "" },
-              ])
-            }
-          >
-            <Plus size={24} className="md:h-4 md:w-4 lg:h-6 lg:w-6" />
-            <span>카테고리 추가</span>
-          </ResponsiveButton>
-        </div>
-      )}
-
-      {changeMove && (
+      {optionState === "move" && (
         <ModalButton
           buttonText="순서 저장하기"
+          secondaryText="돌아가기"
           colorBlack
-          onAction={() =>
-            handleSortSave(() => navigate.replace(`/${storeId}/menu/category`))
-          }
+          onClose={() => {
+            resetMoves();
+            setOptionState(null);
+          }}
+          onAction={() => {
+            handleSortSave(() => {
+              navigate.replace(`/${storeId}/menu`);
+              setOptionState(null);
+            });
+          }}
+          isSubmitted={isSortSubmitting}
         />
+      )}
+      {optionState === "delete" && (
+        <ModalButton
+          buttonText=""
+          secondaryText="돌아가기"
+          onClose={() => setOptionState(null)}
+          onlyClose
+        />
+      )}
+      {!optionState && (
+        <>
+          <div className="flex flex-col">
+            <ResponsiveButton
+              type="button"
+              variant="outline"
+              color="grey"
+              responsiveButtons={{
+                sm: {
+                  buttonSize: "sm",
+                  className: "mt-6 h-[34px] gap-2 items-center",
+                },
+                md: {
+                  buttonSize: "sm",
+                  className: "items-center gap-1 !text-s !font-medium mt-4",
+                },
+                lg: {
+                  buttonSize: "lg",
+                  className: "mt-4",
+                },
+              }}
+              commonClassName="w-full dashed-light"
+              onClick={() =>
+                form.setValue("categories", [
+                  ...form.watch("categories"),
+                  {
+                    categoryId: (
+                      form.watch("categories").length + 1
+                    ).toString(),
+                    name: "",
+                    isUpdated: false,
+                    isAdded: true,
+                  },
+                ])
+              }
+            >
+              <Plus size={24} className="md:h-4 md:w-4 lg:h-6 lg:w-6" />
+              <span>카테고리 추가</span>
+            </ResponsiveButton>
+          </div>
+          <ModalButton
+            buttonText="저장하기"
+            isSubmitted={isSubmitting}
+            secondaryText="닫기"
+            onClose={() => navigate.back()}
+            onAction={handleSave}
+          />
+        </>
       )}
     </div>
   );
