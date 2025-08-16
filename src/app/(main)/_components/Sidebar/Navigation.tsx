@@ -3,16 +3,19 @@
 import Spinner from "@/components/common/Spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import MainSelect from "../MainSelect";
 import SidebarMenu from "./SidebarMenu";
 import { getStoreList } from "../../(owner)/[id]/store/_api/stores.api";
 
 interface IProps {
-  initialStoreId: string;
   role: AccountPermission;
 }
 
-export default function Navigation({ initialStoreId, role }: IProps) {
+export default function Navigation({ role }: IProps) {
+  const navigate = useRouter();
+  const pathname = usePathname();
+
   const [selectedStore, setSelectedStore] = useState<{
     name: string;
     storeId: string;
@@ -29,16 +32,11 @@ export default function Navigation({ initialStoreId, role }: IProps) {
   });
 
   useEffect(() => {
-    if (storeList?.stores?.length) {
-      if (initialStoreId) {
-        setSelectedStore(
-          storeList.stores.find((el) => el.storeId === initialStoreId)!
-        );
-      } else {
-        setSelectedStore(storeList?.stores?.[0]);
-      }
-    }
-  }, [storeList, initialStoreId]);
+    if (!storeList?.stores?.length) return;
+    const currentId = pathname.split("/").filter(Boolean)[0];
+    const matched = storeList.stores.find((el) => el.storeId === currentId);
+    setSelectedStore(matched ?? storeList.stores[0]);
+  }, [storeList, pathname]);
 
   return (
     <nav>
@@ -51,9 +49,12 @@ export default function Navigation({ initialStoreId, role }: IProps) {
         <MainSelect
           stores={storeList?.stores}
           value={selectedStore.name}
-          onValueChange={(value) =>
-            setSelectedStore(storeList.stores.find((el) => el.name === value)!)
-          }
+          onValueChange={(value) => {
+            const store = storeList.stores.find((el) => el.name === value);
+            setSelectedStore(store!);
+            navigate.push(`/${store?.storeId}`);
+            // navigate.refresh();
+          }}
           triggerClassname="text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
         />
       )}
