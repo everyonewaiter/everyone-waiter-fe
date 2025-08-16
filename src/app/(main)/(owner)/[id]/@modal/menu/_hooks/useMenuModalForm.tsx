@@ -14,8 +14,22 @@ export default function useMenuModalForm(data?: MenuDetail) {
   const categoryId = searchParams.get("categoryId");
 
   const form = useForm<TypeMenuForm>({
-    mode: "onChange",
+    mode: "onSubmit",
     resolver: zodResolver(menuFormSchema),
+    defaultValues: {
+      imgFile: undefined as unknown as File,
+      imgString: "",
+      category: "",
+      name: "",
+      description: "",
+      price: "",
+      spicy: 1,
+      state: "DEFAULT",
+      label: "DEFAULT",
+      printEnabled: false,
+      requiredOptions: [],
+      optionalOptions: [],
+    },
   });
 
   useEffect(() => {
@@ -25,7 +39,7 @@ export default function useMenuModalForm(data?: MenuDetail) {
       category: data.categoryId,
       name: data.name,
       description: data.description,
-      price: data.price,
+      price: (data.price ?? 0).toLocaleString(),
       spicy: data.spicy,
       state: data.state,
       label: data.label!,

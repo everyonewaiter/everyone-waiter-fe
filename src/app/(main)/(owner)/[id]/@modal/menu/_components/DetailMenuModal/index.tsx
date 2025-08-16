@@ -8,6 +8,7 @@ import { useStoreContext } from "@/providers/storeProvider";
 import ImageSection from "./ImageSection";
 import ModalButton from "./ModalButton";
 import useMenuModalForm from "../../_hooks/useMenuModalForm";
+import useHandleMenuSubmit from "../../_hooks/useHandleMenuSubmit";
 
 const FormSection = dynamic(() => import("../FormSection"), { ssr: false });
 const OptionTemplate = dynamic(() => import("../OptionTemplate"), {
@@ -39,7 +40,6 @@ export default function DetailMenuModal({
   const { form } = useMenuModalForm(data);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [showInfo, setShowInfo] = useState<Record<OptionType, boolean>>({
     [OptionType.REQUIRED]: false,
     [OptionType.OPTIONAL]: false,
@@ -48,9 +48,27 @@ export default function DetailMenuModal({
     OptionType.REQUIRED
   );
 
+  const { handleSubmit } = useHandleMenuSubmit({
+    storeId,
+    type,
+    data: {
+      menuId: data?.menuId,
+      image: data?.image,
+    },
+    onSetIsSubmitted: setIsSubmitted,
+  });
+
+  const handleAfterAction = () => ({
+    onSuccess: () => navigate.back(),
+    onError: () => setIsSubmitted(false),
+  });
+
   return (
     <FormProvider {...form}>
-      <div className="scrollbar-hide flex h-full w-full flex-col md:gap-5 lg:gap-8">
+      <form
+        onSubmit={form.handleSubmit(() => handleSubmit(handleAfterAction))}
+        className="scrollbar-hide flex h-full w-full flex-col md:gap-5 lg:gap-8"
+      >
         {/* 헤더 */}
         <div className="shrink-0">
           <Header onNavigate={() => navigate.back()} />
@@ -60,11 +78,7 @@ export default function DetailMenuModal({
         <div className="overflow-hidden">
           <div className="scrollbar-hide flex h-full w-full flex-col overflow-y-auto md:flex-row md:gap-3 lg:gap-[18px]">
             {/* 이미지 표시 및 등록 */}
-            <ImageSection
-              previewUrl={previewUrl}
-              onSetPreviewUrl={setPreviewUrl}
-              isEditing={isEditing}
-            />
+            <ImageSection isEditing={isEditing} />
 
             {/* 메뉴 상세 정보 등록 / 수정 */}
             <FormSection isEditing={isEditing} storeId={storeId} type={type} />
@@ -118,7 +132,7 @@ export default function DetailMenuModal({
             {...data}
           />
         </div>
-      </div>
+      </form>
     </FormProvider>
   );
 }

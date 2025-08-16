@@ -21,7 +21,7 @@ export default function useHandleMenuSubmit({
 }: IProps) {
   const form = useFormContext<TypeMenuForm>();
 
-  const add = menuQueries.useAddMenu(storeId);
+  const add = menuQueries.useAddMenu(storeId, form);
   const updateWithImg = menuQueries.useUpdateWithImage(storeId);
   const updateWithoutImg = menuQueries.useUpdateWithoutImage(storeId);
 
