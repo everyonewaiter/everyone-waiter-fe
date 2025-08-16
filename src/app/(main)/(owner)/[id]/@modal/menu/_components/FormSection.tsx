@@ -34,7 +34,9 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
     <section className="flex h-fit basis-[32.81%] rounded-[12px] border border-gray-600 p-4 lg:rounded-[24px] lg:p-6">
       <div className="flex w-full flex-col gap-2">
         <div className={cn("flex flex-col", inputGap)}>
-          <Label disabled={!isEditing}>카테고리</Label>
+          <Label disabled={!isEditing} className="mb-1">
+            카테고리
+          </Label>
           <Dropdown
             data={data?.categories?.map((el) => el.name) ?? []}
             defaultText={
@@ -72,7 +74,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
           placeholder="메뉴 설명을 입력해주세요."
         />
         <div className="mt-1 flex flex-col gap-2">
-          <Label>가격</Label>
+          <Label disabled={!isEditing}>가격</Label>
           <Controller
             name="price"
             control={form.control}
@@ -89,6 +91,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                   const numeric = Number(digitsOnly);
                   form.setValue("price", numeric.toLocaleString());
                 }}
+                disabled={!isEditing}
                 hasError={!!form.formState.errors.price}
               />
             )}
