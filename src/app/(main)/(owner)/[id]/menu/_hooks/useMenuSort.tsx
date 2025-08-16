@@ -54,6 +54,7 @@ export function useMenuSort(storeId: string, categoryId: string) {
           ...el,
           category: el.categoryId,
           label: el.label!,
+          price: el.price.toLocaleString(),
         }))
       );
   }, [menus?.menus, setInit]);
