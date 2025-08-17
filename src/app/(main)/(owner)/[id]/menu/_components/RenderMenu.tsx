@@ -7,7 +7,9 @@ import { useMediaQuery } from "react-responsive";
 import DashedBorder from "@/components/DashedBorder";
 import { useStoreContext } from "@/providers/storeProvider";
 import Spinner from "@/components/common/Spinner";
+import { rectSortingStrategy } from "@/components/dnd";
 import { Skeleton } from "@/components/common/Skeleton/Skeleton";
+import { TypeMenuList } from "../_schema/menu.schema";
 import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
 
@@ -27,6 +29,7 @@ interface IProps {
   isSelected: (value: { menuId: string }) => boolean;
   toggle: (value: { menuId: string }) => void;
   handleDragEnd: ({ active, over }: any) => void;
+  sortedMenus?: TypeMenuList["menus"];
 }
 
 export default function RenderMenu({
@@ -35,6 +38,7 @@ export default function RenderMenu({
   isSelected,
   toggle,
   handleDragEnd,
+  sortedMenus,
 }: IProps) {
   const navigate = useRouter();
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
@@ -49,40 +53,43 @@ export default function RenderMenu({
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
       <div className="flex-1">
         <div className="grid grid-cols-3 gap-4 md:grid-cols-5 md:gap-x-[10px] md:gap-y-[16px] lg:gap-x-[32px] lg:gap-y-[40px]">
-          <button
-            type="button"
-            className="aspect-[329/440] h-full"
-            onClick={() =>
-              navigate.push(
-                `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
-              )
-            }
-          >
-            <DashedBorder
-              layoutClassName="bg-gray-700 cursor-pointer h-full"
-              radius={{
-                lg: 24,
-                md: 12,
-                sm: 15,
-              }}
-            >
-              <PlusIcon strokeWidth={1.5} />
-              <span className="text-base">메뉴 추가</span>
-            </DashedBorder>
-          </button>
-          {data && changeSort && (
+          {sortedMenus && changeSort && (
             <Sortable
-              items={data?.menus?.map((item) => item.menuId)!}
+              items={sortedMenus.map((item) => item.menuId!)}
               onDragEnd={handleDragEnd}
+              sortingStrategy={rectSortingStrategy}
             >
-              {data?.menus?.map((item) => (
+              {sortedMenus.map((item) => (
                 <SortableItem
-                  key={item.menuId}
+                  key={item.menuId!}
                   item={item}
-                  onClick={() => navigate.push(handleNavigate(item.menuId))}
+                  onClick={() => navigate.push(handleNavigate(item.menuId!))}
                 />
               ))}
             </Sortable>
+          )}
+          {!changeSort && (
+            <button
+              type="button"
+              className="aspect-[329/440] h-full"
+              onClick={() =>
+                navigate.push(
+                  `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
+                )
+              }
+            >
+              <DashedBorder
+                layoutClassName="bg-gray-700 cursor-pointer h-full"
+                radius={{
+                  lg: 24,
+                  md: 12,
+                  sm: 15,
+                }}
+              >
+                <PlusIcon strokeWidth={1.5} />
+                <span className="text-base">메뉴 추가</span>
+              </DashedBorder>
+            </button>
           )}
           {data &&
             !changeSort &&

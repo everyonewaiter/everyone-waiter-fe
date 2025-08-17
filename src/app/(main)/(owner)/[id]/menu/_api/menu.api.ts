@@ -171,12 +171,12 @@ export const deleteMenu = async ({
 };
 
 export const deleteMultipleMenus = async ({
+  menuIds,
   storeId,
-  body,
-}: PropsWithStoreId<{ body: { menuId: string }[] }>) => {
+}: PropsWithStoreId<{ menuIds: string[] }>) => {
   const response = await instance.post(
     `${API_PATH.stores}/${storeId}/menus/delete`,
-    body
+    { menuIds }
   );
   return response.data;
 };

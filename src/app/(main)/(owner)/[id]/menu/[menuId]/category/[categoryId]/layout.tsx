@@ -9,11 +9,9 @@ import { categoryKeys, menuKeys } from "../../../_queries/keys";
 export default async function Layout({
   children,
   params,
-  // modal,
 }: {
   children: React.ReactNode;
   params: Promise<{ id: string }>;
-  // modal?: React.ReactNode;
 }) {
   const queryClient = getQueryClient();
   const { id } = await params;
@@ -30,10 +28,7 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="relative flex min-h-screen flex-col">
-        {children}
-        {/* {modal} */}
-      </div>
+      <div className="relative flex min-h-screen flex-col">{children}</div>
     </HydrationBoundary>
   );
 }

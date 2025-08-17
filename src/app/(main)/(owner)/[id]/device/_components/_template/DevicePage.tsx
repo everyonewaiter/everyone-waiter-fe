@@ -204,11 +204,7 @@ export default function DevicePage() {
                 />
                 <span>{index + 1}</span>
               </div>
-              <MobileTable
-                className="z-10"
-                key={item.deviceId}
-                // onClick={() => handleModalOpen(item.deviceId)}
-              >
+              <MobileTable className="z-10" key={item.deviceId}>
                 <TableBody className="flex flex-col">
                   <MobileTableRow>
                     <MobileTableHead>이름</MobileTableHead>

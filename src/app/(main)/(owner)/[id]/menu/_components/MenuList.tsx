@@ -17,9 +17,15 @@ export default function MenuList() {
   const { storeId } = useStoreContext();
   const { isSelected, toggle, selectedCards } = useSelectedCard();
   const { active, categories, setActive } = useActiveCategory(storeId);
-  const { handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
+  const { form, handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
 
   const [changeSort, setChangeSort] = useState(false);
+
+  const getBorderClass = (categoryId: string) => {
+    if (changeSort) return "border-gray-300 bg-transparent";
+    if (active === categoryId) return "border-black";
+    return "border-gray-300";
+  };
 
   return (
     <div className="flex flex-col pb-2 md:pt-4 lg:pt-6">
@@ -44,6 +50,7 @@ export default function MenuList() {
             }}
             onClick={() => navigate.push(`/${storeId}/menu/category/add`)}
             aria-label="카테고리 등록 및 수정"
+            disabled={changeSort}
           >
             <SettingsIcon size={18} strokeWidth={1.5} />
           </ResponsiveButton>
@@ -60,10 +67,9 @@ export default function MenuList() {
                 md: { buttonSize: "sm" },
                 sm: { buttonSize: "sm" },
               }}
-              commonClassName={
-                active === cat.categoryId ? "border-black" : "border-gray-300"
-              }
+              commonClassName={getBorderClass(cat.categoryId)}
               onClick={() => setActive(cat.categoryId)}
+              disabled={changeSort}
             >
               {cat.name}
             </ResponsiveButton>
@@ -74,7 +80,7 @@ export default function MenuList() {
           categoryId={active}
           changeSort={changeSort}
           onSetChangeSort={setChangeSort}
-          onSaveSort={handleSortSave}
+          onSaveSort={() => handleSortSave(() => setChangeSort(false))}
         />
       </div>
       <RenderMenu
@@ -83,6 +89,7 @@ export default function MenuList() {
         isSelected={isSelected}
         toggle={toggle}
         handleDragEnd={handleDragEnd}
+        sortedMenus={form.watch("menus")}
       />
     </div>
   );

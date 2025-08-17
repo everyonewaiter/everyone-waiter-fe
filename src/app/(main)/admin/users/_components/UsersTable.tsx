@@ -48,7 +48,6 @@ export default function UsersTable({ data }: IProps) {
             <UsersTableRow
               key={item.accountId.toString()}
               {...item}
-              // openModal={() => handleOpenModal(item.accountId)}
               openModal={() => navigate.push(`/admin/users/${item.accountId}`)}
             />
           ))}
@@ -59,7 +58,6 @@ export default function UsersTable({ data }: IProps) {
           <MobileTable
             key={item.accountId}
             className="z-10"
-            // onClick={() => handleOpenModal(item.accountId)}
             onClick={() => navigate.push(`/admin/users/${item.accountId}`)}
           >
             <TableBody className="flex flex-col">
