@@ -192,9 +192,12 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                     className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
                   },
                 }}
-                onClick={() =>
-                  isEditing ? form.setValue("spicy", key.length / 3) : null
-                }
+                onClick={() => {
+                  if (!isEditing) return;
+                  const current = form.watch("spicy");
+                  const next = key.length / 3;
+                  form.setValue("spicy", current === next ? 0 : next);
+                }}
                 commonClassName={
                   !isEditing
                     ? "hover:!bg-transparent !cursor-default hover:!text-current  pointer-events-none"
