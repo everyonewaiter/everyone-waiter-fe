@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/useOverlay";
+import { DeviceProvider } from "@/providers/deviceStoreProvider";
 
 const PayAlert = dynamic(() => import("../modals/PayAlert"), {
   ssr: false,
@@ -24,14 +25,15 @@ export default function SidePayment({
   const handlePay = (type: "cash" | "credit-card") => {
     open(() => (
       <QueryProviders>
-        <PayAlert
-          close={close}
-          type={type}
-          orderType={orderType}
-          remainingPaymentPrice={remainingPaymentPrice}
-          // payment={payment}
-          {...props}
-        />
+        <DeviceProvider>
+          <PayAlert
+            close={close}
+            type={type}
+            orderType={orderType}
+            remainingPaymentPrice={remainingPaymentPrice}
+            {...props}
+          />
+        </DeviceProvider>
       </QueryProviders>
     ));
   };
