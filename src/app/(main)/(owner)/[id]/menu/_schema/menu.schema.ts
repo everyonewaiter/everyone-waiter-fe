@@ -17,7 +17,7 @@ const schema = z.object({
   printEnabled: z.boolean(),
   requiredOptions: z.array(
     z.object({
-      name: z.string(),
+      name: z.string().optional(),
       printEnabled: z.boolean().default(true).optional(),
       menuOptions: z.array(
         z.object({
@@ -29,7 +29,7 @@ const schema = z.object({
   ),
   optionalOptions: z.array(
     z.object({
-      name: z.string(),
+      name: z.string().optional(),
       printEnabled: z.boolean().default(true).optional(),
       menuOptions: z.array(
         z.object({

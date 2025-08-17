@@ -34,6 +34,26 @@ export default function useHandleMenuSubmit({
   ) => {
     onSetIsSubmitted(true);
 
+    const hasGroupWithNameButNoOptions = (
+      groups?: TypeMenuForm["requiredOptions"]
+    ) =>
+      (groups ?? []).some((g) => {
+        const hasName = (g?.name?.trim() ?? "") !== "";
+        const numValidOptions = (g?.menuOptions ?? []).filter(
+          (opt) => (opt?.name?.trim() ?? "") !== ""
+        ).length;
+        return hasName && numValidOptions === 0;
+      });
+
+    if (
+      hasGroupWithNameButNoOptions(data.requiredOptions) ||
+      hasGroupWithNameButNoOptions(data.optionalOptions)
+    ) {
+      alert("하위 옵션을 1개 이상 입력해주세요.");
+      onSetIsSubmitted(false);
+      return;
+    }
+
     const { request } = formToRequest(data);
 
     if (type === "create") {

@@ -28,11 +28,11 @@ export const formToRequest = (form: TypeMenuForm) => {
   if (form.requiredOptions?.length > 0) {
     menuOptionGroups.push(
       ...form.requiredOptions
-        .filter((group) => group.name.trim() !== "")
+        .filter((group) => (group?.name?.trim() ?? "") !== "")
         .map((group) => ({
-          name: group.name,
+          name: group.name as string,
           type: "MANDATORY" as MenuOptionType,
-          printEnabled: true,
+          printEnabled: group.printEnabled ?? true,
           menuOptions: group.menuOptions.filter(
             (opt) => opt.name.trim() !== ""
           ),
@@ -44,11 +44,11 @@ export const formToRequest = (form: TypeMenuForm) => {
   if (form.optionalOptions?.length > 0) {
     menuOptionGroups.push(
       ...form.optionalOptions
-        .filter((group) => group.name.trim() !== "")
+        .filter((group) => (group?.name?.trim() ?? "") !== "")
         .map((group) => ({
-          name: group.name,
+          name: group.name as string,
           type: "OPTIONAL" as MenuOptionType,
-          printEnabled: true,
+          printEnabled: group.printEnabled ?? true,
           menuOptions: group.menuOptions.filter(
             (opt) => opt.name.trim() !== ""
           ),
