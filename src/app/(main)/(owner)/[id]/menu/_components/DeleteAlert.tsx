@@ -17,19 +17,32 @@ export default function DeleteAlert({
   const remove = menuQueries.useDeleteMenu(storeId);
   const multiRemove = menuQueries.useMultiDelete(storeId);
 
+  console.log(selected);
+
   return (
     <Alert
       onClose={close}
       onAction={() => {
         const fn =
-          selected?.length > 1
-            ? () => multiRemove.mutate({ body: selected, storeId })
+          selected?.length >= 2
+            ? () =>
+                multiRemove.mutate(
+                  { menuIds: selected.map((el) => el.menuId), storeId },
+                  {
+                    onSuccess: () => close(),
+                  }
+                )
             : () =>
-                remove.mutate({
-                  categoryId,
-                  storeId,
-                  menuId: selected[0].menuId,
-                });
+                remove.mutate(
+                  {
+                    categoryId,
+                    storeId,
+                    menuId: selected[0].menuId,
+                  },
+                  {
+                    onSuccess: () => close(),
+                  }
+                );
 
         fn();
       }}
