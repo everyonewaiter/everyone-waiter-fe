@@ -10,7 +10,6 @@ import useGetDate from "@/hooks/useGetDate";
 import dynamic from "next/dynamic";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { posQueries } from "./_queries/usePos";
-import SalesModal from "./_components/modals/SalesModal";
 
 const OpenSwitch = dynamic(() => import("./_components/OpenSwitch"), {
   ssr: false,
@@ -30,7 +29,6 @@ export default function Pos() {
   const open = posQueries.useOpenStore();
 
   const posControl = useOverlay();
-  const salesControl = useOverlay();
 
   const handleOpenPos = () => {
     const successHandler = () => {
@@ -66,14 +64,6 @@ export default function Pos() {
         </QueryProviders>
       ));
     }
-  };
-
-  const openSales = () => {
-    salesControl.open(() => (
-      <QueryProviders>
-        <SalesModal close={salesControl.close} />
-      </QueryProviders>
-    ));
   };
 
   return (
@@ -114,13 +104,13 @@ export default function Pos() {
               결제내역
             </button>
           </Link>
-          <button
+          <Link
+            href="/pos/payments/sales?from=pos"
             type="button"
             className="center h-[72px] w-full rounded-[16px] border border-white text-2xl font-semibold text-white"
-            onClick={openSales}
           >
             매출액
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ export default function POSHeader2() {
         <span>돌아가기</span>
       </button>
       <Link
-        href={`/pos/payments/${isHistory ? "sales" : "history"}`}
+        href={`/pos/payments/${isHistory ? "sales?from=history" : "history"}`}
         className="text-gray-0 font-regular flex flex-row gap-[10px] rounded-[12px] border border-gray-600 px-4 py-3 text-lg"
       >
         <Icon

@@ -8,7 +8,8 @@ import Logo from "@/components/Logo";
 import OpenStore from "./OpenStore";
 
 export default function POSHeader({ children }: PropsWithChildren) {
-  const { fullDate, fullTime, day } = useGetDate(new Date());
+  const now = new Date();
+  const { fullDate, fullTime, day } = useGetDate(now);
 
   return (
     <header className="flex flex-col px-[60px] pt-10">
