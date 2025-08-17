@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
+import axios, { AxiosError } from "axios";
 import {
   closeStore,
   getDetailActivity,
@@ -22,6 +23,21 @@ const useOpenStore = () =>
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: posKeys.stores });
     },
+    onError: (error) => {
+      if (!axios.isAxiosError(error)) {
+        // eslint-disable-next-line
+        alert("알 수 없는 오류가 발생했습니다.");
+        return;
+      }
+
+      const axErr = error as AxiosError<any>;
+      const code = (axErr?.response?.data as any)?.code as string | undefined;
+
+      if (code === "ALREADY_STORE_OPENED") {
+        // eslint-disable-next-line
+        alert("이미 영업중인 매장입니다.");
+      }
+    },
   });
 
 const useCloseStore = () =>
@@ -29,6 +45,33 @@ const useCloseStore = () =>
     mutationFn: closeStore,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: posKeys.stores });
+    },
+    onError: (error) => {
+      if (!axios.isAxiosError(error)) {
+        // eslint-disable-next-line
+        alert("알 수 없는 오류가 발생했습니다.");
+        return;
+      }
+
+      const axErr = error as AxiosError<any>;
+      const code = (axErr?.response?.data as any)?.code as string | undefined;
+
+      if (code === "INCOMPLETE_POS_TABLE_ACTIVITY") {
+        // eslint-disable-next-line
+        alert("완료되지 않은 주문이 있습니다. 주문을 완료해주세요.");
+        return;
+      }
+
+      if (code === "INCOMPLETE_WAITING") {
+        // eslint-disable-next-line
+        alert("대기 중인 웨이팅이 있습니다. 웨이팅을 완료해주세요.");
+        return;
+      }
+
+      if (code === "ALREADY_STORE_OPENED") {
+        // eslint-disable-next-line
+        alert("이미 마감된 매장입니다.");
+      }
     },
   });
 

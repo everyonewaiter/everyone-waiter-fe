@@ -18,10 +18,11 @@ export default function OpenStore() {
   const modal = useOverlay();
   const { storeId } = useDeviceContext();
 
-  const storeOpen = posQueries.useOpenStore();
-  const storeClose = posQueries.useCloseStore();
   const { data } = posQueries.useStoreInfo(storeId!);
   const isStoreOpen = data?.status === "OPEN";
+
+  const storeOpen = posQueries.useOpenStore();
+  const storeClose = posQueries.useCloseStore();
 
   const handleOpenStore = () => {
     const successHandler = () => {

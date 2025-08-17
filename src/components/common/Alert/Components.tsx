@@ -100,10 +100,9 @@ const AlertDialogAction = React.forwardRef<
     customButtonStyle: string;
   }
 >(({ className, onClick, noResponsive, customButtonStyle, ...props }, ref) => (
-  <AlertDialogPrimitive.Action ref={ref} className="flex-1">
+  <AlertDialogPrimitive.Action ref={ref} asChild>
     {noResponsive ? (
       <Button
-        asChild
         type="button"
         onClick={onClick}
         className="button-xl w-full"
@@ -111,7 +110,6 @@ const AlertDialogAction = React.forwardRef<
       />
     ) : (
       <ResponsiveButton
-        asChild
         type="button"
         responsiveButtons={{
           lg: { buttonSize: "xl" },
@@ -154,12 +152,11 @@ const AlertDialogCancel = React.forwardRef<
     { className, hasNoAction, noResponsive, customButtonStyle, ...props },
     ref
   ) => (
-    <AlertDialogPrimitive.Cancel ref={ref} className="flex-1">
+    <AlertDialogPrimitive.Cancel ref={ref} asChild>
       {noResponsive ? (
         <Button type="button" className="button-xl w-full" {...props} />
       ) : (
         <ResponsiveButton
-          asChild
           color="grey"
           type="button"
           responsiveButtons={{
