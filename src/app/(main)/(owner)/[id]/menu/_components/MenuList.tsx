@@ -7,7 +7,6 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useStoreContext } from "@/providers/storeProvider";
 import { useActiveCategory } from "../_hooks/useActiveCategory";
 import { useMenuSort } from "../_hooks/useMenuSort";
-import useSelectedCard from "../_hooks/useSelectedCard";
 import HeaderButton from "./HeaderButton";
 import RenderMenu from "./RenderMenu";
 
@@ -15,7 +14,6 @@ export default function MenuList() {
   const navigate = useRouter();
 
   const { storeId } = useStoreContext();
-  const { isSelected, toggle, selectedCards } = useSelectedCard();
   const { active, categories, setActive } = useActiveCategory(storeId);
   const { form, handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
 
@@ -76,7 +74,6 @@ export default function MenuList() {
           ))}
         </div>
         <HeaderButton
-          selectedCards={selectedCards}
           categoryId={active}
           changeSort={changeSort}
           onSetChangeSort={setChangeSort}
@@ -86,8 +83,6 @@ export default function MenuList() {
       <RenderMenu
         changeSort={changeSort}
         categoryId={active}
-        isSelected={isSelected}
-        toggle={toggle}
         handleDragEnd={handleDragEnd}
         sortedMenus={form.watch("menus")}
       />

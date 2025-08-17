@@ -5,9 +5,9 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
 import { getCdn } from "@/utils/getCdn";
+import { useMenuSelection } from "../_stores/useMenuSelection";
 
 interface IProps extends Menu {
-  onToggle?: (value: Menu) => void;
   isSelected?: boolean;
   hideSelect?: boolean;
   onClick: () => void;
@@ -15,13 +15,14 @@ interface IProps extends Menu {
 }
 
 export default function MenuCard({
-  onToggle,
   isSelected,
   hideSelect = false,
   onClick,
   className,
   ...menu
 }: IProps) {
+  const { toggle } = useMenuSelection();
+
   return (
     <div
       className={cn(
@@ -67,7 +68,7 @@ export default function MenuCard({
           <Checkbox
             className="mt-2 ml-2 h-6 w-6"
             checked={isSelected}
-            onCheckedChange={() => onToggle?.(menu)}
+            onCheckedChange={() => toggle(menu.menuId)}
             onClick={(e) => {
               e.stopPropagation();
             }}
