@@ -106,6 +106,5 @@ export default function useCategoryMove(storeId: string) {
     resetMoves,
     initialRef,
     isSortSubmitting,
-    categories,
   };
 }

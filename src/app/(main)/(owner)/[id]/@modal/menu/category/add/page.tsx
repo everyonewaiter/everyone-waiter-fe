@@ -29,10 +29,7 @@ export default function Page() {
     initialRef,
     resetMoves,
     isSortSubmitting,
-    categories,
   } = useCategoryMove(storeId);
-
-  console.log(categories);
 
   const update = categoryQueries.useUpdateCategory();
   const add = categoryQueries.useAddCategory();
