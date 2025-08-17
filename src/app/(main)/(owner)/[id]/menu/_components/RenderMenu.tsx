@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/common/Skeleton/Skeleton";
 import { TypeMenuList } from "../_schema/menu.schema";
 import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
+import { useMenuSelection } from "../_stores/useMenuSelection";
 
 const Sortable = dynamic(() => import("@/components/Sortable"), {
   ssr: false,
@@ -26,8 +27,6 @@ const SortableItem = dynamic(() => import("./SortableItem"), {
 interface IProps {
   changeSort: boolean;
   categoryId: string;
-  isSelected: (value: { menuId: string }) => boolean;
-  toggle: (value: { menuId: string }) => void;
   handleDragEnd: ({ active, over }: any) => void;
   sortedMenus?: TypeMenuList["menus"];
 }
@@ -35,8 +34,6 @@ interface IProps {
 export default function RenderMenu({
   changeSort,
   categoryId,
-  isSelected,
-  toggle,
   handleDragEnd,
   sortedMenus,
 }: IProps) {
@@ -44,6 +41,8 @@ export default function RenderMenu({
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
   const { storeId } = useStoreContext();
+  const { isSelected } = useMenuSelection();
+
   const { data, isLoading } = menuQueries.useMenuList(storeId, categoryId);
 
   const handleNavigate = (menuId: string) =>
@@ -96,8 +95,7 @@ export default function RenderMenu({
             data?.menus?.map((item) => (
               <MenuCard
                 key={item.menuId}
-                onToggle={toggle}
-                isSelected={isSelected(item)}
+                isSelected={isSelected(item.menuId)}
                 onClick={() => navigate.push(handleNavigate(item.menuId))}
                 {...item}
               />
