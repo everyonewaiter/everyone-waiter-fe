@@ -1,5 +1,6 @@
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Controller, useFormContext } from "react-hook-form";
+import { useEffect } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Dropdown from "@/components/common/Dropdown";
 import Label from "@/components/common/Label";
@@ -25,6 +26,34 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
 
   const inputGap = "gap-1 lg:gap-2";
   const marginTop = "mt-2 lg:mt-4";
+
+  useEffect(() => {
+    form.register("label");
+    form.register("state");
+    form.register("spicy");
+    form.register("printEnabled");
+
+    if (form.getValues("label") == null) {
+      form.setValue("label", "DEFAULT");
+    }
+    if (form.getValues("state") == null) {
+      form.setValue("state", "DEFAULT");
+    }
+    if (form.getValues("spicy") == null) {
+      form.setValue("spicy", 1);
+    }
+    if (form.getValues("printEnabled") == null) {
+      form.setValue("printEnabled", true);
+    }
+  }, [form]);
+
+  const labelValue =
+    form.watch("label") ?? form.getValues("label") ?? "DEFAULT";
+  const stateValue =
+    form.watch("state") ?? form.getValues("state") ?? "DEFAULT";
+  const spicyValue = form.watch("spicy") ?? form.getValues("spicy") ?? 1;
+  const printEnabledValue =
+    form.watch("printEnabled") ?? form.getValues("printEnabled") ?? true;
 
   const getCategoryName = () =>
     data?.categories?.find((el) => el.categoryId === form.watch("category"))
@@ -108,7 +137,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 key={key}
                 type="button"
                 variant="outline"
-                color={form.watch("label") === key ? "primary" : "grey"}
+                color={labelValue === key ? "primary" : "grey"}
                 responsiveButtons={{
                   lg: {
                     buttonSize: "sm",
@@ -131,49 +160,54 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                       )
                     : null
                 }
+                commonClassName={
+                  !isEditing
+                    ? "hover:!bg-transparent !cursor-default hover:!text-current  pointer-events-none"
+                    : undefined
+                }
               >
                 {menuLabelTranslate[key as keyof typeof menuLabelTranslate]}
               </ResponsiveButton>
             ))}
           </div>
-          {type === "update" && (
-            <>
-              <Separator className="my-2 h-[2px] bg-gray-600" />
-              <div className="flex items-center gap-2">
-                {["🌶️", "🌶️🌶️", "🌶️🌶️🌶️"].map((key) => (
-                  <ResponsiveButton
-                    key={key}
-                    type="button"
-                    variant="outline"
-                    color={
-                      form.watch("spicy") === key.length / 3
-                        ? "primary"
-                        : "grey"
-                    }
-                    responsiveButtons={{
-                      lg: {
-                        buttonSize: "sm",
-                        className: "w-fit !rounded-[40px]",
-                      },
-                      md: {
-                        buttonSize: "custom",
-                        className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
-                      },
-                      sm: {
-                        buttonSize: "custom",
-                        className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
-                      },
-                    }}
-                    onClick={() =>
-                      isEditing ? form.setValue("spicy", key.length / 3) : null
-                    }
-                  >
-                    {key}
-                  </ResponsiveButton>
-                ))}
-              </div>
-            </>
-          )}
+          <Separator className="my-2 h-[2px] bg-gray-600" />
+          <div className="flex items-center gap-2">
+            {["🌶️", "🌶️🌶️", "🌶️🌶️🌶️"].map((key) => (
+              <ResponsiveButton
+                key={key}
+                type="button"
+                variant="outline"
+                color={spicyValue === key.length / 3 ? "primary" : "grey"}
+                responsiveButtons={{
+                  lg: {
+                    buttonSize: "sm",
+                    className: "w-fit !rounded-[40px]",
+                  },
+                  md: {
+                    buttonSize: "custom",
+                    className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
+                  },
+                  sm: {
+                    buttonSize: "custom",
+                    className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
+                  },
+                }}
+                onClick={() => {
+                  if (!isEditing) return;
+                  const current = form.watch("spicy");
+                  const next = key.length / 3;
+                  form.setValue("spicy", current === next ? 0 : next);
+                }}
+                commonClassName={
+                  !isEditing
+                    ? "hover:!bg-transparent !cursor-default hover:!text-current  pointer-events-none"
+                    : undefined
+                }
+              >
+                {key}
+              </ResponsiveButton>
+            ))}
+          </div>
         </div>
         <div className={cn("flex flex-col gap-2", marginTop)}>
           <Label>상태</Label>
@@ -183,7 +217,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 key={key}
                 type="button"
                 variant="outline"
-                color={form.watch("state") === key ? "primary" : "grey"}
+                color={stateValue === key ? "primary" : "grey"}
                 responsiveButtons={{
                   lg: {
                     buttonSize: "sm",
@@ -201,6 +235,11 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 onClick={() =>
                   isEditing ? form.setValue("state", key as MenuState) : null
                 }
+                commonClassName={
+                  !isEditing
+                    ? "hover:!bg-transparent !cursor-default hover:!text-current  pointer-events-none"
+                    : undefined
+                }
               >
                 {menuStateTranslate[key as keyof typeof menuStateTranslate]}
               </ResponsiveButton>
@@ -213,7 +252,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
           </span>
           <Switch
             className="h-5 w-10"
-            checked={form.watch("printEnabled")}
+            checked={printEnabledValue}
             onCheckedChange={(checked) =>
               form.setValue("printEnabled", checked)
             }

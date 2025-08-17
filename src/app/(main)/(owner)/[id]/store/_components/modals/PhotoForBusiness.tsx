@@ -42,6 +42,7 @@ export default function PhotoForBusiness({
             width={380}
             height={457}
             className="h-full rounded-[16px] border border-gray-600 md:h-[260px] md:w-[216px] lg:h-[437px] lg:w-[360px]"
+            unoptimized
           />
         )}
         <input

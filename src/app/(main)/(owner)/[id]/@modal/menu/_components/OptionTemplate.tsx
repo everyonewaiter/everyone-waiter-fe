@@ -35,7 +35,7 @@ export default function OptionTemplate({
   return (
     <div
       className={cn(
-        "relative flex cursor-pointer flex-col gap-4 rounded-[12px] border border-gray-600 p-3 lg:rounded-[24px] lg:p-6",
+        "relative flex flex-col gap-4 rounded-[12px] border border-gray-600 p-3 lg:rounded-[24px] lg:p-6",
         props.isOpen ? "h-[calc(100%-57px-40px)]" : "",
         className
       )}
@@ -56,18 +56,23 @@ export default function OptionTemplate({
       />
       {props.isOpen ? (
         <div className="flex h-full flex-col gap-4">
-          <div
-            className={cn(
-              "flex flex-col gap-3 overflow-y-auto",
-              form.watch(type)?.length > 1
-                ? "lg:h-[calc(100%-95px)]"
-                : "lg:h-[calc(100%-40px)]"
-            )}
-          >
-            {form.watch(type)?.length > 0 ? (
-              form.watch(type)?.map((option, i) => (
+          {isEditing && (
+            <div
+              className={cn(
+                "scrollbar-hide flex flex-col gap-3 overflow-y-auto",
+                isEditing ? "cursor-pointer" : ""
+              )}
+              style={{
+                height:
+                  form.watch(type)?.length > 1
+                    ? "calc(100% - 95px)"
+                    : "calc(100% - 40px)",
+              }}
+            >
+              {form.watch(type)?.map((_, i) => (
                 <div
-                  key={option.name}
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`${type}-${i}`}
                   className={cn(
                     "flex gap-3",
                     i > 0 ? "mt-3 lg:mt-4" : "",
@@ -92,14 +97,14 @@ export default function OptionTemplate({
                     </button>
                   )}
                 </div>
-              ))
-            ) : (
-              <div className="center flex-1 text-sm text-gray-300">
-                현재 등록된 필수 옵션이 없습니다.
-              </div>
-            )}
-          </div>
-
+              ))}
+            </div>
+          )}
+          {!isEditing && form.watch(type)?.length === 0 && (
+            <div className="center h-full w-full text-sm">
+              {type.startsWith("required") ? "필수" : "선택"} 옵션이 없습니다.
+            </div>
+          )}
           {/* 하단 버튼 고정 */}
           {isEditing && (
             <ResponsiveButton
@@ -113,7 +118,11 @@ export default function OptionTemplate({
               onClick={() =>
                 form.setValue(type, [
                   ...(form.watch(type) ?? []),
-                  { name: "", menuOptions: [{ name: "", price: 0 }] },
+                  {
+                    name: "",
+                    printEnabled: true,
+                    menuOptions: [{ name: "", price: 0 }],
+                  },
                 ])
               }
             >

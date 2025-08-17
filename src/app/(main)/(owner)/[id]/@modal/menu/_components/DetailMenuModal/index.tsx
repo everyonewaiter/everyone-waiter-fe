@@ -9,6 +9,7 @@ import ImageSection from "./ImageSection";
 import ModalButton from "./ModalButton";
 import useMenuModalForm from "../../_hooks/useMenuModalForm";
 import useHandleMenuSubmit from "../../_hooks/useHandleMenuSubmit";
+import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
 
 const FormSection = dynamic(() => import("../FormSection"), { ssr: false });
 const OptionTemplate = dynamic(() => import("../OptionTemplate"), {
@@ -63,12 +64,13 @@ export default function DetailMenuModal({
     onError: () => setIsSubmitted(false),
   });
 
+  const onSubmit = (formData: unknown) =>
+    handleSubmit(formData as TypeMenuForm, handleAfterAction);
+
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit((formData) =>
-          handleSubmit(formData, handleAfterAction)
-        )}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="scrollbar-hide flex h-full w-full flex-col md:gap-5 lg:gap-8"
       >
         {/* 헤더 */}

@@ -108,6 +108,7 @@ export default function Page() {
                       alt="사업자 등록증"
                       width={381}
                       height={458}
+                      unoptimized
                       className="rounded-[16px] border border-gray-600 object-cover lg:h-[458px] lg:w-[381px]"
                     />
                   </div>
