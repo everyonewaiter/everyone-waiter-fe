@@ -31,7 +31,6 @@ export default function SortableItem({ item, onClick }: IProps) {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <MenuCard
         {...(normalized as Menu)}
-        onToggle={() => null}
         isSelected={false}
         hideSelect
         onClick={onClick}
