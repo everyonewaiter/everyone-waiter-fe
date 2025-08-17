@@ -160,45 +160,51 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                       )
                     : null
                 }
+                commonClassName={
+                  !isEditing
+                    ? "hover:!bg-transparent !cursor-default hover:!text-current  pointer-events-none"
+                    : undefined
+                }
               >
                 {menuLabelTranslate[key as keyof typeof menuLabelTranslate]}
               </ResponsiveButton>
             ))}
           </div>
-          {type === "update" && (
-            <>
-              <Separator className="my-2 h-[2px] bg-gray-600" />
-              <div className="flex items-center gap-2">
-                {["🌶️", "🌶️🌶️", "🌶️🌶️🌶️"].map((key) => (
-                  <ResponsiveButton
-                    key={key}
-                    type="button"
-                    variant="outline"
-                    color={spicyValue === key.length / 3 ? "primary" : "grey"}
-                    responsiveButtons={{
-                      lg: {
-                        buttonSize: "sm",
-                        className: "w-fit !rounded-[40px]",
-                      },
-                      md: {
-                        buttonSize: "custom",
-                        className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
-                      },
-                      sm: {
-                        buttonSize: "custom",
-                        className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
-                      },
-                    }}
-                    onClick={() =>
-                      isEditing ? form.setValue("spicy", key.length / 3) : null
-                    }
-                  >
-                    {key}
-                  </ResponsiveButton>
-                ))}
-              </div>
-            </>
-          )}
+          <Separator className="my-2 h-[2px] bg-gray-600" />
+          <div className="flex items-center gap-2">
+            {["🌶️", "🌶️🌶️", "🌶️🌶️🌶️"].map((key) => (
+              <ResponsiveButton
+                key={key}
+                type="button"
+                variant="outline"
+                color={spicyValue === key.length / 3 ? "primary" : "grey"}
+                responsiveButtons={{
+                  lg: {
+                    buttonSize: "sm",
+                    className: "w-fit !rounded-[40px]",
+                  },
+                  md: {
+                    buttonSize: "custom",
+                    className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
+                  },
+                  sm: {
+                    buttonSize: "custom",
+                    className: "w-fit !rounded-[40px] h-7 px-3 text-xs",
+                  },
+                }}
+                onClick={() =>
+                  isEditing ? form.setValue("spicy", key.length / 3) : null
+                }
+                commonClassName={
+                  !isEditing
+                    ? "hover:!bg-transparent !cursor-default hover:!text-current  pointer-events-none"
+                    : undefined
+                }
+              >
+                {key}
+              </ResponsiveButton>
+            ))}
+          </div>
         </div>
         <div className={cn("flex flex-col gap-2", marginTop)}>
           <Label>상태</Label>
@@ -225,6 +231,11 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 }}
                 onClick={() =>
                   isEditing ? form.setValue("state", key as MenuState) : null
+                }
+                commonClassName={
+                  !isEditing
+                    ? "hover:!bg-transparent !cursor-default hover:!text-current  pointer-events-none"
+                    : undefined
                 }
               >
                 {menuStateTranslate[key as keyof typeof menuStateTranslate]}

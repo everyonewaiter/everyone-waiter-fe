@@ -58,46 +58,41 @@ export default function OptionTemplate({
         <div className="flex h-full flex-col gap-4">
           <div
             className={cn(
-              "flex flex-col gap-3 overflow-y-auto",
+              "scrollbar-hide flex cursor-pointer flex-col gap-3 overflow-y-auto",
               form.watch(type)?.length > 1
                 ? "lg:h-[calc(100%-95px)]"
                 : "lg:h-[calc(100%-40px)]"
             )}
           >
-            {form.watch(type)?.length > 0 ? (
-              form.watch(type)?.map((option, i) => (
-                <div
-                  key={option.name}
-                  className={cn(
-                    "flex gap-3",
-                    i > 0 ? "mt-3 lg:mt-4" : "",
-                    popupAction ? "items-center" : "item-start"
-                  )}
-                >
-                  <OptionBox type={type} index={i} isEditing={isEditing} />
-                  {popupAction && (
-                    <button
-                      type="button"
-                      className="center h-8 w-8 rounded-[8px] border border-gray-600"
-                    >
-                      <Icon
-                        iconKey={popupAction === "순서 변경" ? "move" : "trash"}
-                        size={18}
-                        className={
-                          popupAction === "순서 변경"
-                            ? "text-gray-300"
-                            : "text-gray-0"
-                        }
-                      />
-                    </button>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div className="center flex-1 text-sm text-gray-300">
-                현재 등록된 필수 옵션이 없습니다.
+            {form.watch(type)?.map((_, i) => (
+              <div
+                // eslint-disable-next-line react/no-array-index-key
+                key={`${type}-${i}`}
+                className={cn(
+                  "flex gap-3",
+                  i > 0 ? "mt-3 lg:mt-4" : "",
+                  popupAction ? "items-center" : "item-start"
+                )}
+              >
+                <OptionBox type={type} index={i} isEditing={isEditing} />
+                {popupAction && (
+                  <button
+                    type="button"
+                    className="center h-8 w-8 rounded-[8px] border border-gray-600"
+                  >
+                    <Icon
+                      iconKey={popupAction === "순서 변경" ? "move" : "trash"}
+                      size={18}
+                      className={
+                        popupAction === "순서 변경"
+                          ? "text-gray-300"
+                          : "text-gray-0"
+                      }
+                    />
+                  </button>
+                )}
               </div>
-            )}
+            ))}
           </div>
 
           {/* 하단 버튼 고정 */}
@@ -113,7 +108,11 @@ export default function OptionTemplate({
               onClick={() =>
                 form.setValue(type, [
                   ...(form.watch(type) ?? []),
-                  { name: "", menuOptions: [{ name: "", price: 0 }] },
+                  {
+                    name: "",
+                    printEnabled: true,
+                    menuOptions: [{ name: "", price: 0 }],
+                  },
                 ])
               }
             >
