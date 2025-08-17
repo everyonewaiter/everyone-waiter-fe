@@ -46,6 +46,7 @@ export default function ImageSection({ isEditing }: IProps) {
             alt="menu image"
             width={364}
             height={478}
+            unoptimized
             loading="lazy"
             className="h-full w-full object-cover"
           />

@@ -18,6 +18,7 @@ const POSMenuCard = memo(({ onClick, ...props }: IProps) => (
         alt={`${props.name} 메뉴 이미지`}
         fill
         className="object-cover"
+        unoptimized
         priority
       />
     ) : (

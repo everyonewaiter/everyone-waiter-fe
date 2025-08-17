@@ -46,6 +46,7 @@ export default function MenuCard({
             fill
             className="object-cover"
             loading="eager"
+            unoptimized
             priority
             sizes="(max-width: 768px) 100vw, 300px"
           />

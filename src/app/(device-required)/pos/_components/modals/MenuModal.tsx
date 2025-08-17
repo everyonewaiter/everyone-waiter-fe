@@ -133,6 +133,7 @@ function MenuModal({
               className="object-cover"
               width={500}
               height={160}
+              unoptimized
             />
           )}
         </div>
