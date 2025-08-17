@@ -49,6 +49,7 @@ export default function useHandleMenuSubmit({
       hasGroupWithNameButNoOptions(data.requiredOptions) ||
       hasGroupWithNameButNoOptions(data.optionalOptions)
     ) {
+      // eslint-disable-next-line no-alert
       alert("하위 옵션을 1개 이상 입력해주세요.");
       onSetIsSubmitted(false);
       return;
