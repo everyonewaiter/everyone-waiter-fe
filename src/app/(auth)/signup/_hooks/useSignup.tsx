@@ -91,7 +91,7 @@ const useSignup = ({ form, onDispatch }: IProps) => {
       }
 
       if (code === "UNMATCHED_VERIFICATION_CODE") {
-        form.setError("phone", {
+        form.setError("authNumber", {
           message: "인증 번호가 일치하지 않습니다.",
         });
         return;
