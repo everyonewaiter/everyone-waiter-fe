@@ -1,12 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import { setEncryptedItem } from "@/lib/auth/secureStorage";
 import cn from "@/lib/utils";
+import makeDeviceName from "@/utils/makeDeviceName";
 import { deviceQueries } from "../../_queries/useDeviceInfo";
 import useStep2Form from "../../_hooks/useStep2Form";
 import { TypeDeviceStep2Form } from "../../_schema/device.schema";
@@ -34,7 +35,12 @@ export default function AddDeviceStep2({
 
   const {
     form: { form, watch, handleSubmit },
-  } = useStep2Form(purpose);
+  } = useStep2Form();
+
+  useEffect(() => {
+    form.setValue("deviceName", makeDeviceName(purpose));
+    // eslint-disable-next-line
+  }, [purpose]);
 
   const { mutate } = deviceQueries.useAddDevice();
 
