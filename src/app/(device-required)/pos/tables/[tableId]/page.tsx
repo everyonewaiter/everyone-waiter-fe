@@ -9,7 +9,6 @@ import CategoriesButton from "../../_components/CategoriesButton";
 import POSHeader from "../../_components/POSHeader";
 import POSMenuCard from "../../_components/POSMenuCard";
 import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
-import { useMemoStore } from "../../_hooks/useMemoStore";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { posQueries } from "../../_queries/usePos";
 
@@ -37,7 +36,6 @@ export default function DetailTableOrder() {
 
   const { orders, addOrders } = useOrderStore();
   const { open, close } = useOverlay();
-  const { setOriginMemo } = useMemoStore();
   const { resetCheckedMenu, checkedMenu } = useCheckedMenuStore();
 
   const { data: device } = deviceQueries.useDeviceDetail();
@@ -57,16 +55,6 @@ export default function DetailTableOrder() {
       setHasLoadedOnce(true);
     }
   }, [data, menus, isLoading]);
-
-  useEffect(() => {
-    if (data) {
-      const origin = data.orders
-        .filter((el) => el.memo)
-        .map((el) => el.memo)
-        .join(", ");
-      setOriginMemo(origin);
-    }
-  }, [data, setOriginMemo]);
 
   const list = isActive === "전체" ? allMenus : selectedCategory;
 
