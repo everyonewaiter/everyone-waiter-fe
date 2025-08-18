@@ -4,31 +4,18 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Dropdown from "@/components/common/Dropdown";
-import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import { Form } from "@/components/common/Form";
-import transformDate from "@/lib/formatting/transformDate";
 import { permissionTranslate, stateTranslate } from "@/constants/translates";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
 import Spinner from "@/components/common/Spinner";
+import Input from "@/components/common/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { adminQueries } from "../../../_queries/useAdmin";
-
-interface TypeForm {
-  email: string;
-  date: string;
-  selectedPermission: AccountPermission | null;
-  selectedStatus: Status | null;
-}
-
-interface TypeEditForm {
-  email: string;
-  date: string;
-  permission: string;
-  status: string;
-}
+import { TypeUserForm, userSchema } from "../../../users/_schema/user.schema";
 
 export default function Page() {
   const params = useParams();
@@ -39,17 +26,28 @@ export default function Page() {
   const { data: accountData } = adminQueries.useAccountDetail(accountId);
   const updateDetail = adminQueries.useUpdateAccount();
 
-  const form = useForm<TypeForm | TypeEditForm>({
+  const form = useForm<TypeUserForm>({
     mode: "onChange",
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      email: "",
+      permission: "USER",
+      state: "INACTIVE",
+      phoneNumber: "",
+    },
   });
+
+  const handlePhoneNumber = () => {
+    const phone = accountData?.phoneNumber!;
+
+    return `${phone.slice(0, 3)}-${phone.slice(3, 7)}-${phone.slice(7, 11)}`;
+  };
 
   useEffect(() => {
     if (accountData?.accountId) {
       form.reset({
-        email: accountData.email,
-        date: transformDate(accountData.createdAt),
-        selectedPermission: accountData.permission,
-        selectedStatus: accountData.state,
+        ...accountData,
+        phoneNumber: handlePhoneNumber(),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,12 +64,9 @@ export default function Page() {
         accountId,
         permission: findKeyByValue(
           permissionTranslate,
-          form.watch("selectedPermission")!
+          form.watch("permission")!
         ) as AccountPermission,
-        state: findKeyByValue(
-          stateTranslate,
-          form.watch("selectedStatus")!
-        ) as Status,
+        state: findKeyByValue(stateTranslate, form.watch("state")!) as Status,
       },
       {
         onError: () => setIsSubmitted(false),
@@ -99,11 +94,15 @@ export default function Page() {
                   placeholder="이메일"
                   disabled
                 />
+                <div className="flex flex-col gap-2">
+                  <Label disabled>가입 일시</Label>
+                  <Input disabled value={accountData?.createdAt} />
+                </div>
                 <LabeledInput
                   form={form}
-                  name="date"
-                  label="가입 일시"
-                  placeholder="가입 일시"
+                  name="phoneNumber"
+                  label="휴대폰 번호"
+                  placeholder="휴대폰 번호"
                   disabled
                 />
                 <div className="flex flex-col gap-4">
@@ -115,20 +114,17 @@ export default function Page() {
                       defaultText={
                         permissionTranslate[
                           form.watch(
-                            "selectedPermission"
+                            "permission"
                           ) as keyof typeof permissionTranslate
                         ]
                       }
                       setActive={(value) =>
-                        form.setValue(
-                          "selectedPermission",
-                          value as AccountPermission
-                        )
+                        form.setValue("permission", value as AccountPermission)
                       }
                       active={
                         permissionTranslate[
                           form.watch(
-                            "selectedPermission"
+                            "permission"
                           ) as keyof typeof permissionTranslate
                         ] ?? "권한"
                       }
@@ -136,10 +132,10 @@ export default function Page() {
                       className="w-[280px] md:w-[324px] lg:w-[480px]"
                     />
                   </div>
-                  <div className="flex w-full flex-col gap-2">
+                  {/* <div className="flex w-full flex-col gap-2">
                     <Label disabled>구독 상태</Label>
                     <Input value="스타터" disabled />
-                  </div>
+                  </div> */}
                   <div className="flex w-full flex-col gap-2">
                     <Label>상태</Label>
                     <Dropdown
@@ -147,19 +143,15 @@ export default function Page() {
                       data={["활성화", "비활성화"]}
                       defaultText={
                         stateTranslate[
-                          form.watch(
-                            "selectedStatus"
-                          ) as keyof typeof stateTranslate
+                          form.watch("state") as keyof typeof stateTranslate
                         ]
                       }
                       setActive={(value) =>
-                        form.setValue("selectedStatus", value as Status)
+                        form.setValue("state", value as Status)
                       }
                       active={
                         stateTranslate[
-                          form.watch(
-                            "selectedStatus"
-                          ) as keyof typeof stateTranslate
+                          form.watch("state") as keyof typeof stateTranslate
                         ] ?? "상태"
                       }
                       triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"

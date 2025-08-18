@@ -28,7 +28,9 @@ export const getAccounts = async ({
   return response.data;
 };
 
-export const getDetailAccount = async (accountId: string) => {
+export const getDetailAccount = async (
+  accountId: string
+): Promise<AdminUser> => {
   const response = await instance.get(
     `${API_PATH.admin}/accounts/${accountId.toString()}`
   );

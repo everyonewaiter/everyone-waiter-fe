@@ -1,9 +1,9 @@
 import Dropdown from "@/components/common/Dropdown";
 import { useFormContext } from "react-hook-form";
-import { TypeUserForm } from "../_schema/user.schema";
+import { TypeUserSearchForm } from "../_schema/user.schema";
 
 function DropdownGroup() {
-  const { watch, setValue } = useFormContext<TypeUserForm>();
+  const { watch, setValue } = useFormContext<TypeUserSearchForm>();
 
   return (
     <div className="flex items-center gap-2 md:gap-1 lg:gap-2">
@@ -13,7 +13,7 @@ function DropdownGroup() {
         setActive={(value) =>
           setValue(
             "active.permission",
-            value as TypeUserForm["active"]["permission"]
+            value as TypeUserSearchForm["active"]["permission"]
           )
         }
         active={watch("active.permission")}
@@ -25,7 +25,7 @@ function DropdownGroup() {
         setActive={(value) =>
           setValue(
             "active.subscription",
-            value as TypeUserForm["active"]["subscription"]
+            value as TypeUserSearchForm["active"]["subscription"]
           )
         }
         active={watch("active.subscription")}
@@ -37,7 +37,7 @@ function DropdownGroup() {
         setActive={(value) =>
           setValue(
             "active.storeAccepted",
-            value as TypeUserForm["active"]["storeAccepted"]
+            value as TypeUserSearchForm["active"]["storeAccepted"]
           )
         }
         active={watch("active.storeAccepted")}
@@ -47,7 +47,10 @@ function DropdownGroup() {
         data={["전체", "활성화", "비활성화"]}
         defaultText="상태"
         setActive={(value) =>
-          setValue("active.status", value as TypeUserForm["active"]["status"])
+          setValue(
+            "active.status",
+            value as TypeUserSearchForm["active"]["status"]
+          )
         }
         active={watch("active.status")}
         triggerClassName="text-s lg:!text-sm"

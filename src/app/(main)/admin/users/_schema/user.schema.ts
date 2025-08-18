@@ -1,6 +1,7 @@
+import { emailSchema, phoneSchema } from "@/schema";
 import { z } from "zod";
 
-export const userSchema = z.object({
+export const userSearchSchema = z.object({
   searchWord: z.string(),
   active: z.object({
     permission: z.enum(["전체", "사장님", "사용자", "관리자"]).nullable(),
@@ -10,4 +11,12 @@ export const userSchema = z.object({
   }),
 });
 
+export const userSchema = z.object({
+  email: emailSchema,
+  permission: z.custom<AccountPermission>(),
+  phoneNumber: phoneSchema,
+  state: z.enum(["ACTIVE", "INACTIVE"]),
+});
+
+export type TypeUserSearchForm = z.infer<typeof userSearchSchema>;
 export type TypeUserForm = z.infer<typeof userSchema>;

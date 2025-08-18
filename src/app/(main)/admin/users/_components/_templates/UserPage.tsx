@@ -7,7 +7,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { adminQueries } from "../../../_queries/useAdmin";
 import UsersContent from "../UsersContent";
-import { TypeUserForm, userSchema } from "../../_schema/user.schema";
+import {
+  TypeUserSearchForm,
+  userSearchSchema,
+} from "../../_schema/user.schema";
 
 const permissionObj = {
   전체: "",
@@ -30,9 +33,9 @@ export interface TypeActive {
 }
 
 export default function UserPage() {
-  const form = useForm<TypeUserForm>({
+  const form = useForm<TypeUserSearchForm>({
     mode: "onChange",
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(userSearchSchema),
     defaultValues: {
       searchWord: "",
       active: {
