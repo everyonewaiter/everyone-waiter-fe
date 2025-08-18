@@ -49,6 +49,7 @@ export default function UserPage() {
   const { watch } = form;
   const activePermission = watch("active.permission");
   const activeStatus = watch("active.status");
+  const activeStoreAccepted = watch("active.storeAccepted");
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -57,18 +58,31 @@ export default function UserPage() {
     delay: 300,
   });
 
-  const { data, refetch } = adminQueries.useAccount(
-    debouncedValue,
-    permissionObj[
+  const getHasStoreValue = (value: string | null): boolean | null => {
+    if (value === "Y") return true;
+    if (value === "N") return false;
+    return null;
+  };
+
+  const { data, refetch } = adminQueries.useAccount({
+    email: debouncedValue,
+    permission: permissionObj[
       activePermission as keyof typeof permissionObj
     ] as AccountPermission,
-    stateObj[activeStatus as keyof typeof stateObj] as Status,
-    currentPage
-  );
+    state: stateObj[activeStatus as keyof typeof stateObj] as Status,
+    hasStore: getHasStoreValue(activeStoreAccepted),
+    page: currentPage,
+  });
 
   useEffect(() => {
     refetch();
-  }, [activePermission, activeStatus, debouncedValue, refetch]);
+  }, [
+    activePermission,
+    activeStatus,
+    activeStoreAccepted,
+    debouncedValue,
+    refetch,
+  ]);
 
   return (
     <div className="flex h-full flex-col">

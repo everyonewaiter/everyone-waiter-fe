@@ -2,25 +2,31 @@ import API_PATH from "@/lib/api/paths";
 import { instance } from "@/lib/axios/instance";
 
 interface GetAccountParams {
-  searchEmail?: string;
-  searchPermission?: AccountPermission | "";
-  searchState?: Status | "";
+  email?: string;
+  permission?: AccountPermission | "";
+  state?: Status | "";
+  hasStore?: boolean | null;
   page?: number;
   size?: number;
 }
 
 export const getAccounts = async ({
-  searchEmail = "",
-  searchPermission = "",
-  searchState = "",
+  email = "",
+  permission = "",
+  state = "",
+  hasStore = null,
   page = 1,
   size = 20,
 }: GetAccountParams): Promise<ResWithPagination<AdminAccount[]>> => {
+  const params: GetAccountParams = {};
+  if (email) params.email = email;
+  if (permission) params.permission = permission;
+  if (state) params.state = state;
+  if (hasStore !== null) params.hasStore = hasStore;
+
   const response = await instance.get(`${API_PATH.admin}/accounts`, {
     params: {
-      email: encodeURIComponent(searchEmail),
-      permission: encodeURIComponent(searchPermission),
-      state: encodeURIComponent(searchState),
+      ...params,
       page,
       size,
     },
