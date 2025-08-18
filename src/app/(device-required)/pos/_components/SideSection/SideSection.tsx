@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/useOverlay";
+import useLeaveGuard from "@/hooks/useCheckLeave";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import { orderQueries } from "../../_queries/useOrder";
@@ -89,6 +90,8 @@ export default function SideSection() {
       },
     });
   };
+
+  useLeaveGuard(orders.length > 0);
 
   return (
     <SideLayout className="flex-col">
