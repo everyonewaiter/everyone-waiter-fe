@@ -1,15 +1,14 @@
-import { useState } from "react";
-import useGetDate from "@/hooks/useGetDate";
-import DatePicker from "@/components/common/DatePicker";
-import ModalWithTitle from "@/components/modal/largeModalLayout";
+"use client";
+
+import { paymentListQueries } from "@/app/(device-required)/pos/_queries/usePaymentList";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { paymentListQueries } from "../../_queries/usePaymentList";
+import DatePicker from "@/components/common/DatePicker";
+import useGetDate from "@/hooks/useGetDate";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-interface IProps {
-  close: () => void;
-}
-
-export default function SalesModal({ close }: IProps) {
+export default function Page() {
+  const navigate = useRouter();
   const { formattedMonth, formattedDate } = useGetDate(new Date());
 
   const [date, setDate] = useState<Date | null>(null);
@@ -20,7 +19,7 @@ export default function SalesModal({ close }: IProps) {
   const { data, refetch } = paymentListQueries.useRevenueList(formatted);
 
   return (
-    <ModalWithTitle onClose={close} className="!w-[544px] !py-8">
+    <div className="!w-[544px] bg-white">
       <DatePicker
         date={date}
         onSetDate={(d) => {
@@ -95,7 +94,7 @@ export default function SalesModal({ close }: IProps) {
               </div>
               <ResponsiveButton
                 color="grey"
-                onClick={close}
+                onClick={() => navigate.back()}
                 type="button"
                 className="button-xl"
                 responsiveButtons={{
@@ -116,6 +115,6 @@ export default function SalesModal({ close }: IProps) {
           )}
         </div>
       )}
-    </ModalWithTitle>
+    </div>
   );
 }

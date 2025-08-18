@@ -1,12 +1,15 @@
 "use client";
 
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import { DeviceProvider } from "@/providers/deviceStoreProvider";
 import { usePathname, useRouter } from "next/navigation";
 import { getDecryptedItem } from "@/lib/auth/secureStorage";
 import FirstLoading from "../(main)/_components/FirstLoading";
 
-export default function Layout({ children }: PropsWithChildren) {
+export default function Layout({
+  children,
+  modal,
+}: PropsWithChildren<{ modal: ReactNode }>) {
   const navigate = useRouter();
   const pathname = usePathname();
 
@@ -48,5 +51,10 @@ export default function Layout({ children }: PropsWithChildren) {
 
   if (!valid && !pathname.startsWith("/device")) return null;
 
-  return <DeviceProvider>{children}</DeviceProvider>;
+  return (
+    <DeviceProvider>
+      {children}
+      {modal}
+    </DeviceProvider>
+  );
 }

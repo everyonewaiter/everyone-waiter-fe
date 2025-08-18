@@ -121,9 +121,10 @@ const AlertDialogAction = React.forwardRef<
           },
           sm: {
             buttonSize: "sm",
-            className: `${customButtonStyle} justify-center items-center`,
+            className: `justify-center items-center`,
           },
         }}
+        commonClassName={cn(customButtonStyle, "cursor-pointer")}
         onClick={onClick}
         {...props}
       />
@@ -170,10 +171,10 @@ const AlertDialogCancel = React.forwardRef<
             },
             sm: {
               buttonSize: "sm",
-              className: `${customButtonStyle} justify-center items-center`,
+              className: `justify-center items-center`,
             },
           }}
-          commonClassName="cursor-pointer"
+          commonClassName={cn(customButtonStyle, "cursor-pointer")}
           {...props}
         />
       )}

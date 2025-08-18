@@ -26,7 +26,11 @@ export default function DatePicker({ date, onSetDate }: IProps) {
   const [open, setOpen] = useState(false);
 
   const handleOpenChange = (newOpen: boolean) => {
-    document.body.classList.toggle("disable-modal-close", newOpen);
+    if (newOpen) {
+      document.body.classList.add("disable-modal-close");
+    } else {
+      document.body.classList.remove("disable-modal-close");
+    }
     setOpen(newOpen);
   };
 
@@ -60,7 +64,11 @@ export default function DatePicker({ date, onSetDate }: IProps) {
         </Button>
       </PopoverTrigger>
       {open && (
-        <PopoverContent className="!z-[10000] mt-2 ml-15 w-auto p-0">
+        <PopoverContent
+          className="!z-[10000] mt-2 ml-15 w-auto p-0"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
           <Calendar
             mode="single"
             selected={date!}

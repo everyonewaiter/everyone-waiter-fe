@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
 import Dropdown from "@/components/common/Dropdown";
@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormErrorMessage } from "@/components/common/Form";
+import cn from "@/lib/utils";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
@@ -155,100 +157,130 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       layoutClassName="!w-[648px]"
       noResponsive
     >
-      <div className="-mt-4 flex w-full flex-col gap-10">
-        <div className="flex items-center justify-between">
-          <h3 className="text-[28px] font-semibold">
-            {props.tableNo}번 테이블
-          </h3>
-          <Button
-            variant="outline"
-            color="primary"
-            className="button-lg !rounded-[8px] text-[15px] !font-medium"
-          >
-            결제 취소
-          </Button>
-        </div>
-        <div className="flex flex-col gap-8">
-          <div className="flex flex-col items-start">
-            <Label className="text-[15px] font-medium">결제 정보</Label>
-            <strong className="mt-2 text-2xl font-semibold">
-              {menus && (
-                <strong className="mt-2 text-2xl font-semibold">
-                  {menus.length === 1
-                    ? menus[0]
-                    : `${menus[0]} 외 ${menus.length - 1}개`}
-                </strong>
-              )}
-            </strong>
+      <Form {...form}>
+        <div className="-mt-4 flex w-full flex-col gap-10">
+          <div className="flex items-center justify-between">
+            <h3 className="text-[28px] font-semibold">
+              {props.tableNo}번 테이블
+            </h3>
+            <Button
+              variant="outline"
+              color="primary"
+              className="button-lg !rounded-[8px] text-[15px] !font-medium"
+            >
+              결제 취소
+            </Button>
           </div>
-          <div className="flex flex-col items-start">
-            <Label className="text-[15px] font-medium">결제할 금액</Label>
-            <strong className="mt-2 text-2xl font-semibold">
-              {(hasOrderId
-                ? selectedOrdersTotal
-                : props.totalOrderPrice
-              ).toLocaleString()}
-              원
-            </strong>
-          </div>
-          {type === "cash" ? (
-            <>
-              <div className="flex flex-col items-start">
-                <Label className="text-[15px] font-medium">
-                  현금영수증 발행
-                </Label>
-                <div className="mt-2 flex w-full items-center gap-3">
-                  {["신청안함", "개인소득공제용", "사업자증빙용"].map((key) => (
-                    <Button
-                      key={key}
-                      color={
-                        form.watch("receiptType") === key ? "primary" : "grey"
-                      }
-                      variant="outline"
-                      className="button-lg w-full !font-medium"
-                      onClick={() =>
-                        form.setValue(
-                          "receiptType",
-                          key as TypePayForm["receiptType"]
-                        )
-                      }
-                    >
-                      {key}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-              {form.watch("receiptType") !== "신청안함" && (
-                <div className="flex flex-col items-start gap-2">
-                  <Label className="text-[15px] font-medium">휴대폰 번호</Label>
-                  <Input
-                    {...form.register("phoneNumber")}
-                    placeholder={`${form.watch("receiptType") === "개인소득공제용" ? "휴대폰 번호" : "사업자 번호"}를 입력해주세요.`}
-                    className="placeholder:font-medium"
-                    autoFocus
-                    onChange={(e) => {
-                      const onlyNums = e.target.value.replace(/[^0-9]/g, "");
-                      const formatted = phoneNumberPattern(onlyNums);
-                      form.setValue("phoneNumber", formatted);
-                    }}
-                  />
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="flex flex-col items-start gap-2">
-              <Label className="text-[15px] font-medium">할부 개월</Label>
-              <Dropdown
-                data={monthlyPlan}
-                defaultText="할부 개월을 선택해주세요."
-                active={form.watch("monthlyPlan").toString()}
-                setActive={(value) => form.setValue("monthlyPlan", value)}
-                triggerClassName="text-sm font-medium rounded-[12px]"
-              />
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col items-start">
+              <Label className="text-[15px] font-medium">결제 정보</Label>
+              <strong className="mt-2 text-2xl font-semibold">
+                {menus && (
+                  <strong className="mt-2 text-2xl font-semibold">
+                    {menus.length === 1
+                      ? menus[0]
+                      : `${menus[0]} 외 ${menus.length - 1}개`}
+                  </strong>
+                )}
+              </strong>
             </div>
-          )}
+            <div className="flex flex-col items-start">
+              <Label className="text-[15px] font-medium">결제할 금액</Label>
+              <strong className="mt-2 text-2xl font-semibold">
+                {(hasOrderId
+                  ? selectedOrdersTotal
+                  : props.totalOrderPrice
+                ).toLocaleString()}
+                원
+              </strong>
+            </div>
+            {type === "cash" ? (
+              <>
+                <div className="flex flex-col items-start">
+                  <Label className="text-[15px] font-medium">
+                    현금영수증 발행
+                  </Label>
+                  <div className="mt-2 flex w-full items-center gap-3">
+                    {["신청안함", "개인소득공제용", "사업자증빙용"].map(
+                      (key) => (
+                        <Button
+                          key={key}
+                          color={
+                            form.watch("receiptType") === key
+                              ? "primary"
+                              : "grey"
+                          }
+                          variant="outline"
+                          className={cn(
+                            "button-lg w-full !font-medium",
+                            form.watch("receiptType") === key
+                              ? ""
+                              : "border-gray-500"
+                          )}
+                          onClick={() => {
+                            form.setValue(
+                              "receiptType",
+                              key as TypePayForm["receiptType"]
+                            );
+                            form.setValue("phoneNumber", "");
+                            form.clearErrors("phoneNumber");
+                          }}
+                        >
+                          {key}
+                        </Button>
+                      )
+                    )}
+                  </div>
+                </div>
+                {form.watch("receiptType") !== "신청안함" && (
+                  <div className="flex flex-col items-start gap-2">
+                    <Label className="text-[15px] font-medium">
+                      휴대폰 번호
+                    </Label>
+                    <Controller
+                      control={form.control}
+                      name="phoneNumber"
+                      render={({ field }) => (
+                        <div className="flex w-full flex-col gap-1">
+                          <Input
+                            {...field}
+                            placeholder={`${form.watch("receiptType") === "개인소득공제용" ? "휴대폰 번호" : "사업자 번호"}를 입력해주세요.`}
+                            className="w-full font-medium md:h-12"
+                            autoFocus
+                            onChange={(e) => {
+                              const onlyNums = e.target.value.replace(
+                                /[^0-9]/g,
+                                ""
+                              );
+                              const formatted = phoneNumberPattern(onlyNums);
+                              field.onChange(formatted);
+                            }}
+                            hasError={!!form.formState.errors.phoneNumber}
+                          />
+                          <FormErrorMessage>
+                            {form.formState.errors.phoneNumber?.message}
+                          </FormErrorMessage>
+                        </div>
+                      )}
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex flex-col items-start gap-2">
+                <Label className="text-[15px] font-medium">할부 개월</Label>
+                <Dropdown
+                  data={monthlyPlan}
+                  defaultText="할부 개월을 선택해주세요."
+                  active={form.watch("monthlyPlan").toString()}
+                  setActive={(value) => form.setValue("monthlyPlan", value)}
+                  triggerClassName="text-sm font-medium rounded-[12px]"
+                />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </Form>
     </Alert>
   );
 }

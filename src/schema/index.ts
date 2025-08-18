@@ -8,6 +8,7 @@ export const emailSchema = z
 export const phoneSchema = z
   .string()
   .min(1, "전화번호를 입력해주세요.")
+  .startsWith("0", { message: "잘못된 전화번호 형식입니다." })
   .refine(
     (val) =>
       val.length < 1 ||
