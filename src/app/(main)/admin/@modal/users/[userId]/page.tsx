@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Dropdown from "@/components/common/Dropdown";
@@ -18,6 +18,7 @@ import { adminQueries } from "../../../_queries/useAdmin";
 import { TypeUserForm, userSchema } from "../../../users/_schema/user.schema";
 
 export default function Page() {
+  const navigate = useRouter();
   const params = useParams();
   const accountId = params?.userId as string;
 
@@ -53,22 +54,17 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountData]);
 
-  const findKeyByValue = (obj: Record<string, string>, value: string) =>
-    Object.keys(obj).find((key) => obj[key] === value);
-
-  const submitHandler = () => {
+  const submitHandler = (data: TypeUserForm) => {
     setIsSubmitted(true);
 
     updateDetail.mutate(
       {
         accountId,
-        permission: findKeyByValue(
-          permissionTranslate,
-          form.watch("permission")!
-        ) as AccountPermission,
-        state: findKeyByValue(stateTranslate, form.watch("state")!) as Status,
+        permission: data.permission,
+        state: data.state,
       },
       {
+        onSuccess: () => navigate.back(),
         onError: () => setIsSubmitted(false),
       }
     );
@@ -79,13 +75,13 @@ export default function Page() {
       <div className="flex flex-col pb-6 text-lg font-semibold md:pb-5 lg:pb-8 lg:text-2xl">
         <span className="text-gray-0">회원 정보</span>
       </div>
-      {accountData ? (
-        <ScrollArea className="!h-[300px] md:!h-[360px] lg:!h-[450px]">
-          <Form {...form}>
-            <form
-              className="flex flex-col"
-              onSubmit={form.handleSubmit(submitHandler)}
-            >
+      <Form {...form}>
+        <form
+          className="flex flex-col"
+          onSubmit={form.handleSubmit(submitHandler)}
+        >
+          {accountData ? (
+            <ScrollArea className="!h-[300px] md:!h-[360px] lg:!h-[450px]">
               <div className="flex flex-col gap-4">
                 <LabeledInput
                   form={form}
@@ -118,9 +114,20 @@ export default function Page() {
                           ) as keyof typeof permissionTranslate
                         ]
                       }
-                      setActive={(value) =>
-                        form.setValue("permission", value as AccountPermission)
-                      }
+                      setActive={(value) => {
+                        let translated;
+                        if (value === "사용자") {
+                          translated = "USER";
+                        } else if (value === "관리자") {
+                          translated = "ADMIN";
+                        } else {
+                          translated = "OWNER";
+                        }
+                        form.setValue(
+                          "permission",
+                          translated as AccountPermission
+                        );
+                      }}
                       active={
                         permissionTranslate[
                           form.watch(
@@ -128,8 +135,7 @@ export default function Page() {
                           ) as keyof typeof permissionTranslate
                         ] ?? "권한"
                       }
-                      triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
-                      className="w-[280px] md:w-[324px] lg:w-[480px]"
+                      triggerClassName="!w-full !flex justify-between h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
                     />
                   </div>
                   {/* <div className="flex w-full flex-col gap-2">
@@ -146,9 +152,12 @@ export default function Page() {
                           form.watch("state") as keyof typeof stateTranslate
                         ]
                       }
-                      setActive={(value) =>
-                        form.setValue("state", value as Status)
-                      }
+                      setActive={(value) => {
+                        form.setValue(
+                          "state",
+                          value === "활성화" ? "ACTIVE" : "INACTIVE"
+                        );
+                      }}
                       active={
                         stateTranslate[
                           form.watch("state") as keyof typeof stateTranslate
@@ -160,29 +169,29 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-            </form>
-          </Form>
-        </ScrollArea>
-      ) : (
-        <div className="flex !h-[300px] flex-col gap-3.5 md:!h-[360px] lg:!h-[450px]">
-          <SkeletonGroup />
-        </div>
-      )}
-      <div className="mt-8 flex w-full flex-row items-center justify-between gap-3">
-        <ResponsiveButton
-          type="submit"
-          color="black"
-          responsiveButtons={{
-            sm: { buttonSize: "sm" },
-            md: { buttonSize: "sm" },
-            lg: { buttonSize: "lg" },
-          }}
-          disabled={isSubmitted}
-          commonClassName="w-full"
-        >
-          {isSubmitted ? <Spinner /> : "변경 내용 저장하기"}
-        </ResponsiveButton>
-      </div>
+            </ScrollArea>
+          ) : (
+            <div className="flex !h-[300px] flex-col gap-3.5 md:!h-[360px] lg:!h-[450px]">
+              <SkeletonGroup />
+            </div>
+          )}
+          <div className="mt-8 flex w-full flex-row items-center justify-between gap-3">
+            <ResponsiveButton
+              type="submit"
+              color="black"
+              responsiveButtons={{
+                sm: { buttonSize: "sm" },
+                md: { buttonSize: "sm" },
+                lg: { buttonSize: "lg" },
+              }}
+              disabled={isSubmitted}
+              commonClassName="w-full"
+            >
+              {isSubmitted ? <Spinner /> : "변경 내용 저장하기"}
+            </ResponsiveButton>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
