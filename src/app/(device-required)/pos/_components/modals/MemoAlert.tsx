@@ -1,9 +1,7 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import Textarea from "@/components/common/TextArea";
-import { useMemoStore } from "../../_hooks/useMemoStore";
 import { useOrderStore } from "../../_hooks/useOrderStore";
-import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import { orderQueries } from "../../_queries/useOrder";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
@@ -13,32 +11,16 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 interface IProps {
   close: () => void;
   isOrder: boolean;
-  orderNo?: number;
   tableNo?: number;
 }
 
-export default function MemoAlert({
-  close,
-  isOrder,
-  orderNo,
-  tableNo,
-}: IProps) {
-  const ref = useRef<HTMLTextAreaElement>(null);
-  const [isEditing, setIsEditing] = useState(false);
+export default function MemoAlert({ close, isOrder, tableNo }: IProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [memo, setMemo] = useState("");
 
-  const { memo, setMemo, resetMemo } = useMemoStore();
-  const { selectedOrder, setSelectedOrder } = useSelectItemStore();
   const { orders, resetOrders } = useOrderStore();
 
-  const memoUpdate = orderQueries.useUpdateMemo();
   const order = orderQueries.useOrderMenu();
-
-  const isReadonly = !isOrder && !isEditing;
-  const placeholder =
-    isOrder || isEditing
-      ? "예약 관련 메모를 작성해주세요. (선택)"
-      : "작성된 메모가 없습니다.";
 
   const handleOrder = () => {
     order.mutate(
@@ -56,25 +38,7 @@ export default function MemoAlert({
       {
         onSuccess: () => {
           resetOrders();
-          resetMemo();
-          close();
-        },
-        onError: () => setIsSubmitted(false),
-      }
-    );
-  };
-
-  const handleUpdateMemo = () => {
-    memoUpdate.mutate(
-      {
-        tableNo: Number(tableNo),
-        orderId: selectedOrder?.orderId as string,
-        body: { memo },
-      },
-      {
-        onSuccess: () => {
-          setSelectedOrder(null);
-          resetMemo();
+          setMemo("");
           close();
         },
         onError: () => setIsSubmitted(false),
@@ -84,55 +48,28 @@ export default function MemoAlert({
 
   const handleAction = () => {
     setIsSubmitted(true);
-
-    if (isOrder) {
-      handleOrder();
-    } else if (isEditing) {
-      handleUpdateMemo();
-    } else {
-      setIsEditing(true);
-      ref.current?.focus();
-      if (typeof memo === "string") {
-        ref.current?.setSelectionRange(memo.length, memo.length);
-      }
-    }
-  };
-
-  const getButtonText = () => {
-    if (isOrder) return "주문하기";
-    return isEditing ? "저장하기" : "수정하기";
+    handleOrder();
   };
 
   const alertProps = {
     onClose: close,
-    buttonColor: isOrder || isEditing ? "black" : "primary",
+    buttonColor: isOrder ? "black" : "primary",
     noResponsive: true,
-    buttonText: getButtonText(),
+    buttonText: "주문하기",
     onAction: handleAction,
-    hasNoCancel: isEditing,
     isSubmitted,
   };
 
   return (
     <Alert {...alertProps}>
       <div className="-mt-4 flex w-full flex-col gap-5">
-        {isOrder ? (
-          <h3 className="text-xl font-semibold">주문하시겠습니까?</h3>
-        ) : (
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-semibold">메모</h3>
-            <span className="text-lg font-semibold">
-              {orderNo ? `${orderNo}번 주문` : `${tableNo}번 테이블`}
-            </span>
-          </div>
-        )}
+        <h3 className="text-xl font-semibold">주문하시겠습니까?</h3>
         <Textarea
-          ref={ref}
           className="h-[120px]"
-          placeholder={placeholder}
+          placeholder="예약 관련 메모를 작성해주세요. (선택)"
           value={memo}
           onChange={(e) => setMemo(e.target.value)}
-          readOnly={isReadonly}
+          readOnly={!isOrder}
         />
       </div>
     </Alert>
