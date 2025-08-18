@@ -48,26 +48,29 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { open, close } = useOverlay();
-  const handleOpenAlert = () => {
+  const handleOpenAlert = (key: string) => {
     open(() => (
-      <Alert onAction={close} onClose={close} buttonText="확인" hasNoCancel>
-        <span>등록된 매장이 없습니다.</span>
+      <Alert onClose={close} buttonText="확인" hasNoAction>
+        <span>{key}된 매장이 없습니다.</span>
         <br />
-        <span>매장을 먼저 등록해주세요!</span>
+        <span>매장을 먼저 {key}해주세요!</span>
       </Alert>
     ));
   };
 
   const mutateSendPhoneAuthCode = useSendAuth();
-  const mutateVerifyAuthCode = useVerifyPhone(handleOpenAlert, (data) => {
-    setStores(data.stores);
-    if (data.stores.length === 1) setActive(data.stores[0].name);
-    // eslint-disable-next-line
-    alert("인증되었습니다.");
-    dispatch({ type: "VERIFY_SUCCESS" });
-    form.clearErrors("phone");
-    form.clearErrors("authNumber");
-  });
+  const mutateVerifyAuthCode = useVerifyPhone(
+    () => handleOpenAlert("등록"),
+    (data) => {
+      setStores(data.stores);
+      if (data.stores.length === 1) setActive(data.stores[0].name);
+      // eslint-disable-next-line
+      alert("인증되었습니다.");
+      dispatch({ type: "VERIFY_SUCCESS" });
+      form.clearErrors("phone");
+      form.clearErrors("authNumber");
+    }
+  );
 
   useEffect(() => {
     if (state.authExpired) {
@@ -92,8 +95,10 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
     setIsSubmitted(true);
     const matchedStore = stores?.find((el) => el.name === active);
     if (!matchedStore) {
-      handleOpenAlert();
+      handleOpenAlert("등록");
       setIsSubmitted(false);
+    } else if (!active) {
+      handleOpenAlert("선택");
     } else {
       onNextStep({ ...matchedStore, phoneNumber: form.watch("phone") });
     }
