@@ -3,8 +3,9 @@ export const accountKeys = {
     page?: number,
     email?: string,
     permission?: AccountPermission | "",
-    state?: Status | ""
-  ) => ["get-account", { page, email, permission, state }],
+    state?: Status | "",
+    hasStore?: boolean
+  ) => ["get-account", { page, email, permission, state, hasStore }],
   accountDetail: (id: string) => ["detail-account", id],
   allToApprove: (filters?: {
     email?: string;

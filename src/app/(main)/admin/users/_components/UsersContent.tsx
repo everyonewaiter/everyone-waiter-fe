@@ -2,7 +2,7 @@ import Searchbar from "@/components/Searchbar";
 import { useFormContext } from "react-hook-form";
 import DropdownGroup from "./DropdownGroup";
 import UsersTable from "./UsersTable";
-import { TypeUserForm } from "../_schema/user.schema";
+import { TypeUserSearchForm } from "../_schema/user.schema";
 
 interface IProps {
   debouncedValue: string;
@@ -10,7 +10,7 @@ interface IProps {
 }
 
 export default function UsersContent({ debouncedValue, data }: IProps) {
-  const { watch, setValue } = useFormContext<TypeUserForm>();
+  const { watch, setValue } = useFormContext<TypeUserSearchForm>();
 
   return (
     <div className="flex flex-1 flex-col">

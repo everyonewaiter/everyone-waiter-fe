@@ -15,16 +15,29 @@ import { storeKeys } from "../../(owner)/[id]/store/_queries/keys";
 
 const queryClient = getQueryClient();
 
-const useAccount = (
-  searchEmail: string,
-  searchPermission: AccountPermission | "",
-  searchState: Status | "",
-  page: number = 1
-) =>
+const useAccount = ({
+  email,
+  state,
+  permission,
+  hasStore,
+  page = 1,
+}: {
+  email: string;
+  state: Status;
+  permission: AccountPermission;
+  hasStore: boolean | null;
+  page: number;
+}) =>
   useQuery({
-    queryKey: accountKeys.all(page, searchEmail, searchPermission, searchState),
+    queryKey: accountKeys.all(page, email, permission, state),
     queryFn: () =>
-      getAccounts({ page, searchEmail, searchPermission, searchState }),
+      getAccounts({
+        page,
+        email,
+        permission,
+        state,
+        hasStore,
+      }),
     placeholderData: keepPreviousData,
   });
 

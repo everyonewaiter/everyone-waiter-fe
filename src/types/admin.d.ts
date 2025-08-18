@@ -17,3 +17,14 @@ type AdminStores = {
   status: RegisterStatus;
   updatedAt: string;
 };
+
+type AdminUser = {
+  accountId: string;
+  createdAt: string;
+  updatedAt: string;
+  email: string;
+  lastSignIn: string;
+  permission: AccountPermission;
+  phoneNumber: string;
+  state: Status;
+};
