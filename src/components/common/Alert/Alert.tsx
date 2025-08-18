@@ -2,6 +2,7 @@
 
 import { PropsWithChildren, useRef, useState } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
+import cn from "@/lib/utils";
 import { ButtonColors } from "../Button/Button";
 import {
   AlertDialog,
@@ -17,9 +18,11 @@ import Spinner from "../Spinner";
 interface IProps {
   onAction?: () => void;
   onClose: () => void;
+  onCancel?: () => void;
   hasNoCancel?: boolean;
   hasNoAction?: boolean;
   buttonText?: string;
+  cancelText?: string;
   buttonColor?: string;
   layoutClassName?: string;
   noResponsive?: boolean;
@@ -31,10 +34,12 @@ interface IProps {
 function Alert({
   children,
   onAction,
+  onCancel,
   onClose,
   hasNoCancel,
   hasNoAction,
   buttonText,
+  cancelText,
   layoutClassName,
   buttonColor = "primary",
   noResponsive,
@@ -60,7 +65,7 @@ function Alert({
     <AlertDialog open={open}>
       <AlertDialogContent
         ref={ref}
-        className={layoutClassName}
+        className={cn(layoutClassName, "flex flex-col justify-between")}
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <AlertDialogHeader>
@@ -72,13 +77,13 @@ function Alert({
           {!hasNoCancel && (
             <AlertDialogCancel
               color="grey"
-              onClick={handleClose}
+              onClick={onCancel || handleClose}
               className="flex-[0.6]"
               hasNoAction={hasNoAction}
               noResponsive={noResponsive}
               customButtonStyle={customButtonStyle}
             >
-              <span>닫기</span>
+              <span>{cancelText || "닫기"}</span>
             </AlertDialogCancel>
           )}
           {!hasNoAction && (

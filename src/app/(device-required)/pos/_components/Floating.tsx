@@ -7,15 +7,9 @@ import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon/Icon";
 import useOverlay from "@/hooks/useOverlay";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
-import { useMemoStore } from "../_hooks/useMemoStore";
-import { useOrderStore } from "../_hooks/useOrderStore";
-import { useSelectItemStore } from "../_hooks/useSelectItemStore";
 import { posQueries } from "../_queries/usePos";
 import ReceiptModal from "./modals/ReceiptModal";
-
-const MemoAlert = dynamic(() => import("./modals/MemoAlert"), {
-  ssr: false,
-});
+import MemoListAlert from "./modals/MemoListAlert";
 
 const ResendAlert = dynamic(() => import("./modals/ResendAlert"), {
   ssr: false,
@@ -54,10 +48,6 @@ export default function Floating({ hasData, tableNo }: IProps) {
   const { open, close } = useOverlay();
 
   const { data } = posQueries.useActivity(tableNo);
-
-  const { orders } = useOrderStore();
-  const { selectedOrder } = useSelectItemStore();
-  const { setMemo } = useMemoStore();
   const { storeId } = useDeviceContext();
 
   const list = hasData
@@ -69,28 +59,27 @@ export default function Floating({ hasData, tableNo }: IProps) {
     else if (type === "rotate")
       navigate.push(`/pos/tables?sourceTableNo=${tableNo}`);
     else if (type === "book") {
-      const orderNo = data?.orders.findIndex(
-        (el) => el.orderId === selectedOrder?.orderId
-      ) as number;
-
-      if (!selectedOrder || orderNo < 0) {
-        // eslint-disable-next-line  no-alert
-        alert("주문 선택 시 메모를 확인할 수 있습니다.");
-        return;
-      }
-
-      setMemo(selectedOrder.memo);
+      const memos = (data?.orders ?? [])
+        .map((order, index) =>
+          order.memo && order.memo.trim().length > 0
+            ? {
+                index: index + 1,
+                memo: order.memo,
+                orderId: order.orderId,
+                menus: order.orderMenus.map((el) => el.name),
+              }
+            : null
+        )
+        .filter(Boolean) as {
+        index: number;
+        memo: string;
+        orderId: string;
+        menus: string[];
+      }[];
 
       open(() => (
         <QueryProviders>
-          {type === "book" && selectedOrder && (
-            <MemoAlert
-              close={close}
-              isOrder={orders.length > 0}
-              orderNo={orderNo + 1}
-              tableNo={tableNo}
-            />
-          )}
+          <MemoListAlert close={close} memos={memos} tableNo={tableNo} />
         </QueryProviders>
       ));
     } else if (type === "send") {

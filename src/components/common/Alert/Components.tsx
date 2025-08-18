@@ -100,9 +100,10 @@ const AlertDialogAction = React.forwardRef<
     customButtonStyle: string;
   }
 >(({ className, onClick, noResponsive, customButtonStyle, ...props }, ref) => (
-  <AlertDialogPrimitive.Action ref={ref} asChild>
+  <AlertDialogPrimitive.Action ref={ref} className="flex-1">
     {noResponsive ? (
       <Button
+        asChild
         type="button"
         onClick={onClick}
         className="button-xl w-full"
@@ -110,6 +111,7 @@ const AlertDialogAction = React.forwardRef<
       />
     ) : (
       <ResponsiveButton
+        asChild
         type="button"
         responsiveButtons={{
           lg: { buttonSize: "xl" },
@@ -119,9 +121,10 @@ const AlertDialogAction = React.forwardRef<
           },
           sm: {
             buttonSize: "sm",
-            className: `${customButtonStyle} justify-center items-center`,
+            className: `justify-center items-center`,
           },
         }}
+        commonClassName={cn(customButtonStyle, "cursor-pointer")}
         onClick={onClick}
         {...props}
       />
@@ -152,11 +155,12 @@ const AlertDialogCancel = React.forwardRef<
     { className, hasNoAction, noResponsive, customButtonStyle, ...props },
     ref
   ) => (
-    <AlertDialogPrimitive.Cancel ref={ref} asChild>
+    <AlertDialogPrimitive.Cancel ref={ref} className="flex-1">
       {noResponsive ? (
         <Button type="button" className="button-xl w-full" {...props} />
       ) : (
         <ResponsiveButton
+          asChild
           color="grey"
           type="button"
           responsiveButtons={{
@@ -167,10 +171,10 @@ const AlertDialogCancel = React.forwardRef<
             },
             sm: {
               buttonSize: "sm",
-              className: `${customButtonStyle} justify-center items-center`,
+              className: `justify-center items-center`,
             },
           }}
-          commonClassName="cursor-pointer"
+          commonClassName={cn(customButtonStyle, "cursor-pointer")}
           {...props}
         />
       )}
