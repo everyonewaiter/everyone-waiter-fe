@@ -26,7 +26,12 @@ export default function ImageWithFallback({
   onClick,
   ...props
 }: ImageWithFallbackProps) {
-  const [currentSrc, setCurrentSrc] = useState<string>("");
+  const [currentSrc, setCurrentSrc] = useState<string>(() => {
+    if (src && src.trim() !== "") {
+      return `${process.env.NEXT_PUBLIC_PROD_CDN}/${src}`;
+    }
+    return "";
+  });
   const [hasError, setHasError] = useState(false);
 
   const handleError = () => {
@@ -55,8 +60,10 @@ export default function ImageWithFallback({
   };
 
   useEffect(() => {
-    setCurrentSrc(`${process.env.NEXT_PUBLIC_PROD_CDN}/${src}`);
-    setHasError(false);
+    if (src && src.trim() !== "") {
+      setCurrentSrc(`${process.env.NEXT_PUBLIC_PROD_CDN}/${src}`);
+      setHasError(false);
+    }
   }, [src]);
 
   const imageProps = {
@@ -75,6 +82,10 @@ export default function ImageWithFallback({
     onLoad: handleLoad,
     ...props,
   };
+
+  if (!currentSrc || currentSrc.trim() === "") {
+    return null;
+  }
 
   return <Image {...imageProps} />;
 }
