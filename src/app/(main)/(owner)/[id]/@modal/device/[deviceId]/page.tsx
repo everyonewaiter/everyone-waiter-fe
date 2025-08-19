@@ -61,7 +61,7 @@ export default function DeviceInfoModal() {
             triggerClassName="h-10 lg:h-12 text-sm lg:text-[15px] md:font-regular !w-fit"
           />
         </div>
-        {["HALL", "TABLE"].includes(form.watch("purpose")) && (
+        {form.watch("purpose") === "TABLE" && (
           <LabeledInput
             form={form}
             name="tableNo"
@@ -69,7 +69,6 @@ export default function DeviceInfoModal() {
             type="number"
           />
         )}
-
         {["HALL", "TABLE"].includes(form.watch("purpose")) && (
           <div className="flex flex-col gap-2">
             <Label>결제 방식</Label>
