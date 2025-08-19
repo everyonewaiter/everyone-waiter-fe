@@ -8,6 +8,15 @@ export function getCdn(path: string): string {
 
   if (path.startsWith("http")) return path;
 
+  const hasEnvPath = baseUrl.endsWith("/p") || baseUrl.endsWith("/d");
+
+  if (hasEnvPath) {
+    if (path.startsWith("p/") || path.startsWith("d/")) {
+      return `${baseUrl}/${path}`;
+    }
+    return `${baseUrl}/${path}`;
+  }
+
   if (
     process.env.NODE_ENV === "production" &&
     !path.includes("/d/") &&
@@ -38,12 +47,24 @@ export function getCdnFallbackPath(path: string): string {
     return path;
   }
 
-  if (path.includes("/p/")) {
-    return `${baseUrl}/${path.replace("/p/", "/d/")}`;
-  }
-  if (path.includes("/d/")) {
-    return `${baseUrl}/${path.replace("/p/", "/d/")}`;
+  const hasEnvPath = baseUrl.endsWith("/p") || baseUrl.endsWith("/d");
+
+  if (hasEnvPath) {
+    if (baseUrl.endsWith("/p")) {
+      return `${baseUrl.replace("/p", "/d")}/${path}`;
+    }
+    if (baseUrl.endsWith("/d")) {
+      return `${baseUrl.replace("/d", "/p")}/${path}`;
+    }
+  } else {
+    if (path.includes("/p/")) {
+      return `${baseUrl}/${path.replace("/p/", "/d/")}`;
+    }
+    if (path.includes("/d/")) {
+      return `${baseUrl}/${path.replace("/d/", "/p/")}`;
+    }
+    return `${baseUrl}/d/${path}`;
   }
 
-  return `${baseUrl}/d/${path}`;
+  return `${baseUrl}/${path}`;
 }

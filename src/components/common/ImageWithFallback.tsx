@@ -34,7 +34,9 @@ export default function ImageWithFallback({
     if (!hasError) {
       setHasError(true);
 
-      const fallbackPath = getCdnFallbackPath(currentSrc);
+      const originalPath = currentSrc.replace(/^https?:\/\/[^/]+\//, "");
+      const fallbackPath = getCdnFallbackPath(originalPath);
+
       if (fallbackPath !== currentSrc) {
         setCurrentSrc(fallbackPath);
         return;
