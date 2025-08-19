@@ -53,6 +53,19 @@ export default function HeaderButton({
           >
             저장
           </ResponsiveButton>
+          <ResponsiveButton
+            variant="outline"
+            color="grey"
+            responsiveButtons={{
+              lg: { buttonSize: "sm" },
+              md: { buttonSize: "sm" },
+              sm: { buttonSize: "sm" },
+            }}
+            commonClassName="border-gray-500"
+            onClick={() => onSetChangeSort(false)}
+          >
+            취소
+          </ResponsiveButton>
         </div>
       ) : (
         <>
