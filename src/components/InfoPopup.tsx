@@ -7,16 +7,18 @@ import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import useAuthStore from "@/stores/useAuthStore";
 import Icon from "./common/Icon/Icon";
 
-const popupList = [
-  {
-    text: "매장 등록 신청 현황",
-    url: "/stores",
-  },
-  // {
-  //   text: "구독",
-  //   url: "/subscription",
-  // },
-];
+const popupList = {
+  OWNER: [
+    {
+      text: "매장 등록 신청 현황",
+      url: "/stores",
+    },
+    // {
+    //   text: "구독",
+    //   url: "/subscription",
+    // }
+  ],
+};
 
 interface IProps {
   close: () => void;
@@ -63,11 +65,11 @@ export default function InfoPopup({ close, storeId }: IProps) {
           <Icon iconKey="user" size={16} className="h-4 w-4 lg:h-6 lg:w-6" />
         </div>
         <span className="min-w-0 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-gray-100 lg:text-sm">
-          {user?.email}
+          {user?.permission === "ADMIN" ? "admin" : user?.email}
         </span>
       </div>
 
-      {popupList.map((item) => (
+      {popupList[user?.permission as keyof typeof popupList]?.map((item) => (
         <div
           key={item.text}
           role="menuitem"
