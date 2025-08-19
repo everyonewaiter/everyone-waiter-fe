@@ -36,7 +36,18 @@ export default function ImageSection({ isEditing }: IProps) {
           formState.errors.imgString ? "border-status-error" : ""
         )}
       >
-        {watch("imgString") ? (
+        {watch("imgString") && watch("imgString").startsWith("blob") && (
+          <Image
+            src={watch("imgString")}
+            alt="menu image"
+            width={364}
+            height={478}
+            unoptimized
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        )}
+        {watch("imgString") && !watch("imgString").startsWith("blob") && (
           <ImageWithFallback
             src={watch("imgString")}
             alt="menu image"
@@ -46,7 +57,8 @@ export default function ImageSection({ isEditing }: IProps) {
             loading="lazy"
             className="h-full w-full object-cover"
           />
-        ) : (
+        )}
+        {!watch("imgString") && (
           <div className="center h-full w-full">
             <Image
               src="/logo/logo-medium-gray.svg"
