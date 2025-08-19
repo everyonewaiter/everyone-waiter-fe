@@ -13,7 +13,7 @@ export function getCdn(path: string): string {
     !path.includes("/d/") &&
     !path.includes("/p/")
   ) {
-    return `${baseUrl}/d${path}`;
+    return `${baseUrl}/d/${path}`;
   }
 
   return `${baseUrl}/${path}`;
@@ -27,14 +27,23 @@ export function getCdnFallbackPath(path: string): string {
 
   if (!baseUrl) return path;
 
-  if (path.startsWith("http")) return path;
+  if (path.startsWith("http")) {
+    // CDN URL에서 d/와 p/ 경로 전환
+    if (path.includes("/d/")) {
+      return path.replace("/d/", "/p/");
+    }
+    if (path.includes("/p/")) {
+      return path.replace("/p/", "/d/");
+    }
+    return path;
+  }
 
   if (path.includes("/p/")) {
     return `${baseUrl}/${path.replace("/p/", "/d/")}`;
   }
   if (path.includes("/d/")) {
-    return `${baseUrl}/${path.replace("/d/", "/p/")}`;
+    return `${baseUrl}/${path.replace("/p/", "/d/")}`;
   }
 
-  return `${baseUrl}/d${path}`;
+  return `${baseUrl}/d/${path}`;
 }
