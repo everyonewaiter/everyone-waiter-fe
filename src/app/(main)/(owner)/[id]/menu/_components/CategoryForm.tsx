@@ -69,7 +69,6 @@ export default function CategoryForm({
                   const targetId = prev[hoverIndex].categoryId;
                   const where = dragIndex < hoverIndex ? "NEXT" : "PREVIOUS";
 
-                  // Prevent duplicate moves by checking if this move already exists
                   onSetPendingMoves((prevMoves) => {
                     const existingMove = prevMoves.find(
                       (move) => move.sourceId === sourceId
@@ -79,10 +78,9 @@ export default function CategoryForm({
                       existingMove.targetId === targetId &&
                       existingMove.where === where
                     ) {
-                      return prevMoves; // Return unchanged if same move already exists
+                      return prevMoves;
                     }
 
-                    // Remove any existing move for this sourceId and add the new one
                     return [
                       ...prevMoves.filter((move) => move.sourceId !== sourceId),
                       { sourceId, targetId, where },
@@ -104,19 +102,17 @@ export default function CategoryForm({
               id: category.categoryId,
             }))}
           >
-            {items?.map((category, index) => (
-              <div
-                className="mb-2 flex gap-2"
-                key={category.name || `temp-${index}`}
-              >
+            <div className="mb-2 flex flex-col gap-2 md:gap-4">
+              {items?.map((category, index) => (
                 <CategoryFormItem
+                  key={category.name || `temp-${index}`}
                   index={index}
                   categoryId={category.categoryId}
                   optionState={optionState}
                   initialCategoriesRef={initialCategoriesRef}
                 />
-              </div>
-            ))}
+              ))}
+            </div>
           </SortableContext>
         </DndContext>
       ) : (

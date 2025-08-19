@@ -79,11 +79,9 @@ export default function Page() {
         <ModalTitle
           title={getTitle()}
           topRightComponent={
-            <ModalHeader
-              optionState={optionState}
-              setOptionState={setOptionState}
-            />
+            !optionState && <ModalHeader setOptionState={setOptionState} />
           }
+          className="lg:!mb-0"
         />
         <CategoryForm
           optionState={optionState}

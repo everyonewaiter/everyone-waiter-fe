@@ -1,57 +1,37 @@
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon/Icon";
 import { ArrowDownUp } from "lucide-react";
 
 interface IProps {
-  optionState: "move" | "delete" | null;
   setOptionState: (state: "move" | "delete" | null) => void;
 }
 
-export default function ModalHeader({ optionState, setOptionState }: IProps) {
+export default function ModalHeader({ setOptionState }: IProps) {
   return (
-    <>
-      <ResponsiveButton
-        color="grey"
-        responsiveButtons={{
-          lg: {
-            buttonSize: "md",
-            className: "!rounded-[24px] !px-4 !py-2",
-          },
-        }}
-        commonClassName="hidden lg:flex"
+    <div className="flex items-center gap-4">
+      <button
+        type="button"
+        className="flex items-center gap-1 lg:gap-2"
         onClick={() => setOptionState("move")}
       >
         <ArrowDownUp
-          size={18}
+          size={16}
           strokeWidth={1.5}
-          className="md:h-3 md:w-3 lg:h-[18px] lg:w-[18px]"
+          className="text-gray-300 md:h-3 md:w-3 lg:mt-[1px] lg:h-5 lg:w-5"
         />
-        <span className="lg:text-base">순서 변경</span>
-      </ResponsiveButton>
-      {!optionState && (
-        <div className="flex items-center gap-4 lg:hidden">
-          <button
-            type="button"
-            className="flex items-center gap-1"
-            onClick={() => setOptionState("move")}
-          >
-            <ArrowDownUp
-              size={16}
-              strokeWidth={1.5}
-              className="text-gray-300"
-            />
-            <span className="text-sm text-gray-300">순서 변경</span>
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-1"
-            onClick={() => setOptionState("delete")}
-          >
-            <Icon iconKey="trash" className="text-status-error" size={16} />
-            <span className="text-status-error text-sm">삭제</span>
-          </button>
-        </div>
-      )}
-    </>
+        <span className="text-sm text-gray-300 lg:text-lg">순서 변경</span>
+      </button>
+      <button
+        type="button"
+        className="flex items-center gap-1 lg:gap-2"
+        onClick={() => setOptionState("delete")}
+      >
+        <Icon
+          iconKey="trash"
+          className="text-status-error md:h-3 md:w-3 lg:mt-[1px] lg:h-5 lg:w-5"
+          size={16}
+        />
+        <span className="text-status-error text-sm lg:text-lg">삭제</span>
+      </button>
+    </div>
   );
 }
