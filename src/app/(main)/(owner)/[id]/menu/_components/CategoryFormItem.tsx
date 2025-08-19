@@ -9,7 +9,7 @@ import {
 import Icon from "@/components/common/Icon/Icon";
 import Input from "@/components/common/Input";
 import cn from "@/lib/utils";
-import { CSS, useSortable } from "@/components/dnd/index";
+import { useSortable } from "@/components/dnd/index";
 import { useFormContext, Controller } from "react-hook-form";
 import { useStoreContext } from "@/providers/storeProvider";
 import { categoryQueries } from "../_queries/useCategories";
@@ -20,14 +20,12 @@ interface IProps {
   index: number;
   optionState: "move" | "delete" | null;
   initialCategoriesRef: RefObject<Category[]>;
-  sortableId?: string;
 }
 
 export default function CategoryFormItem({
   index,
   optionState,
   categoryId,
-  sortableId,
 }: IProps) {
   const { storeId } = useStoreContext();
   const form = useFormContext<TypeCategoryForm>();
@@ -42,10 +40,10 @@ export default function CategoryFormItem({
     setActivatorNodeRef,
     transform,
     transition,
-  } = useSortable({ id: sortableId ?? categoryId });
+  } = useSortable({ id: categoryId });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: transform ? `translate3d(0px, ${transform.y}px, 0)` : undefined,
     transition,
   };
 
@@ -69,7 +67,6 @@ export default function CategoryFormItem({
   };
 
   const handleUpdate = () => {
-    // NOTE 카테고리 아이디가 없으면 (새로 추가됨) -> isUpdated로 변경하지 않음
     if (
       form.getValues(`categories.${index}.categoryId`) &&
       !form.getValues(`categories.${index}.isAdded`)
@@ -79,7 +76,13 @@ export default function CategoryFormItem({
   };
 
   return (
-    <FormItem className="w-full" ref={setNodeRef} style={style}>
+    <FormItem
+      className="w-full"
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
       <FormLabel>카테고리 {index + 1}</FormLabel>
       <div className="flex items-center gap-2">
         <FormControl className="flex flex-1 gap-2">
