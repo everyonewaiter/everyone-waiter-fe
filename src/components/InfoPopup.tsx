@@ -11,7 +11,7 @@ const popupList = {
   OWNER: [
     {
       text: "매장 등록 신청 현황",
-      url: "/stores",
+      url: "/",
     },
     // {
     //   text: "구독",
