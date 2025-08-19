@@ -2,7 +2,6 @@
 
 import Image, { ImageProps } from "next/image";
 import { useState, useEffect } from "react";
-import { getCdn, getCdnFallbackPath } from "@/utils/getCdn";
 
 interface ImageWithFallbackProps extends Omit<ImageProps, "src" | "alt"> {
   src: string;
@@ -27,24 +26,23 @@ export default function ImageWithFallback({
   onClick,
   ...props
 }: ImageWithFallbackProps) {
-  const [currentSrc, setCurrentSrc] = useState<string>(getCdn(src));
+  const [currentSrc, setCurrentSrc] = useState<string>("");
   const [hasError, setHasError] = useState(false);
 
   const handleError = () => {
     if (!hasError) {
       setHasError(true);
 
-      const originalPath = currentSrc.replace(/^https?:\/\/[^/]+\//, "");
-      const fallbackPath = getCdnFallbackPath(originalPath);
-
-      if (fallbackPath !== currentSrc) {
-        setCurrentSrc(fallbackPath);
+      if (currentSrc.startsWith(process.env.NEXT_PUBLIC_PROD_CDN!)) {
+        setCurrentSrc(`${process.env.NEXT_PUBLIC_DEV_CDN}/${src}`);
         return;
       }
 
-      if (fallbackSrc) {
-        setCurrentSrc(fallbackSrc);
-        return;
+      if (currentSrc.startsWith(process.env.NEXT_PUBLIC_DEV_CDN!)) {
+        if (fallbackSrc) {
+          setCurrentSrc(fallbackSrc);
+          return;
+        }
       }
 
       props.onError?.();
@@ -57,7 +55,7 @@ export default function ImageWithFallback({
   };
 
   useEffect(() => {
-    setCurrentSrc(getCdn(src));
+    setCurrentSrc(`${process.env.NEXT_PUBLIC_PROD_CDN}/${src}`);
     setHasError(false);
   }, [src]);
 
