@@ -4,7 +4,7 @@ import Image from "next/image";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
-import { getCdn } from "@/utils/getCdn";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { useMenuSelection } from "../_stores/useMenuSelection";
 
 interface IProps extends Menu {
@@ -41,8 +41,8 @@ export default function MenuCard({
     >
       <div className="relative aspect-[329/440]">
         {menu.image ? (
-          <Image
-            src={getCdn(menu.image)}
+          <ImageWithFallback
+            src={menu.image}
             alt={`${menu.image} 메뉴 이미지`}
             fill
             className="object-cover"

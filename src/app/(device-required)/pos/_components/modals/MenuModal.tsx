@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import cn from "@/lib/utils";
-import { getCdn } from "@/utils/getCdn";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 import OptionGroupSection from "../OptionGroupSection";
 
 interface IProps {
@@ -127,8 +126,8 @@ function MenuModal({
       >
         <div className="flex h-[160px] overflow-hidden rounded-[16px] md:h-full md:flex-1 lg:h-full lg:flex-1 lg:rounded-[28px]">
           {data?.image && (
-            <Image
-              src={getCdn(data?.image)}
+            <ImageWithFallback
+              src={data?.image}
               alt="menu image"
               className="object-cover"
               width={500}

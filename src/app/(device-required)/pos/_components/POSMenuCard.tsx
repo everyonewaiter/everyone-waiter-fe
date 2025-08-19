@@ -1,4 +1,4 @@
-import { getCdn } from "@/utils/getCdn";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 import Image from "next/image";
 import { memo } from "react";
 
@@ -13,8 +13,8 @@ const POSMenuCard = memo(({ onClick, ...props }: IProps) => (
     onClick={onClick}
   >
     {props.image ? (
-      <Image
-        src={getCdn(props.image)}
+      <ImageWithFallback
+        src={props.image}
         alt={`${props.name} 메뉴 이미지`}
         fill
         className="object-cover"
