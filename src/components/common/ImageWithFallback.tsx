@@ -35,7 +35,7 @@ export default function ImageWithFallback({
       setHasError(true);
 
       const fallbackPath = getCdnFallbackPath(currentSrc);
-      if (fallbackPath !== getCdn(currentSrc)) {
+      if (fallbackPath !== currentSrc) {
         setCurrentSrc(fallbackPath);
         return;
       }

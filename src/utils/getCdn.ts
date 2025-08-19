@@ -8,6 +8,14 @@ export function getCdn(path: string): string {
 
   if (path.startsWith("http")) return path;
 
+  if (
+    process.env.NODE_ENV === "production" &&
+    !path.includes("/d/") &&
+    !path.includes("/p/")
+  ) {
+    return `${baseUrl}/d${path}`;
+  }
+
   return `${baseUrl}/${path}`;
 }
 
@@ -28,5 +36,5 @@ export function getCdnFallbackPath(path: string): string {
     return `${baseUrl}/${path.replace("/d/", "/p/")}`;
   }
 
-  return `${baseUrl}/${path}`;
+  return `${baseUrl}/d${path}`;
 }
