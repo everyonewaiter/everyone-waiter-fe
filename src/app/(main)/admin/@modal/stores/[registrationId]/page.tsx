@@ -2,14 +2,13 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import Image from "next/image";
 import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { ScrollArea } from "@/components/common/ScrollArea";
 import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
-import { getCdn } from "@/utils/getCdn";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { adminQueries } from "../../../_queries/useAdmin";
 
 const dataObj = {
@@ -103,8 +102,8 @@ export default function Page() {
                 <Label>사업자 등록증</Label>
                 {data?.image && (
                   <div className="flex w-full justify-center rounded-[16px] md:py-1 lg:py-6">
-                    <Image
-                      src={getCdn(data?.image)}
+                    <ImageWithFallback
+                      src={data?.image}
                       alt="사업자 등록증"
                       width={381}
                       height={458}

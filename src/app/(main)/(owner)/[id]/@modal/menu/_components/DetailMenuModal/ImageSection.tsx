@@ -4,8 +4,8 @@ import { useRef } from "react";
 import Image from "next/image";
 import cn from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
-import { getCdn } from "@/utils/getCdn";
 import { FormErrorMessage } from "@/components/common/Form";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
 
 interface IProps {
@@ -37,12 +37,8 @@ export default function ImageSection({ isEditing }: IProps) {
         )}
       >
         {watch("imgString") ? (
-          <Image
-            src={
-              watch("imgString").startsWith("blob")
-                ? watch("imgString")
-                : getCdn(watch("imgString"))
-            }
+          <ImageWithFallback
+            src={watch("imgString")}
             alt="menu image"
             width={364}
             height={478}

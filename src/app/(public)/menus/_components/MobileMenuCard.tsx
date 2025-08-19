@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { getCdn } from "@/utils/getCdn";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 
 interface IProps {
   image: string;
@@ -18,8 +17,8 @@ export default function MobileMenuCard({
     <button type="button" className="py-4" onClick={onClick}>
       <div className="flex items-center gap-5">
         <div className="relative h-[96px] w-[96px] overflow-hidden rounded-[12px]">
-          <Image
-            src={getCdn(image)}
+          <ImageWithFallback
+            src={image}
             alt="menu"
             width={96}
             height={96}

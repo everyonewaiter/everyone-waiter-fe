@@ -1,7 +1,6 @@
-import Image from "next/image";
 import { ChangeEvent, useRef } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import { getCdn } from "@/utils/getCdn";
+import ImageWithFallback from "@/components/common/ImageWithFallback";
 
 interface IProps {
   isUpdating: boolean;
@@ -36,8 +35,8 @@ export default function PhotoForBusiness({
             className="h-full rounded-[16px] border border-gray-600 object-cover md:h-[260px] md:w-[210px] lg:h-[437px] lg:w-[360px]"
           />
         ) : (
-          <Image
-            src={getCdn(image)}
+          <ImageWithFallback
+            src={image}
             alt="사업자 등록증"
             width={380}
             height={457}
