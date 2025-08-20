@@ -1,58 +1,57 @@
-import { UseMutationResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import getQueryClient from "@/app/get-query-client";
-import { TypeDeviceForm } from "../../device/_schema/device.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import {
+  deviceFormSchema,
+  TypeDeviceForm,
+} from "../../device/_schema/device.schema";
 import { deviceKeys } from "../../device/_queries/keys";
+import { deviceQueries } from "../../device/_queries/useDevice";
 
-export default function useDeviceForm({
-  data,
-  setIsSubmitted,
-}: {
-  data?: Device & {
-    tableNo: number;
-    ksnetDeviceNo: string;
-  };
-  setIsSubmitted: (checked: boolean) => void;
-}) {
+interface IProps {
+  deviceId: string;
+  storeId: string;
+}
+
+export default function useDeviceForm({ deviceId, storeId }: IProps) {
   const navigate = useRouter();
   const queryClient = getQueryClient();
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const { data: deviceDetail } = deviceQueries.useDetails(deviceId, storeId);
+  const update = deviceQueries.useUpdateDevice();
+
   const form = useForm<TypeDeviceForm>({
-    mode: "onSubmit",
-    // resolver: zodResolver(deviceFormSchema),
+    mode: "onChange",
+    resolver: zodResolver(deviceFormSchema),
     values: {
-      name: data?.name ?? "",
-      createdAt: data?.createdAt ?? "",
-      state: data?.state || null,
-      purpose: data?.purpose ?? "HALL",
-      paymentType: data?.paymentType ?? "POSTPAID",
-      tableNo: data?.tableNo ?? 0,
-      deviceNumber: data?.ksnetDeviceNo ?? "",
+      name: deviceDetail?.name ?? "",
+      createdAt: deviceDetail?.createdAt ?? "",
+      state: deviceDetail?.state || null,
+      purpose: deviceDetail?.purpose ?? "HALL",
+      paymentType: deviceDetail?.paymentType ?? "POSTPAID",
+      tableNo: String(deviceDetail?.tableNo) ?? "0",
+      deviceNumber: deviceDetail?.ksnetDeviceNo ?? "",
     },
   });
 
   const submitHandler = (
-    action: UseMutationResult<
-      any,
-      Error,
-      Pick<Device, "name" | "purpose" | "paymentType"> & {
-        tableNo: number;
-        ksnetDeviceNo: string;
-      } & { storeId: string; deviceId: string },
-      unknown
-    >,
     submitData: TypeDeviceForm,
     id: { storeId: string; deviceId: string }
   ) => {
+    if (form.formState.errors) return;
+
     setIsSubmitted(true);
 
-    action.mutate(
+    update.mutate(
       {
         name: submitData.name,
         purpose: submitData.purpose,
         paymentType: submitData.paymentType,
-        tableNo: submitData.tableNo,
+        tableNo: Number(submitData.tableNo),
         ksnetDeviceNo: submitData.deviceNumber,
         ...id,
       },
@@ -79,5 +78,7 @@ export default function useDeviceForm({
   return {
     form,
     submitHandler,
+    isSubmitted,
+    deviceDetail,
   };
 }

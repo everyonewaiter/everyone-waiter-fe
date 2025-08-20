@@ -36,6 +36,8 @@ interface IProps {
 export default function AddDeviceStep1({ onNextStep }: IProps) {
   const { state, dispatch } = useAuthReducer();
 
+  const ACTIVE_INIT = "매장을 선택해주세요.";
+
   const { form } = useStep1Form({ isAuthActive: state.authDisabled });
 
   const { useSendAuth, useVerifyPhone } = deviceQueries.useHandleDevice({
@@ -44,7 +46,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
   });
 
   const [stores, setStores] = useState<{ storeId: string; name: string }[]>();
-  const [active, setActive] = useState("매장을 선택해주세요.");
+  const [active, setActive] = useState(ACTIVE_INIT);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { open, close } = useOverlay();
@@ -93,15 +95,21 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
 
   const handleSubmit = () => {
     setIsSubmitted(true);
+
+    if (active === ACTIVE_INIT) {
+      handleOpenAlert("선택");
+      setIsSubmitted(false);
+      return;
+    }
+
     const matchedStore = stores?.find((el) => el.name === active);
     if (!matchedStore) {
       handleOpenAlert("등록");
       setIsSubmitted(false);
-    } else if (!active) {
-      handleOpenAlert("선택");
-    } else {
-      onNextStep({ ...matchedStore, phoneNumber: form.watch("phone") });
+      return;
     }
+
+    onNextStep({ ...matchedStore, phoneNumber: form.watch("phone") });
   };
 
   const phoneBtnLabel = useMemo(() => {
