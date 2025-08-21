@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import getQueryClient from "@/app/get-query-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   deviceFormSchema,
   TypeDeviceForm,
@@ -28,22 +28,35 @@ export default function useDeviceForm({ deviceId, storeId }: IProps) {
     mode: "onChange",
     resolver: zodResolver(deviceFormSchema),
     values: {
-      name: deviceDetail?.name ?? "",
-      createdAt: deviceDetail?.createdAt ?? "",
-      state: deviceDetail?.state || null,
-      purpose: deviceDetail?.purpose ?? "HALL",
-      paymentType: deviceDetail?.paymentType ?? "POSTPAID",
-      tableNo: String(deviceDetail?.tableNo) ?? "0",
-      deviceNumber: deviceDetail?.ksnetDeviceNo ?? "",
+      name: "",
+      createdAt: "",
+      state: null,
+      purpose: "HALL",
+      paymentType: "POSTPAID",
+      tableNo: "0",
+      deviceNumber: "",
     },
   });
+
+  useEffect(() => {
+    if (deviceDetail?.deviceId) {
+      form.reset({
+        name: deviceDetail.name,
+        createdAt: deviceDetail.createdAt,
+        state: deviceDetail.state,
+        purpose: deviceDetail.purpose,
+        paymentType: deviceDetail.paymentType,
+        tableNo: String(deviceDetail.tableNo),
+        deviceNumber: deviceDetail.ksnetDeviceNo,
+      });
+    }
+    // eslint-disable-next-line
+  }, [deviceDetail]);
 
   const submitHandler = (
     submitData: TypeDeviceForm,
     id: { storeId: string; deviceId: string }
   ) => {
-    if (form.formState.errors) return;
-
     setIsSubmitted(true);
 
     update.mutate(
