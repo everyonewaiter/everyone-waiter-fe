@@ -1,7 +1,7 @@
 "use client";
 
 import { FormProvider } from "react-hook-form";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Plus } from "@/components/common/Icon/index";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -18,6 +18,7 @@ export enum OptionState {
 }
 
 export default function Page() {
+  const navigate = useRouter();
   const params = useParams();
   const storeId = params?.id as string;
 
@@ -37,7 +38,10 @@ export default function Page() {
         <ModalTitle
           title={getTitle()}
           topRightComponent={
-            !optionState && <ModalHeader setOptionState={setOptionState} />
+            !optionState &&
+            !form.formState.isDirty && (
+              <ModalHeader setOptionState={setOptionState} />
+            )
           }
           className="lg:!mb-0"
         />
@@ -49,23 +53,16 @@ export default function Page() {
           setItems={setItems}
         />
 
-        {optionState === "move" && (
+        {optionState ? (
           <ModalButton
             buttonText=""
             secondaryText="돌아가기"
-            onlyClose
-            onClose={() => setOptionState(null)}
-          />
-        )}
-        {optionState === "delete" && (
-          <ModalButton
-            buttonText=""
-            secondaryText="돌아가기"
-            onClose={() => setOptionState(null)}
+            onClose={() =>
+              form.watch("categories") ? setOptionState(null) : navigate.back()
+            }
             onlyClose
           />
-        )}
-        {!optionState && (
+        ) : (
           <>
             <div className="flex flex-col">
               <ResponsiveButton
