@@ -46,13 +46,14 @@ export default function Page() {
   }) => {
     try {
       setIsSubmitting(true);
-      const promises = formData.categories
-        .filter((category) => category.name)
-        .map((category) =>
-          addCategory.mutateAsync({ categoryName: category.name, storeId })
-        );
-
-      await Promise.all(promises);
+      const toCreate = formData.categories.filter((category) => category.name);
+      for (let i = 0; i < toCreate.length; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await addCategory.mutateAsync({
+          categoryName: toCreate[i].name,
+          storeId,
+        });
+      }
       navigate.push(`/${storeId}/menu`);
     } finally {
       setIsSubmitting(false);
