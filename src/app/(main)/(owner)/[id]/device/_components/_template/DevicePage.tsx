@@ -82,7 +82,7 @@ export default function DevicePage() {
       >
         {checkedKeys.length >= 1 ? (
           <div>
-            <span className="text-primary">{firstItem?.deviceId}</span>
+            <span className="text-primary">{firstItem?.name}</span>
             {length > 1 ? ` 외 ${length - 1}개의 ` : " "}
             기기를 삭제하시겠습니까?
           </div>
@@ -204,7 +204,13 @@ export default function DevicePage() {
                 />
                 <span>{index + 1}</span>
               </div>
-              <MobileTable className="z-10" key={item.deviceId}>
+              <MobileTable
+                className="z-10 cursor-pointer"
+                key={item.deviceId}
+                onClick={() =>
+                  navigate.push(`/${storeId}/device/${item.deviceId}`)
+                }
+              >
                 <TableBody className="flex flex-col">
                   <MobileTableRow>
                     <MobileTableHead>이름</MobileTableHead>
@@ -248,7 +254,7 @@ export default function DevicePage() {
                   </MobileTableRow>
                   <MobileTableRow>
                     <MobileTableHead>등록 일시</MobileTableHead>
-                    <MobileTableCell>
+                    <MobileTableCell hideBorder>
                       {transformDate(item.updatedAt)}
                     </MobileTableCell>
                   </MobileTableRow>
