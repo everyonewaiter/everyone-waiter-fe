@@ -8,91 +8,64 @@ import {
 import { DndContext } from "@dnd-kit/core";
 import CategoryFormItem from "./CategoryFormItem";
 import { TypeCategoryForm } from "../_schema/category.schema";
+import { categoryQueries } from "../_queries/useCategories";
 
 interface IProps {
   optionState: "move" | "delete" | null;
   initialCategoriesRef: RefObject<Category[]>;
+  storeId: string;
   items: TypeCategoryForm["categories"];
-  onSetItems: (
-    items:
-      | TypeCategoryForm["categories"]
-      | ((
-          prev: TypeCategoryForm["categories"]
-        ) => TypeCategoryForm["categories"])
-  ) => void;
-  onSetPendingMoves: (
-    value:
-      | {
-          sourceId: string;
-          targetId: string;
-          where: "NEXT" | "PREVIOUS";
-        }
-      | ((
-          prev: {
-            sourceId: string;
-            targetId: string;
-            where: "NEXT" | "PREVIOUS";
-          }[]
-        ) => {
-          sourceId: string;
-          targetId: string;
-          where: "NEXT" | "PREVIOUS";
-        }[])
-  ) => void;
+  setItems: (items: TypeCategoryForm["categories"]) => void;
 }
 
 export default function CategoryForm({
   optionState,
   initialCategoriesRef,
+  storeId,
   items,
-  onSetItems,
-  onSetPendingMoves,
+  setItems,
 }: IProps) {
   const form = useFormContext<TypeCategoryForm>();
+
+  const move = categoryQueries.useMoveCategory();
 
   return (
     <div className="scrollbar-hide overflow-y-auto md:h-[270px] lg:h-[424px]">
       {optionState === "move" ? (
         <DndContext
           onDragEnd={(event) => {
-            onSetItems((prev: TypeCategoryForm["categories"]) => {
-              if (event?.active?.id !== event?.over?.id) {
-                const dragIndex = prev.findIndex(
-                  (value) => value.categoryId === event?.active?.id
-                );
-                const hoverIndex = prev.findIndex(
-                  (value) => value.categoryId === event?.over?.id
-                );
+            const categories = form.watch("categories");
+            const activeId = event?.active?.id as string | undefined;
+            const overId = event?.over?.id as string | undefined;
 
-                if (dragIndex !== -1 && hoverIndex !== -1) {
-                  const sourceId = prev[dragIndex].categoryId;
-                  const targetId = prev[hoverIndex].categoryId;
-                  const where = dragIndex < hoverIndex ? "NEXT" : "PREVIOUS";
+            if (!activeId || !overId || activeId === overId) return;
 
-                  onSetPendingMoves((prevMoves) => {
-                    const existingMove = prevMoves.find(
-                      (move) => move.sourceId === sourceId
-                    );
-                    if (
-                      existingMove &&
-                      existingMove.targetId === targetId &&
-                      existingMove.where === where
-                    ) {
-                      return prevMoves;
-                    }
+            const dragIndex = categories.findIndex(
+              (v) => v.categoryId === activeId
+            );
+            const hoverIndex = categories.findIndex(
+              (v) => v.categoryId === overId
+            );
+            if (dragIndex === -1 || hoverIndex === -1) return;
 
-                    return [
-                      ...prevMoves.filter((move) => move.sourceId !== sourceId),
-                      { sourceId, targetId, where },
-                    ];
-                  });
-                }
+            const where = dragIndex < hoverIndex ? "NEXT" : "PREVIOUS";
 
-                return arrayMove(prev, dragIndex, hoverIndex);
+            const nextCategories = arrayMove(categories, dragIndex, hoverIndex);
+            setItems(nextCategories);
+
+            move.mutate(
+              {
+                sourceId: activeId,
+                targetId: overId,
+                where,
+                storeId,
+              },
+              {
+                onSuccess: () => {
+                  form.setValue("categories", nextCategories);
+                },
               }
-
-              return prev;
-            });
+            );
           }}
         >
           <SortableContext

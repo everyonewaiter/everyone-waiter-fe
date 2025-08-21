@@ -1,76 +1,34 @@
 "use client";
 
 import { FormProvider } from "react-hook-form";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import { Plus } from "@/components/common/Icon/index";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import getQueryClient from "@/app/get-query-client";
 import ModalButton from "../../../_components/ModalButton";
 import ModalTitle from "../../../_components/ModalTitle";
 import CategoryForm from "../../../../menu/_components/CategoryForm";
 import ModalHeader from "./_components/ModalHeader";
 import useCategoryMove from "../../_hooks/useCategoryMove";
 import SaveButton from "./_components/SaveButton";
-import { TypeCategoryForm } from "../../../../menu/_schema/category.schema";
-import { categoryQueries } from "../../../../menu/_queries/useCategories";
-import { categoryKeys } from "../../../../menu/_queries/keys";
+
+export enum OptionState {
+  MOVE = "move",
+  DELETE = "delete",
+}
 
 export default function Page() {
-  const navigate = useRouter();
   const params = useParams();
   const storeId = params?.id as string;
 
-  const { form, initialRef } = useCategoryMove(storeId);
+  const { form, initialRef, items, setItems } = useCategoryMove(storeId);
 
-  const move = categoryQueries.useMoveCategory(storeId);
-
-  const [isSortSubmitted, setIsSortSubmitted] = useState(false);
-  const [optionState, setOptionState] = useState<"move" | "delete" | null>(
-    null
-  );
-  const [items, setItems] = useState<TypeCategoryForm["categories"]>(
-    form.watch("categories")
-  );
-  const [pendingMoves, setPendingMoves] = useState<
-    { sourceId: string; targetId: string; where: "NEXT" | "PREVIOUS" }[]
-  >([]);
+  const [optionState, setOptionState] = useState<OptionState | null>(null);
 
   const getTitle = () => {
     if (optionState === "move") return "카테고리 순서 변경";
     if (optionState === "delete") return "카테고리 삭제";
     return "카테고리";
-  };
-
-  useEffect(() => {
-    setItems(form.watch("categories"));
-    // eslint-disable-next-line
-  }, []);
-
-  const handleSaveSort = async () => {
-    if (pendingMoves.length === 0) {
-      // eslint-disable-next-line
-      alert("순서 변경 후 저장이 가능합니다.");
-      return;
-    }
-
-    setIsSortSubmitted(true);
-
-    try {
-      const queryClient = getQueryClient();
-      const promises = pendingMoves.map((value) =>
-        move.mutateAsync({ storeId, ...value })
-      );
-
-      await Promise.all(promises);
-
-      navigate.back();
-      queryClient.invalidateQueries({
-        queryKey: categoryKeys.all(storeId),
-      });
-    } catch (error) {
-      setIsSortSubmitted(false);
-    }
   };
 
   return (
@@ -86,27 +44,17 @@ export default function Page() {
         <CategoryForm
           optionState={optionState}
           initialCategoriesRef={initialRef}
+          storeId={storeId}
           items={items}
-          onSetItems={setItems}
-          onSetPendingMoves={(value) => {
-            if (typeof value === "function") {
-              setPendingMoves(value);
-            } else {
-              setPendingMoves((prev) => [...prev, value]);
-            }
-          }}
+          setItems={setItems}
         />
 
         {optionState === "move" && (
           <ModalButton
-            buttonText="순서 저장하기"
+            buttonText=""
             secondaryText="돌아가기"
-            colorBlack
-            onClose={() => {
-              setOptionState(null);
-            }}
-            onAction={handleSaveSort}
-            isSubmitted={isSortSubmitted}
+            onlyClose
+            onClose={() => setOptionState(null)}
           />
         )}
         {optionState === "delete" && (

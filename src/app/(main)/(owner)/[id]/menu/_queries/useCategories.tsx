@@ -30,8 +30,15 @@ const useAddCategory = () =>
     },
   });
 
-const useMoveCategory = (storeId: string) =>
-  useOptimisticReorderMutation(moveCategory, () => categoryKeys.all(storeId));
+const useMoveCategory = () =>
+  useMutation({
+    mutationFn: moveCategory,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: categoryKeys.all(variables.storeId),
+      });
+    },
+  });
 
 const useUpdateCategory = () =>
   useMutation({

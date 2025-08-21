@@ -57,8 +57,8 @@ export default function SaveButton({ initialRef, storeId }: IProps) {
         })
       ),
     ])
-      .then(() => navigate.push(`/${storeId}/menu`))
-      .catch(() => setIsSubmitting(false));
+      .then(() => navigate.back())
+      .finally(() => setIsSubmitting(false));
   };
 
   return (
