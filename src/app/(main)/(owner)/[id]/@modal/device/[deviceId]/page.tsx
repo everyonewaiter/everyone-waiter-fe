@@ -20,7 +20,7 @@ export default async function Page({
   });
 
   return (
-    <RefLayout className="min-w-[544px]">
+    <RefLayout className="w-[calc(100%-60px)] min-w-[320px] md:w-auto md:min-w-[544px]">
       <ModalTitle title="기기 정보" />
       <DetailDevicePage storeId={id} deviceId={deviceId} />
     </RefLayout>

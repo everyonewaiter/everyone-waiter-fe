@@ -135,12 +135,16 @@ MobileTableHead.displayName = "MobileTableHead";
 
 const MobileTableCell = React.forwardRef<
   HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement> & { className?: string }
->(({ children, className, ...props }, ref) => (
+  React.TdHTMLAttributes<HTMLTableCellElement> & {
+    className?: string;
+    hideBorder?: boolean;
+  }
+>(({ children, className, hideBorder, ...props }, ref) => (
   <td
     ref={ref}
     className={cn(
-      "!text-s text-gray-0 font-regular flex flex-[0.56] items-center justify-center border-b border-b-gray-600 px-6 text-center",
+      "!text-s text-gray-0 font-regular flex flex-[0.56] items-center justify-center px-6 text-center",
+      hideBorder ? "" : "border-b border-b-gray-600",
       className
     )}
     {...props}

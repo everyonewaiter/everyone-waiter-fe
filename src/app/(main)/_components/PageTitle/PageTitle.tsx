@@ -21,7 +21,7 @@ export default function PageTitle({
   return (
     <div
       className={cn(
-        "sticky right-0 left-0 z-50 flex w-full flex-col gap-3 bg-white md:gap-2 lg:gap-5",
+        "sticky right-0 left-0 z-50 mt-3 flex w-full flex-col gap-3 bg-white md:mt-0 md:gap-2 lg:gap-5",
         className
       )}
     >

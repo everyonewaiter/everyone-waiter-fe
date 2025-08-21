@@ -70,8 +70,8 @@ export default function Dropdown({
           <button
             type="button"
             className={cn(
-              "flex h-8 w-fit items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 hover:border-gray-400 md:h-[38px] md:pr-3 md:pl-4",
-              "font-regular text-xs lg:text-sm",
+              "flex h-9 w-fit items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 hover:border-gray-400 md:h-[38px] md:pl-4",
+              "font-regular text-s md:text-xs lg:text-sm",
               disabled
                 ? "pointer-events-none cursor-not-allowed bg-[#F5F5F5] text-gray-300 placeholder:text-gray-400"
                 : "text-gray-0",
