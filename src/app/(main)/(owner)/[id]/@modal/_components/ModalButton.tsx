@@ -16,6 +16,7 @@ interface IProps {
   onAction?: () => void;
   isSubmitted?: boolean;
   onClose?: () => void;
+  disabled?: boolean;
 }
 
 export default function ModalButton({
@@ -29,6 +30,7 @@ export default function ModalButton({
   onClose,
   isSubmitted,
   type = "button",
+  disabled,
 }: IProps) {
   const router = useRouter();
 
@@ -66,6 +68,7 @@ export default function ModalButton({
           }}
           commonClassName={cn("w-full", className)}
           onClick={onAction}
+          disabled={disabled}
         >
           {isSubmitted ? <Spinner /> : buttonText}
         </ResponsiveButton>

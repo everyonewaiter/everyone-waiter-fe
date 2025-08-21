@@ -29,7 +29,7 @@ export default function RefLayout({
     <div
       ref={ref}
       className={cn(
-        "rounded-[20px] bg-white md:p-5 lg:rounded-[30px] lg:p-8",
+        "rounded-[20px] bg-white px-4 py-5 md:p-5 lg:rounded-[30px] lg:p-8",
         className
       )}
     >

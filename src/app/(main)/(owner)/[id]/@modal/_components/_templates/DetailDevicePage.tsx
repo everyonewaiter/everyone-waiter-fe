@@ -23,14 +23,14 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
 
   if (!deviceDetail)
     return (
-      <div className="flex h-[288px] flex-col gap-3.5 md:h-[324px] lg:h-[488px]">
+      <div className="flex flex-col gap-3.5 md:h-[324px] lg:h-[488px]">
         <SkeletonGroup />
       </div>
     );
 
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <LabeledInput form={form} name="name" label="기기 이름" />
         <LabeledInput form={form} name="createdAt" label="등록일시" disabled />
         <div className="flex flex-col gap-2">
@@ -54,7 +54,21 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
               const selected = Object.entries(deviceTranslate).find(
                 (el) => el[1] === value
               );
-              form.setValue("purpose", selected?.[0] as DevicePurpose);
+              if (
+                selected?.[0] === "TABLE" &&
+                (form.getValues("tableNo") === "0" ||
+                  form.getValues("tableNo") === "")
+              ) {
+                form.setError("tableNo", {
+                  message: "테이블 번호를 1 이상으로 변경해주세요.",
+                });
+              } else {
+                form.clearErrors("tableNo");
+              }
+              form.setValue("purpose", selected?.[0] as DevicePurpose, {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
             }}
             defaultText={
               deviceTranslate[
@@ -86,7 +100,10 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
                     (el) => el[1] === value
                   );
                   if (selected) {
-                    form.setValue("paymentType", selected[0] as DevicePayment);
+                    form.setValue("paymentType", selected[0] as DevicePayment, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
                   }
                 }}
                 defaultText={
@@ -102,11 +119,18 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
         <ModalButton
           buttonText="수정"
           isSubmitted={isSubmitted}
+          type="submit"
           onAction={() =>
             submitHandler(form.getValues(), { storeId, deviceId })
           }
+          disabled={
+            !form.formState.isDirty ||
+            !!form.formState.errors.name ||
+            !!form.formState.errors.tableNo ||
+            !!form.formState.errors.deviceNumber
+          }
         />
-      </form>
+      </div>
     </Form>
   );
 }
