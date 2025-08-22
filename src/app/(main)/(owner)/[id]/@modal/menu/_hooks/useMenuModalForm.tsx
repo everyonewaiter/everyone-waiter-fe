@@ -33,6 +33,8 @@ export default function useMenuModalForm(data?: MenuDetail) {
   });
 
   useEffect(() => {
+    // Avoid resetting while a submit is in-flight to prevent UI flicker/reorder revert
+    if (form.formState.isSubmitting) return;
     if (data?.menuId) {
       form.reset({
         category: data.categoryId,

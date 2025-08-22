@@ -16,9 +16,15 @@ interface IProps {
   type: "requiredOptions" | "optionalOptions";
   index: number;
   isEditing: boolean;
+  disabled: boolean;
 }
 
-export default function OptionBox({ type, index, isEditing }: IProps) {
+export default function OptionBox({
+  type,
+  index,
+  isEditing,
+  disabled,
+}: IProps) {
   const form = useFormContext<TypeMenuForm>();
 
   const { fields, append, remove } = useFieldArray({
@@ -36,7 +42,7 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
             <FormControl>
               <Input
                 placeholder="옵션명을 입력해주세요."
-                disabled={!isEditing}
+                disabled={!isEditing || disabled}
                 {...field}
               />
             </FormControl>
@@ -54,7 +60,7 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
           onCheckedChange={(checked) =>
             form.setValue(`${type}.${index}.printEnabled` as const, checked)
           }
-          disabled={!isEditing}
+          disabled={!isEditing || disabled}
         />
       </div>
       <Separator className="h-[1px] bg-gray-600" />
@@ -72,7 +78,7 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
                   <FormControl>
                     <Input
                       placeholder="하위 옵션명을 입력해주세요."
-                      disabled={!isEditing}
+                      disabled={!isEditing || disabled}
                       {...nameField}
                     />
                   </FormControl>
@@ -89,7 +95,7 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
                       placeholder="ex. 33,000"
                       className="!pr-10"
                       type="number"
-                      disabled={!isEditing}
+                      disabled={!isEditing || disabled}
                       {...priceField}
                     />
                   </FormControl>
@@ -99,7 +105,7 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
                 </FormItem>
               )}
             />
-            {isEditing && (
+            {isEditing && !disabled && (
               <button
                 type="button"
                 className="flex p-1 lg:p-2"
@@ -114,7 +120,7 @@ export default function OptionBox({ type, index, isEditing }: IProps) {
             )}
           </div>
         ))}
-        {isEditing && (
+        {isEditing && !disabled && (
           <ResponsiveButton
             type="button"
             color="grey"

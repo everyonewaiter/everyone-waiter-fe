@@ -29,13 +29,17 @@ export const formToRequest = (form: TypeMenuForm) => {
     menuOptionGroups.push(
       ...form.requiredOptions
         .filter((group) => (group?.name?.trim() ?? "") !== "")
-        .map((group) => ({
+        .map((group, groupIndex) => ({
           name: group.name as string,
           type: "MANDATORY" as MenuOptionType,
           printEnabled: group.printEnabled ?? true,
-          menuOptions: group.menuOptions.filter(
-            (opt) => opt.name.trim() !== ""
-          ),
+          sortNumber: groupIndex,
+          menuOptions: group.menuOptions
+            .filter((opt) => opt.name.trim() !== "")
+            .map((opt, optionIndex) => ({
+              ...opt,
+              sortNumber: optionIndex,
+            })),
         }))
         .filter((group) => group.menuOptions.length > 0)
     );
@@ -45,13 +49,17 @@ export const formToRequest = (form: TypeMenuForm) => {
     menuOptionGroups.push(
       ...form.optionalOptions
         .filter((group) => (group?.name?.trim() ?? "") !== "")
-        .map((group) => ({
+        .map((group, groupIndex) => ({
           name: group.name as string,
           type: "OPTIONAL" as MenuOptionType,
           printEnabled: group.printEnabled ?? true,
-          menuOptions: group.menuOptions.filter(
-            (opt) => opt.name.trim() !== ""
-          ),
+          sortNumber: groupIndex,
+          menuOptions: group.menuOptions
+            .filter((opt) => opt.name.trim() !== "")
+            .map((opt, optionIndex) => ({
+              ...opt,
+              sortNumber: optionIndex,
+            })),
         }))
         .filter((group) => group.menuOptions.length > 0)
     );

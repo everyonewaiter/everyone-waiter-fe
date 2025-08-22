@@ -11,6 +11,8 @@ interface IProps {
   popupAction: string;
   isOpen: boolean;
   isEditing: boolean;
+  hasOption: boolean;
+  onComplete?: () => void;
 }
 
 export default function OptionComponent({
@@ -19,6 +21,8 @@ export default function OptionComponent({
   popupAction,
   isOpen,
   isEditing,
+  hasOption,
+  onComplete,
 }: IProps) {
   const [showPopup, setShowPopup] = useState(false);
 
@@ -33,7 +37,7 @@ export default function OptionComponent({
         />
       </div>
 
-      {isOpen && isEditing && (
+      {hasOption && isOpen && isEditing && (
         <>
           {popupAction === "순서 변경" ? (
             <ResponsiveButton
@@ -45,10 +49,7 @@ export default function OptionComponent({
                     "h-7 rounded-[8px] px-4 !text-s font-regular text-primary",
                 },
               }}
-              onClick={() => {
-                // sort
-                onSetPopupAction("");
-              }}
+              onClick={() => onComplete?.()}
             >
               완료
             </ResponsiveButton>
