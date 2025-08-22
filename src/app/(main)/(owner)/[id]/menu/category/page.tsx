@@ -1,63 +1,21 @@
 "use client";
 
+import { randomUUID } from "crypto";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
 import { Plus } from "@/components/common/Icon/index";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { Form } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
 import { useStoreContext } from "@/providers/storeProvider";
-import { categoryQueries } from "../_queries/useCategories";
-import { categorySchema, TypeCategory } from "../_schema/category.schema";
+import useCategoryForm from "../_hooks/useCategoryForm";
 
 export default function Page() {
   const navigate = useRouter();
   const { storeId } = useStoreContext();
 
-  const { data } = categoryQueries.useCategories(storeId);
-  const addCategory = categoryQueries.useAddCategory();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const form = useForm<TypeCategory>({
-    mode: "onChange",
-    resolver: zodResolver(categorySchema),
-    defaultValues: { categories: [] },
-  });
-
-  const hasInitialized = useRef(false);
-  useEffect(() => {
-    if (!hasInitialized.current && data?.categories) {
-      form.reset({ categories: data.categories });
-      hasInitialized.current = true;
-    }
-  }, [data?.categories, form]);
-
-  const { fields, append } = useFieldArray({
-    control: form.control,
-    name: "categories",
-  });
-
-  const submitHandler = async (formData: {
-    categories: { name: string }[];
-  }) => {
-    try {
-      setIsSubmitting(true);
-      const promises = formData.categories
-        .filter((category) => category.name)
-        .map((category) =>
-          addCategory.mutateAsync({ categoryName: category.name, storeId })
-        );
-
-      await Promise.all(promises);
-      navigate.push(`/${storeId}/menu`);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const { form, fields, append, submitHandler, isSubmitting } =
+    useCategoryForm(storeId);
 
   return (
     <div className="h-full w-full">
@@ -74,11 +32,15 @@ export default function Page() {
             <Form {...form}>
               <form
                 className="flex flex-col gap-3 lg:gap-4"
-                onSubmit={form.handleSubmit(submitHandler)}
+                onSubmit={form.handleSubmit((formData) =>
+                  submitHandler(formData, () =>
+                    navigate.push(`/${storeId}/menu`)
+                  )
+                )}
               >
                 {fields?.map((item, index) => (
                   <LabeledInput
-                    key={item.categoryId}
+                    key={item.id}
                     form={form}
                     label={`카테고리${index + 1}`}
                     name={`categories.${index}.name`}
@@ -108,7 +70,7 @@ export default function Page() {
                     commonClassName="dashed-light bg-white w-full text-gray-300 !font-medium"
                     onClick={() =>
                       append({
-                        categoryId: String(form.watch("categories").length + 1),
+                        categoryId: randomUUID(),
                         name: "",
                       })
                     }

@@ -1,8 +1,9 @@
 import Icon from "@/components/common/Icon/Icon";
 import { ArrowDownUp } from "lucide-react";
+import { OptionState } from "../page";
 
 interface IProps {
-  setOptionState: (state: "move" | "delete" | null) => void;
+  setOptionState: (state: OptionState | null) => void;
 }
 
 export default function ModalHeader({ setOptionState }: IProps) {
@@ -11,7 +12,7 @@ export default function ModalHeader({ setOptionState }: IProps) {
       <button
         type="button"
         className="flex items-center gap-1 lg:gap-2"
-        onClick={() => setOptionState("move")}
+        onClick={() => setOptionState("move" as OptionState)}
       >
         <ArrowDownUp
           size={16}
@@ -23,7 +24,7 @@ export default function ModalHeader({ setOptionState }: IProps) {
       <button
         type="button"
         className="flex items-center gap-1 lg:gap-2"
-        onClick={() => setOptionState("delete")}
+        onClick={() => setOptionState("delete" as OptionState)}
       >
         <Icon
           iconKey="trash"

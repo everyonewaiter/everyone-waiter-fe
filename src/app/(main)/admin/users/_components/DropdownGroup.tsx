@@ -5,8 +5,6 @@ import { TypeUserSearchForm } from "../_schema/user.schema";
 function DropdownGroup() {
   const { watch, setValue } = useFormContext<TypeUserSearchForm>();
 
-  console.log(watch());
-
   return (
     <div className="flex items-center gap-2 md:gap-1 lg:gap-2">
       <Dropdown
