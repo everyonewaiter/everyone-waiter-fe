@@ -22,7 +22,7 @@ const schema = z.object({
       menuOptions: z.array(
         z.object({
           name: z.string(),
-          price: z.number(),
+          price: z.coerce.number(),
         })
       ),
     })
@@ -34,7 +34,7 @@ const schema = z.object({
       menuOptions: z.array(
         z.object({
           name: z.string(),
-          price: z.number(),
+          price: z.coerce.number(),
         })
       ),
     })

@@ -78,7 +78,11 @@ const useUpdateWithoutImage = (storeId: string) =>
     mutationFn: updateMenuWithoutImage,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: menuKeys.menu(storeId, variables.menuId),
+        predicate: (query) =>
+          Array.isArray(query.queryKey) &&
+          query.queryKey[0] === "menus" &&
+          query.queryKey[1] === storeId &&
+          query.queryKey.includes(variables.menuId),
       });
     },
     onError: (e) => {
@@ -112,7 +116,11 @@ const useUpdateWithImage = (storeId: string) =>
     mutationFn: updateMenuWithImage,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: menuKeys.menu(storeId, variables.menuId),
+        predicate: (query) =>
+          Array.isArray(query.queryKey) &&
+          query.queryKey[0] === "menus" &&
+          query.queryKey[1] === storeId &&
+          query.queryKey.includes(variables.menuId),
       });
     },
     onError: (e) => {

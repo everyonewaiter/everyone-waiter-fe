@@ -9,7 +9,6 @@ import ImageSection from "./ImageSection";
 import ModalButton from "./ModalButton";
 import useMenuModalForm from "../../_hooks/useMenuModalForm";
 import useHandleMenuSubmit from "../../_hooks/useHandleMenuSubmit";
-import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
 
 const FormSection = dynamic(() => import("../FormSection"), { ssr: false });
 const OptionTemplate = dynamic(() => import("../OptionTemplate"), {
@@ -64,13 +63,12 @@ export default function DetailMenuModal({
     onError: () => setIsSubmitted(false),
   });
 
-  const onSubmit = (formData: unknown) =>
-    handleSubmit(formData as TypeMenuForm, handleAfterAction);
-
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit((formData) =>
+          handleSubmit(formData, handleAfterAction)
+        )}
         className="scrollbar-hide flex h-full w-full flex-col md:gap-5 lg:gap-8"
       >
         {/* 헤더 */}
@@ -99,6 +97,7 @@ export default function DetailMenuModal({
                 isOpen={currentOption === "required"}
                 type="requiredOptions"
                 isEditing={isEditing}
+                data={form.watch("requiredOptions")}
               />
               <OptionTemplate
                 title="선택 옵션"
@@ -110,6 +109,7 @@ export default function DetailMenuModal({
                 isOpen={currentOption === "optional"}
                 type="optionalOptions"
                 isEditing={isEditing}
+                data={form.watch("optionalOptions")}
               />
             </section>
             <div className="flex w-full justify-center md:hidden">
