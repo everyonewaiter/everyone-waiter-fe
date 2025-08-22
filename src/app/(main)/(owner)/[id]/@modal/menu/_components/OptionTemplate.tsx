@@ -34,8 +34,6 @@ export default function OptionTemplate({
 
   const [popupAction, setPopupAction] = useState("");
 
-  console.log(data);
-
   return (
     <div
       className={cn(

@@ -37,7 +37,12 @@ export default function ModalButton({
         md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
         sm: { buttonSize: "sm", className: "!h-10" },
       }}
-      onClick={() => (isEditing ? null : onSetEditing(true))}
+      onClick={(e) => {
+        if (!isEditing) {
+          e.preventDefault();
+          onSetEditing(true);
+        }
+      }}
     >
       {isSubmitted ? <Spinner /> : buttonText()}
     </ResponsiveButton>

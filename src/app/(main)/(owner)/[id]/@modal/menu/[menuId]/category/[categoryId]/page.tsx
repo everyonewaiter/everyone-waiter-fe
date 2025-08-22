@@ -18,7 +18,7 @@ export default function Page() {
   const menuId = params?.menuId as string;
   const categoryId = params?.categoryId as string;
 
-  const { data, isLoading } = menuQueries.useMenuDetail(
+  const { data, isLoading, refetch } = menuQueries.useMenuDetail(
     storeId,
     categoryId ?? "",
     menuId
@@ -36,7 +36,14 @@ export default function Page() {
   return (
     <DetailMenuModal
       isEditing={isEditing}
-      onSetEditing={setIsEditing}
+      onSetEditing={(value) => {
+        if (value) {
+          setIsEditing(true);
+        } else {
+          setIsEditing(false);
+          refetch();
+        }
+      }}
       type="update"
       data={data}
     />
