@@ -99,6 +99,7 @@ export default function DetailMenuModal({
                 isOpen={currentOption === "required"}
                 type="requiredOptions"
                 isEditing={isEditing}
+                data={form.watch("requiredOptions")}
               />
               <OptionTemplate
                 title="선택 옵션"
@@ -110,6 +111,7 @@ export default function DetailMenuModal({
                 isOpen={currentOption === "optional"}
                 type="optionalOptions"
                 isEditing={isEditing}
+                data={form.watch("optionalOptions")}
               />
             </section>
             <div className="flex w-full justify-center md:hidden">

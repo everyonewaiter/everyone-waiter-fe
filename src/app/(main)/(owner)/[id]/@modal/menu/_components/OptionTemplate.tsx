@@ -19,18 +19,22 @@ interface IProps {
   className?: string;
   type: "requiredOptions" | "optionalOptions";
   isEditing: boolean;
+  data?: TypeMenuForm["requiredOptions"] | TypeMenuForm["optionalOptions"];
 }
 
 export default function OptionTemplate({
   onClick,
   className,
   type,
+  data,
   isEditing,
   ...props
 }: IProps) {
   const form = useFormContext<TypeMenuForm>();
 
   const [popupAction, setPopupAction] = useState("");
+
+  console.log(data);
 
   return (
     <div
@@ -56,50 +60,48 @@ export default function OptionTemplate({
       />
       {props.isOpen ? (
         <div className="flex h-full flex-col gap-4">
-          {isEditing && (
-            <div
-              className={cn(
-                "scrollbar-hide flex flex-col gap-3 overflow-y-auto",
-                isEditing ? "cursor-pointer" : ""
-              )}
-              style={{
-                height:
-                  form.watch(type)?.length > 1
-                    ? "calc(100% - 95px)"
-                    : "calc(100% - 40px)",
-              }}
-            >
-              {form.watch(type)?.map((_, i) => (
-                <div
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={`${type}-${i}`}
-                  className={cn(
-                    "flex gap-3",
-                    i > 0 ? "mt-3 lg:mt-4" : "",
-                    popupAction ? "items-center" : "item-start"
-                  )}
-                >
-                  <OptionBox type={type} index={i} isEditing={isEditing} />
-                  {popupAction && (
-                    <button
-                      type="button"
-                      className="center h-8 w-8 rounded-[8px] border border-gray-600"
-                    >
-                      <Icon
-                        iconKey={popupAction === "순서 변경" ? "move" : "trash"}
-                        size={18}
-                        className={
-                          popupAction === "순서 변경"
-                            ? "text-gray-300"
-                            : "text-gray-0"
-                        }
-                      />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+          <div
+            className={cn(
+              "scrollbar-hide flex flex-col gap-3 overflow-y-auto",
+              isEditing ? "cursor-pointer" : ""
+            )}
+            style={{
+              height:
+                form.watch(type)?.length > 1
+                  ? "calc(100% - 95px)"
+                  : "calc(100% - 40px)",
+            }}
+          >
+            {data?.map((_, i) => (
+              <div
+                // eslint-disable-next-line react/no-array-index-key
+                key={`${type}-${i}`}
+                className={cn(
+                  "flex gap-3",
+                  i > 0 ? "mt-3 lg:mt-4" : "",
+                  popupAction ? "items-center" : "item-start"
+                )}
+              >
+                <OptionBox type={type} index={i} isEditing={isEditing} />
+                {popupAction && (
+                  <button
+                    type="button"
+                    className="center h-8 w-8 rounded-[8px] border border-gray-600"
+                  >
+                    <Icon
+                      iconKey={popupAction === "순서 변경" ? "move" : "trash"}
+                      size={18}
+                      className={
+                        popupAction === "순서 변경"
+                          ? "text-gray-300"
+                          : "text-gray-0"
+                      }
+                    />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
           {!isEditing && form.watch(type)?.length === 0 && (
             <div className="center h-full w-full text-sm">
               {type.startsWith("required") ? "필수" : "선택"} 옵션이 없습니다.
