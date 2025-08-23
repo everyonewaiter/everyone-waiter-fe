@@ -7,26 +7,11 @@ export default async function Page({
 }: {
   searchParams: Promise<{ token?: string; email: string }>;
 }) {
-  const { token, email } = (await searchParams) as {
-    token: string;
-    email: string;
-  };
+  const { token, email } = await searchParams;
 
   const handleResend = () => {
-    sendAuthMail({ email })
-      .then(() => redirect("/login"))
-      .catch((e) => {
-        const errorCode = (e as any)?.response?.data?.code;
-        if (errorCode === "ALREADY_VERIFIED_EMAIL") {
-          // eslint-disable-next-line
-          alert("이미 이메일 인증이 완료된 계정입니다.");
-          redirect("/login");
-        } else if (errorCode === "ACCOUNT_NOT_FOUND") {
-          // eslint-disable-next-line
-          alert("잘못된 접근입니다. 이메일을 확인해주세요.");
-          redirect("/login");
-        }
-      });
+    sendAuthMail({ email });
+    redirect("/login");
   };
 
   if (!token) {
@@ -40,11 +25,9 @@ export default async function Page({
   }
 
   try {
-    await verifyEmail({ token });
-    // eslint-disable-next-line
-    alert("인증 되었습니다.");
-    redirect("/login");
+    await verifyEmail({ token }).then(() => redirect("/login"));
   } catch (error) {
+    console.log((error as any).response);
     const code = (error as any)?.response?.data.code;
     if (code === "EXPIRED_VERIFICATION_EMAIL" || code === "ACCOUNT_NOT_FOUND") {
       return (
@@ -55,13 +38,7 @@ export default async function Page({
         />
       );
     }
-
-    if (code === "ALREADY_VERIFIED_EMAIL") {
-      // eslint-disable-next-line
-      alert("이미 이메일 인증이 완료된 계정입니다.");
-      redirect("/login");
-    }
-
-    redirect("/login");
+    // if (code === "ALREADY_VERIFIED_EMAIL") redirect("/login");
+    // redirect("/login");
   }
 }
