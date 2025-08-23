@@ -75,20 +75,14 @@ export default function CategoryForm({
             const to = fields.findIndex((f: any) => f.categoryId === overId);
             if (from === -1 || to === -1) return;
 
-            const where = from < to ? "NEXT" : "PREVIOUS";
+            const where = from < to ? "NEXT" : "PREV";
             const source = fields[from] as any;
             const target = fields[to] as any;
             const sourceId = source?.categoryId as string;
             const targetId = target?.categoryId as string;
 
-            // 1) UI: move locally
             move(from, to);
 
-            console.log(
-              `source: ${source.name} -> target: ${target.name} ${where}`
-            );
-
-            // 2) Server: only if both persisted
             if (!isTempOrAdded(source) && !isTempOrAdded(target)) {
               moveMutation.mutate({ storeId, sourceId, targetId, where });
             }
