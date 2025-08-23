@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { RefObject, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { SortableContext } from "@dnd-kit/sortable";
 import { DndContext } from "@dnd-kit/core";
@@ -23,6 +23,7 @@ export default function CategoryForm({
     name: "categories",
   });
   const moveMutation = categoryQueries.useMoveCategory();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const restrictToVerticalAxis = ({ transform }: any) => ({
     ...transform,
@@ -60,7 +61,10 @@ export default function CategoryForm({
   };
 
   return (
-    <div className="scrollbar-hide overflow-y-auto md:h-[270px] lg:h-[424px]">
+    <div
+      className="scrollbar-hide overflow-y-auto md:h-[270px] lg:h-[424px]"
+      ref={scrollRef}
+    >
       {optionState === "move" ? (
         <DndContext
           modifiers={[restrictToParentElement, restrictToVerticalAxis]}
@@ -75,20 +79,20 @@ export default function CategoryForm({
             const to = fields.findIndex((f: any) => f.categoryId === overId);
             if (from === -1 || to === -1) return;
 
-            const where = from < to ? "NEXT" : "PREVIOUS";
+            const where = from < to ? "NEXT" : "PREV";
             const source = fields[from] as any;
             const target = fields[to] as any;
             const sourceId = source?.categoryId as string;
             const targetId = target?.categoryId as string;
 
-            // 1) UI: move locally
+            const prevScrollTop = scrollRef.current?.scrollTop ?? 0;
             move(from, to);
+            requestAnimationFrame(() => {
+              if (scrollRef.current) {
+                scrollRef.current.scrollTop = prevScrollTop;
+              }
+            });
 
-            console.log(
-              `source: ${source.name} -> target: ${target.name} ${where}`
-            );
-
-            // 2) Server: only if both persisted
             if (!isTempOrAdded(source) && !isTempOrAdded(target)) {
               moveMutation.mutate({ storeId, sourceId, targetId, where });
             }

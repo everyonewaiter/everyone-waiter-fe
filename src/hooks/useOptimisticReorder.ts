@@ -4,7 +4,7 @@ import { QueryClient, QueryKey, useMutation } from "@tanstack/react-query";
 interface MoveParams {
   sourceId: string;
   targetId: string;
-  where: "NEXT" | "PREVIOUS";
+  where: "NEXT" | "PREV";
   storeId: string;
 }
 
