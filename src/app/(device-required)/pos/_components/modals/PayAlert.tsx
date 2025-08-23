@@ -12,6 +12,7 @@ import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormErrorMessage } from "@/components/common/Form";
 import cn from "@/lib/utils";
+import formatLicenseNumber from "@/lib/formatting/formatLicenseNumber";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
@@ -26,6 +27,12 @@ declare global {
   interface Window {
     $: any;
   }
+}
+
+enum ReceiptType {
+  NONE = "신청안함",
+  DEDUCTION = "개인소득공제용",
+  PROOF = "사업자증빙용",
 }
 
 interface IProps extends PosTableActivity {
@@ -72,6 +79,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     defaultValues: {
       receiptType: "개인소득공제용",
       phoneNumber: "",
+      licenseNumber: "",
       monthlyPlan: "일시불",
     },
   });
@@ -116,8 +124,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       });
     } else {
       let cashReceiptType = "";
-      if (form.watch("receiptType") === "신청안함") cashReceiptType = "NONE";
-      else if (form.watch("receiptType") === "사업자증빙용")
+      if (form.watch("receiptType") === ReceiptType.NONE)
+        cashReceiptType = "NONE";
+      else if (form.watch("receiptType") === ReceiptType.PROOF)
         cashReceiptType = "PROOF";
       else cashReceiptType = "DEDUCTION";
 
@@ -125,7 +134,10 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         tableNo: props.tableNo,
         body: {
           amount,
-          cashReceiptNo: form.watch("phoneNumber"),
+          cashReceiptNo:
+            (form.watch("receiptType") === ReceiptType.PROOF
+              ? form.watch("licenseNumber")
+              : form.watch("phoneNumber")) ?? "",
           cashReceiptType: cashReceiptType as OrderReceiptType,
         },
         successHandler: () => {
@@ -201,38 +213,36 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                     현금영수증 발행
                   </Label>
                   <div className="mt-2 flex w-full items-center gap-3">
-                    {["신청안함", "개인소득공제용", "사업자증빙용"].map(
-                      (key) => (
-                        <Button
-                          key={key}
-                          color={
-                            form.watch("receiptType") === key
-                              ? "primary"
-                              : "grey"
-                          }
-                          variant="outline"
-                          className={cn(
-                            "button-lg w-full !font-medium",
-                            form.watch("receiptType") === key
-                              ? ""
-                              : "border-gray-500"
-                          )}
-                          onClick={() => {
-                            form.setValue(
-                              "receiptType",
-                              key as TypePayForm["receiptType"]
-                            );
-                            form.setValue("phoneNumber", "");
-                            form.clearErrors("phoneNumber");
-                          }}
-                        >
-                          {key}
-                        </Button>
-                      )
-                    )}
+                    {Object.values(ReceiptType).map((key) => (
+                      <Button
+                        key={key}
+                        color={
+                          form.watch("receiptType") === key ? "primary" : "grey"
+                        }
+                        variant="outline"
+                        className={cn(
+                          "button-lg w-full !font-medium",
+                          form.watch("receiptType") === key
+                            ? ""
+                            : "border-gray-500"
+                        )}
+                        onClick={() => {
+                          form.setValue(
+                            "receiptType",
+                            key as TypePayForm["receiptType"]
+                          );
+                          form.setValue("phoneNumber", "");
+                          form.setValue("licenseNumber", "");
+                          form.clearErrors("phoneNumber");
+                          form.clearErrors("licenseNumber");
+                        }}
+                      >
+                        {key}
+                      </Button>
+                    ))}
                   </div>
                 </div>
-                {form.watch("receiptType") !== "신청안함" && (
+                {form.watch("receiptType") === ReceiptType.DEDUCTION && (
                   <div className="flex flex-col items-start gap-2">
                     <Label className="text-[15px] font-medium">
                       휴대폰 번호
@@ -244,7 +254,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                         <div className="flex w-full flex-col gap-1">
                           <Input
                             {...field}
-                            placeholder={`${form.watch("receiptType") === "개인소득공제용" ? "휴대폰 번호" : "사업자 번호"}를 입력해주세요.`}
+                            placeholder="휴대폰 번호를 입력해주세요."
                             className="w-full font-medium md:h-12"
                             autoFocus
                             onChange={(e) => {
@@ -259,6 +269,39 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                           />
                           <FormErrorMessage>
                             {form.formState.errors.phoneNumber?.message}
+                          </FormErrorMessage>
+                        </div>
+                      )}
+                    />
+                  </div>
+                )}
+                {form.watch("receiptType") === ReceiptType.PROOF && (
+                  <div className="flex flex-col items-start gap-2">
+                    <Label className="text-[15px] font-medium">
+                      사업자 번호
+                    </Label>
+                    <Controller
+                      control={form.control}
+                      name="licenseNumber"
+                      render={({ field }) => (
+                        <div className="flex w-full flex-col gap-1">
+                          <Input
+                            {...field}
+                            placeholder="사업자 번호를 입력해주세요."
+                            className="w-full font-medium md:h-12"
+                            autoFocus
+                            onChange={(e) => {
+                              const onlyNums = e.target.value.replace(
+                                /[^0-9]/g,
+                                ""
+                              );
+                              const formatted = formatLicenseNumber(onlyNums);
+                              field.onChange(formatted);
+                            }}
+                            hasError={!!form.formState.errors.licenseNumber}
+                          />
+                          <FormErrorMessage>
+                            {form.formState.errors.licenseNumber?.message}
                           </FormErrorMessage>
                         </div>
                       )}

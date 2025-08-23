@@ -18,6 +18,17 @@ export const phoneSchema = z
     }
   );
 
+export const licenseSchema = z
+  .string()
+  .min(1, "사업자 번호를 입력해주세요.")
+  .refine(
+    (val) =>
+      /^\d{3}-(?:0[1-9]|[1-6][0-9]|7[0-9]|81|82|86|87|9[0-9])-\d{5}$/.test(val),
+    {
+      message: "유효하지 않은 사업자 번호 형식입니다.",
+    }
+  );
+
 export const passwordSchema = z
   .string()
   .trim()

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { imageSchema, phoneSchema } from ".";
+import { imageSchema, licenseSchema, phoneSchema } from ".";
 
 export const storeSchema = z.object({
   name: z
@@ -13,7 +13,7 @@ export const storeSchema = z.object({
   address: z.string().min(1, "소재지를 선택해주세요."),
   detailAddress: z.string().min(1, "상세 주소를 입력해주세요."),
   landline: phoneSchema,
-  license: z.string().min(1, "사업자 번호를 입력해주세요."),
+  license: licenseSchema,
   reason: z.string().min(1, "매장 전화번호를 입력해주세요."),
   image: imageSchema,
   origins: z.array(
