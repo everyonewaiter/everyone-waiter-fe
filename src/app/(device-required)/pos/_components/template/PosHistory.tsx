@@ -76,7 +76,7 @@ export default function PosHistory() {
                 ))}
               </TableRow>
             </TableHeader>
-            {!isLoading && data?.orderPayments?.length && (
+            {!isLoading && (data?.orderPayments?.length ?? 0) > 0 && (
               <TableBody>
                 {data?.orderPayments?.map((item, idx) => (
                   <TableRow
@@ -140,10 +140,24 @@ export default function PosHistory() {
                 ))}
               </TableBody>
             )}
-            {!isLoading && data?.orderPayments?.length === 0 && (
-              <TableBody>해당 날짜에 결제 내역이 없습니다.</TableBody>
+            {!isLoading && (data?.orderPayments?.length ?? 0) === 0 && (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={7} className="py-10 text-center">
+                    해당 날짜에 결제 내역이 없습니다.
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             )}
-            {isLoading && <TableBody>결제 내역을 가져오는 중입니다.</TableBody>}
+            {isLoading && (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={7} className="py-10 text-center">
+                    결제 내역을 가져오는 중입니다.
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            )}
           </Table>
         </div>
       </div>
