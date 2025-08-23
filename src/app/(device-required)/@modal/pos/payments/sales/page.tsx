@@ -11,7 +11,7 @@ export default function Page() {
   const navigate = useRouter();
   const { formattedMonth, formattedDate } = useGetDate(new Date());
 
-  const [date, setDate] = useState<Date | null>(null);
+  const [date, setDate] = useState<Date | null>(new Date());
   const formatted = date
     ? `${date.getFullYear()}${formattedMonth(date)}${formattedDate(date)}`
     : "";
@@ -96,7 +96,6 @@ export default function Page() {
                 color="grey"
                 onClick={() => navigate.back()}
                 type="button"
-                className="button-xl"
                 responsiveButtons={{
                   lg: { buttonSize: "xl" },
                   md: { buttonSize: "lg" },

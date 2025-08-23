@@ -75,7 +75,7 @@ export default function ImageWithFallback({
     height: fill ? undefined : height,
     priority,
     unoptimized,
-    loading,
+    loading: priority ? undefined : loading,
     sizes,
     onClick,
     onError: handleError,

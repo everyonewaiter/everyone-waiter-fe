@@ -7,9 +7,11 @@ import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon/Icon";
 import useOverlay from "@/hooks/useOverlay";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
+import useLeaveGuard from "@/hooks/useCheckLeave";
 import { posQueries } from "../_queries/usePos";
 import ReceiptModal from "./modals/ReceiptModal";
 import MemoListAlert from "./modals/MemoListAlert";
+import { useOrderStore } from "../_hooks/useOrderStore";
 
 const ResendAlert = dynamic(() => import("./modals/ResendAlert"), {
   ssr: false,
@@ -49,6 +51,8 @@ export default function Floating({ hasData, tableNo }: IProps) {
 
   const { data } = posQueries.useActivity(tableNo);
   const { storeId } = useDeviceContext();
+  const { orders, resetOrders } = useOrderStore();
+  const { checkCanLeave } = useLeaveGuard(orders.length > 0);
 
   const list = hasData
     ? FLOATING_ITEMS
@@ -97,6 +101,19 @@ export default function Floating({ hasData, tableNo }: IProps) {
     }
   };
 
+  const handleClick = (icon: string) => {
+    if (hasData) {
+      handleAction(icon);
+    } else if (!hasData && orders.length > 0) {
+      checkCanLeave(() => {
+        resetOrders();
+        navigate.replace("/pos/tables");
+      });
+    } else {
+      navigate.replace("/pos/tables");
+    }
+  };
+
   return (
     <aside className="shadow-floating font-regular text-gray-0 absolute bottom-7 left-1/2 flex h-[76px] -translate-x-1/2 flex-row rounded-[40px] bg-white px-10 py-6 text-xl">
       {Array.isArray(list) &&
@@ -105,7 +122,7 @@ export default function Floating({ hasData, tableNo }: IProps) {
             <button
               type="button"
               className="inline-flex items-center gap-2 whitespace-nowrap"
-              onClick={() => handleAction(item.icon)}
+              onClick={() => handleClick(item.icon)}
             >
               <Icon iconKey={item.icon} className="text-gray-0" />
               <span>{item.label}</span>

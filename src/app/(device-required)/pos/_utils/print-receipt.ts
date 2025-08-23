@@ -535,10 +535,19 @@ export const print = ({
   window.cutPaper(1);
 
   const strSubmit = window.getPosData();
-  window.requestPrint("Printer1", strSubmit, (result: unknown) => {
-    // eslint-disable-next-line no-console
-    if ((result as string).endsWith("success")) {
+  try {
+    window.requestPrint("Printer1", strSubmit, (result: unknown) => {
+      if ((result as string).endsWith("success")) {
+        successHandler?.();
+      }
+    });
+  } catch (error) {
+    // eslint-disable-next-line
+    const userChoice = confirm(
+      "프린터가 연결되어있지 않습니다. 영수증을 인쇄하지 않고 진행하시겠습니까?"
+    );
+    if (userChoice) {
       successHandler?.();
     }
-  });
+  }
 };
