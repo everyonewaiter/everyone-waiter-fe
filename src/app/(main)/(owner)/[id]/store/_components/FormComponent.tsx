@@ -83,9 +83,12 @@ export default function FormComponent({ storeId }: IProps) {
                   placeholder="매장 전화번호"
                   onChange={(e) => {
                     const formatted = phoneNumberPattern(e.target.value);
-                    form.setValue("landline", formatted);
+                    form.setValue("landline", formatted, {
+                      shouldDirty: true,
+                    });
                   }}
                   disabled={!isEditing}
+                  readOnly={isSubmitted}
                   hasError={!!form.formState.errors.landline}
                 />
               </div>
@@ -98,6 +101,7 @@ export default function FormComponent({ storeId }: IProps) {
                 isEditing={isEditing}
                 fields={fields}
                 removeOrigin={removeOrigin}
+                isSubmitted={isSubmitted}
               />
             </FormProvider>
           ) : (
@@ -178,7 +182,7 @@ export default function FormComponent({ storeId }: IProps) {
                     },
                   }}
                   commonClassName="w-full"
-                  disabled={isSubmitted}
+                  disabled={isSubmitted || !form.formState.isDirty}
                 >
                   {isSubmitted ? <Spinner /> : "저장하기"}
                 </ResponsiveButton>

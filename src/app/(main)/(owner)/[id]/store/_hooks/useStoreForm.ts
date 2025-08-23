@@ -35,13 +35,6 @@ export default function useStoreForm(storeId: string) {
     action: UseMutationResult<any, Error, any, unknown>,
     successHandler: () => void
   ) => {
-    if (!form.formState.isDirty) {
-      // eslint-disable-next-line
-      alert("변경사항이 없습니다.");
-      successHandler();
-      return;
-    }
-
     setIsSubmitted(true);
     const origins = form.getValues("origins");
 

@@ -23,9 +23,15 @@ interface IProps {
   isEditing: boolean;
   fields: FieldArrayWithId<TypeStoreInfo, "origins", "id">[];
   removeOrigin: UseFieldArrayRemove;
+  isSubmitted: boolean;
 }
 
-export default function Origins({ isEditing, fields, removeOrigin }: IProps) {
+export default function Origins({
+  isEditing,
+  fields,
+  removeOrigin,
+  isSubmitted,
+}: IProps) {
   const isLargeScreen = useMediaQuery({ query: "(min-width: 961px)" });
 
   const form = useFormContext<TypeStoreInfo>();
@@ -56,6 +62,7 @@ export default function Origins({ isEditing, fields, removeOrigin }: IProps) {
                 }
                 {...form.register(`origins.${idx}.item`)}
                 className="w-full text-center outline-none"
+                disabled={isSubmitted}
               />
             ) : (
               item.item
@@ -69,6 +76,7 @@ export default function Origins({ isEditing, fields, removeOrigin }: IProps) {
                 }
                 {...form.register(`origins.${idx}.origin`)}
                 className="w-full text-center outline-none"
+                disabled={isSubmitted}
               />
             ) : (
               item.origin
