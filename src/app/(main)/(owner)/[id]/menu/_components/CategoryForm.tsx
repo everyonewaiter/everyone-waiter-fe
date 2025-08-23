@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { RefObject, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { SortableContext } from "@dnd-kit/sortable";
 import { DndContext } from "@dnd-kit/core";
@@ -23,6 +23,7 @@ export default function CategoryForm({
     name: "categories",
   });
   const moveMutation = categoryQueries.useMoveCategory();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const restrictToVerticalAxis = ({ transform }: any) => ({
     ...transform,
@@ -60,7 +61,10 @@ export default function CategoryForm({
   };
 
   return (
-    <div className="scrollbar-hide overflow-y-auto md:h-[270px] lg:h-[424px]">
+    <div
+      className="scrollbar-hide overflow-y-auto md:h-[270px] lg:h-[424px]"
+      ref={scrollRef}
+    >
       {optionState === "move" ? (
         <DndContext
           modifiers={[restrictToParentElement, restrictToVerticalAxis]}
@@ -81,7 +85,13 @@ export default function CategoryForm({
             const sourceId = source?.categoryId as string;
             const targetId = target?.categoryId as string;
 
+            const prevScrollTop = scrollRef.current?.scrollTop ?? 0;
             move(from, to);
+            requestAnimationFrame(() => {
+              if (scrollRef.current) {
+                scrollRef.current.scrollTop = prevScrollTop;
+              }
+            });
 
             if (!isTempOrAdded(source) && !isTempOrAdded(target)) {
               moveMutation.mutate({ storeId, sourceId, targetId, where });

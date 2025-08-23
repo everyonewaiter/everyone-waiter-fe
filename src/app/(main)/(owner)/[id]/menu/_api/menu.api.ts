@@ -30,7 +30,11 @@ export const moveCategory = async ({
   sourceId,
   targetId,
   where,
-}: PropsWithStoreId<{ sourceId: string; targetId: string; where: string }>) => {
+}: PropsWithStoreId<{
+  sourceId: string;
+  targetId: string;
+  where: "NEXT" | "PREV";
+}>) => {
   const response = await instance.post(
     `${API_PATH.stores}/${storeId}/categories/${sourceId}/move/${targetId}`,
     {
