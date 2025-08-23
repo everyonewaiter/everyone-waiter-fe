@@ -10,6 +10,7 @@ import useGetDate from "@/hooks/useGetDate";
 import dynamic from "next/dynamic";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { posQueries } from "./_queries/usePos";
+import SalesModal from "./_components/modals/SalesModal";
 
 const OpenSwitch = dynamic(() => import("./_components/OpenSwitch"), {
   ssr: false,
@@ -66,15 +67,27 @@ export default function Pos() {
     }
   };
 
+  const salesControl = useOverlay();
+
+  const handleOpenSales = () => {
+    salesControl.open(() => (
+      <QueryProviders>
+        <SalesModal close={salesControl.close} />
+      </QueryProviders>
+    ));
+  };
+
   return (
-    <div className="h-screen w-screen">
+    <div className="relative h-screen w-screen bg-black">
       <Image
         src="/images/pos-main.png"
         fill
-        alt="pos main image"
+        alt="pos background"
         className="object-cover"
+        priority
+        sizes="100vw"
       />
-      <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center gap-[80px]">
+      <div className="absolute inset-0 top-0 flex h-full w-full flex-col items-center justify-center gap-[80px]">
         {data?.name && (
           <div className="absolute top-0 right-0 px-[60px] py-10 text-[40px] text-red-500">
             <OpenSwitch isStoreOpen={data?.status === "OPEN"} />
@@ -104,13 +117,13 @@ export default function Pos() {
               결제내역
             </button>
           </Link>
-          <Link
-            href="/pos/payments/sales?from=pos"
+          <button
             type="button"
             className="center h-[72px] w-full rounded-[16px] border border-white text-2xl font-semibold text-white"
+            onClick={handleOpenSales}
           >
             매출액
-          </Link>
+          </button>
         </div>
       </div>
     </div>

@@ -100,34 +100,34 @@ const AlertDialogAction = React.forwardRef<
     customButtonStyle: string;
   }
 >(({ className, onClick, noResponsive, customButtonStyle, ...props }, ref) => (
-  <AlertDialogPrimitive.Action ref={ref} className="flex-1">
+  <AlertDialogPrimitive.Action ref={ref} className="flex-1" asChild>
     {noResponsive ? (
       <Button
-        asChild
         type="button"
         onClick={onClick}
         className="button-xl w-full"
         {...props}
       />
     ) : (
-      <ResponsiveButton
-        asChild
-        type="button"
-        responsiveButtons={{
-          lg: { buttonSize: "xl" },
-          md: {
-            buttonSize: "sm",
-            className: "justify-center items-center",
-          },
-          sm: {
-            buttonSize: "sm",
-            className: `justify-center items-center`,
-          },
-        }}
-        commonClassName={cn(customButtonStyle, "cursor-pointer")}
-        onClick={onClick}
-        {...props}
-      />
+      <div className={cn(customButtonStyle, "w-full")}>
+        <ResponsiveButton
+          type="button"
+          responsiveButtons={{
+            lg: { buttonSize: "xl" },
+            md: {
+              buttonSize: "sm",
+              className: "justify-center items-center",
+            },
+            sm: {
+              buttonSize: "sm",
+              className: `justify-center items-center`,
+            },
+          }}
+          commonClassName={cn(customButtonStyle, "cursor-pointer")}
+          onClick={onClick}
+          {...props}
+        />
+      </div>
     )}
   </AlertDialogPrimitive.Action>
 ));
@@ -155,28 +155,29 @@ const AlertDialogCancel = React.forwardRef<
     { className, hasNoAction, noResponsive, customButtonStyle, ...props },
     ref
   ) => (
-    <AlertDialogPrimitive.Cancel ref={ref} className="flex-1">
+    <AlertDialogPrimitive.Cancel ref={ref} className="flex-1" asChild>
       {noResponsive ? (
         <Button type="button" className="button-xl w-full" {...props} />
       ) : (
-        <ResponsiveButton
-          asChild
-          color="grey"
-          type="button"
-          responsiveButtons={{
-            lg: { buttonSize: "xl" },
-            md: {
-              buttonSize: "sm",
-              className: "justify-center items-center",
-            },
-            sm: {
-              buttonSize: "sm",
-              className: `justify-center items-center`,
-            },
-          }}
-          commonClassName={cn(customButtonStyle, "cursor-pointer")}
-          {...props}
-        />
+        <div className={cn(customButtonStyle, "w-full")}>
+          <ResponsiveButton
+            color="grey"
+            type="button"
+            responsiveButtons={{
+              lg: { buttonSize: "xl" },
+              md: {
+                buttonSize: "sm",
+                className: "justify-center items-center",
+              },
+              sm: {
+                buttonSize: "sm",
+                className: `justify-center items-center`,
+              },
+            }}
+            commonClassName={cn(customButtonStyle, "cursor-pointer")}
+            {...props}
+          />
+        </div>
       )}
     </AlertDialogPrimitive.Cancel>
   )

@@ -1,12 +1,74 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import Alert from "@/components/common/Alert/Alert";
+import QueryProviders from "@/app/query-providers";
+import LeavePageModal from "@/components/LeavePageModal";
+import useOverlay from "./useOverlay";
 
 export default function useLeaveGuard(shouldBlock: boolean) {
-  useEffect(() => {
-    if (!shouldBlock) return;
+  const { open, close } = useOverlay();
+  const [isLeaving, setIsLeaving] = useState(false);
 
-    const msg = "작성하던 내용이 모두 사라집니다. 계속하시겠습니까?";
+  const handleLeave = useCallback(() => {
+    if (isLeaving) return;
+
+    open(() => (
+      <QueryProviders>
+        <LeavePageModal
+          close={close}
+          onAction={() => {
+            setIsLeaving(true);
+            close();
+            window.removeEventListener("popstate", handleLeave);
+            window.history.back();
+          }}
+          onCancel={() => {
+            close();
+            window.history.forward();
+          }}
+        />
+      </QueryProviders>
+    ));
+  }, [isLeaving, open, close]);
+
+  const checkCanLeave = (onConfirm: () => void, message?: string) => {
+    if (!shouldBlock) {
+      onConfirm();
+      return;
+    }
+
+    open(() => (
+      <QueryProviders>
+        <Alert
+          onClose={close}
+          buttonText="이동"
+          cancelText="취소"
+          buttonColor="black"
+          onAction={() => {
+            close();
+            onConfirm();
+          }}
+          onCancel={() => {
+            close();
+          }}
+          customButtonStyle="w-full !button-lg"
+        >
+          <div className="flex flex-col gap-2 py-3">
+            <span className="text-primary text-xl font-semibold">
+              현재 저장되지 않은 주문 내역이 있습니다.
+            </span>
+            <span className="text-gray-0 text-lg font-medium">
+              {message || "저장하지 않고 이동하시겠습니까?"}
+            </span>
+          </div>
+        </Alert>
+      </QueryProviders>
+    ));
+  };
+
+  useEffect(() => {
+    if (!shouldBlock) return () => {};
 
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -17,21 +79,18 @@ export default function useLeaveGuard(shouldBlock: boolean) {
     window.history.pushState({ guard: true }, "", window.location.href);
 
     const onPopState = () => {
-      // eslint-disable-next-line no-alert
-      const ok = window.confirm(msg);
-      if (ok) {
-        window.removeEventListener("popstate", onPopState);
-        window.history.back();
-      } else {
-        window.history.forward();
+      if (!isLeaving) {
+        handleLeave();
       }
     };
+
     window.addEventListener("popstate", onPopState);
 
-    // eslint-disable-next-line consistent-return
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
       window.removeEventListener("popstate", onPopState);
     };
-  }, [shouldBlock]);
+  }, [shouldBlock, isLeaving, handleLeave]);
+
+  return { checkCanLeave };
 }

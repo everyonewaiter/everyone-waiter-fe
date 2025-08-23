@@ -5,13 +5,15 @@ import cn from "@/lib/utils";
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <div className="z-100 w-full overflow-auto">
     <table
       ref={ref}
       className={cn("z-100 my-6 w-full md:my-3 lg:my-6", className)}
       {...props}
-    />
+    >
+      {children}
+    </table>
   </div>
 ));
 Table.displayName = "Table";
@@ -19,7 +21,7 @@ Table.displayName = "Table";
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <thead
     ref={ref}
     className={cn(
@@ -27,14 +29,16 @@ const TableHeader = React.forwardRef<
       className
     )}
     {...props}
-  />
+  >
+    {children}
+  </thead>
 ));
 TableHeader.displayName = "TableHeader";
 
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement> & { className?: string }
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
@@ -42,15 +46,19 @@ const TableHead = React.forwardRef<
       className
     )}
     {...props}
-  />
+  >
+    {children}
+  </th>
 ));
 TableHead.displayName = "TableHead";
 
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <tbody ref={ref} className={cn(className)} {...props} />
+>(({ className, children, ...props }, ref) => (
+  <tbody ref={ref} className={cn(className)} {...props}>
+    {children}
+  </tbody>
 ));
 TableBody.displayName = "TableBody";
 
@@ -59,7 +67,7 @@ const TableRow = React.forwardRef<
   React.HTMLAttributes<HTMLTableRowElement> & {
     isHead?: boolean;
   }
->(({ className, isHead, ...props }, ref) => (
+>(({ className, isHead, children, ...props }, ref) => (
   <tr
     ref={ref}
     className={cn(
@@ -68,14 +76,16 @@ const TableRow = React.forwardRef<
       className
     )}
     {...props}
-  />
+  >
+    {children}
+  </tr>
 ));
 TableRow.displayName = "TableRow";
 
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement> & { className?: string }
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <td
     ref={ref}
     className={cn(
@@ -83,7 +93,9 @@ const TableCell = React.forwardRef<
       className
     )}
     {...props}
-  />
+  >
+    {children}
+  </td>
 ));
 TableCell.displayName = "TableCell";
 

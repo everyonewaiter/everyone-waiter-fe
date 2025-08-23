@@ -1,11 +1,5 @@
 import { PropsWithChildren } from "react";
-import POSHeader2 from "../../_components/POSHeader2";
 
 export default function Layout({ children }: PropsWithChildren) {
-  return (
-    <div>
-      <POSHeader2 />
-      {children}
-    </div>
-  );
+  return <div className="h-screen w-screen bg-white">{children}</div>;
 }
