@@ -22,7 +22,7 @@ export default function Page() {
   const params = useParams();
   const storeId = params?.id as string;
 
-  const { form, initialRef, items, setItems } = useCategoryMove(storeId);
+  const { form, initialRef } = useCategoryMove(storeId);
 
   const [optionState, setOptionState] = useState<OptionState | null>(null);
 
@@ -49,8 +49,6 @@ export default function Page() {
           optionState={optionState}
           initialCategoriesRef={initialRef}
           storeId={storeId}
-          items={items}
-          setItems={setItems}
         />
 
         {optionState ? (
