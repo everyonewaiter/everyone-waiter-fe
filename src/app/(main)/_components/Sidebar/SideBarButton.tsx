@@ -3,15 +3,18 @@
 import { Menu } from "@/components/common/Icon/index";
 import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/useOverlay";
+import { StoreProvider } from "@/providers/storeProvider";
 import MobileSidebar from "../MobileLayout/MobileSidebar";
 
-export default function SideBarButton() {
+export default function SideBarButton({ storeId }: { storeId?: string }) {
   const { open, close } = useOverlay();
 
   const handleOpenSidebar = () => {
     open(() => (
       <QueryProviders>
-        <MobileSidebar onClose={close} />
+        <StoreProvider storeId={storeId!}>
+          <MobileSidebar onClose={close} />
+        </StoreProvider>
       </QueryProviders>
     ));
   };

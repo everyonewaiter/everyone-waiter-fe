@@ -4,13 +4,14 @@ import Link from "next/link";
 
 interface IProps {
   href?: string;
+  storeId?: string;
 }
 
-export default function MobileHeader({ href }: IProps) {
+export default function MobileHeader({ href, storeId }: IProps) {
   return (
     <header className="sticky top-0 z-[9998] h-[60px] border-b border-gray-600 bg-white px-5 md:hidden">
       <div className="flex h-full items-center justify-center">
-        {href !== "/main" && <SideBarButton />}
+        {href !== "/main" && <SideBarButton storeId={storeId} />}
         <Link
           href={href || "/"}
           className="flex w-full items-center justify-center gap-3"
