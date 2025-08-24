@@ -22,10 +22,11 @@ interface IProps {
   imageFile?: File;
   handleFile: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  isSubmitted?: boolean;
 }
 
 const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
-  ({ image, handleFile, className, imageFile }, ref) => {
+  ({ image, handleFile, className, imageFile, isSubmitted }, ref) => {
     const [open, setOpen] = useState(false);
 
     let previewContent = null;
@@ -59,6 +60,12 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
       );
     }
 
+    const handleClick = () => {
+      if (isSubmitted) return;
+      if (image) setOpen(true);
+      else (ref as RefObject<HTMLInputElement>).current?.click();
+    };
+
     return (
       <>
         {open && (
@@ -77,11 +84,7 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
             `flex border-spacing-4 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[16px] border-1 border-dashed border-gray-500 bg-gray-700 ${image ? "" : "p-6"}`,
             className
           )}
-          onClick={() =>
-            image
-              ? setOpen(true)
-              : (ref as RefObject<HTMLInputElement>).current?.click()
-          }
+          onClick={handleClick}
         >
           {previewContent}
           <input

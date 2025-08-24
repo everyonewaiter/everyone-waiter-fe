@@ -36,12 +36,14 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
         name="name"
         label="상호명"
         placeholder="상호명을 입력해주세요. (20자 이내)"
+        readOnly={isSubmitted}
       />
       <LabeledInput
         form={form}
         name="ceoName"
         label="대표자명"
         placeholder="대표자명 입력해주세요."
+        readOnly={isSubmitted}
       />
       <LabeledInput
         form={form}
@@ -50,11 +52,11 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
         placeholder="소재지를 선택해주세요."
         className="cursor-pointer focus:border-2 focus:border-blue-500 focus:pl-[15px]"
         readOnly
-        onClick={handleOpenAddress}
+        onClick={() => (isSubmitted ? null : handleOpenAddress())}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+          if (e.key === "Enter" || (e.key === " " && !isSubmitted)) {
             e.preventDefault();
             handleOpenAddress();
           }
@@ -65,6 +67,7 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
         name="detailAddress"
         label="상세 주소"
         placeholder="상세 주소를 입력해주세요."
+        readOnly={isSubmitted}
       />
       <div className="flex flex-col gap-2">
         <Label>매장 전화번호</Label>
@@ -80,6 +83,7 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
                 form.setValue("landline", formatted);
               }}
               hasError={!!form.formState.errors.landline}
+              readOnly={isSubmitted}
             />
           )}
         />
@@ -101,6 +105,7 @@ export default function CreateForm({ isSubmitted, onSubmit }: IProps) {
                 form.setValue("license", formatted);
               }}
               hasError={!!form.formState.errors.license}
+              readOnly={isSubmitted}
             />
           )}
         />

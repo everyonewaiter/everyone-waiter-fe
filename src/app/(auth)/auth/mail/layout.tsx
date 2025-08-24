@@ -1,6 +1,5 @@
-import Loading from "@/components/Loading";
 import Image from "next/image";
-import { ReactNode, Suspense } from "react";
+import { ReactNode } from "react";
 
 export default function BlankLayout({ children }: { children: ReactNode }) {
   return (
@@ -13,7 +12,7 @@ export default function BlankLayout({ children }: { children: ReactNode }) {
           height={180}
           className="sm:mb-5 sm:h-[140px] sm:w-[140px] md:mb-5 md:h-[140px] md:w-[140px] lg:mb-10 lg:h-[180px] lg:w-[180px]"
         />
-        <Suspense fallback={<Loading />}>{children}</Suspense>
+        {children}
       </div>
     </div>
   );

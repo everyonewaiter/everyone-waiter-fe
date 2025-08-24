@@ -45,10 +45,12 @@ export default function useCreateForm() {
 
     mutate(formData, {
       onError: () => setIsSubmitted(false),
-      onSuccess: () =>
-        navigate.replace(
+      onSuccess: () => {
+        navigate.push(
           `${permission === "USER" ? "/main" : ""}/create?state=pending`
-        ),
+        );
+        setIsSubmitted(false);
+      },
     });
   };
 
