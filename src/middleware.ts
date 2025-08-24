@@ -14,7 +14,6 @@ const publicPrefixes = [
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const accessToken = req.cookies.get("accessToken")?.value;
   const permission = req.cookies.get("permission")?.value;
 
   const isPublic = publicPrefixes.some(
@@ -24,11 +23,6 @@ export function middleware(req: NextRequest) {
   // 공개 페이지는 통과
   if (isPublic) {
     return NextResponse.next();
-  }
-
-  // 토큰이나 권한이 없으면 로그인 페이지로
-  if (!permission || !accessToken) {
-    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   // 권한별 접근 제한
