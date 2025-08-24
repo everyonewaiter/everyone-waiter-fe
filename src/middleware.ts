@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const publicPrefixes = [
+  "/",
   "/login",
   "/not-found",
   "/signup",
   "/auth",
   "/waitings",
   "/menus",
+  "/device",
 ];
 
 export function middleware(req: NextRequest) {
@@ -32,19 +34,31 @@ export function middleware(req: NextRequest) {
   // 권한별 접근 제한
   if (permission === "USER") {
     if (!pathname.startsWith("/main")) {
+      const referer = req.headers.get("referer");
+      if (referer) {
+        return NextResponse.redirect(new URL(referer));
+      }
       return NextResponse.redirect(new URL("/main", req.url));
     }
   }
 
   if (permission === "ADMIN") {
     if (!pathname.startsWith("/admin")) {
+      const referer = req.headers.get("referer");
+      if (referer) {
+        return NextResponse.redirect(new URL(referer));
+      }
       return NextResponse.redirect(new URL("/admin/users", req.url));
     }
   }
 
   if (permission === "OWNER") {
     if (!pathname.match(/^\/\d+$/)) {
-      return NextResponse.redirect(new URL("/not-found", req.url));
+      const referer = req.headers.get("referer");
+      if (referer) {
+        return NextResponse.redirect(new URL(referer));
+      }
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 
