@@ -13,7 +13,7 @@ interface IProps {
 export default function Header({ href }: IProps) {
   const navigate = useRouter();
 
-  const { data } = hallQueries.useWaitingList(false);
+  const { data } = hallQueries.useWaitingList();
 
   return (
     <header className="flex w-full items-center justify-between rounded-4xl bg-white px-8 py-6">
