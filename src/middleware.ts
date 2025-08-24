@@ -19,22 +19,33 @@ export function middleware(req: NextRequest) {
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
   );
 
+  // 공개 페이지는 통과
   if (isPublic) {
     return NextResponse.next();
   }
 
+  // 토큰이나 권한이 없으면 로그인 페이지로
   if (!permission || !accessToken) {
-    return NextResponse.next();
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // NOTE: userPaths 외 접근 제한
-  if (permission === "USER" && !accessToken) {
-    return NextResponse.redirect(new URL("/main", req.url));
+  // 권한별 접근 제한
+  if (permission === "USER") {
+    if (!pathname.startsWith("/main")) {
+      return NextResponse.redirect(new URL("/main", req.url));
+    }
   }
 
-  // NOTE: 관리자 페이지 외 접근 제한
-  if (permission === "ADMIN" && !accessToken) {
-    return NextResponse.redirect(new URL("/admin/users", req.url));
+  if (permission === "ADMIN") {
+    if (!pathname.startsWith("/admin")) {
+      return NextResponse.redirect(new URL("/admin/users", req.url));
+    }
+  }
+
+  if (permission === "OWNER") {
+    if (!pathname.match(/^\/\d+$/)) {
+      return NextResponse.redirect(new URL("/not-found", req.url));
+    }
   }
 
   return NextResponse.next();
