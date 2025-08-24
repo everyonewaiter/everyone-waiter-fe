@@ -46,20 +46,29 @@ export default function StoreApplicationModal({
                 isActive={active}
               />
             </div>
-            <div className="scrollbar-hide mt-6 h-[340px] md:mt-4 md:mb-6 md:h-[292px] lg:mt-5 lg:h-[454px] lg:overflow-y-auto">
+            <div className="scrollbar-hide h-[340px] md:mt-6 md:mb-6 md:h-[292px] lg:mt-5 lg:h-[454px] lg:overflow-y-auto">
               {active === 0 && (
                 <StoreApplyForm
                   isUpdating={isUpdating}
                   isAccepted={isAccepted}
                 />
               )}
-              {active === 1 && (
+              <div className="hidden flex-col gap-6 md:flex">
+                {active === 1 && (
+                  <PhotoForBusiness
+                    isUpdating={isUpdating}
+                    image={image}
+                    onSetImage={setImage}
+                  />
+                )}
+              </div>
+              <div className="flex flex-col gap-6 md:hidden">
                 <PhotoForBusiness
                   isUpdating={isUpdating}
                   image={image}
                   onSetImage={setImage}
                 />
-              )}
+              </div>
             </div>
           </ModalWithTitle.Layout>
           {item.status === "REJECT" && (
