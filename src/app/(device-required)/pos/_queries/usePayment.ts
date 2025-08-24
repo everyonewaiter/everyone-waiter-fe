@@ -48,6 +48,7 @@ export default function usePayment() {
     body: Pick<OrderPayments, "cashReceiptNo" | "cashReceiptType" | "amount">;
     successHandler: () => void;
   }>) => {
+    // eslint-disable-next-line no-console
     approvePay.mutate(
       {
         tableNo,
@@ -66,7 +67,18 @@ export default function usePayment() {
           tradeUniqueNo: "",
         },
       },
-      { onSuccess: successHandler }
+      {
+        onSuccess: () => {
+          // eslint-disable-next-line no-console
+          console.log(`success: cash`);
+          successHandler();
+        },
+        onError: (error) => {
+          // eslint-disable-next-line no-console
+          console.log(`error: cash`);
+          console.log(error);
+        },
+      }
     );
   };
 
