@@ -36,7 +36,7 @@ export default function MobileSidebar({ onClose }: IProps) {
             }}
           >
             <Image src="/logo/logo.svg" width={40} height={40} alt="로고" />
-            <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
+            <h1 className="font-hakgyo text-primary text-base lg:text-2xl">
               모두의 웨이터
             </h1>
           </button>

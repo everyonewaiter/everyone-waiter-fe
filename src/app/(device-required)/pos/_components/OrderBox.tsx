@@ -16,7 +16,7 @@ export default function OrderBox({ onSelect, select, ...props }: IProps) {
       >
         <div
           className={cn(
-            "rounded-[12px] border p-4",
+            "rounded-xl border p-4",
             select ? "border-primary" : "border-gray-600"
           )}
         >

@@ -33,7 +33,7 @@ export default function PdfViewer({ file }: IProps) {
   return (
     <div
       ref={containerRef}
-      className="w-full overflow-hidden rounded-[16px] border border-gray-600 object-cover"
+      className="w-full overflow-hidden rounded-2xl border border-gray-600 object-cover"
     >
       <Document file={file}>
         <Page

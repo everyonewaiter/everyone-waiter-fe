@@ -112,7 +112,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
               "py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5"
             )}
           >
-            <h1 className="text-[15px] font-bold text-white lg:text-[18px]">
+            <h1 className="text-[15px] font-bold text-white lg:text-lg">
               관리자
             </h1>
           </div>

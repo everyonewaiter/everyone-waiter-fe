@@ -67,7 +67,7 @@ export default function Waiting() {
                 className="flex h-[225px] w-full flex-row gap-2"
                 key={item.waitingId}
               >
-                <div className="flex w-[160px] flex-col items-center justify-center gap-2 rounded-[16px] bg-white">
+                <div className="flex w-[160px] flex-col items-center justify-center gap-2 rounded-2xl bg-white">
                   <span className="text-lg font-medium">대기 번호</span>
                   <strong className="text-4xl font-bold">
                     {String(item.number).padStart(3, "0")}

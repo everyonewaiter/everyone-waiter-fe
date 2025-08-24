@@ -97,7 +97,7 @@ export default function AddDeviceStep2({
             type="button"
             key={tab.id}
             className={cn(
-              "font-regular text-s h-10 w-full rounded-[12px] border lg:h-20 lg:rounded-[16px] lg:text-base",
+              "font-regular text-s h-10 w-full rounded-xl border lg:h-20 lg:rounded-2xl lg:text-base",
               purpose === tab.id
                 ? "border-primary text-primary bg-[#f2202004]"
                 : "border-gray-600 text-gray-200"

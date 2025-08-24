@@ -42,7 +42,7 @@ export default function Page() {
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-[10px]">
                   <p className="text-left text-xl font-semibold">주문 금액</p>
-                  <div className="w-full rounded-[12px] border border-gray-600 px-6 py-4">
+                  <div className="w-full rounded-xl border border-gray-600 px-6 py-4">
                     <div className="text-gray-0 flex items-center justify-between font-medium">
                       <span className="text-lg">주문 금액</span>
                       <span className="text-xl">
@@ -59,7 +59,7 @@ export default function Page() {
                 </div>
                 <div className="flex flex-col gap-[10px]">
                   <p className="text-left text-xl font-semibold">결제 금액</p>
-                  <div className="w-full rounded-[12px] border border-gray-600 px-6 py-4">
+                  <div className="w-full rounded-xl border border-gray-600 px-6 py-4">
                     <div className="text-gray-0 flex items-center justify-between font-medium">
                       <span className="text-lg">카드</span>
                       <span className="text-xl">
@@ -76,7 +76,7 @@ export default function Page() {
                 </div>
                 <div className="flex flex-col gap-[10px]">
                   <p className="text-left text-xl font-semibold">취소 금액</p>
-                  <div className="w-full rounded-[12px] border border-gray-600 px-6 py-4">
+                  <div className="w-full rounded-xl border border-gray-600 px-6 py-4">
                     <div className="text-gray-0 flex items-center justify-between font-medium">
                       <span className="text-lg">카드</span>
                       <span className="text-xl">

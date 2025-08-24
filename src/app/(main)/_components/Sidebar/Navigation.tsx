@@ -55,12 +55,12 @@ export default function Navigation({ role }: IProps) {
             const p = pathname.split("/");
             navigate.push(`/${store?.storeId}/${p.slice(2).join("/")}`);
           }}
-          triggerClassname="text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-[18px]"
+          triggerClassname="text-[15px] font-bold text-white md:py-[12.5px] md:pl-4 lg:py-[14.5px] lg:pl-5 lg:text-lg"
         />
       )}
       {role === "ADMIN" && (
         <div className="bg-primary flex w-full items-center justify-between rounded-xl py-[12.5px] pl-4 lg:py-[14.5px] lg:pl-5">
-          <h1 className="text-[15px] font-bold text-white lg:text-[18px]">
+          <h1 className="text-[15px] font-bold text-white lg:text-lg">
             관리자
           </h1>
         </div>

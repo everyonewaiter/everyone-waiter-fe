@@ -25,7 +25,7 @@ export default function StoreSection({ data, onAction }: IProps) {
               responsiveButtons={{
                 lg: {
                   buttonSize: "custom",
-                  className: `h-10 w-full px-5 rounded-[8px]`,
+                  className: `h-10 w-full px-5 rounded-lg`,
                 },
                 md: {
                   buttonSize: "sm",

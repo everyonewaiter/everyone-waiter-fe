@@ -23,7 +23,7 @@ export default function POSHeader({ children }: PropsWithChildren) {
           {children || (
             <Link
               href="/pos/payments/history"
-              className="text-gray-0 font-regular flex flex-row gap-[10px] rounded-[12px] border border-gray-600 px-4 py-3 text-lg"
+              className="text-gray-0 font-regular flex flex-row gap-[10px] rounded-xl border border-gray-600 px-4 py-3 text-lg"
             >
               <Icon iconKey="file-check" size={28} />
               <span>결제 내역</span>

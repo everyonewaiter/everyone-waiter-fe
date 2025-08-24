@@ -16,9 +16,9 @@
   --color-gray-800: #c0c0c0;
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-opacity-100: #00000060;
-  --color-opacity-200: #ffffff04;
-  --color-opacity-300: #00000030;
+  --color-white-opacity-1: #ffffff0a; /* 흰색 4% */
+  --color-black-opacity-1: #00000099; /* 블랙 60% */
+  --color-black-opacity-2: #0000004d; /* 블랙 30% */
   --color-status-error: #d02006;
   --color-status-warning: #f0d36a;
   --color-status-success: #6bd876;

@@ -21,7 +21,7 @@ export default async function Page({
           회원가입이 완료되었습니다.
         </p>
         {/* Show at Mobile - start */}
-        <div className="mt-4 mb-5 hidden items-center justify-center rounded-[12px] bg-gray-700 text-gray-300 sm:flex sm:h-14 md:h-[51px] md:w-[292px] md:text-lg md:font-medium lg:h-[60px] lg:w-[432px] lg:text-xl">
+        <div className="mt-4 mb-5 hidden items-center justify-center rounded-xl bg-gray-700 text-gray-300 sm:flex sm:h-14 md:h-[51px] md:w-[292px] md:text-lg md:font-medium lg:h-[60px] lg:w-[432px] lg:text-xl">
           {email}
         </div>
         <div className="font-regular flex flex-col gap-1 text-center text-sm text-gray-300 md:hidden">

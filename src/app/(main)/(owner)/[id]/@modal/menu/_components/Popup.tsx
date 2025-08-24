@@ -8,14 +8,14 @@ interface IProps {
 
 export default function Popup({ onSetPopupAction }: IProps) {
   return (
-    <aside className="absolute top-8 right-0 z-1000 flex w-[136px] flex-col gap-2 rounded-[16px] bg-white p-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]">
+    <aside className="absolute top-8 right-0 z-1000 flex w-[136px] flex-col gap-2 rounded-2xl bg-white p-3 shadow-[0px_2px_10px_rgba(0,0,0,0.08)]">
       <ResponsiveButton
         type="button"
         responsiveButtons={{
           lg: {
             buttonSize: "custom",
             className:
-              "p-3 flex items-center gap-2 bg-white hover:bg-gray-700 rounded-[8px] border-none text-[15px] font-regular text-gray-100",
+              "p-3 flex items-center gap-2 bg-white hover:bg-gray-700 rounded-lg border-none text-[15px] font-regular text-gray-100",
           },
         }}
         onClick={() => onSetPopupAction("순서 변경")}
@@ -29,7 +29,7 @@ export default function Popup({ onSetPopupAction }: IProps) {
           lg: {
             buttonSize: "custom",
             className:
-              "p-3 flex items-center gap-2 bg-white hover:bg-gray-700 rounded-[8px] border-none text-[15px] font-regular text-gray-100",
+              "p-3 flex items-center gap-2 bg-white hover:bg-gray-700 rounded-lg border-none text-[15px] font-regular text-gray-100",
           },
         }}
         onClick={() => onSetPopupAction("옵션 삭제")}

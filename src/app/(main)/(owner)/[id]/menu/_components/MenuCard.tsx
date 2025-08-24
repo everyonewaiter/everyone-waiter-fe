@@ -26,7 +26,7 @@ export default function MenuCard({
   return (
     <div
       className={cn(
-        "relative cursor-pointer overflow-hidden rounded-[12px] border lg:rounded-[24px]",
+        "relative cursor-pointer overflow-hidden rounded-xl border lg:rounded-3xl",
         isSelected ? "border-primary" : "border-gray-600",
         className
       )}
@@ -75,22 +75,22 @@ export default function MenuCard({
             aria-label={`${menu.name} 메뉴 선택`}
           />
         )}
-        <div className="mt-auto flex flex-col gap-1 rounded-[12px] bg-white p-2 lg:gap-2 lg:rounded-[20px] lg:px-5 lg:py-4">
+        <div className="mt-auto flex flex-col gap-1 rounded-xl bg-white p-2 lg:gap-2 lg:rounded-[20px] lg:px-5 lg:py-4">
           {menu.label !== "DEFAULT" && (
             <ResponsiveButton
               responsiveButtons={{
                 lg: {
                   buttonSize: "custom",
                   className:
-                    "w-fit px-4 py-1 bg-[#3900B508] !text-[#3900B5] border-none text-sm font-regular  rounded-[24px]",
+                    "w-fit px-4 py-1 bg-[#3900B508] !text-[#3900B5] border-none text-sm font-regular  rounded-3xl",
                 },
                 md: {
                   buttonSize: "custom",
-                  className: "w-fit h-6 px-3 py-1 rounded-[24px] text-xs",
+                  className: "w-fit h-6 px-3 py-1 rounded-3xl text-xs",
                 },
                 sm: {
                   buttonSize: "custom",
-                  className: "w-fit h-6 px-3 py-1 rounded-[24px] text-xs",
+                  className: "w-fit h-6 px-3 py-1 rounded-3xl text-xs",
                 },
               }}
             >

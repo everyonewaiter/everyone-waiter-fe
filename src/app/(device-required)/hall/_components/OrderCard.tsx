@@ -19,7 +19,7 @@ export default function OrderCard({ completed, orderId, ...props }: IProps) {
   return (
     <div
       className={cn(
-        "flex w-[320px] flex-col gap-6 rounded-[24px] border border-gray-600 p-6",
+        "flex w-[320px] flex-col gap-6 rounded-3xl border border-gray-600 p-6",
         completed ? "h-[245px]" : "h-[279px]"
       )}
     >

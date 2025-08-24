@@ -46,7 +46,7 @@ export default function OptionComponent({
                 lg: {
                   buttonSize: "custom",
                   className:
-                    "h-7 rounded-[8px] px-4 !text-s font-regular text-primary",
+                    "h-7 rounded-lg px-4 !text-s font-regular text-primary",
                 },
               }}
               onClick={() => onComplete?.()}

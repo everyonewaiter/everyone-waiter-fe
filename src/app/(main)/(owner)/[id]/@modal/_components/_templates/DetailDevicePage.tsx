@@ -75,7 +75,7 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
                 deviceDetail?.purpose as keyof typeof deviceTranslate
               ] || "전체"
             }
-            triggerClassName="lg:rounded-[12px] rounded-[8px] justify-between"
+            triggerClassName="lg:rounded-xl rounded-lg justify-between"
           />
         </div>
         {form.watch("purpose") === "TABLE" && (
@@ -111,7 +111,7 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
                     deviceDetail?.paymentType as DevicePayment
                   ]
                 }
-                triggerClassName="lg:rounded-[12px] rounded-[8px] justify-between"
+                triggerClassName="lg:rounded-xl rounded-lg justify-between"
               />
             </div>
           </>

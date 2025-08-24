@@ -130,7 +130,7 @@ export default function SideSection() {
               </div>
               <Button
                 color="primary"
-                className="mt-8 flex h-[64px] w-full flex-1 rounded-[12px] px-8 text-xl"
+                className="mt-8 flex h-[64px] w-full flex-1 rounded-xl px-8 text-xl"
                 onClick={handleAddMenu}
               >
                 주문 요청

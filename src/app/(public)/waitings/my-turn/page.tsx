@@ -75,7 +75,7 @@ export default function Page() {
             {currentNumber <= 2 && (
               <div
                 className={cn(
-                  "bg-primary -mb-[1px] w-fit rounded-[24px] px-3 py-2 text-xs font-semibold text-white",
+                  "bg-primary -mb-[1px] w-fit rounded-3xl px-3 py-2 text-xs font-semibold text-white",
                   currentNumber === 1 ? "-mr-4" : "-mr-2"
                 )}
               >
@@ -84,7 +84,7 @@ export default function Page() {
             )}
             {currentNumber > 2 && (
               <div
-                className="bg-primary -mb-[1px] w-fit rounded-[24px] px-3 py-2 text-xs font-semibold text-white"
+                className="bg-primary -mb-[1px] w-fit rounded-3xl px-3 py-2 text-xs font-semibold text-white"
                 style={{
                   marginLeft:
                     currentNumber <= 5 ? positionPx - 98 : positionPx - 134,
@@ -111,9 +111,9 @@ export default function Page() {
             </svg>
           </div>
           <div className="relative mx-auto" style={{ width: barWidth }}>
-            <div className="h-[6px] w-full rounded-[24px] bg-gray-700" />
+            <div className="h-[6px] w-full rounded-3xl bg-gray-700" />
             <div
-              className="bg-primary absolute top-0 left-0 h-[6px] w-[60px] max-w-full rounded-[24px]"
+              className="bg-primary absolute top-0 left-0 h-[6px] w-[60px] max-w-full rounded-3xl"
               style={{ width: positionPx }}
             >
               <div className="bg-primary absolute -top-[2px] right-0 h-[10px] w-[10px] rounded-full ring-[5px] ring-[#F2202014]" />
@@ -124,11 +124,11 @@ export default function Page() {
           className="mx-auto flex flex-col gap-2"
           style={{ width: barWidth }}
         >
-          <div className="flex w-full items-center justify-between rounded-[16px] bg-gray-700 px-4 py-3 text-[15px] font-medium">
+          <div className="flex w-full items-center justify-between rounded-2xl bg-gray-700 px-4 py-3 text-[15px] font-medium">
             예상 대기시간
             <strong className="text-lg font-semibold">24분</strong>
           </div>
-          <div className="flex w-full items-center justify-between rounded-[16px] bg-gray-700 px-4 py-3 text-[15px] font-medium">
+          <div className="flex w-full items-center justify-between rounded-2xl bg-gray-700 px-4 py-3 text-[15px] font-medium">
             내 대기번호
             <strong className="text-lg font-semibold">{data?.number}번</strong>
           </div>

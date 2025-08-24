@@ -26,7 +26,7 @@ export default function PageTitle({
       )}
     >
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-[18px] font-bold md:text-[16px] lg:text-[28px]">
+        <h1 className="text-lg font-bold md:text-base lg:text-[28px]">
           {initialTitle}
         </h1>
         <PopupButton storeId={storeId} />

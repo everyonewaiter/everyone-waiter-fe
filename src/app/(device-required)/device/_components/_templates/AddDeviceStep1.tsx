@@ -229,7 +229,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
                       defaultText="매장을 선택해주세요."
                       active={active}
                       setActive={setActive}
-                      triggerClassName="!h-9 lg:!h-12 justify-between rounded-[8px]"
+                      triggerClassName="!h-9 lg:!h-12 justify-between rounded-lg"
                     />
                   </div>
                 </Suspense>

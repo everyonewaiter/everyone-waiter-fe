@@ -42,7 +42,7 @@ export default function MobileTables({ onClick, tableNo, ...props }: IProps) {
                       sm: {
                         buttonSize: "custom",
                         className:
-                          "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+                          "h-[26px] px-4 py-1 rounded-md text-xs text-white font-semibold",
                       },
                     }}
                   >

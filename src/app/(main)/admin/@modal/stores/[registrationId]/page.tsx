@@ -94,21 +94,21 @@ export default function Page() {
                     defaultText=""
                     setActive={setActive}
                     active={active}
-                    triggerClassName="h-9 rounded-[8px] md:h-9 md:pr-4 md:pl-4 md:text-[13px] lg:h-12 lg:rounded-[12px] lg:py-3 lg:pr-3 lg:pl-4 lg:text-sm lg:text-[15px] justify-between"
+                    triggerClassName="h-9 rounded-lg md:h-9 md:pr-4 md:pl-4 md:text-s lg:h-12 lg:rounded-xl lg:py-3 lg:pr-3 lg:pl-4 lg:text-sm lg:text-[15px] justify-between"
                   />
                 </div>
               )}
               <div className="mb-8 flex flex-col gap-2">
                 <Label>사업자 등록증</Label>
                 {data?.image && (
-                  <div className="flex w-full justify-center rounded-[16px] md:py-1 lg:py-6">
+                  <div className="flex w-full justify-center rounded-2xl md:py-1 lg:py-6">
                     <ImageWithFallback
                       src={data?.image}
                       alt="사업자 등록증"
                       width={381}
                       height={458}
                       unoptimized
-                      className="rounded-[16px] border border-gray-600 object-cover lg:h-[458px] lg:w-[381px]"
+                      className="rounded-2xl border border-gray-600 object-cover lg:h-[458px] lg:w-[381px]"
                     />
                   </div>
                 )}

@@ -33,7 +33,7 @@ export default function TableBox({
       role="button"
       tabIndex={0}
       className={cn(
-        "flex h-[320px] w-[432px] cursor-pointer flex-col justify-between rounded-[24px] border-[2px] p-7 text-left",
+        "flex h-[320px] w-[432px] cursor-pointer flex-col justify-between rounded-3xl border-[2px] p-7 text-left",
         props.orderMenuCount > 0 ? "border-primary" : "border-gray-500",
         isMoving && hasAnimation ? "animate-wiggle" : ""
       )}
@@ -49,7 +49,7 @@ export default function TableBox({
         {props.orderType ? (
           <Button
             variant="default"
-            className={cn("button-sm !rounded-[24px]", getChipColor())}
+            className={cn("button-sm !rounded-3xl", getChipColor())}
           >
             {
               paymentTimeTranslate[
@@ -58,21 +58,21 @@ export default function TableBox({
             }
           </Button>
         ) : (
-          <Button color="grey" className="button-sm !rounded-[24px]">
+          <Button color="grey" className="button-sm !rounded-3xl">
             대기
           </Button>
         )}
         <div className="flex flex-row gap-2">
           <Button
             color="grey"
-            className="text-gray-0 !text-s font-regular flex h-9 flex-row gap-[6px] rounded-[12px] px-3 py-2"
+            className="text-gray-0 !text-s font-regular flex h-9 flex-row gap-[6px] rounded-xl px-3 py-2"
           >
             <Icon iconKey="alarm" size={20} className="text-gray-0 h-5 w-5" />
             {props?.orderedAt?.split(" ")[1].slice(0, 5) || "00:00"}
           </Button>
           <Button
             color="grey"
-            className="text-gray-0 !text-s font-regular flex h-9 flex-row gap-[6px] rounded-[12px] px-3 py-2"
+            className="text-gray-0 !text-s font-regular flex h-9 flex-row gap-[6px] rounded-xl px-3 py-2"
           >
             <Icon
               iconKey="stopwatch"

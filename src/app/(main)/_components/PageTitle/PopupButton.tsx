@@ -30,7 +30,7 @@ export default function PopupButton({ storeId }: { storeId?: string }) {
     <button
       type="button"
       data-popup-button
-      className="center relative h-8 w-8 rounded-[12px] border border-gray-400 lg:h-12 lg:w-12 lg:rounded-[16px]"
+      className="center relative h-8 w-8 rounded-xl border border-gray-400 lg:h-12 lg:w-12 lg:rounded-2xl"
       onClick={handleOpenPopup}
       aria-label="프로필 메뉴 열기"
     >

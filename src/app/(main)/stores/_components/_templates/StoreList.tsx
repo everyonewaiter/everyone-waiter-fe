@@ -82,7 +82,7 @@ export default function StoreList({ storeId }: IProps) {
               sm: { buttonSize: "sm" },
             }}
           >
-            <div className="flex flex-row items-center lg:gap-[6px]">
+            <div className="flex flex-row items-center lg:gap-1.5">
               <Plus className="fill-primary h-4 w-4" />
               <span>매장 추가</span>
             </div>

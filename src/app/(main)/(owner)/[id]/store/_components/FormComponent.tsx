@@ -105,7 +105,7 @@ export default function FormComponent({ storeId }: IProps) {
               />
             </FormProvider>
           ) : (
-            <div className="flex h-[140px] w-full flex-col items-center justify-center rounded-[16px] border border-gray-600 bg-gray-700 md:h-auto md:gap-1 md:p-6">
+            <div className="flex h-[140px] w-full flex-col items-center justify-center rounded-2xl border border-gray-600 bg-gray-700 md:h-auto md:gap-1 md:p-6">
               <span className="text-gray-0 text-sm font-medium">
                 원산지가 등록되어 있지 않습니다.
               </span>

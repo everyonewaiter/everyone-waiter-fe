@@ -43,7 +43,7 @@ export default function LicensePreview({
               alt="사업자 등록중"
               width={381}
               height={458}
-              className="aspect-[381/458] rounded-[16px] border border-gray-600 object-cover lg:h-[458px] lg:w-[381px]"
+              className="aspect-[381/458] rounded-2xl border border-gray-600 object-cover lg:h-[458px] lg:w-[381px]"
             />
           )}
         </div>

@@ -60,7 +60,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
       ?.name;
 
   return (
-    <section className="flex h-fit basis-[32.81%] rounded-[12px] border border-gray-600 p-4 lg:rounded-[24px] lg:p-6">
+    <section className="flex h-fit basis-[32.81%] rounded-xl border border-gray-600 p-4 lg:rounded-3xl lg:p-6">
       <div className="flex w-full flex-col gap-2">
         <div className={cn("flex flex-col", inputGap)}>
           <Label disabled={!isEditing} className="mb-1">
@@ -83,7 +83,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
               }
             }}
             disabled={type !== "create"}
-            triggerClassName="justify-between lg:rounded-[12px] md:rounded-[8px]"
+            triggerClassName="justify-between lg:rounded-xl md:rounded-lg"
           />
         </div>
         <LabeledInput

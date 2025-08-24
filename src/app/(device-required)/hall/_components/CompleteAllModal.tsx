@@ -18,14 +18,14 @@ export default function CompleteAllModal({
 }: IProps) {
   return (
     <ModalWithTitle onClose={close} topRightComponent={null}>
-      <div className="center flex-col gap-1 rounded-[16px] border border-gray-600 py-4">
+      <div className="center flex-col gap-1 rounded-2xl border border-gray-600 py-4">
         <span className="text-gray-0 text-xl font-semibold">테이블 번호</span>
         <strong className="text-gray-0 text-3xl font-bold">
           {String(tableNo).padStart(2, "0")}
         </strong>
       </div>
       {type === "single-complete" && (
-        <div className="center mt-2 flex-col gap-1 rounded-[16px] border border-gray-600 py-4">
+        <div className="center mt-2 flex-col gap-1 rounded-2xl border border-gray-600 py-4">
           <span className="text-gray-0 text-lg font-semibold">{text}</span>
         </div>
       )}

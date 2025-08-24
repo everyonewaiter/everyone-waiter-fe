@@ -30,7 +30,7 @@ export default function Device() {
   return (
     <div
       className={cn(
-        "mx-5 w-full bg-white p-5 md:mx-0 md:w-[364px] md:rounded-[24px] lg:w-136 lg:rounded-[32px] lg:p-8",
+        "mx-5 w-full bg-white p-5 md:mx-0 md:w-[364px] md:rounded-3xl lg:w-136 lg:rounded-4xl lg:p-8",
         step === 0 ? "mt-0 md:mt-4 lg:mt-30" : "mt-0 md:mt-2 lg:mt-24"
       )}
     >

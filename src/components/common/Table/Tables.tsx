@@ -25,7 +25,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "hidden cursor-default items-center justify-center !bg-gray-700 md:flex md:h-10 md:rounded-[12px] lg:h-16 lg:rounded-[16px]",
+      "hidden cursor-default items-center justify-center !bg-gray-700 md:flex md:h-10 md:rounded-xl lg:h-16 lg:rounded-2xl",
       className
     )}
     {...props}
@@ -107,7 +107,7 @@ const MobileTable = React.forwardRef<
     <table
       ref={ref}
       className={cn(
-        "block overflow-hidden rounded-[16px] border border-gray-600",
+        "block overflow-hidden rounded-2xl border border-gray-600",
         className
       )}
       {...props}

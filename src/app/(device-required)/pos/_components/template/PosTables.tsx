@@ -68,7 +68,7 @@ export default function PosTables() {
               <Button
                 variant="outline"
                 color="grey"
-                className="text-gray-0 h-20 w-full rounded-[16px] !border-gray-600 p-6"
+                className="text-gray-0 h-20 w-full rounded-2xl !border-gray-600 p-6"
               >
                 {moveSourceTableNo}번 테이블
               </Button>
@@ -76,7 +76,7 @@ export default function PosTables() {
               <Button
                 variant="outline"
                 color="primary"
-                className="!text-gray-0 h-20 w-full rounded-[16px] p-6"
+                className="!text-gray-0 h-20 w-full rounded-2xl p-6"
               >
                 {tableNo}번 테이블
               </Button>
@@ -107,7 +107,7 @@ export default function PosTables() {
           <Button
             variant="outline"
             color="black"
-            className="mb-6 flex h-[58px] !w-fit gap-2 rounded-[24px] px-5 py-[15px]"
+            className="mb-6 flex h-[58px] !w-fit gap-2 rounded-3xl px-5 py-[15px]"
             onClick={() => navigate.back()}
           >
             <Icon

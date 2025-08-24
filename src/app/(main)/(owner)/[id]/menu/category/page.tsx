@@ -55,8 +55,7 @@ export default function Page() {
                     responsiveButtons={{
                       sm: {
                         buttonSize: "sm",
-                        className:
-                          "flex mt-4 gap-2 items-center rounded-[12px]",
+                        className: "flex mt-4 gap-2 items-center rounded-xl",
                       },
                       md: {
                         buttonSize: "sm",
@@ -85,7 +84,7 @@ export default function Page() {
                       responsiveButtons={{
                         sm: {
                           buttonSize: "sm",
-                          className: "mt-4 gap-2 items-center rounded-[12px]",
+                          className: "mt-4 gap-2 items-center rounded-xl",
                         },
                         md: {
                           buttonSize: "sm",

@@ -9,7 +9,7 @@ interface IProps extends Menu {
 const POSMenuCard = memo(({ onClick, ...props }: IProps) => (
   <button
     type="button"
-    className="relative h-[340px] overflow-hidden rounded-[24px] border-[1.5px] border-gray-600"
+    className="relative h-[340px] overflow-hidden rounded-3xl border-[1.5px] border-gray-600"
     onClick={onClick}
   >
     {props.image ? (

@@ -16,7 +16,7 @@ export default function MobileMenuCard({
   return (
     <button type="button" className="py-4" onClick={onClick}>
       <div className="flex items-center gap-5">
-        <div className="relative h-[96px] w-[96px] overflow-hidden rounded-[12px]">
+        <div className="relative h-[96px] w-[96px] overflow-hidden rounded-xl">
           <ImageWithFallback
             src={image}
             alt="menu"

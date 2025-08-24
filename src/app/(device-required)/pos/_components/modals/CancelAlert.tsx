@@ -85,7 +85,7 @@ export default function CancelAlert({
     >
       <div className="-mt-4 flex w-full flex-col gap-8">
         {type !== "order-reset" && (
-          <div className="flex items-center justify-between rounded-[12px] border border-gray-600 px-6 py-4">
+          <div className="flex items-center justify-between rounded-xl border border-gray-600 px-6 py-4">
             <span className="text-2xl font-semibold">
               {activityData.tableNo}번 테이블
             </span>
