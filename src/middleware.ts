@@ -53,7 +53,7 @@ export function middleware(req: NextRequest) {
   }
 
   if (permission === "OWNER") {
-    if (!pathname.match(/^\/\d+$/)) {
+    if (!pathname.match(/^\/(\d+)(\/.*)?$/)) {
       const referer = req.headers.get("referer");
       if (referer) {
         return NextResponse.redirect(new URL(referer));
