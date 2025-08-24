@@ -20,14 +20,12 @@ export default function SidebarMenu({ selectedStoreId, permission }: IProps) {
 
   const handleMenuClick = (href: string) => {
     if (href === comparePath) return;
-    const targetPath =
-      permission === "OWNER" ? `/${selectedStoreId}${href}` : href;
 
     startTransition(() => {
-      if (permission === "OWNER" && href === "/") {
-        navigate.push(`/${selectedStoreId}`);
+      if (permission === "OWNER") {
+        navigate.push(`/${selectedStoreId}${href}`);
       } else {
-        navigate.push(targetPath);
+        navigate.push(href);
       }
     });
   };

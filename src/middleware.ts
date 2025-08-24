@@ -11,6 +11,8 @@ const publicPrefixes = [
   "/device",
 ];
 
+const deviceRequiredPrefixes = ["/pos", "/hall", "/waiting"];
+
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
@@ -19,9 +21,12 @@ export function middleware(req: NextRequest) {
   const isPublic = publicPrefixes.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
   );
+  const isDeviceRequired = deviceRequiredPrefixes.some((prefix) =>
+    pathname.startsWith(prefix)
+  );
 
   // 공개 페이지는 통과
-  if (isPublic) {
+  if (isPublic || isDeviceRequired) {
     return NextResponse.next();
   }
 
@@ -47,7 +52,7 @@ export function middleware(req: NextRequest) {
   }
 
   if (permission === "OWNER") {
-    if (!pathname.match(/^\/\d+$/)) {
+    if (!pathname.match(/^\/(\d+)(\/.*)?$/)) {
       const referer = req.headers.get("referer");
       if (referer) {
         return NextResponse.redirect(new URL(referer));
