@@ -1,14 +1,16 @@
 "use client";
 
-import { PlusIcon } from "@/components/common/Icon/index";
 import dynamic from "next/dynamic";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "react-responsive";
+import { PlusIcon } from "@/components/common/Icon/index";
 import DashedBorder from "@/components/DashedBorder";
 import { useStoreContext } from "@/providers/storeProvider";
 import Spinner from "@/components/common/Spinner";
 import { rectSortingStrategy } from "@/components/dnd";
 import { Skeleton } from "@/components/common/Skeleton/Skeleton";
+import Loading from "@/components/Loading";
 import { TypeMenuList } from "../_schema/menu.schema";
 import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
@@ -40,6 +42,8 @@ export default function RenderMenu({
   const navigate = useRouter();
   const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
+  const [isNavigating, setIsNavigating] = useState(false);
+
   const { storeId } = useStoreContext();
   const { isSelected } = useMenuSelection();
 
@@ -50,6 +54,7 @@ export default function RenderMenu({
 
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
+      {isNavigating && <Loading />}
       <div className="flex-1">
         <div className="grid grid-cols-3 gap-4 md:grid-cols-5 md:gap-x-[10px] md:gap-y-4 lg:gap-x-[32px] lg:gap-y-[40px]">
           {sortedMenus && changeSort && (
@@ -71,11 +76,12 @@ export default function RenderMenu({
             <button
               type="button"
               className="aspect-[329/440] h-full"
-              onClick={() =>
+              onClick={() => {
+                setIsNavigating(true);
                 navigate.push(
                   `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
-                )
-              }
+                );
+              }}
             >
               <DashedBorder
                 layoutClassName="bg-gray-700 cursor-pointer h-full"

@@ -27,7 +27,6 @@ export default async function Page({
   try {
     await verifyEmail({ token }).then(() => redirect("/login"));
   } catch (error) {
-    console.log((error as any).response);
     const code = (error as any)?.response?.data.code;
     if (code === "EXPIRED_VERIFICATION_EMAIL" || code === "ACCOUNT_NOT_FOUND") {
       return (

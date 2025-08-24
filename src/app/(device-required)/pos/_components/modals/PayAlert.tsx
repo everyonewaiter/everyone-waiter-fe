@@ -130,6 +130,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         cashReceiptType = "PROOF";
       else cashReceiptType = "DEDUCTION";
 
+      console.log("start: cash");
       payCash({
         tableNo: props.tableNo,
         body: {

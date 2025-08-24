@@ -14,17 +14,11 @@ export default function Layout({
   const pathname = usePathname();
 
   const [checking, setIsChecking] = useState(false);
-  const [valid, setValid] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const meta = localStorage.getItem("@meta");
-
-        if (!pathname.startsWith("/device") && !meta) {
-          navigate.replace("/device");
-          return;
-        }
 
         if (meta) {
           const { deviceId, storeId } = JSON.parse(meta);
@@ -37,7 +31,6 @@ export default function Layout({
           if (!secretKey) {
             navigate.replace("/device");
           }
-          setValid(true);
         }
       } catch {
         navigate.replace("/device");
@@ -48,8 +41,6 @@ export default function Layout({
   }, [pathname, navigate]);
 
   if (checking) return <FirstLoading />;
-
-  if (!valid && !pathname.startsWith("/device")) return null;
 
   return (
     <DeviceProvider>

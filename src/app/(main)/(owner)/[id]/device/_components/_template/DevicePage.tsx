@@ -79,6 +79,7 @@ export default function DevicePage() {
         onAction={handleDeleteDevice}
         buttonText="삭제"
         hasNoAction={!length}
+        customButtonStyle="!w-full"
       >
         {checkedKeys.length >= 1 ? (
           <div>

@@ -73,10 +73,20 @@ const useAddMenu = (storeId: string, form: UseFormReturn<TypeMenuForm>) =>
     },
   });
 
-const useUpdateWithoutImage = (storeId: string) =>
+const useUpdateWithoutImage = (storeId: string, categoryId: string) =>
   useMutation({
     mutationFn: updateMenuWithoutImage,
     onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: menuKeys.category(storeId, categoryId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: menuKeys.menuInCategory(
+          storeId,
+          categoryId,
+          variables.menuId
+        ),
+      });
       queryClient.invalidateQueries({
         predicate: (query) =>
           Array.isArray(query.queryKey) &&
@@ -111,10 +121,13 @@ const useUpdateWithoutImage = (storeId: string) =>
     },
   });
 
-const useUpdateWithImage = (storeId: string) =>
+const useUpdateWithImage = (storeId: string, categoryId: string) =>
   useMutation({
     mutationFn: updateMenuWithImage,
     onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: menuKeys.category(storeId, categoryId),
+      });
       queryClient.invalidateQueries({
         predicate: (query) =>
           Array.isArray(query.queryKey) &&
