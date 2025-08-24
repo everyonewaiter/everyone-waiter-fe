@@ -95,6 +95,7 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
 
   let lastErrorMessage = "";
   let lastErrorTime = 0;
+  let lastAlertTime = 0;
 
   axiosInstance.interceptors.response.use(
     (response) => response,
@@ -104,6 +105,18 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
       const now = Date.now();
 
       if (error.response) {
+        if (error.response?.status === 401) {
+          if (now - lastAlertTime > 10000) {
+            lastAlertTime = now;
+            alert(
+              `${window.location.href.split("/")[3].toUpperCase()} 기기가 아닙니다. 기기를 등록해주세요.`
+            );
+            setTimeout(() => {
+              window.location.href = "/device";
+            }, 10);
+          }
+        }
+
         if (error.response?.status === 404) {
           const customError = new Error("NOT_FOUND");
           (customError as any).code = "NOT_FOUND";
