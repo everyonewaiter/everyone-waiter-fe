@@ -16,6 +16,7 @@ interface IProps extends StoreDetail {
 }
 
 export default function MobileTables({ onClick, tableNo, ...props }: IProps) {
+  console.log(props);
   return (
     <MobileTable className="z-10" onClick={() => onClick(props)}>
       <TableBody className="flex flex-col">
@@ -41,7 +42,7 @@ export default function MobileTables({ onClick, tableNo, ...props }: IProps) {
                       sm: {
                         buttonSize: "custom",
                         className:
-                          "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+                          "h-[26px] px-4 py-1 rounded-md text-xs text-white font-semibold",
                       },
                     }}
                   >
@@ -49,15 +50,18 @@ export default function MobileTables({ onClick, tableNo, ...props }: IProps) {
                   </ResponsiveButton>
                 </MobileTableCell>
               )}
-              {key !== "신청일" && key !== "상태" && (
+              {key === "사유" && (
+                <MobileTableCell hideBorder>
+                  {props.reason || "-"}
+                </MobileTableCell>
+              )}
+              {key !== "신청일" && key !== "상태" && key !== "사유" && (
                 <MobileTableCell>
-                  {
-                    props[
-                      registrationTableWidths[
-                        key as keyof typeof registrationTableWidths
-                      ].text as keyof StoreDetail
-                    ]
-                  }
+                  {props[
+                    registrationTableWidths[
+                      key as keyof typeof registrationTableWidths
+                    ].text as keyof StoreDetail
+                  ] ?? "-"}
                 </MobileTableCell>
               )}
             </MobileTableRow>

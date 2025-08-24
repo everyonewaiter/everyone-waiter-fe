@@ -51,7 +51,7 @@ export default function OptionItem({
       {isEditing && (
         <button
           type="button"
-          className="center h-8 w-8 rounded-[8px] border border-gray-600"
+          className="center h-8 w-8 rounded-lg border border-gray-600"
           onClick={() => {
             if (!isSortMode) onDelete();
           }}

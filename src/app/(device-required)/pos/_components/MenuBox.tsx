@@ -58,7 +58,7 @@ export default function MenuBox({
           <div
             key={menu.orderMenuId}
             className={cn(
-              "rounded-[12px] border p-4",
+              "rounded-xl border p-4",
               isSelected ? "border-primary" : "border-gray-600",
               isInteractive ? "cursor-pointer" : "cursor-default"
             )}

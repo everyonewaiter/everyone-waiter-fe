@@ -39,11 +39,11 @@ export default function CancelWaiting({ value, onChange }: IProps) {
           <InputOTPGroup className="flex gap-3">
             <InputOTPSlot
               index={0}
-              className="h-21 w-[65px] !rounded-[12px] border-none bg-gray-700 text-4xl !font-medium"
+              className="h-21 w-[65px] !rounded-xl border-none bg-gray-700 text-4xl !font-medium"
             />
             <InputOTPSlot
               index={1}
-              className="h-21 w-[65px] !rounded-[12px] border-none bg-gray-700 text-4xl !font-medium"
+              className="h-21 w-[65px] !rounded-xl border-none bg-gray-700 text-4xl !font-medium"
             />
           </InputOTPGroup>
         </InputOTP>

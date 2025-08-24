@@ -114,7 +114,7 @@ function MenuModal({
     >
       <div
         className={cn(
-          "relative flex h-[650px] w-full flex-col gap-6 rounded-[32px] bg-white p-5 md:h-[460px] md:flex-row md:p-4 lg:gap-8 lg:p-6",
+          "relative flex h-[650px] w-full flex-col gap-6 rounded-4xl bg-white p-5 md:h-[460px] md:flex-row md:p-4 lg:gap-8 lg:p-6",
           layoutClassName
         )}
         onClick={(e) => e.stopPropagation()}
@@ -124,7 +124,7 @@ function MenuModal({
           if (e.key === "Escape") e.stopPropagation();
         }}
       >
-        <div className="flex h-[160px] overflow-hidden rounded-[16px] md:h-full md:flex-1 lg:h-full lg:flex-1 lg:rounded-[28px]">
+        <div className="flex h-[160px] overflow-hidden rounded-2xl md:h-full md:flex-1 lg:h-full lg:flex-1 lg:rounded-[28px]">
           {data?.image && (
             <ImageWithFallback
               src={data?.image}
@@ -195,7 +195,7 @@ function MenuModal({
                 {data?.price.toLocaleString()}원
               </div>
             </div>
-            <div className="my-4 h-2 w-full rounded-[8px] bg-gray-700 lg:my-5" />
+            <div className="my-4 h-2 w-full rounded-lg bg-gray-700 lg:my-5" />
             {Array.isArray(data?.menuOptionGroups) &&
             data?.menuOptionGroups?.length > 0 ? (
               <FormProvider {...form}>
@@ -263,8 +263,8 @@ function MenuModal({
               }}
             >
               총{handleTotalPrice().toLocaleString()}
-              원 <div className="h-1 w-1 rounded-full bg-[#ffffff60]" /> 메뉴
-              추가
+              원 <div className="bg-black-opacity-1 h-1 w-1 rounded-full" />{" "}
+              메뉴 추가
             </Button>
           )}
         </div>

@@ -135,7 +135,7 @@ export default function Page() {
                           ) as keyof typeof permissionTranslate
                         ] ?? "권한"
                       }
-                      triggerClassName="!w-full !flex justify-between h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
+                      triggerClassName="!w-full !flex justify-between h-9 lg:!h-12 lg:rounded-xl rounded-[10px] text-s lg:!text-sm"
                     />
                   </div>
                   {/* <div className="flex w-full flex-col gap-2">
@@ -163,7 +163,7 @@ export default function Page() {
                           form.watch("state") as keyof typeof stateTranslate
                         ] ?? "상태"
                       }
-                      triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-[12px] rounded-[10px] text-s lg:!text-sm"
+                      triggerClassName="!w-full !flex justify-between pl-3 lg:!pl-4 !pr-3 h-9 lg:!h-12 lg:rounded-xl rounded-[10px] text-s lg:!text-sm"
                       className="w-[280px] md:w-[324px] lg:w-[480px]"
                     />
                   </div>

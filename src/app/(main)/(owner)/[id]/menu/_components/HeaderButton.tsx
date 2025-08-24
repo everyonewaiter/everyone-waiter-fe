@@ -38,7 +38,7 @@ export default function HeaderButton({
     <div className="flex items-center justify-end gap-4 lg:gap-6">
       {changeSort ? (
         <div className="flex items-center gap-2">
-          <div className="text-primary font-regular hidden h-9 items-center justify-center rounded-[8px] bg-[rgba(242,32,32,0.04)] px-4 text-sm md:flex">
+          <div className="text-primary font-regular hidden h-9 items-center justify-center rounded-lg bg-[rgba(242,32,32,0.04)] px-4 text-sm md:flex">
             메뉴의 순서 변경은 메뉴를 꾹 누르신 후, 원하시는 자리로 메뉴를
             이동해주세요
           </div>

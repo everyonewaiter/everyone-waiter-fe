@@ -51,7 +51,7 @@ export default function RenderMenu({
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
       <div className="flex-1">
-        <div className="grid grid-cols-3 gap-4 md:grid-cols-5 md:gap-x-[10px] md:gap-y-[16px] lg:gap-x-[32px] lg:gap-y-[40px]">
+        <div className="grid grid-cols-3 gap-4 md:grid-cols-5 md:gap-x-[10px] md:gap-y-4 lg:gap-x-[32px] lg:gap-y-[40px]">
           {sortedMenus && changeSort && (
             <Sortable
               items={sortedMenus.map((item) => item.menuId!)}
@@ -104,7 +104,7 @@ export default function RenderMenu({
             [0, 1, 2, 3].map((el) => (
               <Skeleton
                 key={el + 1}
-                className="aspect-[329/440] rounded-[12px] lg:rounded-[24px]"
+                className="aspect-[329/440] rounded-xl lg:rounded-3xl"
               />
             ))}
         </div>

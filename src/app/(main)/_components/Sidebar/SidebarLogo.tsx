@@ -15,7 +15,7 @@ export default function SidebarLogo() {
       onClick={() => navigate.push(`/${storeId}`)}
     >
       <Logo width={40} height={40} />
-      <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
+      <h1 className="font-hakgyo text-primary text-base lg:text-2xl">
         모두의 웨이터
       </h1>
     </button>

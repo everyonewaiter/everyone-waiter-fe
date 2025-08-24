@@ -63,12 +63,12 @@ export default function Tables({ data, onOpenModal }: IProps) {
                   md: {
                     buttonSize: "custom",
                     className:
-                      "h-[26px] px-4 py-1 rounded-[6px] text-xs text-white font-semibold",
+                      "h-[26px] px-4 py-1 rounded-md text-xs text-white font-semibold",
                   },
                   lg: {
                     buttonSize: "custom",
                     className:
-                      "h-[37px] px-5 py-2 rounded-[8px] text-sm text-white font-regular",
+                      "h-[37px] px-5 py-2 rounded-lg text-sm text-white font-regular",
                   },
                 }}
               >

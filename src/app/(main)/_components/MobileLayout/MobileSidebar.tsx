@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import { useStoreContext } from "@/providers/storeProvider";
-import Logo from "@/components/Logo";
+import Image from "next/image";
 import MobileSidebarSection from "./MobileSidebarSection";
 
 interface IProps {
@@ -21,7 +21,7 @@ export default function MobileSidebar({ onClose }: IProps) {
   useModalCloseTriggers({ ref, onClose });
 
   return (
-    <div className="bg-opacity-100 fixed inset-0 z-[9999] flex backdrop-blur-sm md:hidden">
+    <div className="bg-opacity-100 fixed inset-0 z-[9998] flex backdrop-blur-sm md:hidden">
       <aside
         ref={ref}
         className="relative flex h-screen w-[284px] flex-col overflow-auto rounded-tr-[10px] rounded-br-[10px] bg-white stroke-gray-600 px-4"
@@ -35,9 +35,8 @@ export default function MobileSidebar({ onClose }: IProps) {
               onClose();
             }}
           >
-            <Logo width={40} height={40} />
-
-            <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
+            <Image src="/logo/logo.svg" width={40} height={40} alt="로고" />
+            <h1 className="font-hakgyo text-primary text-base lg:text-2xl">
               모두의 웨이터
             </h1>
           </button>

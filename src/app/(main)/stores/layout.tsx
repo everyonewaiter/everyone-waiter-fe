@@ -27,7 +27,7 @@ export default async function Layout({
       <PageTitle initialTitle={pageTitle} storeId={id} />
 
       <div className="h-screen w-screen bg-gray-700 lg:px-[60px] lg:py-[32px]">
-        <div className="h-full w-full rounded-[32px] bg-white lg:px-8">
+        <div className="h-full w-full rounded-4xl bg-white lg:px-8">
           {children}
         </div>
       </div>

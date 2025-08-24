@@ -116,14 +116,14 @@ export default function CategoryFormItem({
               lg: {
                 buttonSize: "custom",
                 className: cn(
-                  "h-10 w-10 rounded-[12px] border justify-center items-center bg-white",
+                  "h-10 w-10 rounded-xl border justify-center items-center bg-white",
                   optionState === "move" && "border-gray-600",
                   optionState === "delete" && "border-status-error"
                 ),
               },
               md: {
                 buttonSize: "custom",
-                className: "w-7 h-7 rounded-[8px] border-gray-600 border",
+                className: "w-7 h-7 rounded-lg border-gray-600 border",
               },
             }}
             onClick={() => (optionState === "delete" ? handleDelete() : null)}

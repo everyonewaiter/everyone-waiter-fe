@@ -44,22 +44,22 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
       topRightComponent={<div />}
     >
       <ModalWithTitle.Layout>
-        <div className="flex h-[275px] flex-row items-center gap-4 rounded-[24px] bg-gray-700 p-5">
+        <div className="flex h-[275px] flex-row items-center gap-4 rounded-3xl bg-gray-700 p-5">
           <div className="flex flex-1 flex-col items-center gap-4">
             <span className="text-lg font-medium">대기 번호</span>
             <strong className="text-4xl font-bold">
               {String(waiting.number).padStart(3, "0")}
             </strong>
           </div>
-          <div className="flex h-full w-[308px] flex-col rounded-[24px] bg-white p-5">
-            <div className="flex h-10 w-fit flex-row items-center justify-center rounded-[24px] bg-gray-700 px-3 py-2">
+          <div className="flex h-full w-[308px] flex-col rounded-3xl bg-white p-5">
+            <div className="flex h-10 w-fit flex-row items-center justify-center rounded-3xl bg-gray-700 px-3 py-2">
               <div className="flex flex-row items-center">
                 <Icon iconKey="smile" />
                 <span>성인 {waiting.adult}</span>
               </div>
               {waiting.infant > 0 && (
                 <>
-                  <div className="mx-3 h-[16px] w-[1px] bg-gray-100" />
+                  <div className="mx-3 h-4 w-[1px] bg-gray-100" />
                   <div className="flex flex-row items-center">
                     <Icon iconKey="baby" />
                     <span className="mt-[1px]">아동 {waiting.infant}</span>
@@ -74,7 +74,7 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
               <strong className="text-gray-0 decoration-gray-0 text-xl font-semibold underline decoration-1 underline-offset-[8px]">
                 {transformPhoneNumber(waiting.phoneNumber)}
               </strong>
-              <div className="flex w-fit flex-row gap-3 rounded-[8px] bg-gray-700 px-4 py-[6px]">
+              <div className="flex w-fit flex-row gap-3 rounded-lg bg-gray-700 px-4 py-[6px]">
                 <span className="text-gray-0 text-lg font-semibold">
                   {elapsedCreatedAt}분 경과
                 </span>
@@ -92,7 +92,7 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
                 lg: {
                   buttonSize: "xl",
                   className:
-                    "!border-gray-700 bg-gray-700 rounded-[12px] px-5 py-3 flex items-center justify-between !text-gray-0 w-full",
+                    "!border-gray-700 bg-gray-700 rounded-xl px-5 py-3 flex items-center justify-between !text-gray-0 w-full",
                 },
               }}
             >
@@ -107,7 +107,7 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
                   lg: {
                     buttonSize: "xl",
                     className:
-                      "rounded-[12px] px-[20px] py-[12px] flex items-center justify-between !text-status-error w-full !border-status-error",
+                      "rounded-xl px-[20px] py-[12px] flex items-center justify-between !text-status-error w-full !border-status-error",
                   },
                 }}
               >

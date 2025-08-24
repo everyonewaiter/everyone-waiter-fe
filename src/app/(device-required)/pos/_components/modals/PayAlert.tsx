@@ -178,7 +178,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             <Button
               variant="outline"
               color="primary"
-              className="button-lg !rounded-[8px] text-[15px] !font-medium"
+              className="button-lg !rounded-lg text-[15px] !font-medium"
             >
               결제 취소
             </Button>
@@ -317,7 +317,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
                   defaultText="할부 개월을 선택해주세요."
                   active={form.watch("monthlyPlan").toString()}
                   setActive={(value) => form.setValue("monthlyPlan", value)}
-                  triggerClassName="text-sm font-medium rounded-[12px]"
+                  triggerClassName="text-sm font-medium rounded-xl"
                 />
               </div>
             )}

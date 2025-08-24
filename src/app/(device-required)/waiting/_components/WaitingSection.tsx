@@ -20,16 +20,16 @@ export default function WaitingSection({
   const elapsedMinutes = useElapsedMinutes(waiting.createdAt);
 
   return (
-    <div className="flex flex-1 flex-row items-center justify-between rounded-[16px] bg-white px-10 py-8">
+    <div className="flex flex-1 flex-row items-center justify-between rounded-2xl bg-white px-10 py-8">
       <div>
-        <div className="mb-4 flex h-10 w-fit flex-row items-center justify-center rounded-[24px] bg-gray-700 px-3 py-2">
+        <div className="mb-4 flex h-10 w-fit flex-row items-center justify-center rounded-3xl bg-gray-700 px-3 py-2">
           <div className="flex flex-row items-center">
             <Icon iconKey="smile" />
             <span>성인 {waiting.adult}</span>
           </div>
           {waiting.infant > 0 && (
             <>
-              <div className="mx-3 h-[16px] w-[1px] bg-gray-100" />
+              <div className="mx-3 h-4 w-[1px] bg-gray-100" />
               <div className="flex flex-row items-center">
                 <Icon iconKey="baby" />
                 <span className="mt-[1px]">아동 {waiting.infant}</span>
@@ -44,7 +44,7 @@ export default function WaitingSection({
           <strong className="text-gray-0 decoration-gray-0 decoration-1.5 text-xl underline underline-offset-[8px]">
             {transformPhoneNumber(waiting.phoneNumber)}
           </strong>
-          <div className="flex flex-row gap-2 rounded-[8px] bg-gray-700 px-4 py-[6px]">
+          <div className="flex flex-row gap-2 rounded-lg bg-gray-700 px-4 py-[6px]">
             <span className="text-gray-0 text-lg font-semibold">
               {elapsedMinutes}분 경과
             </span>

@@ -131,7 +131,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
             <Button
               variant="outline"
               color="black"
-              className="flex h-[64px] w-[180px] rounded-[12px] px-8 text-xl"
+              className="flex h-[64px] w-[180px] rounded-xl px-8 text-xl"
               disabled={!selectedRow}
               onClick={handleCancelPayment}
             >
@@ -140,7 +140,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
           )}
           <Button
             color="black"
-            className="flex h-[64px] flex-1 rounded-[12px] px-8 text-xl"
+            className="flex h-[64px] flex-1 rounded-xl px-8 text-xl"
             disabled={!selectedRow}
             onClick={handlePrintReceipt}
           >

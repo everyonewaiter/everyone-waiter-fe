@@ -32,7 +32,7 @@ export default function SideControl({
       <Button
         variant="outline"
         color="grey"
-        className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
+        className="button-xl !w-14 !rounded-xl border-gray-600 !px-0 !text-gray-300"
         onClick={() => handleQuantity("sub")}
       >
         <MinusIcon size={24} />
@@ -41,7 +41,7 @@ export default function SideControl({
       <Button
         variant="outline"
         color="grey"
-        className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
+        className="button-xl !w-14 !rounded-xl border-gray-600 !px-0 !text-gray-300"
         onClick={() => handleQuantity("add")}
       >
         <PlusIcon size={24} />
@@ -54,7 +54,7 @@ export default function SideControl({
         <Button
           variant="outline"
           color="grey"
-          className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
+          className="button-xl !w-14 !rounded-xl border-gray-600 !px-0 !text-gray-300"
           onClick={() => handleUpdateMenu("sub")}
         >
           <MinusIcon size={24} />
@@ -63,7 +63,7 @@ export default function SideControl({
         <Button
           variant="outline"
           color="grey"
-          className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
+          className="button-xl !w-14 !rounded-xl border-gray-600 !px-0 !text-gray-300"
           onClick={() => handleUpdateMenu("add")}
         >
           <PlusIcon size={24} />
@@ -74,7 +74,7 @@ export default function SideControl({
         <Button
           variant="outline"
           color="grey"
-          className="button-xl !w-14 !rounded-[12px] border-gray-600 !px-0 !text-gray-300"
+          className="button-xl !w-14 !rounded-xl border-gray-600 !px-0 !text-gray-300"
           onClick={onCancelOrder}
         >
           <Icon iconKey="trash" size={24} />

@@ -5,7 +5,7 @@ import { useState, type ButtonHTMLAttributes } from "react";
 import cn from "@/lib/utils";
 
 const buttonCheckboxVariants = cva(
-  "h-[18px] w-[18px] shrink-0 rounded-[4px] border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer bg-white fill-white flex items-center justify-center",
+  "h-[18px] w-[18px] shrink-0 rounded-sm border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer bg-white fill-white flex items-center justify-center",
   {
     variants: {
       checked: {

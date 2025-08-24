@@ -81,7 +81,7 @@ const UploadPhoto = forwardRef<HTMLInputElement, IProps>(
         <button
           type="button"
           className={cn(
-            `flex border-spacing-4 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[16px] border-1 border-dashed border-gray-500 bg-gray-700 ${image ? "" : "p-6"}`,
+            `flex border-spacing-4 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-1 border-dashed border-gray-500 bg-gray-700 ${image ? "" : "p-6"}`,
             className
           )}
           onClick={handleClick}

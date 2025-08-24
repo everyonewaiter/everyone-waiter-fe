@@ -56,7 +56,7 @@ export default function Hall() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="w-full rounded-[32px] bg-white p-8">
+      <div className="w-full rounded-4xl bg-white p-8">
         <div className="flex items-center gap-3">
           {Object.keys(tabList).map((key) => (
             <Button
@@ -83,10 +83,10 @@ export default function Hall() {
       </div>
       {activeTab === "주문" && (
         <>
-          <div className="flex w-full flex-col gap-6 rounded-[32px] bg-white p-8">
+          <div className="flex w-full flex-col gap-6 rounded-4xl bg-white p-8">
             <div className="flex items-center gap-2">
               <h2 className="text-gray-0 text-2xl font-semibold">호출 내역</h2>
-              <div className="center h-8 w-8 rounded-[24px] bg-gray-700 text-xl font-medium">
+              <div className="center h-8 w-8 rounded-3xl bg-gray-700 text-xl font-medium">
                 {staffCalls?.data?.staffCalls.length ?? "0"}
               </div>
             </div>
@@ -109,9 +109,9 @@ export default function Hall() {
               <span>직원 호출 내역을 불러올 수 없습니다.</span>
             )}
           </div>
-          <div className="flex w-full flex-col gap-6 rounded-[32px] bg-white p-8">
+          <div className="flex w-full flex-col gap-6 rounded-4xl bg-white p-8">
             {!orders.isLoading && orders?.data?.orders?.length! > 0 && (
-              <div className="w-full rounded-[32px]">
+              <div className="w-full rounded-4xl">
                 <div className="flex flex-col gap-6">
                   {orders?.data?.orders.map((item) => (
                     <OrderRow key={item.orderId} {...item} />

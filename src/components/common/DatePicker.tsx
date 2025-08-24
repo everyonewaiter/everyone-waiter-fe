@@ -51,14 +51,14 @@ export default function DatePicker({ date, onSetDate }: IProps) {
           variant="outline"
           color="black"
           className={cn(
-            "relative h-[48px] w-[280px] justify-between rounded-[10px] border border-gray-500 px-4 py-3 pr-4 text-left text-[16px] font-normal",
+            "relative h-[48px] w-[280px] justify-between rounded-[10px] border border-gray-500 px-4 py-3 pr-4 text-left text-base font-normal",
             !date && "text-muted-foreground"
           )}
         >
           {date ? (
             <span className="text-gray-0">{formattedDate}</span>
           ) : (
-            <span className="text-[16px] text-gray-200">YYYY.MM.DD</span>
+            <span className="text-base text-gray-200">YYYY.MM.DD</span>
           )}
           <CalendarIcon className="absolute right-3 size-6 text-gray-500" />
         </Button>

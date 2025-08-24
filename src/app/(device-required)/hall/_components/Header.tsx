@@ -16,7 +16,7 @@ export default function Header({ href }: IProps) {
   const { data } = hallQueries.useWaitingList(false);
 
   return (
-    <header className="flex w-full items-center justify-between rounded-[32px] bg-white px-8 py-6">
+    <header className="flex w-full items-center justify-between rounded-4xl bg-white px-8 py-6">
       <button
         type="button"
         className={cn(
@@ -26,7 +26,7 @@ export default function Header({ href }: IProps) {
         onClick={() => (href ? navigate.push(href!) : null)}
       >
         <Logo width={60} height={60} />
-        <h1 className="font-hakgyo text-primary text-[16px] lg:text-2xl">
+        <h1 className="font-hakgyo text-primary text-base lg:text-2xl">
           모두의 웨이터
         </h1>
       </button>

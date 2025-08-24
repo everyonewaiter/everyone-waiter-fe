@@ -32,7 +32,7 @@ export default function PhotoForBusiness({
           <img
             src={image}
             alt="사업자 등록증"
-            className="h-full rounded-[16px] border border-gray-600 object-cover md:h-[260px] md:w-[210px] lg:h-[437px] lg:w-[360px]"
+            className="h-full rounded-2xl border border-gray-600 object-cover md:h-[260px] md:w-[210px] lg:h-[437px] lg:w-[360px]"
           />
         ) : (
           <ImageWithFallback
@@ -40,7 +40,7 @@ export default function PhotoForBusiness({
             alt="사업자 등록증"
             width={380}
             height={457}
-            className="h-full rounded-[16px] border border-gray-600 md:h-[260px] md:w-[216px] lg:h-[437px] lg:w-[360px]"
+            className="h-full rounded-2xl border border-gray-600 md:h-[260px] md:w-[216px] lg:h-[437px] lg:w-[360px]"
             unoptimized
           />
         )}

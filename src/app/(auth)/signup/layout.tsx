@@ -26,7 +26,7 @@ export default function SignupLayout({ children }: { children: ReactNode }) {
           <Image
             src="/images/login-cover.svg"
             alt="onboarding"
-            className="h-[calc(100dvh-48px)] w-full rounded-[24px] object-cover"
+            className="h-[calc(100dvh-48px)] w-full rounded-3xl object-cover"
             width={1152}
             height={1032}
             priority

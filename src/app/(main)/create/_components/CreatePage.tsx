@@ -12,12 +12,12 @@ export default function CreatePage() {
   useCheckLeave(form.formState.isDirty);
 
   return (
-    <div className="flex items-start justify-between rounded-[32px] bg-white md:w-[722px] md:p-8 lg:w-[888px]">
+    <div className="flex items-start justify-between rounded-4xl bg-white md:w-[722px] md:p-8 lg:w-[888px]">
       <div className="hidden flex-col md:flex">
         <Logo
           width={90}
           height={90}
-          className="md:h-[60px] md:w-[60px] lg:h-[90px] lg:w-[90px]"
+          className="md:h-12 md:w-12 lg:h-[90px] lg:w-[90px]"
         />
         <h1 className="text-gray-0 md:mt-5 md:text-xl md:font-semibold lg:mt-10 lg:text-4xl lg:font-bold">
           매장 등록
@@ -28,7 +28,7 @@ export default function CreatePage() {
           간단한 정보만 입력하면 바로 시작할 수 있어요!
         </p>
       </div>
-      <div className="flex flex-col items-start justify-start gap-[16px]">
+      <div className="flex flex-col items-start justify-start gap-4">
         <h1 className="text-gray-0 flex w-full justify-center text-xl font-semibold md:hidden">
           매장 등록
         </h1>

@@ -167,7 +167,7 @@ export default function DevicePage() {
                           },
                           md: {
                             buttonSize: "custom",
-                            className: "!px-3 !py-[5px] !rounded-[16px] !h-7",
+                            className: "!px-3 !py-[5px] !rounded-2xl !h-7",
                           },
                         }}
                       >
@@ -222,7 +222,7 @@ export default function DevicePage() {
                       <Button
                         variant="outline"
                         color="primary"
-                        className="font-regular rounded-[24px] px-3 py-1 text-xs"
+                        className="font-regular rounded-3xl px-3 py-1 text-xs"
                       >
                         {
                           stateTranslate[

@@ -36,7 +36,7 @@ export default function MoveableChips({
       className="m-1 flex w-fit flex-none flex-row items-center gap-2 select-none"
       style={style}
     >
-      <div className="text-gray-0 font-regular flex h-[30px] flex-row items-center justify-center gap-[6px] rounded-[20px] bg-gray-700 px-3 py-[6px] text-xs whitespace-nowrap md:rounded-[12px] lg:rounded-[20px]">
+      <div className="text-gray-0 font-regular flex h-[30px] flex-row items-center justify-center gap-[6px] rounded-[20px] bg-gray-700 px-3 py-[6px] text-xs whitespace-nowrap md:rounded-xl lg:rounded-[20px]">
         {children}
         <button
           type="button"

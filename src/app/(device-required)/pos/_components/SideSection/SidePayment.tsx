@@ -45,7 +45,7 @@ export default function SidePayment({
           (orderType === "POSTPAID" && remainingPaymentPrice === 0)) && (
           <Button
             color="primary"
-            className="mt-8 flex !h-[64px] w-full flex-1 items-center justify-center rounded-[12px] !px-8 !text-xl"
+            className="mt-8 flex !h-[64px] w-full flex-1 items-center justify-center rounded-xl !px-8 !text-xl"
             onClick={onTableComplete}
           >
             테이블 완료
@@ -58,14 +58,14 @@ export default function SidePayment({
           <Button
             variant="outline"
             color="black"
-            className="flex h-[64px] flex-1 rounded-[12px] px-8 text-xl"
+            className="flex h-[64px] flex-1 rounded-xl px-8 text-xl"
             onClick={() => handlePay("cash")}
           >
             현금 결제
           </Button>
           <Button
             color="black"
-            className="flex h-[64px] flex-1 rounded-[12px] px-8 text-xl"
+            className="flex h-[64px] flex-1 rounded-xl px-8 text-xl"
             onClick={() => handlePay("credit-card")}
           >
             카드 결제

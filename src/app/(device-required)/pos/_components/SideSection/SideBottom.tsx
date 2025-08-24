@@ -49,7 +49,7 @@ export default function SideBottom({
         <Button
           variant="outline"
           color="black"
-          className="h-10 rounded-[8px] border border-[#4f4f4f] px-5"
+          className="h-10 rounded-lg border border-[#4f4f4f] px-5"
           onClick={handleDiscount}
         >
           할인수단 {discount ? "수정" : "추가"}

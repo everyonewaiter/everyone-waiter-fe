@@ -34,16 +34,15 @@ export default function MenuList() {
             responsiveButtons={{
               lg: {
                 buttonSize: "md",
-                className:
-                  "!text-[15px] !rounded-[12px] !p-0 !w-[32px] !h-[32px]",
+                className: "!text-[15px] !rounded-xl !p-0 !w-[32px] !h-[32px]",
               },
               md: {
                 buttonSize: "sm",
-                className: "h-8 !p-2 !rounded-[12px]",
+                className: "h-8 !p-2 !rounded-xl",
               },
               sm: {
                 buttonSize: "sm",
-                className: "h-8 !p-2 !rounded-[12px]",
+                className: "h-8 !p-2 !rounded-xl",
               },
             }}
             onClick={() => navigate.push(`/${storeId}/menu/category/add`)}

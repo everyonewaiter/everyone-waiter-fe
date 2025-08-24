@@ -87,7 +87,7 @@ export default function MemoListAlert({ close, tableNo, memos }: IProps) {
                     {item.menus.length > 1 && `외 ${item.menus.length - 1}개`}
                   </span>
                 </div>
-                <div className="min-h-20 w-full rounded-[12px] border border-gray-600 px-4 py-3 pb-4 text-left text-base font-medium text-gray-100">
+                <div className="min-h-20 w-full rounded-xl border border-gray-600 px-4 py-3 pb-4 text-left text-base font-medium text-gray-100">
                   {item.memo}
                 </div>
               </div>
@@ -109,7 +109,7 @@ export default function MemoListAlert({ close, tableNo, memos }: IProps) {
                   </span>
                 </div>
                 <Textarea
-                  className="min-h-20 w-full rounded-[12px] border border-gray-600 px-4 py-3 pb-4 text-left !text-base font-medium text-gray-100"
+                  className="min-h-20 w-full rounded-xl border border-gray-600 px-4 py-3 pb-4 text-left !text-base font-medium text-gray-100"
                   ref={idx === 0 ? textareaRef : undefined}
                   value={memo.find((el) => el.id === item.orderId)?.memo}
                   onChange={(e) => {

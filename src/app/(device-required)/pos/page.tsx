@@ -89,7 +89,7 @@ export default function Pos() {
       />
       <div className="absolute inset-0 top-0 flex h-full w-full flex-col items-center justify-center gap-[80px]">
         {data?.name && (
-          <div className="absolute top-0 right-0 px-[60px] py-10 text-[40px] text-red-500">
+          <div className="absolute top-0 right-0 px-[60px] py-10 text-4xl text-red-500">
             <OpenSwitch isStoreOpen={data?.status === "OPEN"} />
           </div>
         )}
@@ -104,7 +104,7 @@ export default function Pos() {
         <div className="flex flex-col gap-4">
           <Button
             color="black"
-            className="h-[120px] !w-[659px] rounded-[16px] text-3xl font-bold"
+            className="h-[120px] !w-[659px] rounded-2xl text-3xl font-bold"
             onClick={handleOpenPos}
           >
             POS
@@ -112,14 +112,14 @@ export default function Pos() {
           <Link href="/pos/payments/history" className="w-full">
             <button
               type="button"
-              className="center h-[72px] w-full rounded-[16px] border border-white text-2xl font-semibold text-white"
+              className="center h-[72px] w-full rounded-2xl border border-white text-2xl font-semibold text-white"
             >
               결제내역
             </button>
           </Link>
           <button
             type="button"
-            className="center h-[72px] w-full rounded-[16px] border border-white text-2xl font-semibold text-white"
+            className="center h-[72px] w-full rounded-2xl border border-white text-2xl font-semibold text-white"
             onClick={handleOpenSales}
           >
             매출액

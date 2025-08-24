@@ -37,7 +37,7 @@ export default function Origins({
   const form = useFormContext<TypeStoreInfo>();
 
   return (
-    <div className="text-s flex flex-col overflow-hidden rounded-[12px] border border-gray-600 font-medium">
+    <div className="text-s flex flex-col overflow-hidden rounded-xl border border-gray-600 font-medium">
       <div className="flex h-10 w-full bg-gray-700">
         <TableRow className="w-full">품목</TableRow>
         <TableRow className="w-full">원산지</TableRow>

@@ -25,14 +25,14 @@ export default function POSHeader2() {
 
   const commonButtonProps = {
     className:
-      "text-gray-0 font-regular flex flex-row gap-[10px] rounded-[12px] border border-gray-600 px-4 py-3 text-lg",
+      "text-gray-0 font-regular flex flex-row gap-[10px] rounded-xl border border-gray-600 px-4 py-3 text-lg",
   };
 
   return (
     <POSHeader>
       <button
         type="button"
-        className="text-gray-0 font-regular flex flex-row gap-[10px] rounded-[12px] border border-gray-600 px-4 py-3 text-lg"
+        className="text-gray-0 font-regular flex flex-row gap-[10px] rounded-xl border border-gray-600 px-4 py-3 text-lg"
         onClick={() => navigate.back()}
       >
         <Icon iconKey="arrow-turn-right" size={28} className="pb-0.5" />

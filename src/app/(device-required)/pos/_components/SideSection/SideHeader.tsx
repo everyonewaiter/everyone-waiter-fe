@@ -39,7 +39,7 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
           asChild={false}
           variant="outline"
           color="primary"
-          className="button-lg !rounded-[8px] text-base !font-medium"
+          className="button-lg !rounded-lg text-base !font-medium"
           onClick={() => handleCancel("pay-cancel")}
         >
           결제 취소
@@ -50,7 +50,7 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
           asChild={false}
           variant="outline"
           color="primary"
-          className="button-lg !rounded-[8px] text-base !font-medium"
+          className="button-lg !rounded-lg text-base !font-medium"
           onClick={() => handleCancel("order-reset")}
         >
           주문 초기화
@@ -64,7 +64,7 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
             asChild={false}
             variant="outline"
             color="primary"
-            className="button-lg !rounded-[8px] text-base !font-medium"
+            className="button-lg !rounded-lg text-base !font-medium"
             onClick={() => handleCancel("order-cancel")}
           >
             전체 주문 취소

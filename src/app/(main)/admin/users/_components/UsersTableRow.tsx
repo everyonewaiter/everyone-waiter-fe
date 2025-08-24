@@ -28,12 +28,12 @@ export default function UsersTableRow({ openModal, ...item }: IProps) {
           responsiveButtons={{
             lg: {
               buttonSize: "md",
-              className: "!h-[37px] !px-5 !py-2 !rounded-[24px] !border-none",
+              className: "!h-[37px] !px-5 !py-2 !rounded-3xl !border-none",
             },
             md: {
               buttonSize: "md",
               className:
-                "!h-[26px] !rounded-[24px] !bg-[#3900B508] !text-[#3900B5] !text-xs !font-regular !px-3 !py-1 !border-none",
+                "!h-[26px] !rounded-3xl !bg-[#3900B508] !text-[#3900B5] !text-xs !font-regular !px-3 !py-1 !border-none",
             },
           }}
           commonClassName={cn(

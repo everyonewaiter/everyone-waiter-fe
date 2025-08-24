@@ -33,7 +33,7 @@ export default function OptionBox({
   });
 
   return (
-    <div className="flex w-full cursor-default flex-col gap-4 rounded-[12px] border border-gray-600 p-3 lg:p-4">
+    <div className="flex w-full cursor-default flex-col gap-4 rounded-xl border border-gray-600 p-3 lg:p-4">
       <FormField
         control={form.control}
         name={`${type}.${index}.name`}
@@ -128,12 +128,12 @@ export default function OptionBox({
               lg: {
                 buttonSize: "custom",
                 className:
-                  "w-full h-8 rounded-[8px] text-center border-gray-600 text-sm text-gray-0",
+                  "w-full h-8 rounded-lg text-center border-gray-600 text-sm text-gray-0",
               },
               md: {
                 buttonSize: "custom",
                 className:
-                  "w-full h-8 rounded-[8px] text-center border-gray-600 text-xs text-gray-0 flex gap-1",
+                  "w-full h-8 rounded-lg text-center border-gray-600 text-xs text-gray-0 flex gap-1",
               },
             }}
             onClick={() => append({ name: "", price: 0 })}

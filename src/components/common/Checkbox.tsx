@@ -6,7 +6,7 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 import cn from "@/lib/utils";
 
 export const checkboxVariants = cva(
-  "h-[18px] w-[18px] shrink-0 rounded-[4px] border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed cursor-pointer bg-white fill-white data-[state=checked]:bg-primary",
+  "h-[18px] w-[18px] shrink-0 rounded-sm border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed cursor-pointer bg-white fill-white data-[state=checked]:bg-primary",
   {
     variants: {
       variant: {

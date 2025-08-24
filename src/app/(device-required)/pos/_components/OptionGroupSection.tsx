@@ -115,7 +115,7 @@ export default function OptionGroupSection({
       </div>
       {data.map((item) => (
         <div
-          className="rounded-[12px] bg-gray-700 p-3 lg:p-4"
+          className="rounded-xl bg-gray-700 p-3 lg:p-4"
           key={item.menuOptionGroupId}
         >
           <p className="text-gray-0 mb-3 text-sm lg:text-lg">{item.name}</p>
