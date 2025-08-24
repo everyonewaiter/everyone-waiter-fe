@@ -1,13 +1,15 @@
 import { useSSE } from "@/hooks/useSSE";
+import { useNotificationStore } from "../../_stores/useNotificationStore";
 
-interface UseWaitingSSEOptions {
-  onOrderReceived?: () => void;
-}
+export const useWaitingSSE = () => {
+  const { incrementOrder } = useNotificationStore();
 
-export const useWaitingSSE = (options?: UseWaitingSSEOptions) => {
   useSSE({
     ORDER: () => {
-      options?.onOrderReceived?.();
+      incrementOrder();
+    },
+    WAITING: () => {
+      // something
     },
   });
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
 import cn from "@/lib/utils";
@@ -9,6 +9,7 @@ import CallingCard from "./_components/CallingCard";
 import OrderRow from "./_components/OrderRow";
 import { hallQueries } from "./_query/useHall";
 import { useHallSSE } from "./_hooks/useHallSSE";
+import { useNotificationStore } from "../_stores/useNotificationStore";
 
 enum ActiveTab {
   order = "주문",
@@ -17,6 +18,7 @@ enum ActiveTab {
 
 export default function Hall() {
   const [activeTab, setActiveTab] = useState<ActiveTab>(ActiveTab.order);
+  const { orderCount, resetOrder } = useNotificationStore();
 
   const {
     data: staffCalls,
@@ -30,25 +32,16 @@ export default function Hall() {
     isError: ordersError,
   } = hallQueries.useOrderList(false);
 
-  // const { open, close } = useOverlay();
-
-  // const handleOpenAlert = (message: string) => {
-  //   open(() => (
-  //     <Alert onClose={close} hasNoAction>
-  //       {message}
-  //     </Alert>
-  //   ));
-  // };
-
-  // useHandleQueryError(handleOpenAlert);
   useHallSSE();
+
+  useEffect(() => {
+    resetOrder();
+  }, [resetOrder]);
 
   const tabList: Record<ActiveTab, HallOrder[]> = {
     [ActiveTab.order]: orders?.orders ?? [],
     [ActiveTab.served]: servedList?.orders ?? [],
   };
-
-  console.log(orders?.orders);
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -60,12 +53,17 @@ export default function Hall() {
               variant={activeTab === key ? "default" : "outline"}
               color="black"
               className={cn(
-                "button-xl text-lg !font-medium",
+                "button-xl relative text-lg !font-medium",
                 activeTab === key ? "" : "border-gray-500 text-gray-200"
               )}
               onClick={() => setActiveTab(key as ActiveTab)}
             >
               {key} {tabList[key as ActiveTab].length}건
+              {key === "주문" && orderCount > 0 && (
+                <div className="bg-primary center absolute -top-2 -right-2 h-6 w-6 rounded-full text-sm font-semibold text-white">
+                  {orderCount}
+                </div>
+              )}
             </Button>
           ))}
         </div>
