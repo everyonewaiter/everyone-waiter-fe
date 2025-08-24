@@ -5,12 +5,9 @@ import Button from "@/components/common/Button/Button";
 import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
 import cn from "@/lib/utils";
 import Spinner from "@/components/common/Spinner";
-import useOverlay from "@/hooks/useOverlay";
-import Alert from "@/components/common/Alert/Alert";
 import CallingCard from "./_components/CallingCard";
 import OrderRow from "./_components/OrderRow";
 import { hallQueries } from "./_query/useHall";
-import useHandleQueryError from "./_hooks/useHandleQueryError";
 import { useHallSSE } from "./_hooks/useHallSSE";
 
 enum ActiveTab {
@@ -20,33 +17,22 @@ enum ActiveTab {
 
 export default function Hall() {
   const [activeTab, setActiveTab] = useState<ActiveTab>(ActiveTab.order);
-  const [hasError, setHasError] = useState({
-    staffCall: false,
-    servedList: false,
-    orders: false,
-  });
 
-  const staffCalls = hallQueries.useStaffCallList(hasError.staffCall);
-  const servedList = hallQueries.useOrderList(true, hasError.servedList);
-  const orders = hallQueries.useOrderList(false, hasError.orders);
+  const staffCalls = hallQueries.useStaffCallList();
+  const servedList = hallQueries.useOrderList(true);
+  const orders = hallQueries.useOrderList(false);
 
-  const { open, close } = useOverlay();
+  // const { open, close } = useOverlay();
 
-  const handleOpenAlert = (message: string) => {
-    open(() => (
-      <Alert onClose={close} hasNoAction>
-        {message}
-      </Alert>
-    ));
-  };
+  // const handleOpenAlert = (message: string) => {
+  //   open(() => (
+  //     <Alert onClose={close} hasNoAction>
+  //       {message}
+  //     </Alert>
+  //   ));
+  // };
 
-  useHandleQueryError(
-    handleOpenAlert,
-    setHasError,
-    staffCalls,
-    servedList,
-    orders
-  );
+  // useHandleQueryError(handleOpenAlert);
   useHallSSE();
 
   const tabList: Record<ActiveTab, HallOrder[]> = {

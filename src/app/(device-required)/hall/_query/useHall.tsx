@@ -11,30 +11,30 @@ import {
 
 const queryClient = getQueryClient();
 
-const useWaitingList = (hasError: boolean) =>
+const useWaitingList = () =>
   useQuery({
     queryKey: ["waitings-list"],
     queryFn: getWaitingsList,
     placeholderData: keepPreviousData,
-    refetchInterval: hasError ? false : 60000,
+    // refetchInterval: hasError ? false : 60000,
     retry: false,
   });
 
-const useStaffCallList = (hasError: boolean) =>
+const useStaffCallList = () =>
   useQuery({
     queryKey: ["staff-calls"],
     queryFn: getStaffCalls,
     placeholderData: keepPreviousData,
-    refetchInterval: hasError ? false : 60000,
+    // refetchInterval: hasError ? false : 60000,
     retry: false,
   });
 
-const useOrderList = (served: boolean, hasError: boolean) =>
+const useOrderList = (served: boolean) =>
   useQuery({
     queryKey: ["order-list", served],
     queryFn: () => orderList(served),
     placeholderData: keepPreviousData,
-    refetchInterval: hasError ? false : 60000,
+    // refetchInterval: hasError ? false : 60000,
     retry: false,
   });
 
