@@ -38,8 +38,10 @@ const getInfo = async (uri: string, method: string) => {
 export const useSSE = (handlers: Partial<Record<SSECategory, SSEHandler>>) => {
   useEffect(() => {
     let sse: EventSourcePolyfill | null = null;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 3;
 
-    (async () => {
+    const connectSSE = async () => {
       try {
         const { deviceInfo, signature, timestamp } = await getInfo(
           `${API_PATH.stores}/subscribe`,
@@ -59,11 +61,14 @@ export const useSSE = (handlers: Partial<Record<SSECategory, SSEHandler>>) => {
           }
         );
 
+        sse.onopen = () => {
+          reconnectAttempts = 0;
+        };
+
         sse.onmessage = (event: any) => {
           try {
             const payload: SSEResponse = JSON.parse(event.data);
-            // eslint-disable-next-line no-console
-            console.log("SSE 이벤트:", payload);
+            console.log(payload);
 
             if (payload.category && handlers[payload.category]) {
               handlers[payload.category]?.(payload);
@@ -77,14 +82,49 @@ export const useSSE = (handlers: Partial<Record<SSECategory, SSEHandler>>) => {
         sse.onerror = (err: any) => {
           // eslint-disable-next-line no-console
           console.error("SSE 연결 에러:", err);
+
+          if (err.status === 401) {
+            // eslint-disable-next-line no-console
+            console.error(
+              "인증 실패 (401): 시그니처나 토큰이 유효하지 않습니다."
+            );
+          }
+
+          if (err.message && err.message.includes("Content-Type")) {
+            // eslint-disable-next-line no-console
+            console.error(
+              "서버가 올바른 SSE Content-Type을 반환하지 않습니다. text/event-stream이 필요합니다."
+            );
+          }
+
+          if (reconnectAttempts < maxReconnectAttempts) {
+            reconnectAttempts += 1;
+
+            setTimeout(() => {
+              if (sse) {
+                sse.close();
+                connectSSE();
+              }
+            }, 1000 * reconnectAttempts);
+          } else {
+            // eslint-disable-next-line no-console
+            console.error("최대 재연결 시도 횟수 초과. SSE 연결을 중단합니다.");
+          }
+
           sse?.close();
         };
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error("SSE 초기화 실패:", err);
       }
-    })();
+    };
 
-    return () => sse?.close();
+    connectSSE();
+
+    return () => {
+      if (sse) {
+        sse.close();
+      }
+    };
   }, [handlers]);
 };
