@@ -18,9 +18,17 @@ enum ActiveTab {
 export default function Hall() {
   const [activeTab, setActiveTab] = useState<ActiveTab>(ActiveTab.order);
 
-  const staffCalls = hallQueries.useStaffCallList();
-  const servedList = hallQueries.useOrderList(true);
-  const orders = hallQueries.useOrderList(false);
+  const {
+    data: staffCalls,
+    isLoading: staffCallsLoading,
+    isError: staffCallsError,
+  } = hallQueries.useStaffCallList();
+  const { data: servedList } = hallQueries.useOrderList(true);
+  const {
+    data: orders,
+    isLoading: ordersLoading,
+    isError: ordersError,
+  } = hallQueries.useOrderList(false);
 
   // const { open, close } = useOverlay();
 
@@ -36,9 +44,11 @@ export default function Hall() {
   useHallSSE();
 
   const tabList: Record<ActiveTab, HallOrder[]> = {
-    [ActiveTab.order]: orders.data?.orders ?? [],
-    [ActiveTab.served]: servedList?.data?.orders ?? [],
+    [ActiveTab.order]: orders?.orders ?? [],
+    [ActiveTab.served]: servedList?.orders ?? [],
   };
+
+  console.log(orders?.orders);
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -61,7 +71,7 @@ export default function Hall() {
         </div>
         {activeTab === "완료" && (
           <div className="mt-6 flex flex-col gap-6">
-            {servedList?.data?.orders.map((item) => (
+            {servedList?.orders.map((item) => (
               <OrderRow key={item.orderId} {...item} completed />
             ))}
           </div>
@@ -73,43 +83,42 @@ export default function Hall() {
             <div className="flex items-center gap-2">
               <h2 className="text-gray-0 text-2xl font-semibold">호출 내역</h2>
               <div className="center h-8 w-8 rounded-3xl bg-gray-700 text-xl font-medium">
-                {staffCalls?.data?.staffCalls.length ?? "0"}
+                {staffCalls?.staffCalls.length ?? "0"}
               </div>
             </div>
-            {!staffCalls.isLoading &&
-              staffCalls?.data?.staffCalls?.length! > 0 && (
-                <ScrollArea className="h-full w-full">
-                  <div className="flex w-max gap-6">
-                    {staffCalls?.data?.staffCalls.map((call) => (
-                      <CallingCard key={call.staffCallId} {...call} />
-                    ))}
-                  </div>
-                  <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-              )}
-            {!staffCalls.isLoading &&
-              !staffCalls?.data?.staffCalls?.length &&
-              !staffCalls.isError && <span>직원 호출 내역이 없습니다.</span>}
-            {staffCalls.isLoading && !staffCalls.isError && <Spinner />}
-            {staffCalls.isError && (
+            {!staffCallsLoading && staffCalls?.staffCalls?.length! > 0 && (
+              <ScrollArea className="h-full w-full">
+                <div className="flex w-max gap-6">
+                  {staffCalls?.staffCalls.map((call) => (
+                    <CallingCard key={call.staffCallId} {...call} />
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            )}
+            {!staffCallsLoading &&
+              !staffCalls?.staffCalls?.length &&
+              !staffCallsError && <span>직원 호출 내역이 없습니다.</span>}
+            {staffCallsLoading && !staffCallsError && <Spinner />}
+            {staffCallsError && (
               <span>직원 호출 내역을 불러올 수 없습니다.</span>
             )}
           </div>
           <div className="flex w-full flex-col gap-6 rounded-4xl bg-white p-8">
-            {!orders.isLoading && orders?.data?.orders?.length! > 0 && (
+            {!ordersLoading && orders?.orders?.length! > 0 && (
               <div className="w-full rounded-4xl">
                 <div className="flex flex-col gap-6">
-                  {orders?.data?.orders.map((item) => (
+                  {orders?.orders.map((item) => (
                     <OrderRow key={item.orderId} {...item} />
                   ))}
                 </div>
               </div>
             )}
-            {!orders.isLoading &&
-              !orders?.data?.orders?.length &&
-              !orders.isError && <span>주문 내역이 없습니다.</span>}
-            {orders.isLoading && !orders.isError && <Spinner />}
-            {orders.isError && <span>주문 내역을 불러올 수 없습니다.</span>}
+            {!ordersLoading && !orders?.orders?.length && !ordersError && (
+              <span>주문 내역이 없습니다.</span>
+            )}
+            {ordersLoading && !ordersError && <Spinner />}
+            {ordersError && <span>주문 내역을 불러올 수 없습니다.</span>}
           </div>
         </>
       )}

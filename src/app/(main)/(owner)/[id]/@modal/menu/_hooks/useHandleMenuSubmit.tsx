@@ -6,24 +6,31 @@ import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 interface IProps {
   storeId: string;
   type: "create" | "update";
-  originData: {
-    menuId?: string;
-    image?: string;
-  };
   onSetIsSubmitted: (value: boolean) => void;
+  propsData: {
+    menuId: string;
+    categoryId: string;
+    image: string;
+  };
 }
 
 export default function useHandleMenuSubmit({
   storeId,
   type,
-  originData,
   onSetIsSubmitted,
+  propsData,
 }: IProps) {
   const form = useFormContext<TypeMenuForm>();
 
   const add = menuQueries.useAddMenu(storeId, form);
-  const updateWithImg = menuQueries.useUpdateWithImage(storeId);
-  const updateWithoutImg = menuQueries.useUpdateWithoutImage(storeId);
+  const updateWithImg = menuQueries.useUpdateWithImage(
+    storeId,
+    propsData.categoryId
+  );
+  const updateWithoutImg = menuQueries.useUpdateWithoutImage(
+    storeId,
+    propsData.categoryId
+  );
 
   const handleSubmit = (
     data: TypeMenuForm,
@@ -70,11 +77,11 @@ export default function useHandleMenuSubmit({
         { ...handleAfter() }
       );
     } else if (type === "update") {
-      if (data.imgFile && originData?.image !== data.imgString) {
+      if (data.imgFile && propsData?.image !== data.imgString) {
         updateWithImg.mutate(
           {
             storeId,
-            menuId: originData?.menuId as string,
+            menuId: propsData?.menuId as string,
             body: {
               file: data.imgFile as File,
               request,
@@ -86,7 +93,7 @@ export default function useHandleMenuSubmit({
         updateWithoutImg.mutate(
           {
             storeId,
-            menuId: originData?.menuId as string,
+            menuId: propsData?.menuId as string,
             body: request,
           },
           { ...handleAfter() }

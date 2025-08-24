@@ -51,11 +51,12 @@ export default function DetailMenuModal({
   const { handleSubmit } = useHandleMenuSubmit({
     storeId,
     type,
-    originData: {
-      menuId: data?.menuId,
-      image: data?.image,
-    },
     onSetIsSubmitted: setIsSubmitted,
+    propsData: {
+      menuId: data?.menuId ?? "",
+      categoryId: data?.categoryId ?? "",
+      image: data?.image ?? "",
+    },
   });
 
   const handleAfterAction = () => ({

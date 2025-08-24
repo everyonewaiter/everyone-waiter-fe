@@ -1,6 +1,5 @@
 "use client";
 
-import { randomUUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { Plus } from "@/components/common/Icon/index";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
@@ -69,7 +68,7 @@ export default function Page() {
                     commonClassName="dashed-light bg-white w-full text-gray-300 !font-medium"
                     onClick={() =>
                       append({
-                        categoryId: randomUUID(),
+                        categoryId: crypto.randomUUID(),
                         name: "",
                       })
                     }

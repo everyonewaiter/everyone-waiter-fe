@@ -58,7 +58,7 @@ export default function Dropdown({
         }
       }}
     >
-      <div className="relative w-full">
+      <div className="relative z-[9998] w-full">
         <DropdownMenuTrigger
           asChild
           disabled={disabled}
@@ -112,7 +112,7 @@ export default function Dropdown({
               : "var(--radix-dropdown-menu-trigger-width)",
           }}
           className={cn(
-            "z-100 mt-1 w-full rounded-2xl bg-white px-2 py-3 text-left shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
+            "z-[9998] mt-1 w-full rounded-2xl bg-white px-2 py-3 text-left shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
             className
           )}
           onClick={(e) => e.stopPropagation()}

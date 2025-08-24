@@ -43,6 +43,8 @@ export const useSSE = (handlers: Partial<Record<SSECategory, SSEHandler>>) => {
 
     const connectSSE = async () => {
       try {
+        // eslint-disable-next-line no-console
+        console.log("SSE 연결 시도 중...");
         const { deviceInfo, signature, timestamp } = await getInfo(
           `${API_PATH.stores}/subscribe`,
           "GET"
@@ -63,11 +65,14 @@ export const useSSE = (handlers: Partial<Record<SSECategory, SSEHandler>>) => {
 
         sse.onopen = () => {
           reconnectAttempts = 0;
+          // eslint-disable-next-line no-console
+          console.log("SSE 연결 성공");
         };
 
         sse.onmessage = (event: any) => {
           try {
             const payload: SSEResponse = JSON.parse(event.data);
+            // eslint-disable-next-line no-console
             console.log(payload);
 
             if (payload.category && handlers[payload.category]) {

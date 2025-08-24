@@ -1,11 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
 import { waitingQueries } from "./_queries/useWaiting";
+import { useWaitingSSE } from "./_hooks/useWaitingSSE";
 
 const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
   ssr: false,
@@ -15,9 +17,18 @@ export default function Waiting() {
   const navigate = useRouter();
   const { deviceInfo, isLoading } = useDeviceInfo();
   const { handleOpenModal } = useWaitingModal();
+  const [orderNotificationCount, setOrderNotificationCount] = useState(0);
 
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
   const { data: list } = waitingQueries.useWaitingList(waitingEnabled);
+
+  const incrementOrderNotification = () => {
+    setOrderNotificationCount((prev) => prev + 1);
+  };
+
+  useWaitingSSE({
+    onOrderReceived: incrementOrderNotification,
+  });
 
   return (
     <div className="min-h-screen w-screen bg-gray-700">
@@ -37,9 +48,11 @@ export default function Waiting() {
             >
               홀 화면 이동
             </ResponsiveButton>
-            <div className="bg-primary center absolute -top-5 -right-5 h-10 w-10 rounded-full text-xl font-semibold text-white">
-              4
-            </div>
+            {orderNotificationCount > 0 && (
+              <div className="bg-primary center absolute -top-5 -right-5 h-10 w-10 rounded-full text-xl font-semibold text-white">
+                {orderNotificationCount}
+              </div>
+            )}
           </div>
         </div>
         <div className="h-[1px] w-full bg-gray-300" />

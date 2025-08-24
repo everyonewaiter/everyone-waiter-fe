@@ -34,7 +34,23 @@ export default function OrderRow({ completed, ...props }: IProps) {
     ));
   };
 
-  const getTime = (date: string) => date.split(" ")[1].slice(0, 5);
+  const getTime = (date: string) => {
+    const timePart = date.split(" ")[1];
+    const time = timePart.slice(0, 5);
+    const hour = parseInt(time.split(":")[0], 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+
+    let displayHour;
+    if (hour > 12) {
+      displayHour = hour - 12;
+    } else if (hour === 0) {
+      displayHour = 12;
+    } else {
+      displayHour = hour;
+    }
+
+    return `${ampm} ${String(displayHour).padStart(2, "0")}:${String(time.split(":")[1]).padStart(2, "0")}`;
+  };
 
   return (
     <div
@@ -50,7 +66,7 @@ export default function OrderRow({ completed, ...props }: IProps) {
         )}
       >
         <div className="center rounded-xl border border-gray-600 p-3 text-lg font-medium text-gray-300">
-          주문 시간 PM {getTime(props.createdAt)}
+          주문 시간 {getTime(props.createdAt)}
         </div>
         {completed && (
           <div className="center mt-[10px] rounded-xl border border-gray-600 p-3 text-lg font-medium text-gray-300">
@@ -59,8 +75,16 @@ export default function OrderRow({ completed, ...props }: IProps) {
         )}
         <div className="center w-full flex-1 flex-col gap-3">
           {!completed && (
-            <Button variant="outline" className="button-sm !rounded-3xl">
-              주문
+            <Button
+              variant="outline"
+              className={cn(
+                "button-sm !rounded-3xl",
+                props.category === "INITIAL"
+                  ? "border-primary text-primary"
+                  : "border-[#00B603] text-[#00B603]"
+              )}
+            >
+              {props.category === "INITIAL" ? "주문" : "추가"}
             </Button>
           )}
           <span

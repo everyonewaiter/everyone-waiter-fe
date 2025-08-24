@@ -108,6 +108,7 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
         if (error.response?.status === 401) {
           if (now - lastAlertTime > 10000) {
             lastAlertTime = now;
+            // eslint-disable-next-line no-alert
             alert(
               `${window.location.href.split("/")[3].toUpperCase()} 기기가 아닙니다. 기기를 등록해주세요.`
             );

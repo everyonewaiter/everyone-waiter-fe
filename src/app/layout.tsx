@@ -88,9 +88,7 @@ export default function RootLayout({
       <body>
         <ClientLayout>
           <JQueryScripts />
-          <main className="min-h-screen min-w-screen select-none">
-            {children}
-          </main>
+          <main className="min-h-screen select-none">{children}</main>
         </ClientLayout>
       </body>
     </html>
