@@ -16,7 +16,6 @@ const useWaitingList = () =>
     queryKey: ["waitings-list"],
     queryFn: getWaitingsList,
     placeholderData: keepPreviousData,
-    // refetchInterval: hasError ? false : 60000,
     retry: false,
   });
 
@@ -25,7 +24,6 @@ const useStaffCallList = () =>
     queryKey: ["staff-calls"],
     queryFn: getStaffCalls,
     placeholderData: keepPreviousData,
-    // refetchInterval: hasError ? false : 60000,
     retry: false,
   });
 
@@ -34,7 +32,6 @@ const useOrderList = (served: boolean) =>
     queryKey: ["order-list", served],
     queryFn: () => orderList(served),
     placeholderData: keepPreviousData,
-    // refetchInterval: hasError ? false : 60000,
     retry: false,
   });
 

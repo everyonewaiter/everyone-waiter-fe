@@ -103,7 +103,7 @@ const useActivity = (tableNo: number) =>
   useQuery({
     queryKey: posKeys.activity(tableNo),
     queryFn: () => getTableActivity({ tableNo }),
-    enabled: !!tableNo,
+    enabled: !!tableNo && !Number.isNaN(tableNo),
     staleTime: 1000 * 60 * 5,
   });
 
