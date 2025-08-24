@@ -2,15 +2,16 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useStore } from "zustand";
 import dynamic from "next/dynamic";
 import { getStoreList } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import MENU_ITEMS from "@/constants/sidebarMenus";
 import useAuthStore from "@/stores/useAuthStore";
 import { getComparePath } from "@/utils/getPathname";
-import Icon from "@/components/common/Icon/Icon";
 import cn from "@/lib/utils";
+import Loading from "@/components/Loading";
+import SidebarMenuItem from "../SidebarMenuItem";
 
 const MainSelect = dynamic(() => import("../MainSelect"), {
   ssr: false,
@@ -28,6 +29,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
   const pathname = usePathname();
   const comparePath = getComparePath(pathname, permission);
 
+  const [init, setInit] = useState(false);
   const [selectedStore, setSelectedStore] = useState<{
     name: string;
     storeId: string;
@@ -35,14 +37,13 @@ export default function MobileSidebarSection({ onClose }: IProps) {
     name: "",
     storeId: "",
   });
-  // OWNER인 경우에만 매장 목록 조회
+
   const { data: storeList } = useQuery({
     queryKey: ["store-list"],
     queryFn: () => getStoreList(),
     enabled: permission === "OWNER",
   });
 
-  // storeList가 있을 때 첫 번째 매장 ID를 기본값으로 설정
   useEffect(() => {
     if (storeList?.stores?.length) {
       setSelectedStore(storeList.stores[0]);
@@ -52,13 +53,38 @@ export default function MobileSidebarSection({ onClose }: IProps) {
   const isOwnerWithoutStore =
     permission === "OWNER" && storeList?.stores?.length === 0;
 
+  const [isPending, startTransition] = useTransition();
+
   const handleClick = (href: string) => {
-    if (permission === "OWNER") {
-      navigate.push(`/${selectedStore.storeId}${href}`);
-    } else {
-      navigate.push(href);
+    startTransition(() => {
+      if (permission === "OWNER") {
+        navigate.push(`/${selectedStore.storeId}${href}`);
+      } else {
+        navigate.push(href);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (isPending) {
+      setInit(true);
+    } else if (init) {
+      onClose();
+      setInit(false);
     }
-    onClose();
+  }, [isPending, init, onClose]);
+
+  const handlePrefetchURL = (href: string) => {
+    if (permission === "OWNER") {
+      navigate.prefetch(`/${selectedStore.storeId}${href}`);
+    } else {
+      navigate.prefetch(href);
+    }
+  };
+
+  const isActive = (href: string) => {
+    if (href === "/") return comparePath === "/";
+    return comparePath === href || comparePath.startsWith(`${href}/`);
   };
 
   const commonStyle =
@@ -66,6 +92,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
 
   return (
     <div className={`${isOwnerWithoutStore ? "md:hidden" : "md:block"}`}>
+      {isPending && <Loading />}
       <nav>
         {permission === "OWNER" ? (
           <MainSelect
@@ -94,37 +121,16 @@ export default function MobileSidebarSection({ onClose }: IProps) {
           {MENU_ITEMS[permission]?.length > 1 && (
             <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
           )}
-          {MENU_ITEMS[permission].map((item) => {
-            const isActive =
-              item.href === "/"
-                ? comparePath === "/"
-                : comparePath === item.href ||
-                  comparePath.startsWith(`${item.href}/`);
-            return (
-              <li key={item.href}>
-                <button
-                  type="button"
-                  className={`flex items-center gap-[6px] px-2 py-[9px] text-[13px] transition-colors lg:text-[16px] ${
-                    isActive ? "text-primary" : "text-gray-300"
-                  }`}
-                  onClick={() => handleClick(item.href)}
-                >
-                  {/* 빨간 점 (활성 메뉴만) */}
-                  <div
-                    className={`z-1 size-2 rounded-full ${
-                      isActive ? "bg-primary" : "bg-gray-600"
-                    }`}
-                  />
-                  <Icon
-                    iconKey={item.icon as string}
-                    className={`${isActive ? "text-primary" : "text-gray-300"}`}
-                    size={24}
-                  />
-                  <span className="font-medium">{item.label}</span>
-                </button>
-              </li>
-            );
-          })}
+          {MENU_ITEMS[permission].map((item) => (
+            <SidebarMenuItem
+              key={item.href}
+              {...item}
+              active={isActive(item.href)}
+              onClick={() => handleClick(item.href)}
+              onPrefetchURL={() => handlePrefetchURL(item.href)}
+              className="gap-[6px]"
+            />
+          ))}
         </ul>
       </nav>
     </div>

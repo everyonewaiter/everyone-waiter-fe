@@ -5,6 +5,15 @@ import riceWhite from "@/assets/json/rice-white.json";
 
 const Lottie = dynamic(() => import("react-lottie"), {
   ssr: false,
+  loading: () => (
+    <div className="h-[120px] w-[120px]">
+      <img
+        src="/images/loading-replace.svg"
+        alt="Loading animation"
+        className="h-full w-full"
+      />
+    </div>
+  ),
 });
 
 export default function Loading() {
