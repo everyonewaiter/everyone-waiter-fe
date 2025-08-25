@@ -21,7 +21,6 @@ interface IProps {
 }
 
 export default function FormComponent({ storeId }: IProps) {
-  const [makeDisabled, setMakeDisabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const updateInfo = storesQueries.useUpdateInfo();
@@ -39,7 +38,6 @@ export default function FormComponent({ storeId }: IProps) {
 
   const handleSubmit = () => {
     submitHandler(updateInfo, () => {
-      setMakeDisabled(true);
       setIsEditing(false);
     });
   };
@@ -135,7 +133,7 @@ export default function FormComponent({ storeId }: IProps) {
                     className: "mt-8 !font-medium border-gray-0",
                   },
                 }}
-                disabled={makeDisabled}
+                disabled={updateInfo.isPending}
                 commonClassName="border-dashed mt-3"
                 onClick={appendOrigin}
               >
