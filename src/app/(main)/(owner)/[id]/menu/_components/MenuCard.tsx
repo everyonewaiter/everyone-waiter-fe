@@ -5,6 +5,7 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import { menuLabelTranslate } from "@/constants/translates";
 import { useMenuSelection } from "../_stores/useMenuSelection";
 
 interface IProps extends Menu {
@@ -76,7 +77,7 @@ export default function MenuCard({
           />
         )}
         <div className="mt-auto flex flex-col gap-1 rounded-xl bg-white p-2 lg:gap-2 lg:rounded-[20px] lg:px-5 lg:py-4">
-          {menu.label !== "DEFAULT" && (
+          {menu.label !== null && menu.label !== "DEFAULT" && (
             <ResponsiveButton
               responsiveButtons={{
                 lg: {
@@ -94,7 +95,7 @@ export default function MenuCard({
                 },
               }}
             >
-              {menu.label}
+              {menuLabelTranslate[menu.label]}
             </ResponsiveButton>
           )}
           <div className="flex flex-col items-start justify-between gap-1 lg:flex-row lg:items-center">
