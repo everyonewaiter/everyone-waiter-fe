@@ -9,6 +9,8 @@ const publicPrefixes = [
   "/waitings",
   "/menus",
   "/device",
+  "/create",
+  "/stores",
 ];
 
 const deviceRequiredPrefixes = ["/pos", "/hall", "/waiting"];
