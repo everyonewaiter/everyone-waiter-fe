@@ -40,7 +40,7 @@ export default function ModalWithTitle({
   });
 
   return (
-    <div className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm">
+    <div className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-xs">
       <div
         ref={ref}
         className={cn(
