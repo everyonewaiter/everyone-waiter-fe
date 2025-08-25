@@ -25,7 +25,9 @@ export default async function Page({
   }
 
   try {
-    await verifyEmail({ token }).then(() => redirect("/login"));
+    await verifyEmail({ token });
+
+    redirect("/login");
   } catch (error) {
     const code = (error as any)?.response?.data.code;
     if (code === "EXPIRED_VERIFICATION_EMAIL" || code === "ACCOUNT_NOT_FOUND") {
@@ -37,7 +39,7 @@ export default async function Page({
         />
       );
     }
-    // if (code === "ALREADY_VERIFIED_EMAIL") redirect("/login");
-    // redirect("/login");
+
+    redirect("/login");
   }
 }
