@@ -91,7 +91,7 @@ export default function WaitingSection({
         <ActionButton
           type="button"
           iconKey="bell"
-          className="text-white"
+          iconClassName="text-white"
           text="호출"
           onClick={onCall}
         />
@@ -100,7 +100,8 @@ export default function WaitingSection({
           iconKey="door-open"
           variant="outline"
           color="primary"
-          className="text-primary"
+          iconClassName="text-primary"
+          className="hover:!text-primary hover:bg-transparent"
           text="입장"
           onClick={onEnterance}
         />
