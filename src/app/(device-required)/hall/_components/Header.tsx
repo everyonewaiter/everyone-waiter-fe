@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button/Button";
 import Logo from "@/components/Logo";
 import cn from "@/lib/utils";
-import { hallQueries } from "../_query/useHall";
+import { useNotificationStore } from "../../_stores/useNotificationStore";
 
 interface IProps {
   href?: string;
@@ -12,8 +12,7 @@ interface IProps {
 
 export default function Header({ href }: IProps) {
   const navigate = useRouter();
-
-  const { data } = hallQueries.useWaitingList();
+  const { waitingCount } = useNotificationStore();
 
   return (
     <header className="flex w-full items-center justify-between rounded-4xl bg-white px-8 py-6">
@@ -38,9 +37,11 @@ export default function Header({ href }: IProps) {
         >
           웨이팅 관리 이동
         </Button>
-        <div className="bg-primary center absolute -top-5 -right-5 h-10 w-10 rounded-full text-xl font-semibold text-white">
-          {data?.waitings.length!}
-        </div>
+        {waitingCount > 0 && (
+          <div className="bg-primary center absolute -top-5 -right-5 h-10 w-10 rounded-full text-xl font-semibold text-white">
+            {waitingCount}
+          </div>
+        )}
       </div>
     </header>
   );

@@ -11,10 +11,10 @@ type SSECategory =
 
 type SSEAction = "GET" | "CREATE" | "UPDATE" | "DELETE";
 
-interface SSEResponse {
+interface SSEResponse<T extends unknown> {
   storeId: string;
   category: SSECategory;
   action: SSEAction;
   hasData: boolean;
-  data: any;
+  data?: T;
 }

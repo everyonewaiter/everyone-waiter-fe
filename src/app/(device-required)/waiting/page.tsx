@@ -3,12 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useSSE } from "@/hooks/useSSE";
+import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import getQueryClient from "@/app/get-query-client";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
 import { waitingQueries } from "./_queries/useWaiting";
-import { useWaitingSSE } from "./_hooks/useWaitingSSE";
 import { useNotificationStore } from "../_stores/useNotificationStore";
+import { waitingKeys } from "./_queries/keys";
 
 const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
   ssr: false,
@@ -16,18 +19,38 @@ const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
 
 export default function Waiting() {
   const navigate = useRouter();
+  const queryClient = getQueryClient();
   const { deviceInfo, isLoading } = useDeviceInfo();
   const { handleOpenModal } = useWaitingModal();
-  const { waitingCount, resetWaiting } = useNotificationStore();
+  const { orderCount, resetWaiting, incrementOrder } = useNotificationStore();
 
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
   const { data: list } = waitingQueries.useWaitingList(waitingEnabled);
+  const addWaiting = waitingQueries.useAddWaiting();
 
-  useWaitingSSE();
+  useSSE({
+    onMessage: (data) => {
+      if (data.category === "RECEIPT") {
+        incrementOrder();
+      } else if (data.category === "WAITING") {
+        queryClient.invalidateQueries({
+          queryKey: waitingKeys.all(),
+        });
+      }
+    },
+  });
 
   useEffect(() => {
     resetWaiting();
   }, [resetWaiting]);
+
+  const handleAddWaiting = () => {
+    addWaiting.mutate({
+      phoneNumber: "01036833426",
+      adult: 1,
+      infant: 0,
+    });
+  };
 
   return (
     <div className="min-h-screen w-screen bg-gray-700">
@@ -47,15 +70,24 @@ export default function Waiting() {
             >
               홀 화면 이동
             </ResponsiveButton>
-            {waitingCount > 0 && (
+            {orderCount > 0 && (
               <div className="bg-primary center absolute -top-5 -right-5 h-10 w-10 rounded-full text-xl font-semibold text-white">
-                {waitingCount}
+                {orderCount}
               </div>
             )}
           </div>
         </div>
-        <div className="h-[1px] w-full bg-gray-300" />
+        <div className="h-[1px] w-full bg-gray-500" />
       </header>
+      <div className="mb-6 flex w-full items-center justify-between">
+        <Button
+          color="primary"
+          className="text-gray-0"
+          onClick={handleAddWaiting}
+        >
+          웨이팅 추가
+        </Button>
+      </div>
       <div className="flex w-full flex-row gap-4 px-15 pt-38 pb-8">
         <section className="flex w-full flex-row gap-[25px]">
           <div className="flex w-12 flex-col gap-4">
