@@ -11,10 +11,10 @@ export const getFormattedLastCallTime = (
   const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
   if (diffMinutes < 60) {
-    return `${diffMinutes}분`;
+    return `${diffMinutes + 1}분`;
   }
 
   const hours = Math.floor(diffMinutes / 60);
-  const minutes = diffMinutes % 60;
+  const minutes = (diffMinutes % 60) + 1;
   return `${hours}시간 ${minutes.toString().padStart(2, "0")}분`;
 };
