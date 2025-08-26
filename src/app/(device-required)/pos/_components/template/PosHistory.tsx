@@ -57,7 +57,7 @@ export default function PosHistory() {
   }, [formatted, refetch]);
 
   return (
-    <div className="flex h-screen w-full flex-col">
+    <div className="flex h-dvh w-full flex-col">
       <POSHeader2 />
       <div className="flex h-[calc(100dvh-133px)] w-full">
         <div className="relative flex w-full flex-1 flex-col px-[60px] pt-8 pb-6">

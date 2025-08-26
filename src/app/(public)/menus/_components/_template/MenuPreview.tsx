@@ -122,7 +122,7 @@ export default function MenuPreview() {
           원산지 정보
         </ResponsiveButton>
       </div>
-      <div className="-mx-5 h-[1px] w-screen bg-gray-600 md:hidden" />
+      <div className="-mx-5 h-[1px] w-dvw bg-gray-600 md:hidden" />
       <div className="hidden md:grid md:grid-cols-4 md:gap-x-4 md:gap-y-4 lg:grid-cols-5 lg:gap-x-5 lg:gap-y-10">
         {menuList?.map((item) => (
           <MenuCard

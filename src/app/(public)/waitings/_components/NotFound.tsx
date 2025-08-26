@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function NotFound() {
   return (
-    <div className="center flex h-screen w-screen flex-col">
+    <div className="center flex h-dvh w-dvw flex-col">
       <div className="flex w-full flex-col items-center gap-6 px-5">
         <Image
           src="/gif/error.gif"

@@ -78,7 +78,7 @@ export default function Pos() {
   };
 
   return (
-    <div className="relative h-screen w-screen bg-black">
+    <div className="relative h-dvh w-dvw bg-black">
       <Image
         src="/images/pos-main.png"
         fill

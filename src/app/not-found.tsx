@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function NotFound() {
   return (
-    <div className="center h-screen w-screen flex-col gap-8">
+    <div className="center h-dvh w-dvw flex-col gap-8">
       <Image
         src="/images/not-found.svg"
         alt="존재하지 않는 페이지"

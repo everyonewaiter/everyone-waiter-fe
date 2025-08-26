@@ -37,7 +37,7 @@ export default function Page() {
   };
 
   return (
-    <div className="center h-screen w-screen">
+    <div className="center h-dvh w-dvw">
       <PublicComponent
         title={`웨이팅 등록을\n취소하시겠습니까?`}
         subtitle={`웨이팅을 취소하면 다시 처음부터 대기해야 합니다.\n취소하시려면 아래 대기번호를 입력해주세요.`}

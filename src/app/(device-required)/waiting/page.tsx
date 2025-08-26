@@ -53,7 +53,7 @@ export default function Waiting() {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gray-700">
+    <div className="min-h-dvh w-dvw bg-gray-700">
       <header className="fixed flex w-full flex-col gap-6 bg-gray-700 px-15 pt-10">
         <div className="flex w-full flex-row items-center justify-between">
           <strong className="text-3xl font-bold">웨이팅 관리</strong>

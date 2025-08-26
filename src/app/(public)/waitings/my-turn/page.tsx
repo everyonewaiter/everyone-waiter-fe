@@ -51,7 +51,7 @@ export default function Page() {
   };
 
   return (
-    <div className="center h-screen w-screen">
+    <div className="center h-dvh w-dvw">
       <PublicComponent
         title={
           <span>

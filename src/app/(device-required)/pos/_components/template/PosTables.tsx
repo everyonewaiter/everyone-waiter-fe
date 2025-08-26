@@ -100,7 +100,7 @@ export default function PosTables() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col">
       <POSHeader />
       <div className="flex flex-1 flex-col px-[60px] pt-8">
         {!!moveSourceTableNo && (

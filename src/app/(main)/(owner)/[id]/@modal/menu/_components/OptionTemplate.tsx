@@ -160,7 +160,7 @@ export default function OptionTemplate({
               )}
               style={{
                 height:
-                  groups.length > 1 ? "calc(100% - 95px)" : "calc(100% - 40px)",
+                  groups.length > 1 ? "calc(100%-95px)" : "calc(100%-40px)",
               }}
             >
               {groups?.map((el: any, i: number) => (

@@ -47,8 +47,8 @@ export default function DashedBorder({
             <rect
               x={strokeWidth / 2}
               y={strokeWidth / 2}
-              width={`calc(100% - ${strokeWidth}px)`}
-              height={`calc(100% - ${strokeWidth}px)`}
+              width={`calc(100%-${strokeWidth}px)`}
+              height={`calc(100%-${strokeWidth}px)`}
               rx={radius[size]}
               ry={radius[size]}
               fill="none"

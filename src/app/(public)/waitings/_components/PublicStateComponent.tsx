@@ -73,7 +73,7 @@ export default function PublicStateComponent({
   };
 
   return (
-    <div className="center h-screen w-screen">
+    <div className="center h-dvh w-dvw">
       <div className="center flex flex-col gap-8">
         <Image src={`/gif/${gifName}.gif`} alt="gif" width={140} height={149} />
         <div className="flex flex-col gap-3">
