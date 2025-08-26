@@ -40,7 +40,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
       form.setValue("state", "DEFAULT");
     }
     if (form.getValues("spicy") == null) {
-      form.setValue("spicy", 1);
+      form.setValue("spicy", 0);
     }
     if (form.getValues("printEnabled") == null) {
       form.setValue("printEnabled", true);
@@ -51,7 +51,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
     form.watch("label") ?? form.getValues("label") ?? "DEFAULT";
   const stateValue =
     form.watch("state") ?? form.getValues("state") ?? "DEFAULT";
-  const spicyValue = form.watch("spicy") ?? form.getValues("spicy") ?? 1;
+  const spicyValue = form.watch("spicy") ?? form.getValues("spicy") ?? 0;
   const printEnabledValue =
     form.watch("printEnabled") ?? form.getValues("printEnabled") ?? true;
 
@@ -177,7 +177,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 key={key}
                 type="button"
                 variant="outline"
-                color={spicyValue === key.length / 3 ? "primary" : "grey"}
+                color={spicyValue === key.length ? "primary" : "grey"}
                 responsiveButtons={{
                   lg: {
                     buttonSize: "sm",
@@ -195,7 +195,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 onClick={() => {
                   if (!isEditing) return;
                   const current = form.watch("spicy");
-                  const next = key.length / 3;
+                  const next = key.length;
                   form.setValue("spicy", current === next ? 0 : next);
                 }}
                 commonClassName={

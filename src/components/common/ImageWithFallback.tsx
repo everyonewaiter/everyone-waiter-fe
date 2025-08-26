@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { ImageProps } from "next/image";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ImageWithFallbackProps extends Omit<ImageProps, "src" | "alt"> {
   src: string;
@@ -28,7 +28,7 @@ export default function ImageWithFallback({
 }: ImageWithFallbackProps) {
   const [currentSrc, setCurrentSrc] = useState<string>(() => {
     if (src && src.trim() !== "") {
-      return `${process.env.NEXT_PUBLIC_PROD_CDN}/${src}`;
+      return `${process.env.NEXT_PUBLIC_CDN}/${src}`;
     }
     return "";
   });
@@ -38,16 +38,9 @@ export default function ImageWithFallback({
     if (!hasError) {
       setHasError(true);
 
-      if (currentSrc.startsWith(process.env.NEXT_PUBLIC_PROD_CDN!)) {
-        setCurrentSrc(`${process.env.NEXT_PUBLIC_DEV_CDN}/${src}`);
+      if (fallbackSrc) {
+        setCurrentSrc(fallbackSrc);
         return;
-      }
-
-      if (currentSrc.startsWith(process.env.NEXT_PUBLIC_DEV_CDN!)) {
-        if (fallbackSrc) {
-          setCurrentSrc(fallbackSrc);
-          return;
-        }
       }
 
       props.onError?.();
@@ -61,7 +54,7 @@ export default function ImageWithFallback({
 
   useEffect(() => {
     if (src && src.trim() !== "") {
-      setCurrentSrc(`${process.env.NEXT_PUBLIC_PROD_CDN}/${src}`);
+      setCurrentSrc(`${process.env.NEXT_PUBLIC_CDN}/${src}`);
       setHasError(false);
     }
   }, [src]);

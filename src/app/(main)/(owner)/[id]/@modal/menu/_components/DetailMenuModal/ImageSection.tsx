@@ -62,7 +62,7 @@ export default function ImageSection({ isEditing }: IProps) {
           <div className="center h-full w-full">
             <Image
               src="/logo/logo-medium-gray.svg"
-              alt="매뉴 이미지 없음"
+              alt="메뉴 이미지 없음"
               width={100}
               height={100}
               className="opacity-10"
