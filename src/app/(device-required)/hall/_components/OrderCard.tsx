@@ -20,15 +20,26 @@ export default function OrderCard({ completed, orderId, ...props }: IProps) {
     <div
       className={cn(
         "flex w-[320px] flex-col gap-6 rounded-3xl border border-gray-600 p-6",
-        completed ? "h-[245px]" : "h-[279px]"
+        completed ? "h-[245px]" : "h-[279px]",
+        props.served ? "bg-[#F1F1F1]" : "bg-white"
       )}
     >
       <div className="flex-1">
         <div className="flex items-center justify-between">
-          <strong className="text-2xl font-semibold text-gray-100">
+          <strong
+            className={cn(
+              "text-2xl font-semibold",
+              props.served ? "text-gray-300 line-through" : "text-gray-100"
+            )}
+          >
             {props.name}
           </strong>
-          <span className="text-xl font-semibold text-gray-100">
+          <span
+            className={cn(
+              "text-xl font-semibold",
+              props.served ? "text-gray-300" : "text-gray-100"
+            )}
+          >
             {props.quantity}개
           </span>
         </div>
@@ -38,7 +49,10 @@ export default function OrderCard({ completed, orderId, ...props }: IProps) {
               {option.orderOptions.map((o) => (
                 <div
                   key={o.name}
-                  className="flex items-center justify-between font-medium text-[#2E7BB3]"
+                  className={cn(
+                    "flex items-center justify-between font-medium",
+                    props.served ? "text-gray-300" : "text-[#2E7BB3]"
+                  )}
                 >
                   <span className="flex items-center text-base">
                     <PlusIcon
@@ -58,10 +72,15 @@ export default function OrderCard({ completed, orderId, ...props }: IProps) {
         <Button
           variant="outline"
           color="black"
-          className="button-lg w-full !border-gray-200 text-lg !font-medium text-gray-200"
+          className={cn(
+            "button-lg w-full text-lg !font-medium",
+            props.served
+              ? "border-gray-300 text-gray-300 hover:bg-transparent hover:text-gray-300"
+              : "!border-gray-200 text-gray-200"
+          )}
           onClick={handleComplete}
         >
-          완료
+          {props.served ? "되돌리기" : "완료"}
         </Button>
       )}
     </div>

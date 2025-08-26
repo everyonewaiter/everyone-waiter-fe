@@ -5,11 +5,9 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import DatePicker from "@/components/common/DatePicker";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import useGetDate from "@/hooks/useGetDate";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function SalesModal({ close }: { close: () => void }) {
-  const navigate = useRouter();
   const { formattedMonth, formattedDate } = useGetDate(new Date());
 
   const [date, setDate] = useState<Date | null>(new Date());
@@ -96,7 +94,7 @@ export default function SalesModal({ close }: { close: () => void }) {
                 </div>
                 <ResponsiveButton
                   color="grey"
-                  onClick={() => navigate.back()}
+                  onClick={close}
                   type="button"
                   responsiveButtons={{
                     lg: { buttonSize: "xl" },
