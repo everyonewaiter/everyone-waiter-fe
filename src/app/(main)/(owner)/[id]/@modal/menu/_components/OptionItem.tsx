@@ -48,7 +48,7 @@ export default function OptionItem({
         isEditing={isEditing}
         disabled={!!popupAction}
       />
-      {isEditing && (
+      {popupAction && (
         <button
           type="button"
           className="center h-8 w-8 rounded-lg border border-gray-600"

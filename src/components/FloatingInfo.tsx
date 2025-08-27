@@ -1,30 +1,35 @@
-import React, { PropsWithChildren, forwardRef } from "react";
+interface FloatingInfoProps {
+  style?: React.CSSProperties;
+}
 
-const FloatingInfo = forwardRef<HTMLDivElement, PropsWithChildren>(
-  ({ children }, ref) => (
+export default function FloatingInfo({ style }: FloatingInfoProps) {
+  return (
     <aside
-      className="absolute -top-22.5 left-3 z-100 overflow-visible"
-      ref={ref}
+      className="absolute z-[9999] overflow-visible rounded-2xl bg-white shadow-[0_2px_10px_0_rgba(0,0,0,0.08)]"
+      style={style}
     >
       <div className="relative inline-block">
         {/* 본체 */}
-        <div className="w-[240px] rounded-2xl p-3 text-left text-xs whitespace-pre-line text-[#505050] shadow-md">
-          {children}
+        <div className="w-[240px] rounded-2xl bg-white p-3 text-left text-xs whitespace-pre-line text-[#505050]">
+          {`첫번째 옵션 상세가 기본값으로 설정됩니다.
+순서변경 아이콘 클릭 시 옵션명 및 옵션상세의
+순서를 변경할 수 있습니다.`}
         </div>
 
-        {/* 삼각형을 감싸는 컨테이너에 그림자 적용 */}
-        <div className="absolute -bottom-6 md:left-2 lg:left-6">
+        {/* 삼각형 화살표 - 왼쪽에서 48.5px 위치 (SVG의 중앙) */}
+        <div className="absolute -bottom-[26px] left-[48.5px] z-10 -translate-x-1/2 transform">
           <svg
             width="97"
             height="34"
             viewBox="0 0 97 34"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            className="h-[34px] w-[97px]"
           >
             <g filter="url(#filter0_d_5395_25760)">
               <path
                 d="M44.3324 17.9761L34 8H63L52.6676 17.9761C50.3426 20.2209 46.6574 20.2209 44.3324 17.9761Z"
-                fill="white"
+                fill="#ffffffc9"
               />
             </g>
             <defs>
@@ -68,7 +73,5 @@ const FloatingInfo = forwardRef<HTMLDivElement, PropsWithChildren>(
         </div>
       </div>
     </aside>
-  )
-);
-
-export default FloatingInfo;
+  );
+}

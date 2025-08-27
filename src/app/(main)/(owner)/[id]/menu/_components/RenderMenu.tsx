@@ -92,7 +92,7 @@ export default function RenderMenu({
                 }}
               >
                 <PlusIcon strokeWidth={1.5} />
-                <span className="text-base">메뉴 추가</span>
+                <span className="text-base lg:text-xl">메뉴 추가</span>
               </DashedBorder>
             </button>
           )}
