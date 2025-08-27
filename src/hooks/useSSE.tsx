@@ -36,8 +36,6 @@ export function useSSE<T>({ onMessage, lastEventId }: UseSSEProps<T>) {
       method,
       secretKey,
       timestamp,
-      purpose: deviceInfo.purpose,
-      name: deviceInfo.name,
       deviceId: deviceInfo.deviceId,
     });
 

@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from "axios";
 import CryptoJS from "crypto-js";
 
 // 요청 헤더 및 시그니처 생성에 사용
@@ -7,20 +8,19 @@ const makeSignature = ({
   method,
   uri,
   deviceId,
-  purpose,
-  name,
   secretKey,
   timestamp,
-}: Pick<Device, "deviceId" | "purpose" | "name"> & {
+}: {
+  deviceId: string;
   secretKey: string;
   timestamp: string;
-  method: string;
+  method: AxiosRequestConfig["method"];
   uri: string;
 }) => {
   const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
   hmac.update(`${method} ${uri}`);
   hmac.update("\n");
-  hmac.update(`${deviceId} ${purpose} ${name}`);
+  hmac.update(`${deviceId}`);
   hmac.update("\n");
   hmac.update(timestamp);
   const hash = hmac.finalize();
