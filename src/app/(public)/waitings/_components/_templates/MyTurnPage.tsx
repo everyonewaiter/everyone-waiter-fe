@@ -55,7 +55,7 @@ export default function MyTurnPage({ storeId, key }: IProps) {
               <div
                 className={cn(
                   "bg-primary -mb-[1px] w-fit rounded-3xl px-3 py-2 text-xs font-semibold text-white",
-                  currentNumber === 1 ? "-mr-4" : "-mr-2"
+                  currentNumber <= 1 ? "-mr-4" : "-mr-2"
                 )}
               >
                 매장 앞으로 와주세요!
@@ -93,7 +93,7 @@ export default function MyTurnPage({ storeId, key }: IProps) {
             <div className="h-[6px] w-full rounded-3xl bg-gray-700" />
             <div
               className="bg-primary absolute top-0 left-0 h-[6px] w-[60px] max-w-full rounded-3xl"
-              style={{ width: positionPx }}
+              style={{ width: `${positionPx}px` }}
             >
               <div className="bg-primary absolute -top-[2px] right-0 h-[10px] w-[10px] rounded-full ring-[5px] ring-[#F2202014]" />
             </div>
