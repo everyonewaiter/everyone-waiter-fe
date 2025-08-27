@@ -52,17 +52,13 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
           return config;
         }
 
-        const { purpose } = deviceInfo;
-
         const timestamp = Date.now().toString();
         const signature = makeSignature({
           uri: `/v1${uri}`,
           method,
           secretKey,
-          timestamp,
-          purpose,
-          name: deviceInfo.name,
           deviceId: deviceInfo.deviceId,
+          timestamp,
         });
 
         if (process.env.NODE_ENV === "development") {
@@ -72,8 +68,6 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
             method,
             secretKey,
             timestamp,
-            purpose,
-            name: deviceInfo.name,
             deviceId: deviceInfo.deviceId,
           });
           // eslint-disable-next-line no-console
@@ -107,6 +101,7 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
       if (error.response) {
         if (error.response?.status === 401) {
           if (now - lastAlertTime > 10000) {
+            console.log(error);
             lastAlertTime = now;
             // eslint-disable-next-line no-alert
             alert(

@@ -13,11 +13,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormErrorMessage } from "@/components/common/Form";
 import cn from "@/lib/utils";
 import formatLicenseNumber from "@/lib/formatting/formatLicenseNumber";
+import getQueryClient from "@/app/get-query-client";
+import { useState } from "react";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import { posQueries } from "../../_queries/usePos";
 import { paySchema, TypePayForm } from "../../_schema/pos.schema";
+import { posKeys } from "../../_queries/keys";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -43,11 +46,14 @@ interface IProps extends PosTableActivity {
 
 export default function PayAlert({ close, type, ...props }: IProps) {
   const navigate = useRouter();
+  const queryClient = getQueryClient();
 
   // 분할 계산
   const { selectedOrder } = useSelectItemStore();
   const { storeId } = useDeviceContext();
   const hasOrderId = selectedOrder?.orderId;
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const menus = hasOrderId
     ? selectedOrder?.orderMenus.map((el) => el.name)
@@ -94,6 +100,8 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   ];
 
   const handlePayment = () => {
+    setIsSubmitting(true);
+
     let amount = 0;
     if (hasOrderId) {
       amount = selectedOrdersTotal;
@@ -130,7 +138,6 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         cashReceiptType = "PROOF";
       else cashReceiptType = "DEDUCTION";
 
-      console.log("start: cash");
       payCash({
         tableNo: props.tableNo,
         body: {
@@ -146,13 +153,14 @@ export default function PayAlert({ close, type, ...props }: IProps) {
             type: "cash-receipt",
             activity: activityData!,
             stores: stores!,
-            successHandler:
-              props.orders?.length > 0
-                ? () => close()
-                : () => {
-                    close();
-                    navigate.push("/pos/tables");
-                  },
+            successHandler: () => {
+              close();
+              queryClient.invalidateQueries({
+                queryKey: posKeys.activity(props.tableNo),
+              });
+              navigate.push("/pos/tables");
+              setIsSubmitting(false);
+            },
             cashReceiptPhoneNo: form.watch("phoneNumber"),
           });
         },
@@ -169,6 +177,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       buttonColor="black"
       layoutClassName="!w-[648px]"
       noResponsive
+      isSubmitted={isSubmitting}
     >
       <Form {...form}>
         <div className="-mt-4 flex w-full flex-col gap-10">

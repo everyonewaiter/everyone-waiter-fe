@@ -54,7 +54,7 @@ export default function usePayment() {
         tableNo,
         body: {
           ...body,
-          method: "CARD",
+          method: "CASH",
           vat: Math.floor(body.amount / 10),
           supplyAmount: body.amount - Math.floor(body.amount / 10),
           approvalNo: "",

@@ -109,7 +109,7 @@ const AlertDialogAction = React.forwardRef<
         {...props}
       />
     ) : (
-      <div className={cn(customButtonStyle, "w-full")}>
+      <div>
         <ResponsiveButton
           type="button"
           responsiveButtons={{
@@ -123,7 +123,7 @@ const AlertDialogAction = React.forwardRef<
               className: `justify-center items-center`,
             },
           }}
-          commonClassName={cn(customButtonStyle, "cursor-pointer")}
+          commonClassName={cn("w-full cursor-pointer", customButtonStyle)}
           onClick={onClick}
           {...props}
         />
@@ -159,7 +159,7 @@ const AlertDialogCancel = React.forwardRef<
       {noResponsive ? (
         <Button type="button" className="button-xl w-full" {...props} />
       ) : (
-        <div className={cn(customButtonStyle, "w-full")}>
+        <div>
           <ResponsiveButton
             color="grey"
             type="button"
@@ -174,7 +174,7 @@ const AlertDialogCancel = React.forwardRef<
                 className: `justify-center items-center`,
               },
             }}
-            commonClassName={cn(customButtonStyle, "cursor-pointer")}
+            commonClassName={cn("w-full cursor-pointer", customButtonStyle)}
             {...props}
           />
         </div>

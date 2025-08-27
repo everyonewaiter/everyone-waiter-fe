@@ -97,7 +97,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
   };
 
   return (
-    <aside className="w-full">
+    <aside className="relative w-full">
       <div className="flex items-center justify-between gap-4">
         <strong className="text-gray-0 text-[28px] font-semibold">
           주문 내역
@@ -113,8 +113,8 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
           {selectedRow ? selectedRow.orderPaymentId : "-"}
         </div>
       </div>
-      <div className="flex flex-col">
-        <ScrollArea className="h-[700px] w-full pt-8">
+      <div className="flex flex-1 flex-col">
+        <ScrollArea className="h-[calc(100dvh-300px)] w-full pt-8">
           {selectedRow &&
             Array.isArray(activity?.orders) &&
             activity?.orders?.map((item, index, arr) => (
@@ -126,27 +126,27 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
               </Fragment>
             ))}
         </ScrollArea>
-        <div className="mt-8 flex w-full gap-3">
-          {selectedRow?.cancellable && (
-            <Button
-              variant="outline"
-              color="black"
-              className="flex h-[64px] w-[180px] rounded-xl px-8 text-xl"
-              disabled={!selectedRow}
-              onClick={handleCancelPayment}
-            >
-              결제 취소하기
-            </Button>
-          )}
+      </div>
+      <div className="absolute bottom-0 flex w-full gap-3 bg-white py-8">
+        {selectedRow?.cancellable && (
           <Button
+            variant="outline"
             color="black"
-            className="flex h-[64px] flex-1 rounded-xl px-8 text-xl"
+            className="flex h-[64px] w-[180px] rounded-xl px-8 text-xl"
             disabled={!selectedRow}
-            onClick={handlePrintReceipt}
+            onClick={handleCancelPayment}
           >
-            영수증 출력하기
+            결제 취소하기
           </Button>
-        </div>
+        )}
+        <Button
+          color="black"
+          className="flex h-[64px] flex-1 rounded-xl px-8 text-xl"
+          disabled={!selectedRow}
+          onClick={handlePrintReceipt}
+        >
+          영수증 출력하기
+        </Button>
       </div>
     </aside>
   );
