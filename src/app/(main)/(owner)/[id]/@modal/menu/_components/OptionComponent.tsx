@@ -92,7 +92,7 @@ export default function OptionComponent({
 
         {hasOption && isOpen && isEditing && (
           <>
-            {popupAction === "순서 변경" ? (
+            {popupAction ? (
               <ResponsiveButton
                 variant="outline"
                 responsiveButtons={{

@@ -21,6 +21,7 @@ interface IProps {
   type: "requiredOptions" | "optionalOptions";
   isEditing: boolean;
   data?: TypeMenuForm["requiredOptions"] | TypeMenuForm["optionalOptions"];
+  isUpdate?: boolean;
 }
 
 export default function OptionTemplate({
@@ -29,6 +30,7 @@ export default function OptionTemplate({
   type,
   data,
   isEditing,
+  isUpdate,
   ...props
 }: IProps) {
   const form = useFormContext<TypeMenuForm>();
@@ -97,8 +99,8 @@ export default function OptionTemplate({
         isEditing={isEditing}
         hasOption={groups.length > 0}
         onComplete={() => {
-          form.trigger(type);
           setPopupAction("");
+          form.trigger(type);
         }}
       />
       {props.isOpen ? (
@@ -146,7 +148,10 @@ export default function OptionTemplate({
                       isEditing={isEditing}
                       popupAction={popupAction}
                       id={el.id as string}
-                      onDelete={() => removeGroup(i)}
+                      onDelete={() => {
+                        removeGroup(i);
+                        form.trigger(type);
+                      }}
                     />
                   ))}
                 </div>
@@ -171,7 +176,10 @@ export default function OptionTemplate({
                   isEditing={isEditing}
                   popupAction={popupAction}
                   id={el.id as string}
-                  onDelete={() => removeGroup(i)}
+                  onDelete={() => {
+                    removeGroup(i);
+                    form.trigger(type);
+                  }}
                 />
               ))}
             </div>
@@ -183,7 +191,7 @@ export default function OptionTemplate({
             </div>
           )}
           {/* 하단 버튼 고정 */}
-          {isEditing && !popupAction && (
+          {(isEditing || !popupAction) && (
             <ResponsiveButton
               variant="outline"
               color="black"
