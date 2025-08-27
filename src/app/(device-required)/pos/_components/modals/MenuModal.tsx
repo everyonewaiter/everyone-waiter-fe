@@ -104,7 +104,7 @@ function MenuModal({
 
   return (
     <div
-      className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center"
+      className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center bg-black/50"
       onClick={handleClose}
       role="button"
       tabIndex={0}
