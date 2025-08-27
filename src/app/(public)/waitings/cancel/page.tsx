@@ -34,9 +34,9 @@ export default async function Page({
     });
 
     if (data?.state === "CANCEL") {
-      redirect("/waitings/result?type=cancel");
+      redirect(`/waitings/result?type=cancel&storeId=${storeId}`);
     } else if (data?.state === "COMPLETE") {
-      redirect("/waitings/result?type=enter");
+      redirect(`/waitings/result?type=enter&storeId=${storeId}`);
     }
 
     return (
@@ -46,7 +46,7 @@ export default async function Page({
     );
   } catch (error: any) {
     if (error?.response?.data?.code === "WAITING_NOT_FOUND") {
-      redirect("/waitings/result?type=error");
+      redirect(`/waitings/result?type=error&storeId=${storeId}`);
     }
     throw error;
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
 import dynamic from "next/dynamic";
 import Button from "@/components/common/Button/Button";
@@ -24,14 +24,14 @@ const OriginModal = dynamic(() => import("../OriginModal"), {
   ssr: false,
 });
 
-export default function MenuPreview() {
+interface IProps {
+  storeId: string;
+}
+
+export default function MenuPreview({ storeId }: IProps) {
   const navigate = useRouter();
-  const searchParams = useSearchParams();
-  const storeId = searchParams.get("storeId") as string;
 
   const [activeTab, setActiveTab] = useState("전체");
-
-  const { open, close } = useOverlay();
 
   const { data: storedata } = storesQueries.useStoresDetail(storeId);
   const { data, isLoading } = publicQueries.usePreviewMenu(storeId);
@@ -43,12 +43,14 @@ export default function MenuPreview() {
           .map((el) => el.menus)
           .flat();
 
+  const { open, close } = useOverlay();
+
   const handleOpenModal = () => {
     open(() => <OriginModal close={close} data={storedata!} />);
   };
 
   return (
-    <div className="min-h-full w-full bg-white px-5 pb-5 md:rounded-[20px] md:px-6 md:pb-6 lg:rounded-4xl lg:px-8 lg:pb-8">
+    <div className="min-h-dvh w-full bg-white px-5 pb-5 md:rounded-[20px] md:px-6 md:pb-6 lg:rounded-4xl lg:px-8 lg:pb-8">
       <div className="flex items-end justify-between pb-6 md:items-start md:justify-start md:gap-2 md:pb-7 lg:pb-12">
         <button
           type="button"
@@ -95,7 +97,10 @@ export default function MenuPreview() {
                 variant={activeTab === key.name ? "default" : "outline"}
                 color={activeTab === key.name ? "black" : "grey"}
                 responsiveButtons={{
-                  lg: { buttonSize: "xl", className: "!text-lg !font-medium" },
+                  lg: {
+                    buttonSize: "xl",
+                    className: "!text-lg !font-medium",
+                  },
                   md: { buttonSize: "sm", className: "!text-s" },
                   sm: { buttonSize: "sm" },
                 }}
@@ -162,7 +167,7 @@ export default function MenuPreview() {
         </>
       )}
       {isLoading && (
-        <div className="h-full bg-red-50">
+        <div className="h-full">
           <Spinner />
         </div>
       )}

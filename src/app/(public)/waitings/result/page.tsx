@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{ type?: string; storeId?: string }>;
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  const { type } = await searchParams;
+  const { type, storeId } = await searchParams;
 
   if (!type) return <NotFound />;
 
@@ -25,6 +25,7 @@ export default async function Page({ searchParams }: PageProps) {
             title: "웨이팅 등록이 취소되었습니다!",
             buttonType: "agree",
           }}
+          storeId={storeId!}
         />
       );
 
@@ -37,6 +38,7 @@ export default async function Page({ searchParams }: PageProps) {
             subtitle: `아래 버튼을 클릭하면 새로운 웨이팅을\n등록할 수 있습니다.`,
             buttonType: "go-back",
           }}
+          storeId={storeId!}
         />
       );
 
@@ -49,6 +51,7 @@ export default async function Page({ searchParams }: PageProps) {
             subtitle: `순번이 호출되어 매장에 입장하셨습니다.\n더 이상 웨이팅 정보를 확인할 수 없습니다.`,
             buttonType: "see-menu",
           }}
+          storeId={storeId!}
         />
       );
 
@@ -61,6 +64,7 @@ export default async function Page({ searchParams }: PageProps) {
             subtitle: "일시적인 오류가 발생했습니다. 다시 시도해 주세요.",
             buttonType: "retry",
           }}
+          storeId={storeId!}
         />
       );
 

@@ -10,6 +10,7 @@ interface IProps {
   title: string;
   subtitle?: string;
   buttonType: "agree" | "go-back" | "see-menu" | "retry";
+  storeId: string;
 }
 
 export default function PublicStateComponent({
@@ -17,6 +18,7 @@ export default function PublicStateComponent({
   title,
   subtitle,
   buttonType,
+  storeId,
 }: IProps) {
   const navigate = useRouter();
 
@@ -61,7 +63,7 @@ export default function PublicStateComponent({
             <Button
               color="black"
               className="button-lg w-full"
-              onClick={() => navigate.push("/menus/preview")}
+              onClick={() => navigate.push(`/menus/preview?storeId=${storeId}`)}
             >
               메뉴 보러가기
             </Button>
