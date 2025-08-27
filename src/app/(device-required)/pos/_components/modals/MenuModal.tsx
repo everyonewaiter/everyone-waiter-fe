@@ -114,7 +114,7 @@ function MenuModal({
     >
       <div
         className={cn(
-          "relative flex h-[650px] w-full flex-col gap-6 rounded-4xl bg-white p-5 md:h-[460px] md:flex-row md:p-4 lg:gap-8 lg:p-6",
+          "relative flex h-[650px] w-full flex-col gap-6 rounded-3xl bg-white p-5 md:h-[460px] md:flex-row md:p-4 lg:gap-8 lg:p-6",
           layoutClassName
         )}
         onClick={(e) => e.stopPropagation()}
@@ -195,45 +195,45 @@ function MenuModal({
                 {data?.price.toLocaleString()}원
               </div>
             </div>
-            <div className="my-4 h-2 w-full rounded-lg bg-gray-700 lg:my-5" />
-            {Array.isArray(data?.menuOptionGroups) &&
-            data?.menuOptionGroups?.length > 0 ? (
-              <FormProvider {...form}>
-                <div className="flex flex-col">
-                  {Array.isArray(MandatoryOptions) &&
-                    MandatoryOptions?.length > 0 && (
-                      <OptionGroupSection
-                        data={data.menuOptionGroups.filter(
-                          (el) => el.type === "MANDATORY"
-                        )}
-                        type={type}
-                        required
-                      >
-                        필수 추가 옵션
-                      </OptionGroupSection>
-                    )}
 
-                  {Array.isArray(OptionalOptions) &&
-                    OptionalOptions?.length > 0 && (
-                      <>
-                        {Array.isArray(MandatoryOptions) &&
-                          MandatoryOptions?.length > 0 && (
-                            <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
-                          )}
+            {data?.menuOptionGroups?.length > 0 && (
+              <>
+                <div className="my-4 h-2 w-full rounded-lg bg-gray-700 lg:my-5" />
+                <FormProvider {...form}>
+                  <div className="flex flex-col">
+                    {Array.isArray(MandatoryOptions) &&
+                      MandatoryOptions?.length > 0 && (
                         <OptionGroupSection
                           data={data.menuOptionGroups.filter(
-                            (el) => el.type === "OPTIONAL"
+                            (el) => el.type === "MANDATORY"
                           )}
                           type={type}
+                          required
                         >
-                          선택 추가 옵션
+                          필수 추가 옵션
                         </OptionGroupSection>
-                      </>
-                    )}
-                </div>
-              </FormProvider>
-            ) : (
-              <div>추가 옵션이 없습니다.</div>
+                      )}
+
+                    {Array.isArray(OptionalOptions) &&
+                      OptionalOptions?.length > 0 && (
+                        <>
+                          {Array.isArray(MandatoryOptions) &&
+                            MandatoryOptions?.length > 0 && (
+                              <div className="h-[1px] w-full bg-gray-600 md:my-4 lg:my-5" />
+                            )}
+                          <OptionGroupSection
+                            data={data.menuOptionGroups.filter(
+                              (el) => el.type === "OPTIONAL"
+                            )}
+                            type={type}
+                          >
+                            선택 추가 옵션
+                          </OptionGroupSection>
+                        </>
+                      )}
+                  </div>
+                </FormProvider>
+              </>
             )}
           </ScrollArea>
           {type === "order" && data?.state !== "SOLD_OUT" && (

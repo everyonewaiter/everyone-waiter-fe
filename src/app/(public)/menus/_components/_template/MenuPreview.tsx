@@ -7,6 +7,8 @@ import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
+import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
+import Spinner from "@/components/common/Spinner";
 import { publicQueries } from "../../../_queries/usePublic";
 
 const MenuCard = dynamic(
@@ -31,11 +33,8 @@ export default function MenuPreview() {
 
   const { open, close } = useOverlay();
 
-  const handleOpenModal = () => {
-    open(() => <OriginModal close={close} />);
-  };
-
-  const { data } = publicQueries.usePreviewMenu(storeId);
+  const { data: storedata } = storesQueries.useStoresDetail(storeId);
+  const { data, isLoading } = publicQueries.usePreviewMenu(storeId);
   const menuList =
     activeTab === "전체"
       ? data?.categories.map((el) => el.menus).flat()
@@ -43,6 +42,10 @@ export default function MenuPreview() {
           .filter((v) => v.name === activeTab)
           .map((el) => el.menus)
           .flat();
+
+  const handleOpenModal = () => {
+    open(() => <OriginModal close={close} data={storedata!} />);
+  };
 
   return (
     <div className="min-h-full w-full bg-white px-5 pb-5 md:rounded-[20px] md:px-6 md:pb-6 lg:rounded-4xl lg:px-8 lg:pb-8">
@@ -85,26 +88,27 @@ export default function MenuPreview() {
           >
             전체
           </ResponsiveButton>
-          {data?.categories.map((key) => (
-            <ResponsiveButton
-              key={key.categoryId}
-              variant={activeTab === key.name ? "default" : "outline"}
-              color={activeTab === key.name ? "black" : "grey"}
-              responsiveButtons={{
-                lg: { buttonSize: "xl", className: "!text-lg !font-medium" },
-                md: { buttonSize: "sm", className: "!text-s" },
-                sm: { buttonSize: "sm" },
-              }}
-              onClick={() => setActiveTab(key.name)}
-              commonClassName={cn(
-                activeTab === key.name
-                  ? ""
-                  : "border-gray-500 hover:text-gray-300"
-              )}
-            >
-              {key.name}
-            </ResponsiveButton>
-          ))}
+          {!!data?.categories &&
+            data?.categories.map((key) => (
+              <ResponsiveButton
+                key={key.categoryId}
+                variant={activeTab === key.name ? "default" : "outline"}
+                color={activeTab === key.name ? "black" : "grey"}
+                responsiveButtons={{
+                  lg: { buttonSize: "xl", className: "!text-lg !font-medium" },
+                  md: { buttonSize: "sm", className: "!text-s" },
+                  sm: { buttonSize: "sm" },
+                }}
+                onClick={() => setActiveTab(key.name)}
+                commonClassName={cn(
+                  activeTab === key.name
+                    ? ""
+                    : "border-gray-500 hover:text-gray-300"
+                )}
+              >
+                {key.name}
+              </ResponsiveButton>
+            ))}
         </div>
         <ResponsiveButton
           variant="outline"
@@ -122,36 +126,46 @@ export default function MenuPreview() {
           원산지 정보
         </ResponsiveButton>
       </div>
-      <div className="-mx-5 h-[1px] w-dvw bg-gray-600 md:hidden" />
-      <div className="hidden md:grid md:grid-cols-4 md:gap-x-4 md:gap-y-4 lg:grid-cols-5 lg:gap-x-5 lg:gap-y-10">
-        {menuList?.map((item) => (
-          <MenuCard
-            key={item.menuId}
-            onClick={() =>
-              navigate.push(
-                `/menus/preview/${item.menuId}?storeId=${storeId}&categoryId=${item.categoryId}`
-              )
-            }
-            {...item}
-            className="!w-full md:!min-h-[290px] lg:!min-h-[417px]"
-          />
-        ))}
-      </div>
-      <div className="flex flex-col md:hidden">
-        {menuList?.map((item) => (
-          <Fragment key={item.menuId}>
-            <MobileMenuCard
-              onClick={() =>
-                navigate.push(
-                  `/menus/preview/${item.menuId}?storeId=${storeId}&categoryId=${item.categoryId}`
-                )
-              }
-              {...item}
-            />
-            <div className="h-[1px] w-full bg-gray-600" />
-          </Fragment>
-        ))}
-      </div>
+      <div className="-mx-5 h-[1px] w-dvw bg-gray-600" />
+      {!isLoading && (
+        <>
+          <div className="mt-4 hidden md:grid md:grid-cols-4 md:gap-x-4 md:gap-y-4 lg:grid-cols-5 lg:gap-x-5 lg:gap-y-10">
+            {!!menuList &&
+              menuList?.map((item) => (
+                <MenuCard
+                  key={item.menuId}
+                  onClick={() =>
+                    navigate.push(
+                      `/menus/preview/${item.menuId}?storeId=${storeId}&categoryId=${item.categoryId}`
+                    )
+                  }
+                  {...item}
+                  className="!w-full md:!min-h-[290px] lg:!min-h-[417px]"
+                />
+              ))}
+          </div>
+          <div className="flex flex-col md:hidden">
+            {menuList?.map((item) => (
+              <Fragment key={item.menuId}>
+                <MobileMenuCard
+                  onClick={() =>
+                    navigate.push(
+                      `/menus/preview/${item.menuId}?storeId=${storeId}&categoryId=${item.categoryId}`
+                    )
+                  }
+                  {...item}
+                />
+                <div className="h-[1px] w-full bg-gray-600" />
+              </Fragment>
+            ))}
+          </div>
+        </>
+      )}
+      {isLoading && (
+        <div className="h-full bg-red-50">
+          <Spinner />
+        </div>
+      )}
     </div>
   );
 }
