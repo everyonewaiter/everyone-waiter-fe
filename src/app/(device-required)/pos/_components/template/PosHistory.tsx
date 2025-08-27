@@ -61,7 +61,13 @@ export default function PosHistory() {
       <POSHeader2 />
       <div className="flex h-[calc(100dvh-133px)] w-full">
         <div className="relative flex w-full flex-1 flex-col px-[60px] pt-8 pb-6">
-          <DatePicker date={date} onSetDate={setDate} />
+          <DatePicker
+            date={date}
+            onSetDate={(d) => {
+              setDate(d);
+              setSelectedRow(null);
+            }}
+          />
           <div className="h-[704px]">
             <Table className="mt-6 w-full">
               <TableHeader>
