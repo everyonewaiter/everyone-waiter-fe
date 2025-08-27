@@ -29,7 +29,7 @@ export default async function Layout({ children }: PropsWithChildren) {
   if (!token || permission === "USER") redirect("/");
 
   return (
-    <div className="flex h-screen w-screen flex-col bg-white md:flex-row md:bg-[#F5F5F5]">
+    <div className="flex h-dvh w-dvw flex-col bg-white md:flex-row md:bg-[#F5F5F5]">
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Sidebar />
       </HydrationBoundary>

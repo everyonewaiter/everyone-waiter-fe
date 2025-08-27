@@ -7,8 +7,9 @@ interface IProps
   iconKey: string;
   color?: string;
   variant?: "default" | "outline";
-  className?: string;
+  iconClassName?: string;
   text: string;
+  className?: string;
 }
 
 export default function ActionButton({
@@ -16,8 +17,9 @@ export default function ActionButton({
   children,
   color,
   variant = "default",
-  className,
+  iconClassName,
   text,
+  className,
   ...props
 }: PropsWithChildren<IProps>) {
   return (
@@ -31,9 +33,10 @@ export default function ActionButton({
       }}
       color={color}
       variant={variant}
+      commonClassName={className}
       {...props}
     >
-      <Icon iconKey={iconKey} size={40} className={className} />
+      <Icon iconKey={iconKey} size={40} className={iconClassName} />
       <div className="flex flex-col gap-1">
         <strong className="text-xl font-semibold">{text}</strong>
         {children}

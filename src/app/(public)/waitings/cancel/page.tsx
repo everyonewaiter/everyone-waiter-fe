@@ -1,74 +1,53 @@
-"use client";
+import { Metadata } from "next";
+import { Suspense } from "react";
+import Spinner from "@/components/common/Spinner";
+import { redirect } from "next/navigation";
+import getQueryClient from "@/app/get-query-client";
+import { getTeamsFrontOfMe } from "../../_api/public.api";
+import CancelTurnPage from "../_components/_templates/CancelTurnPage";
 
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/common/InputOtp";
-import { useState } from "react";
-import Button from "@/components/common/Button/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import PublicComponent from "../_components/PublicComponent";
-import { publicQueries } from "../../_queries/usePublic";
+export const metadata: Metadata = {
+  title: "내 순서 취소하기",
+  description: "내 웨이팅 순서를 취소할 수 있다.",
+  icons: {
+    icon: "/logo/logo.svg",
+  },
+};
 
-export default function Page() {
-  const navigate = useRouter();
-  const searchParams = useSearchParams();
-  const storeId = searchParams.get("storeId") as string;
-  const accessKey = searchParams.get("accessKey") as string;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ storeId: string; accessKey: string }>;
+}) {
+  const { storeId, accessKey } = await searchParams;
 
-  const cancelMyTurn = publicQueries.useCancelMyTurn();
+  if (!storeId || !accessKey) {
+    throw new Error("필수 파라미터가 누락되었습니다.");
+  }
 
-  const [otpValue, setOtpValue] = useState("");
+  const queryClient = getQueryClient();
 
-  const handleCancel = () => {
-    // TODO: optValue 안 보냄 - 백엔드 요청
-    cancelMyTurn.mutate(
-      {
-        storeId,
-        accessKey,
-      },
-      {
-        onSuccess: () => {
-          navigate.push("/result?type=cancel");
-        },
-      }
+  try {
+    const data = await queryClient.fetchQuery({
+      queryKey: ["front-of-my-turn"],
+      queryFn: () => getTeamsFrontOfMe({ storeId, accessKey }),
+    });
+
+    if (data?.state === "CANCEL") {
+      redirect(`/waitings/result?type=cancel&storeId=${storeId}`);
+    } else if (data?.state === "COMPLETE") {
+      redirect(`/waitings/result?type=enter&storeId=${storeId}`);
+    }
+
+    return (
+      <Suspense fallback={<Spinner />}>
+        <CancelTurnPage storeId={storeId} key={accessKey} />
+      </Suspense>
     );
-  };
-
-  return (
-    <div className="center h-screen w-screen">
-      <PublicComponent
-        title={`웨이팅 등록을\n취소하시겠습니까?`}
-        subtitle={`웨이팅을 취소하면 다시 처음부터 대기해야 합니다.\n취소하시려면 아래 대기번호를 입력해주세요.`}
-      >
-        <div className="flex w-full justify-center">
-          <InputOTP maxLength={2} value={otpValue} onChange={setOtpValue}>
-            <InputOTPGroup className="flex items-center gap-3">
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
-      </PublicComponent>
-      <div className="absolute bottom-5 flex w-full gap-2 px-5">
-        <Button
-          color="grey"
-          className="button-lg w-20"
-          onClick={() => {
-            window.location.href = "kakaotalk://inappbrowser/close";
-          }}
-        >
-          닫기
-        </Button>
-        <Button
-          color="primary"
-          className="button-lg w-full"
-          onClick={handleCancel}
-        >
-          웨이팅 취소
-        </Button>
-      </div>
-    </div>
-  );
+  } catch (error: any) {
+    if (error?.response?.data?.code === "WAITING_NOT_FOUND") {
+      redirect(`/waitings/result?type=error&storeId=${storeId}`);
+    }
+    throw error;
+  }
 }

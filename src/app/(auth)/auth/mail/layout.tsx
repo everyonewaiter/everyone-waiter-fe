@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export default function BlankLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center">
+    <div className="flex h-dvh w-dvw flex-col items-center justify-center">
       <div className="flex flex-col items-center justify-center">
         <Image
           src="/images/hourglass.svg"

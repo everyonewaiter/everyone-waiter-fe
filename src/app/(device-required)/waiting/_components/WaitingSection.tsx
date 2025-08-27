@@ -1,9 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Icon from "@/components/common/Icon/Icon";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
 import useElapsedMinutes from "../_hooks/useElapsedMinutes";
 import ActionButton from "./ActionButton";
+import { formatCreatedTime } from "../_utils/formatCreatedTime";
+import { getFormattedLastCallTime } from "../_utils/getFormattedLastCallTime";
+import { isInitialValue } from "../_utils/isInitialValue";
 
 interface IProps extends Waiting {
   onCall: () => void;
@@ -18,21 +22,48 @@ export default function WaitingSection({
   ...waiting
 }: IProps) {
   const elapsedMinutes = useElapsedMinutes(waiting.createdAt);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex flex-1 flex-row items-center justify-between rounded-2xl bg-white px-10 py-8">
       <div>
-        <div className="mb-4 flex h-10 w-fit flex-row items-center justify-center rounded-3xl bg-gray-700 px-3 py-2">
-          <div className="flex flex-row items-center">
-            <Icon iconKey="smile" />
-            <span>성인 {waiting.adult}</span>
+        <div className="mb-4 flex flex-row items-center gap-4">
+          <div className="flex h-10 w-fit flex-row items-center justify-center rounded-3xl bg-gray-700 px-3 py-2">
+            <div className="flex flex-row items-center gap-1">
+              <Icon iconKey="smile" className="h-6 w-6" />
+              <span>성인 {waiting.adult}</span>
+            </div>
+            {waiting.infant > 0 && (
+              <>
+                <div className="mx-3 h-4 w-[1px] bg-gray-100" />
+                <div className="flex flex-row items-center">
+                  <Icon iconKey="baby" className="h-6 w-6" />
+                  <span className="mt-[1px]">아동 {waiting.infant}</span>
+                </div>
+              </>
+            )}
           </div>
-          {waiting.infant > 0 && (
+          {waiting.lastCallTime && !isInitialValue(waiting.lastCallTime) && (
             <>
-              <div className="mx-3 h-4 w-[1px] bg-gray-100" />
-              <div className="flex flex-row items-center">
-                <Icon iconKey="baby" />
-                <span className="mt-[1px]">아동 {waiting.infant}</span>
+              <div className="flex h-10 w-fit flex-row items-center justify-between gap-5 rounded-3xl bg-gray-700 px-5">
+                <span>총 호출 횟수</span>
+                <strong>{waiting.callCount}회</strong>
+              </div>
+              <div className="border-status-error flex h-10 w-fit flex-row items-center justify-between gap-[6px] rounded-3xl border px-5">
+                <Icon iconKey="bell" className="text-status-error h-6 w-6" />
+                <span className="text-status-error">
+                  마지막 호출 :{" "}
+                  {getFormattedLastCallTime(currentTime, waiting.lastCallTime)}{" "}
+                  전
+                </span>
               </div>
             </>
           )}
@@ -46,10 +77,12 @@ export default function WaitingSection({
           </strong>
           <div className="flex flex-row gap-2 rounded-lg bg-gray-700 px-4 py-[6px]">
             <span className="text-gray-0 text-lg font-semibold">
-              {elapsedMinutes}분 경과
+              {elapsedMinutes.split(":")[0]
+                ? `${elapsedMinutes.split(":")[0]}시간 ${elapsedMinutes.split(":")[1]}분 경과`
+                : `${elapsedMinutes.split(":")[1]}분 경과`}
             </span>
             <span className="text-status-error text-lg font-semibold">
-              {waiting.createdAt.split(" ")[1]}
+              {formatCreatedTime(waiting.createdAt)}
             </span>
           </div>
         </div>
@@ -58,7 +91,7 @@ export default function WaitingSection({
         <ActionButton
           type="button"
           iconKey="bell"
-          className="text-white"
+          iconClassName="text-white"
           text="호출"
           onClick={onCall}
         />
@@ -67,7 +100,8 @@ export default function WaitingSection({
           iconKey="door-open"
           variant="outline"
           color="primary"
-          className="text-primary"
+          iconClassName="text-primary"
+          className="hover:!text-primary hover:bg-transparent"
           text="입장"
           onClick={onEnterance}
         />

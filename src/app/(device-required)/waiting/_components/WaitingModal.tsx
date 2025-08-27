@@ -1,10 +1,12 @@
 import getQueryClient from "@/app/get-query-client";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon/Icon";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
 import transformPhoneNumber from "@/lib/formatting/transformPhoneNumber";
 import useElapsedMinutes from "../_hooks/useElapsedMinutes";
 import { waitingQueries } from "../_queries/useWaiting";
+import { formatCreatedTime } from "../_utils/formatCreatedTime";
+import { getFormattedLastCallTime } from "../_utils/getFormattedLastCallTime";
+import { isInitialValue } from "../_utils/isInitialValue";
 
 interface IProps extends Waiting {
   close: () => void;
@@ -16,7 +18,6 @@ const queryClient = getQueryClient();
 export default function WaitingModal({ close, type, ...waiting }: IProps) {
   const action = waitingQueries.useControlWaiting();
   const elapsedCreatedAt = useElapsedMinutes(waiting.createdAt);
-  const elapsedLastCall = useElapsedMinutes(waiting.lastCallTime);
 
   const handleTitle = () => {
     if (type === "call") return "호출";
@@ -44,7 +45,7 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
       topRightComponent={<div />}
     >
       <ModalWithTitle.Layout>
-        <div className="flex h-[275px] flex-row items-center gap-4 rounded-3xl bg-gray-700 p-5">
+        <div className="flex flex-row items-center gap-4 rounded-3xl bg-gray-700 p-5">
           <div className="flex flex-1 flex-col items-center gap-4">
             <span className="text-lg font-medium">대기 번호</span>
             <strong className="text-4xl font-bold">
@@ -52,9 +53,9 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
             </strong>
           </div>
           <div className="flex h-full w-[308px] flex-col rounded-3xl bg-white p-5">
-            <div className="flex h-10 w-fit flex-row items-center justify-center rounded-3xl bg-gray-700 px-3 py-2">
+            <div className="flex h-10 w-fit flex-row items-center justify-center rounded-3xl border border-gray-600 bg-gray-700 px-3 py-2">
               <div className="flex flex-row items-center">
-                <Icon iconKey="smile" />
+                <Icon iconKey="smile" className="h-6 w-6" />
                 <span>성인 {waiting.adult}</span>
               </div>
               {waiting.infant > 0 && (
@@ -70,16 +71,18 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
             <strong className="mt-3 text-[28px] font-bold">
               총 {waiting.adult + waiting.infant}명
             </strong>
-            <div className="mt-6 flex flex-col gap-3">
-              <strong className="text-gray-0 decoration-gray-0 text-xl font-semibold underline decoration-1 underline-offset-[8px]">
+            <div className="mt-4 flex flex-col gap-3">
+              <strong className="text-gray-0 decoration-gray-0 w-full text-xl font-semibold underline decoration-1 underline-offset-[8px]">
                 {transformPhoneNumber(waiting.phoneNumber)}
               </strong>
-              <div className="flex w-fit flex-row gap-3 rounded-lg bg-gray-700 px-4 py-[6px]">
+              <div className="flex w-full flex-row gap-3 rounded-lg bg-gray-700 px-4 py-[6px]">
                 <span className="text-gray-0 text-lg font-semibold">
-                  {elapsedCreatedAt}분 경과
+                  {elapsedCreatedAt.split(":")[0]
+                    ? `${elapsedCreatedAt.split(":")[0]}시간 ${elapsedCreatedAt.split(":")[1]}분 경과`
+                    : `${elapsedCreatedAt.split(":")[1]}분 경과`}
                 </span>
                 <span className="text-status-error text-lg font-semibold">
-                  {waiting.createdAt.split(" ")[1]}
+                  {formatCreatedTime(waiting.createdAt)}
                 </span>
               </div>
             </div>
@@ -87,33 +90,19 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
         </div>
         {type === "call" && (
           <div className="mt-2 flex flex-row gap-2">
-            <ResponsiveButton
-              responsiveButtons={{
-                lg: {
-                  buttonSize: "xl",
-                  className:
-                    "!border-gray-700 bg-gray-700 rounded-xl px-5 py-3 flex items-center justify-between !text-gray-0 w-full",
-                },
-              }}
-            >
-              <span className="text-base">총 호출한 횟수</span>
-              <span className="text-lg">{waiting.callCount}회</span>
-            </ResponsiveButton>
-            {Number(elapsedLastCall) <= 100 && (
-              <ResponsiveButton
-                variant="outline"
-                color="primary"
-                responsiveButtons={{
-                  lg: {
-                    buttonSize: "xl",
-                    className:
-                      "rounded-xl px-[20px] py-[12px] flex items-center justify-between !text-status-error w-full !border-status-error",
-                  },
-                }}
-              >
-                <span className="text-base">마지막 호출 시간</span>
-                <span className="text-lg">{elapsedLastCall}분 전</span>
-              </ResponsiveButton>
+            <div className="button-xl !text-gray-0 flex w-[320px] items-center justify-between rounded-xl !border-gray-700 bg-gray-700 !px-5">
+              <span className="text-base font-medium">총 호출한 횟수</span>
+              <span className="text-xl">{waiting.callCount}회</span>
+            </div>
+            {!isInitialValue(waiting.lastCallTime) && (
+              <div className="button-xl border-status-error flex w-full flex-row items-center justify-between rounded-xl border !px-5">
+                <span className="text-status-error text-base font-medium">
+                  마지막 호출 시간
+                </span>
+                <span className="text-status-error text-xl">
+                  {getFormattedLastCallTime(new Date(), waiting.lastCallTime)}전
+                </span>
+              </div>
             )}
           </div>
         )}
@@ -133,6 +122,7 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
           text: handleTitle(),
           onClick: () => handleCall(),
           disabled: false,
+          color: "black",
         }}
         cancelBtn={{ text: "닫기", onClick: close, disabled: false }}
       />

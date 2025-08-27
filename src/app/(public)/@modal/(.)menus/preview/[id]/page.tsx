@@ -27,8 +27,6 @@ export default function Page() {
         el.menuId === (Array.isArray(menuId) ? menuId[0] : menuId)
     );
 
-  // TODO: 원산지 표기 데이터 없음.
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <MenuModal

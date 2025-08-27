@@ -24,7 +24,7 @@ export default function MobileSidebar({ onClose }: IProps) {
     <div className="bg-opacity-100 fixed inset-0 z-[9998] flex backdrop-blur-sm md:hidden">
       <aside
         ref={ref}
-        className="relative flex h-screen w-[284px] flex-col overflow-auto rounded-tr-[10px] rounded-br-[10px] bg-white stroke-gray-600 px-4"
+        className="relative flex h-dvh w-[284px] flex-col overflow-auto rounded-tr-[10px] rounded-br-[10px] bg-white stroke-gray-600 px-4"
       >
         <div className="flex w-full items-center justify-between pt-5 pb-4">
           <button

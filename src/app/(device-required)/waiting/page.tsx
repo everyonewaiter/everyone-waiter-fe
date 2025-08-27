@@ -53,8 +53,8 @@ export default function Waiting() {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-gray-700">
-      <header className="fixed flex w-full flex-col gap-6 bg-gray-700 px-15 pt-10">
+    <div className="min-h-dvh w-dvw bg-gray-700">
+      <header className="flex w-full flex-col gap-6 bg-gray-700 px-15 pt-10">
         <div className="flex w-full flex-row items-center justify-between">
           <strong className="text-3xl font-bold">웨이팅 관리</strong>
           <div className="relative flex">
@@ -82,13 +82,13 @@ export default function Waiting() {
       <div className="mb-6 flex w-full items-center justify-between">
         <Button
           color="primary"
-          className="text-gray-0"
+          className="text-gray-0 button-lg"
           onClick={handleAddWaiting}
         >
           웨이팅 추가
         </Button>
       </div>
-      <div className="flex w-full flex-row gap-4 px-15 pt-38 pb-8">
+      <div className="flex w-full flex-row gap-4 px-15 pb-8">
         <section className="flex w-full flex-row gap-[25px]">
           <div className="flex w-12 flex-col gap-4">
             {list?.waitings?.map((item, index) => (

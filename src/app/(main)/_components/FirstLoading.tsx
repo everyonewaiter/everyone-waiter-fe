@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function FirstLoading() {
   return (
-    <div className="center bg-primary h-screen w-screen md:bg-white">
+    <div className="center bg-primary h-dvh w-dvw md:bg-white">
       <div className="animate-pulse">
         <Image
           src="/logo/logo-with-text.svg"

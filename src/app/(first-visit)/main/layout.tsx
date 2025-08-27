@@ -15,7 +15,7 @@ export default async function Layout({ children }: PropsWithChildren) {
   });
 
   return (
-    <div className="flex h-screen w-screen flex-col bg-white md:bg-gray-700">
+    <div className="flex h-dvh w-dvw flex-col bg-white md:bg-gray-700">
       <HydrationBoundary state={dehydrate(queryClient)}>
         {children}
       </HydrationBoundary>

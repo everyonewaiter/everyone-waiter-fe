@@ -101,7 +101,7 @@ export default function DetailTableOrder() {
   };
 
   return (
-    <div className="flex h-screen flex-row">
+    <div className="flex h-dvh flex-row">
       <div
         className="relative flex flex-1 flex-col"
         onClick={() => {

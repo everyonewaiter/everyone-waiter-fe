@@ -26,7 +26,7 @@ export default async function Layout({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <PageTitle initialTitle={pageTitle} storeId={id} />
 
-      <div className="h-screen w-screen bg-gray-700 lg:px-[60px] lg:py-[32px]">
+      <div className="h-dvh w-dvw bg-gray-700 lg:px-[60px] lg:py-[32px]">
         <div className="h-full w-full rounded-4xl bg-white lg:px-8">
           {children}
         </div>
