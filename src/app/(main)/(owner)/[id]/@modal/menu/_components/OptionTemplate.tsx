@@ -77,7 +77,7 @@ export default function OptionTemplate({
   return (
     <div
       className={cn(
-        "relative flex flex-col gap-4 rounded-xl border border-gray-600 p-3 lg:rounded-3xl lg:p-6",
+        "relative flex flex-col gap-4 overflow-visible rounded-xl border border-gray-600 p-3 lg:rounded-3xl lg:p-6",
         props.isOpen ? "h-[calc(100%-57px-40px)]" : "",
         className
       )}
