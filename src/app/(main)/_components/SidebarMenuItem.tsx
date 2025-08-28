@@ -29,7 +29,7 @@ export default function SidebarMenuItem({
         onMouseEnter={onPrefetchURL}
       >
         <div
-          className={`z-1 size-2 rounded-full ${
+          className={`size-2 rounded-full ${
             active ? "bg-primary" : "bg-gray-600"
           }`}
         />

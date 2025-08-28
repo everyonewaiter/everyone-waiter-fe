@@ -4,9 +4,11 @@ import CreatePage from "./_components/CreatePage";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ state?: string }>;
+  searchParams: Promise<{ state?: string; storeId?: string }>;
 }) {
-  const { state } = await searchParams;
+  const { state, storeId } = await searchParams;
+
+  console.log(state, storeId);
 
   switch (state) {
     case "pending":
@@ -36,7 +38,7 @@ export default async function Page({
     default:
       return (
         <div className="flex h-full w-full items-center justify-center md:items-start lg:items-center">
-          <CreatePage />
+          <CreatePage storeId={storeId} />
         </div>
       );
   }

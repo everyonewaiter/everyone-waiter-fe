@@ -19,7 +19,7 @@ export default function SidebarMenu({ selectedStoreId, permission }: IProps) {
   const comparePath = getComparePath(pathname, permission);
 
   const handleMenuClick = (href: string) => {
-    if (href === comparePath) return;
+    if (comparePath === href) return;
 
     startTransition(() => {
       if (permission === "OWNER") {

@@ -65,7 +65,7 @@ export default function StoreList({ storeId }: IProps) {
           />
         </QueryProviders>
       ));
-    } else if (item.status === "APPLY") {
+    } else if (item.status.endsWith("APPLY")) {
       open(() => (
         <QueryProviders>
           <PendingAcceptModal close={close} />
@@ -90,7 +90,9 @@ export default function StoreList({ storeId }: IProps) {
             startTransition(() => {
               setTimeout(() => {
                 navigate.push(
-                  permission === "USER" ? "/main/create" : "/create"
+                  permission === "USER"
+                    ? "/main/create"
+                    : `/create?storeId=${storeId}`
                 );
               }, 200);
             });

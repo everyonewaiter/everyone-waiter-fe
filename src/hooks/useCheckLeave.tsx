@@ -6,12 +6,15 @@ import QueryProviders from "@/app/query-providers";
 import LeavePageModal from "@/components/LeavePageModal";
 import useOverlay from "./useOverlay";
 
-export default function useLeaveGuard(shouldBlock: boolean) {
+export default function useLeaveGuard(
+  shouldBlock: boolean,
+  allowNavigation: boolean = false
+) {
   const { open, close } = useOverlay();
   const [isLeaving, setIsLeaving] = useState(false);
 
   const handleLeave = useCallback(() => {
-    if (isLeaving) return;
+    if (isLeaving || allowNavigation) return;
 
     open(() => (
       <QueryProviders>
@@ -30,10 +33,10 @@ export default function useLeaveGuard(shouldBlock: boolean) {
         />
       </QueryProviders>
     ));
-  }, [isLeaving, open, close]);
+  }, [isLeaving, open, close, allowNavigation]);
 
   const checkCanLeave = (onConfirm: () => void, message?: string) => {
-    if (!shouldBlock) {
+    if (!shouldBlock || allowNavigation) {
       onConfirm();
       return;
     }
@@ -68,7 +71,7 @@ export default function useLeaveGuard(shouldBlock: boolean) {
   };
 
   useEffect(() => {
-    if (!shouldBlock) return () => {};
+    if (!shouldBlock || allowNavigation) return () => {};
 
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -79,7 +82,7 @@ export default function useLeaveGuard(shouldBlock: boolean) {
     window.history.pushState({ guard: true }, "", window.location.href);
 
     const onPopState = () => {
-      if (!isLeaving) {
+      if (!isLeaving && !allowNavigation) {
         handleLeave();
       }
     };
@@ -90,7 +93,7 @@ export default function useLeaveGuard(shouldBlock: boolean) {
       window.removeEventListener("beforeunload", onBeforeUnload);
       window.removeEventListener("popstate", onPopState);
     };
-  }, [shouldBlock, isLeaving, handleLeave]);
+  }, [shouldBlock, isLeaving, handleLeave, allowNavigation]);
 
   return { checkCanLeave };
 }

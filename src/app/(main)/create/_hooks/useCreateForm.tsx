@@ -8,7 +8,7 @@ import { getClientCookie } from "@/lib/cookies/client";
 import { addStoreSchema, TypeAddStoreForm } from "@/schema/store.schema";
 import { storesQueries } from "../../(owner)/[id]/store/_queries/useStores";
 
-export default function useCreateForm() {
+export default function useCreateForm(storeId?: string) {
   const navigate = useRouter();
   const { mutate } = storesQueries.useRegister();
 
@@ -42,15 +42,21 @@ export default function useCreateForm() {
     if (data.image) {
       formData.append("file", data.image);
     }
+    setIsSubmitted(false);
 
     mutate(formData, {
       onError: () => setIsSubmitted(false),
       onSuccess: () => {
-        navigate.push(
-          `${permission === "USER" ? "/main" : ""}/create?state=pending`
-        );
+        setTimeout(() => {
+          if (permission === "USER") {
+            navigate.replace("/main/create?state=pending");
+          } else {
+            navigate.replace(`/${storeId}`);
+          }
+        }, 300);
         setIsSubmitted(false);
       },
+      onSettled: () => setIsSubmitted(false),
     });
   };
 
