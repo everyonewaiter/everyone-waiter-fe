@@ -65,7 +65,7 @@ export default function StoreList({ storeId }: IProps) {
           />
         </QueryProviders>
       ));
-    } else if (item.status === "APPLY") {
+    } else if (item.status.endsWith("APPLY")) {
       open(() => (
         <QueryProviders>
           <PendingAcceptModal close={close} />
