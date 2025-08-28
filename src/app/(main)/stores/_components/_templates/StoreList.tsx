@@ -90,7 +90,9 @@ export default function StoreList({ storeId }: IProps) {
             startTransition(() => {
               setTimeout(() => {
                 navigate.push(
-                  permission === "USER" ? "/main/create" : "/create"
+                  permission === "USER"
+                    ? "/main/create"
+                    : `/create?storeId=${storeId}`
                 );
               }, 200);
             });

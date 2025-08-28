@@ -6,10 +6,14 @@ import useCheckLeave from "@/hooks/useCheckLeave";
 import useCreateForm from "../_hooks/useCreateForm";
 import CreateForm from "./CreateForm";
 
-export default function CreatePage() {
-  const { form, onSubmit, isSubmitted } = useCreateForm();
+interface IProps {
+  storeId?: string;
+}
 
-  useCheckLeave(form.formState.isDirty);
+export default function CreatePage({ storeId }: IProps) {
+  const { form, onSubmit, isSubmitted } = useCreateForm(storeId);
+
+  useCheckLeave(form.formState.isDirty, true);
 
   return (
     <div className="flex items-start justify-between rounded-4xl bg-white md:w-[722px] md:p-8 lg:w-[888px]">
