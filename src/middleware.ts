@@ -68,7 +68,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // 정적/이미지/아이콘/스크립트/API 등 제외
-    "/((?!_next/static|_next/image|favicon.ico|logo\\.svg|apple-touch-icon\\.png|icon-\\d+x\\d+\\.png|manifest\\.webmanifest|images|fonts|scripts|robots\\.txt|sitemap\\.xml|api).*)",
+    "/((?!_next/static|_next/image|favicon.ico|logo/|apple-touch-icon\\.png|icon-\\d+x\\d+\\.png|manifest\\.webmanifest|images|fonts|scripts|robots\\.txt|sitemap\\.xml|api).*)",
   ],
 };

@@ -1,7 +1,7 @@
 import { getToken } from "@/lib/cookies";
-import { notFound, redirect } from "next/navigation";
-import { getStoreList } from "./(main)/(owner)/[id]/store/_api/stores.api";
+import { redirect } from "next/navigation";
 import FirstLoading from "./(main)/_components/FirstLoading";
+import OwnerRedirectHandler from "./(main)/_components/OwnerRedirectHandler";
 
 export default async function Page() {
   const accessToken = await getToken("accessToken");
@@ -13,13 +13,8 @@ export default async function Page() {
   if (permission === "USER") redirect("/main");
 
   if (permission === "OWNER") {
-    const { stores } = await getStoreList(accessToken);
-    const firstStoreId = stores?.[0]?.storeId;
-    if (firstStoreId) redirect(`/${firstStoreId}`);
-    notFound();
+    return <OwnerRedirectHandler />;
   }
-
-  notFound();
 
   return <FirstLoading />;
 }

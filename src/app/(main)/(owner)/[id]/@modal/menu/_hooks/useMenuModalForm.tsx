@@ -9,7 +9,13 @@ import {
   TypeMenuForm,
 } from "../../../menu/_schema/menu.schema";
 
-export default function useMenuModalForm(data?: MenuDetail) {
+export default function useMenuModalForm({
+  data,
+  initialCategoryId,
+}: {
+  data?: MenuDetail;
+  initialCategoryId?: string;
+}) {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId");
 
@@ -19,7 +25,7 @@ export default function useMenuModalForm(data?: MenuDetail) {
     defaultValues: {
       imgFile: undefined as unknown as File,
       imgString: "",
-      category: "",
+      category: initialCategoryId ?? "",
       name: "",
       description: "",
       price: "",

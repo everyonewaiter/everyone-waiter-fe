@@ -3,7 +3,7 @@
 
 import { Mutex } from "async-mutex";
 import axios, { AxiosInstance } from "axios";
-import { getToken, setCookie } from "../cookies";
+import { getToken } from "../cookies";
 import { getClientCookie, setClientCookie } from "../cookies/client";
 
 let refreshPromise: Promise<any> | null = null;
@@ -12,7 +12,13 @@ const mutex = new Mutex();
 const client = axios.create();
 
 const logout = async () => {
+  if (typeof window === "undefined") return;
+
   try {
+    setClientCookie("accessToken", "");
+    setClientCookie("refreshToken", "");
+    setClientCookie("permission", "");
+
     await client.post("/api/auth/logout", {}, { withCredentials: true });
   } finally {
     window.location.href = "/login";
@@ -44,6 +50,10 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
     async (error) => {
       const originalRequest = error.config as any;
 
+      if (typeof window === "undefined") {
+        return Promise.reject(error);
+      }
+
       if (
         error.response?.status === 401 &&
         !originalRequest._retry &&
@@ -52,44 +62,30 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
         originalRequest._retry = true;
 
         if (refreshPromise) {
-          const accessToken = await refreshPromise;
-          if (!accessToken) throw error;
-          originalRequest.headers = originalRequest.headers ?? {};
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          return axiosInstance(originalRequest);
+          try {
+            const accessToken = await refreshPromise;
+            if (!accessToken) throw error;
+            originalRequest.headers = originalRequest.headers ?? {};
+            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+            return await axiosInstance(originalRequest);
+          } catch (refreshError) {
+            throw error;
+          }
         }
 
         refreshPromise = mutex.runExclusive(async () => {
           try {
-            if (typeof window === "undefined") {
-              // SSR
-              const res = await fetch("/api/refresh", {
-                method: "POST",
-                cache: "no-store",
-              });
-              if (!res.ok) return null;
-              const { accessToken } = await res.json().catch(() => {});
-
-              if (!accessToken) {
-                await logout();
-                return await Promise.reject(error);
-              }
-
-              await setCookie("accessToken", accessToken);
-              return accessToken;
-            }
-            // csr
-
             const res = await client.post(
               "/api/refresh",
               {},
               { withCredentials: true }
             );
+
             const newToken = res.data?.accessToken;
 
             if (!newToken) {
               await logout();
-              return await Promise.reject(error);
+              return null;
             }
 
             setClientCookie("accessToken", newToken);
@@ -102,11 +98,16 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
           }
         });
 
-        const newToken = await refreshPromise;
-        if (!newToken) throw error;
-        originalRequest.headers = originalRequest.headers ?? {};
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axiosInstance(originalRequest);
+        try {
+          const newToken = await refreshPromise;
+          if (!newToken) throw error;
+
+          originalRequest.headers = originalRequest.headers ?? {};
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return await axiosInstance(originalRequest);
+        } catch (refreshError) {
+          throw error;
+        }
       }
 
       return Promise.reject(error);

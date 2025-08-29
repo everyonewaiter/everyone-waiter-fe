@@ -1,51 +1,24 @@
-"use client";
+import ClientRefWrapper from "../../../_components/Wrapper";
+import DetailMenuPage from "../../../_components/DetailMenuModal/DetailMenuPage";
 
-import { useParams } from "next/navigation";
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import Spinner from "@/components/common/Spinner";
-import { menuQueries } from "../../../../../menu/_queries/useMenu";
+export default async function Page({
+  searchParams,
+  params,
+}: {
+  searchParams: Promise<{ hideModal: string }>;
+  params: Promise<{ id: string; menuId: string; categoryId: string }>;
+}) {
+  const p = await params;
 
-const DetailMenuModal = dynamic(
-  () => import("../../../_components/DetailMenuModal/index"),
-  { ssr: false }
-);
+  const { hideModal } = await searchParams;
 
-export default function Page() {
-  const params = useParams();
-
-  const storeId = params?.id as string;
-  const menuId = params?.menuId as string;
-  const categoryId = params?.categoryId as string;
-
-  const { data, isLoading, refetch } = menuQueries.useMenuDetail(
-    storeId,
-    categoryId ?? "",
-    menuId
-  );
-
-  const [isEditing, setIsEditing] = useState(false);
-
-  if (isLoading || !categoryId)
-    return (
-      <div className="center h-full w-full">
-        <Spinner />
-      </div>
-    );
+  if (hideModal === "true") {
+    return null;
+  }
 
   return (
-    <DetailMenuModal
-      isEditing={isEditing}
-      onSetEditing={(value) => {
-        if (value) {
-          setIsEditing(true);
-        } else {
-          setIsEditing(false);
-          refetch();
-        }
-      }}
-      type="update"
-      data={data}
-    />
+    <ClientRefWrapper className="aspect-[1344/832] md:h-auto md:w-[1000px] lg:h-[832px] lg:w-[1344px]">
+      <DetailMenuPage {...p} storeId={p?.id} />
+    </ClientRefWrapper>
   );
 }

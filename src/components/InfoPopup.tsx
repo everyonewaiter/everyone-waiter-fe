@@ -2,10 +2,11 @@
 
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useModalCloseTriggers } from "@/hooks/useModalCloseTriggers";
 import useAuthStore from "@/stores/useAuthStore";
 import Icon from "./common/Icon/Icon";
+import Loading from "./Loading";
 
 const popupList = {
   OWNER: [
@@ -31,6 +32,9 @@ export default function InfoPopup({ close, storeId }: IProps) {
   const navigate = useRouter();
   const { user } = useAuthStore();
 
+  const [startLogout, setStartLogout] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
   useModalCloseTriggers({
     ref,
     onClose: close,
@@ -42,9 +46,13 @@ export default function InfoPopup({ close, storeId }: IProps) {
   };
 
   const handleLogout = async () => {
-    await axios.post("/api/auth/logout", {}, { withCredentials: true });
-    navigate.refresh();
-    handleNavigate("/login");
+    setStartLogout(true);
+    startTransition(async () => {
+      await axios.post("/api/auth/logout");
+      navigate.refresh();
+      navigate.push("/login");
+      close();
+    });
   };
 
   return (
@@ -58,21 +66,29 @@ export default function InfoPopup({ close, storeId }: IProps) {
         right: "var(--popup-right, 0px)",
       }}
     >
-      <div
-        className="flex h-9 w-full items-center gap-1 overflow-hidden rounded-lg bg-gray-700 px-2 md:gap-2 lg:h-12 lg:px-4"
-        aria-label="사용자 정보"
-      >
+      {startLogout && (
         <div
-          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-2xl border border-gray-500 bg-white lg:h-7 lg:w-7"
-          aria-hidden="true"
+          className={`transition-opacity duration-300 ${isPending ? "opacity-100 delay-300" : "opacity-0"}`}
         >
-          <Icon iconKey="user" size={16} className="h-4 w-4 lg:h-6 lg:w-6" />
+          <Loading />
         </div>
-        <span className="min-w-0 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-gray-100 lg:text-sm">
-          {user?.permission === "ADMIN" ? "admin" : user?.email}
-        </span>
-      </div>
-
+      )}
+      {user?.permission !== "ADMIN" && (
+        <div
+          className="flex h-9 w-full items-center gap-1 overflow-hidden rounded-lg bg-gray-700 px-2 md:gap-2 lg:h-12 lg:px-4"
+          aria-label="사용자 정보"
+        >
+          <div
+            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-2xl border border-gray-500 bg-white lg:h-7 lg:w-7"
+            aria-hidden="true"
+          >
+            <Icon iconKey="user" size={16} className="h-4 w-4 lg:h-6 lg:w-6" />
+          </div>
+          <span className="min-w-0 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-gray-100 lg:text-sm">
+            {user?.email}
+          </span>
+        </div>
+      )}
       {popupList[user?.permission as keyof typeof popupList]?.map((item) => (
         <div
           key={item.text}

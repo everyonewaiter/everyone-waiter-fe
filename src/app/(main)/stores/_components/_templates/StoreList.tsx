@@ -76,14 +76,14 @@ export default function StoreList({ storeId }: IProps) {
 
   function AddButton() {
     return (
-      <div className="z-10 hidden w-full justify-end md:flex">
+      <div className="z-10 flex w-full justify-end">
         <ResponsiveButton
           variant="outline"
           color="primary"
           responsiveButtons={{
             lg: { buttonSize: "lg" },
             md: { buttonSize: "sm" },
-            sm: { buttonSize: "sm" },
+            sm: { buttonSize: "sm", className: "mb-3" },
           }}
           onClick={() => {
             setIsLoading(true);
@@ -98,7 +98,7 @@ export default function StoreList({ storeId }: IProps) {
             });
           }}
         >
-          <div className="flex flex-row items-center lg:gap-1.5">
+          <div className="flex flex-row items-center gap-1.5">
             <Plus className="fill-primary h-4 w-4" />
             <span>매장 추가</span>
           </div>
@@ -116,7 +116,7 @@ export default function StoreList({ storeId }: IProps) {
       </div>
 
       <div className="flex w-full flex-1 flex-col">
-        {!pathname.startsWith("/main") && <AddButton />}
+        <AddButton />
         {isMobile ? (
           <div className="flex flex-col gap-4">
             {data?.content.map((item, index) => (
@@ -131,7 +131,6 @@ export default function StoreList({ storeId }: IProps) {
         ) : (
           <Tables data={data?.content} onOpenModal={handleOpenModal} />
         )}
-        {pathname.startsWith("/main") && <AddButton />}
       </div>
       {!pathname.startsWith("/main") && (
         <Paginations

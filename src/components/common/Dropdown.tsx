@@ -58,11 +58,11 @@ export default function Dropdown({
         }
       }}
     >
-      <div className="relative z-[9998] w-full">
+      <div className="relativew-full">
         <DropdownMenuTrigger
           asChild
           disabled={disabled}
-          className="w-full cursor-pointer outline-none"
+          className="z-[9990] w-full cursor-pointer outline-none"
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -71,7 +71,7 @@ export default function Dropdown({
             type="button"
             className={cn(
               "flex h-9 w-fit items-center justify-center gap-[6px] rounded-[40px] border border-gray-600 pr-3 pl-3 hover:border-gray-400 md:h-[38px] md:pl-4",
-              "font-regular text-s md:text-xs lg:text-sm",
+              "font-regular text-s lg:text-sm",
               disabled
                 ? "pointer-events-none cursor-not-allowed bg-[#F5F5F5] text-gray-300 placeholder:text-gray-400"
                 : "text-gray-0",
@@ -85,7 +85,7 @@ export default function Dropdown({
             }}
             tabIndex={disabled ? -1 : 0}
           >
-            <span className="md:text-s text-sm whitespace-nowrap lg:text-[15px]">
+            <span className="text-s whitespace-nowrap lg:text-[15px]">
               {active || defaultText}
             </span>
             {isOpen ? (
@@ -112,7 +112,7 @@ export default function Dropdown({
               : "var(--radix-dropdown-menu-trigger-width)",
           }}
           className={cn(
-            "z-[9998] mt-1 w-full rounded-2xl bg-white px-2 py-3 text-left shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
+            "z-[9999] mt-1 w-full rounded-2xl bg-white px-2 py-3 text-left shadow-[0px_2px_10px_rgba(0,0,0,0.08)]",
             className
           )}
           onClick={(e) => e.stopPropagation()}

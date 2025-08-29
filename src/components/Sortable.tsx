@@ -9,10 +9,11 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@/components/dnd/index";
+import { Props } from "@dnd-kit/core/dist/components/DragOverlay";
 import { SortingStrategy } from "@dnd-kit/sortable";
-import { PropsWithChildren } from "react";
+import { NamedExoticComponent, PropsWithChildren } from "react";
 
-interface IProps {
+interface IProps extends Partial<NamedExoticComponent<Props>> {
   items: any[];
   onDragEnd: (event: any) => void;
   sortingStrategy?: SortingStrategy;
@@ -23,6 +24,7 @@ export default function Sortable({
   onDragEnd,
   children,
   sortingStrategy,
+  ...props
 }: PropsWithChildren<IProps>) {
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -31,10 +33,12 @@ export default function Sortable({
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={onDragEnd}
+      {...props}
     >
       <SortableContext
         items={items}
         strategy={sortingStrategy ?? verticalListSortingStrategy}
+        {...props}
       >
         {children}
       </SortableContext>

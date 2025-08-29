@@ -16,7 +16,6 @@ interface IProps extends StoreDetail {
 }
 
 export default function MobileTables({ onClick, tableNo, ...props }: IProps) {
-  console.log(props);
   return (
     <MobileTable className="z-10" onClick={() => onClick(props)}>
       <TableBody className="flex flex-col">

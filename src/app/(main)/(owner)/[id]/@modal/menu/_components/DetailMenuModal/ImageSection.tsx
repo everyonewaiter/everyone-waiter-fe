@@ -31,7 +31,7 @@ export default function ImageSection({ isEditing }: IProps) {
     <section className="flex basis-[28.44%] flex-col gap-1 lg:gap-2">
       <div
         className={cn(
-          "overflow-hidden rounded-xl md:h-[280px] lg:h-[478px] lg:rounded-3xl",
+          "h-[373px] overflow-hidden rounded-xl md:h-[280px] lg:h-[478px] lg:rounded-3xl",
           watch("imgString") ? "" : "border border-gray-500",
           formState.errors.imgString ? "border-status-error" : ""
         )}
@@ -79,7 +79,7 @@ export default function ImageSection({ isEditing }: IProps) {
         <>
           <button
             type="button"
-            className="center lg:text-s text-gray-0 md:font-regular h-8 rounded-lg border border-gray-300 text-xs lg:h-9 lg:font-medium"
+            className="center lg:text-s md:font-regular h-8 rounded-lg border border-gray-400 text-xs text-gray-100 lg:h-9 lg:font-medium"
             onClick={() => fileRef.current?.click()}
           >
             이미지 {watch("imgString") ? "수정" : "등록"}

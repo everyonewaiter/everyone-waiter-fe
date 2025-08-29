@@ -8,8 +8,6 @@ export default async function Page({
 }) {
   const { state, storeId } = await searchParams;
 
-  console.log(state, storeId);
-
   switch (state) {
     case "pending":
       return (
@@ -37,7 +35,7 @@ export default async function Page({
       );
     default:
       return (
-        <div className="flex h-full w-full items-center justify-center md:items-start lg:items-center">
+        <div className="min-h-[801px]:py-0 flex h-full w-full items-center justify-center py-8 md:items-start lg:items-center">
           <CreatePage storeId={storeId} />
         </div>
       );

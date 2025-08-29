@@ -46,6 +46,8 @@ export default function OrderSection({
   const { updateSetting } = useSettings(storeId);
 
   const handleDrag = ({ active, over }: any) => {
+    document.body.style.overflow = "hidden";
+
     if (active.id !== over?.id) {
       const oldIndex = items.indexOf(active.id);
       const newIndex = items.indexOf(over.id);
@@ -53,6 +55,7 @@ export default function OrderSection({
       setItems(changeSort);
       updateSetting({ staffCallOptions: changeSort });
     }
+    document.body.style.overflow = "";
   };
 
   useEffect(() => {
@@ -74,7 +77,7 @@ export default function OrderSection({
             }
           />
         </div>
-        <div className="flex w-full items-center">
+        <div className="flex w-full gap-12 md:items-center md:gap-1">
           <span className="flex-1 text-sm">
             손님 테이블 주문 내역에서 총 주문금액 표시하기
           </span>
@@ -85,7 +88,7 @@ export default function OrderSection({
             }
           />
         </div>
-        <div className="flex w-full flex-col gap-3 md:gap-2 lg:gap-3">
+        <div className="mb-0 flex w-full flex-col gap-3 md:mb-3 md:gap-2 lg:gap-3">
           <span className="flex-1 text-sm">
             직원 호출 페이지에 옵션 추가{" "}
             <span className="md:text-xxs ml-1 text-xs font-medium text-gray-300 lg:ml-[6px] lg:text-xs">

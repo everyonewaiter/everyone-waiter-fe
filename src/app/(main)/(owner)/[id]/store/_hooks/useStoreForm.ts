@@ -31,6 +31,10 @@ export default function useStoreForm(storeId: string) {
     name: "origins",
   });
 
+  const resetOrigins = () => {
+    form.setValue("origins", data?.setting.countryOfOrigins ?? []);
+  };
+
   const submitHandler = (
     action: UseMutationResult<any, Error, any, unknown>,
     successHandler: () => void
@@ -77,5 +81,6 @@ export default function useStoreForm(storeId: string) {
     submitHandler,
     appendOrigin,
     removeOrigin: remove,
+    resetOrigins,
   };
 }
