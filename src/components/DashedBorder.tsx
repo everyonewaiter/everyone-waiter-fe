@@ -1,4 +1,4 @@
-import React from "react";
+import { useRef, useEffect, useState } from "react";
 import cn from "@/lib/utils";
 
 interface DottedBorderBoxProps {
@@ -26,6 +26,12 @@ export default function DashedBorder({
   gap = 8,
   radius = { sm: 12, md: 16, lg: 24 },
 }: DottedBorderBoxProps) {
+  const [dimensions, setDimensions] = useState<{
+    width: number;
+    height: number;
+  }>({ width: 0, height: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const sizeList = ["sm", "md", "lg"] as const;
 
   const getSize = (size: (typeof sizeList)[number]) => {
@@ -35,11 +41,25 @@ export default function DashedBorder({
     return "hidden";
   };
 
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setDimensions({ width: rect.width, height: rect.height });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+
   return (
     <>
       {sizeList.map((size) => (
         <div
           key={size}
+          ref={containerRef}
           className={`relative ${getSize(size)} ${layoutClassName}`}
           style={{ borderRadius: radius[size] }}
         >
@@ -47,8 +67,8 @@ export default function DashedBorder({
             <rect
               x={strokeWidth / 2}
               y={strokeWidth / 2}
-              width={`calc(100%-${strokeWidth}px)`}
-              height={`calc(100%-${strokeWidth}px)`}
+              width={Math.max(0, dimensions.width - strokeWidth)}
+              height={Math.max(0, dimensions.height - strokeWidth)}
               rx={radius[size]}
               ry={radius[size]}
               fill="none"
