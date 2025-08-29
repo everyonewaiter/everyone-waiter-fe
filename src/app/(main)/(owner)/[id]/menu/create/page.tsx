@@ -1,5 +1,5 @@
 import MenuList from "../_components/MenuList";
 
-export default function Page() {
+export default async function Page() {
   return <MenuList />;
 }

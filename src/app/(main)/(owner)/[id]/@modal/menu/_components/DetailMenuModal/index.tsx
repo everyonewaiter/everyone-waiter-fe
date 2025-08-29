@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider } from "react-hook-form";
@@ -9,12 +8,9 @@ import ImageSection from "./ImageSection";
 import ModalButton from "./ModalButton";
 import useMenuModalForm from "../../_hooks/useMenuModalForm";
 import useHandleMenuSubmit from "../../_hooks/useHandleMenuSubmit";
-
-const FormSection = dynamic(() => import("../FormSection"), { ssr: false });
-const OptionTemplate = dynamic(() => import("../OptionTemplate"), {
-  ssr: false,
-});
-const Header = dynamic(() => import("../Header"), { ssr: false });
+import Header from "../Header";
+import FormSection from "../FormSection";
+import OptionTemplate from "../OptionTemplate";
 
 enum OptionType {
   REQUIRED = "required",
@@ -23,9 +19,10 @@ enum OptionType {
 
 interface IProps {
   isEditing: boolean;
-  onSetEditing: (value: boolean) => void;
+  onSetEditing?: (value: boolean) => void;
   type: "create" | "update";
   data?: MenuDetail;
+  isPage?: boolean;
 }
 
 export default function DetailMenuModal({
@@ -33,6 +30,7 @@ export default function DetailMenuModal({
   onSetEditing,
   type,
   data,
+  isPage,
 }: IProps) {
   const navigate = useRouter();
 
@@ -74,12 +72,12 @@ export default function DetailMenuModal({
       >
         {/* 헤더 */}
         <div className="shrink-0">
-          <Header onNavigate={() => navigate.back()} />
+          <Header onNavigate={() => navigate.back()} isPage={isPage!} />
         </div>
         {/* 콘텐츠 */}
 
-        <div className="overflow-hidden">
-          <div className="scrollbar-hide flex h-full w-full flex-col overflow-y-auto md:flex-row md:gap-3 lg:gap-[18px]">
+        <div className="mt-5 overflow-hidden md:mt-0">
+          <div className="scrollbar-hide flex h-full w-full flex-col md:flex-row md:gap-3 md:overflow-y-auto lg:gap-[18px]">
             {/* 이미지 표시 및 등록 */}
             <ImageSection isEditing={isEditing} />
 
@@ -87,14 +85,20 @@ export default function DetailMenuModal({
             <FormSection isEditing={isEditing} storeId={storeId} type={type} />
 
             {/* 옵션 정보 등록 / 수정 */}
-            <section className="flex h-full basis-[31.3%] flex-col gap-3 lg:gap-[18px]">
+            <section className="mt-4 flex h-full basis-[31.3%] flex-col gap-3 md:mt-0 lg:gap-[18px]">
               <OptionTemplate
                 title="필수 옵션"
                 onSetShowInfo={(value) =>
                   setShowInfo({ ...showInfo, required: value })
                 }
                 showInfo={showInfo.required}
-                onClick={() => setCurrentOption(OptionType.REQUIRED)}
+                onClick={() => {
+                  if (currentOption === OptionType.REQUIRED) {
+                    setCurrentOption(OptionType.OPTIONAL);
+                  } else {
+                    setCurrentOption(OptionType.REQUIRED);
+                  }
+                }}
                 isOpen={currentOption === "required"}
                 type="requiredOptions"
                 isEditing={isEditing}
@@ -107,7 +111,13 @@ export default function DetailMenuModal({
                   setShowInfo({ ...showInfo, optional: value })
                 }
                 showInfo={showInfo.optional}
-                onClick={() => setCurrentOption(OptionType.OPTIONAL)}
+                onClick={() => {
+                  if (currentOption === OptionType.OPTIONAL) {
+                    setCurrentOption(OptionType.REQUIRED);
+                  } else {
+                    setCurrentOption(OptionType.OPTIONAL);
+                  }
+                }}
                 isOpen={currentOption === "optional"}
                 type="optionalOptions"
                 isEditing={isEditing}
@@ -115,10 +125,11 @@ export default function DetailMenuModal({
                 isUpdate={type === "update"}
               />
             </section>
-            <div className="flex w-full justify-center md:hidden">
+            <div className="mt-5 mb-8 flex w-full justify-center md:hidden">
               <ModalButton
+                color="primary"
                 isEditing={isEditing}
-                onSetEditing={onSetEditing}
+                onSetEditing={onSetEditing!}
                 isSubmitted={isSubmitted}
                 {...data}
               />
@@ -130,7 +141,7 @@ export default function DetailMenuModal({
         <div className="hidden w-full justify-center md:flex">
           <ModalButton
             isEditing={isEditing}
-            onSetEditing={onSetEditing}
+            onSetEditing={onSetEditing!}
             isSubmitted={isSubmitted}
             {...data}
           />

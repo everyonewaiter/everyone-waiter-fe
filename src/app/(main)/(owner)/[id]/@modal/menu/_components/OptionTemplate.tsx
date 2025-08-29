@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import cn from "@/lib/utils";
-import OptionComponent from "./OptionComponent";
+import OptionHeader from "./OptionHeader";
 import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
 import OptionItem from "./OptionItem";
 
@@ -79,8 +79,8 @@ export default function OptionTemplate({
   return (
     <div
       className={cn(
-        "relative flex flex-col gap-4 overflow-visible rounded-xl border border-gray-600 p-3 lg:rounded-3xl lg:p-6",
-        props.isOpen ? "h-[calc(100%-57px-40px)]" : "",
+        "relative flex flex-col gap-4 overflow-visible rounded-xl border border-gray-600 p-4 md:p-3 lg:rounded-3xl lg:p-6",
+        props.isOpen ? "h-[388px] md:h-[calc(100%-57px-40px)]" : "",
         className
       )}
       onClick={onClick}
@@ -92,7 +92,7 @@ export default function OptionTemplate({
         }
       }}
     >
-      <OptionComponent
+      <OptionHeader
         {...props}
         onSetPopupAction={setPopupAction}
         popupAction={popupAction}
@@ -130,7 +130,7 @@ export default function OptionTemplate({
               >
                 <div
                   className={cn(
-                    "scrollbar-hide flex flex-col gap-3 overflow-y-auto",
+                    "scrollbar-hide flex h-[266px] flex-col gap-3 overflow-y-auto md:h-auto",
                     isEditing ? "cursor-pointer" : ""
                   )}
                   style={{
@@ -160,7 +160,7 @@ export default function OptionTemplate({
           ) : (
             <div
               className={cn(
-                "scrollbar-hide flex flex-col gap-3 overflow-y-auto",
+                "scrollbar-hide flex h-[266px] flex-col gap-3 overflow-y-auto md:h-auto",
                 isEditing ? "cursor-pointer" : ""
               )}
               style={{
@@ -184,7 +184,6 @@ export default function OptionTemplate({
               ))}
             </div>
           )}
-
           {!isEditing && form.watch(type)?.length === 0 && (
             <div className="center h-full w-full text-sm">
               {type.startsWith("required") ? "필수" : "선택"} 옵션이 없습니다.
@@ -213,6 +212,9 @@ export default function OptionTemplate({
           )}
         </div>
       ) : null}
+      {!groups.length && !isEditing && (
+        <div className="center h-full w-full text-xs text-gray-300">hi</div>
+      )}
     </div>
   );
 }

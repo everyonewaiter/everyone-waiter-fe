@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Icon from "@/components/common/Icon/Icon";
 import FloatingInfo from "@/components/FloatingInfo";
@@ -16,7 +17,7 @@ interface IProps {
   onComplete?: () => void;
 }
 
-export default function OptionComponent({
+export default function OptionHeader({
   title,
   onSetPopupAction,
   popupAction,
@@ -89,7 +90,16 @@ export default function OptionComponent({
             className="text-gray-0 h-5 w-5 lg:h-6 lg:w-6"
           />
         </button>
-
+        {!hasOption && isOpen && (
+          <button type="button" className="flex items-center gap-1">
+            <ChevronUp className="h-4 w-4 text-gray-200" strokeWidth={2} />
+          </button>
+        )}
+        {!hasOption && !isOpen && (
+          <button type="button" className="flex items-center gap-1">
+            <ChevronDown className="h-4 w-4 text-gray-200" strokeWidth={2} />
+          </button>
+        )}
         {hasOption && isOpen && isEditing && (
           <>
             {popupAction ? (
