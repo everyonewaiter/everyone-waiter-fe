@@ -11,6 +11,7 @@ import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
 import useCheckLeave from "@/hooks/useCheckLeave";
 import Input from "@/components/common/Input";
+import DashedBorder from "@/components/DashedBorder";
 import phoneNumberPattern from "@/lib/formatting/formatPhoneNumber";
 import { storesQueries } from "../_queries/useStores";
 import Origins from "./Origins";
@@ -32,6 +33,7 @@ export default function FormComponent({ storeId }: IProps) {
     submitHandler,
     appendOrigin,
     removeOrigin,
+    resetOrigins,
   } = useStoreForm(storeId);
 
   useCheckLeave(form.formState.isDirty);
@@ -114,31 +116,25 @@ export default function FormComponent({ storeId }: IProps) {
           )}
           {isEditing && (
             <>
-              <ResponsiveButton
+              <button
                 type="button"
-                variant="outline"
-                color="gray"
-                responsiveButtons={{
-                  sm: {
-                    buttonSize: "sm",
-                    className: "mt-6 !h-[34px] !gap-2 items-center md:hidden",
-                  },
-                  md: {
-                    buttonSize: "sm",
-                    className:
-                      "!h-[34px] hidden md:flex items-center !gap-1 mt-6",
-                  },
-                  lg: {
-                    buttonSize: "lg",
-                    className: "mt-8 !font-medium border-gray-0",
-                  },
-                }}
-                disabled={updateInfo.isPending}
-                commonClassName="border-dashed mt-3"
                 onClick={appendOrigin}
+                disabled={updateInfo.isPending}
               >
-                <Plus className="h-5 w-5 text-gray-400" />
-              </ResponsiveButton>
+                <DashedBorder
+                  layoutClassName="cursor-pointer"
+                  className="flex h-9 p-0 lg:h-12"
+                  radius={{
+                    lg: 12,
+                    md: 8,
+                    sm: 8,
+                  }}
+                  dash={4}
+                  gap={8}
+                >
+                  <Plus className="h-5 w-5 text-gray-400" />
+                </DashedBorder>
+              </button>
               <div className="mt-6 flex items-center gap-2 md:mt-8">
                 <ResponsiveButton
                   type="button"
@@ -159,7 +155,10 @@ export default function FormComponent({ storeId }: IProps) {
                     },
                   }}
                   disabled={isSubmitted}
-                  onClick={() => setIsEditing(false)}
+                  onClick={() => {
+                    resetOrigins();
+                    setIsEditing(false);
+                  }}
                 >
                   수정 취소
                 </ResponsiveButton>
