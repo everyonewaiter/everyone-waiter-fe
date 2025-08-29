@@ -26,17 +26,11 @@ export default function Page() {
 
   const [optionState, setOptionState] = useState<OptionState | null>(null);
 
-  const getTitle = () => {
-    if (optionState === "move") return "카테고리 순서 변경";
-    if (optionState === "delete") return "카테고리 삭제";
-    return "카테고리";
-  };
-
   return (
     <div className="lg h-full md:w-[340px] lg:w-[540px]">
       <FormProvider {...form}>
         <ModalTitle
-          title={getTitle()}
+          title="카테고리"
           topRightComponent={
             !optionState &&
             !form.formState.isDirty && (
