@@ -28,7 +28,7 @@ export default async function Layout({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="relative flex min-h-dvh flex-col">{children}</div>
+      {children}
     </HydrationBoundary>
   );
 }

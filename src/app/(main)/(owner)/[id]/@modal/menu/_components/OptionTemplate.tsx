@@ -105,7 +105,7 @@ export default function OptionTemplate({
       />
       {props.isOpen ? (
         <div className="flex h-full flex-col gap-4">
-          {popupAction === "순서 변경" ? (
+          {popupAction === "순서 변경" && isEditing && (
             <DndContext
               modifiers={[restrictToParentElement, restrictToVerticalAxis]}
               onDragEnd={({ active, over }: DragEndEvent) => {
@@ -157,7 +157,8 @@ export default function OptionTemplate({
                 </div>
               </SortableContext>
             </DndContext>
-          ) : (
+          )}
+          {!popupAction && isEditing && (
             <div
               className={cn(
                 "scrollbar-hide flex h-[266px] flex-col gap-3 overflow-y-auto md:h-auto",
@@ -184,13 +185,14 @@ export default function OptionTemplate({
               ))}
             </div>
           )}
-          {!isEditing && form.watch(type)?.length === 0 && (
-            <div className="center h-full w-full text-sm">
-              {type.startsWith("required") ? "필수" : "선택"} 옵션이 없습니다.
+          {!groups.length && !isEditing && (
+            <div className="center h-full w-full text-xs text-gray-300">
+              현재 등록된 {type.startsWith("required") ? "필수" : "선택"} 옵션이
+              없습니다.
             </div>
           )}
           {/* 하단 버튼 고정 */}
-          {(isEditing || !popupAction) && (
+          {isEditing && !popupAction && (
             <ResponsiveButton
               variant="outline"
               color="black"
@@ -212,9 +214,6 @@ export default function OptionTemplate({
           )}
         </div>
       ) : null}
-      {!groups.length && !isEditing && (
-        <div className="center h-full w-full text-xs text-gray-300">hi</div>
-      )}
     </div>
   );
 }

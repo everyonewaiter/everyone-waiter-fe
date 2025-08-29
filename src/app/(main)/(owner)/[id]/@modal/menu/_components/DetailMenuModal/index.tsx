@@ -23,6 +23,7 @@ interface IProps {
   type: "create" | "update";
   data?: MenuDetail;
   isPage?: boolean;
+  initialCategoryId?: string;
 }
 
 export default function DetailMenuModal({
@@ -31,11 +32,12 @@ export default function DetailMenuModal({
   type,
   data,
   isPage,
+  initialCategoryId,
 }: IProps) {
   const navigate = useRouter();
 
   const { storeId } = useStoreContext();
-  const { form } = useMenuModalForm(data);
+  const { form } = useMenuModalForm({ data, initialCategoryId });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showInfo, setShowInfo] = useState<Record<OptionType, boolean>>({

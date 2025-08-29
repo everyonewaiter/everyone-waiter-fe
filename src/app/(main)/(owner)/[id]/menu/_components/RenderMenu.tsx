@@ -56,7 +56,7 @@ export default function RenderMenu({
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
       {isNavigating && <Loading />}
       <div className="flex-1">
-        <div className="grid grid-cols-3 gap-4 md:grid-cols-5 md:gap-x-[10px] md:gap-y-4 lg:gap-x-[32px] lg:gap-y-[40px]">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-x-[10px] md:gap-y-4 lg:grid-cols-5 lg:gap-x-[32px] lg:gap-y-[40px]">
           {sortedMenus && changeSort && (
             <Sortable
               items={sortedMenus.map((item) => item.menuId!)}
@@ -81,14 +81,16 @@ export default function RenderMenu({
                 navigate.push(
                   `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
                 );
+                setIsNavigating(false);
               }}
             >
               <DashedBorder
                 layoutClassName="bg-gray-700 cursor-pointer h-full"
+                className="flex-col items-center justify-center gap-2"
                 radius={{
                   lg: 24,
-                  md: 12,
-                  sm: 15,
+                  md: 15,
+                  sm: 12,
                 }}
               >
                 <PlusIcon strokeWidth={1.5} />
@@ -107,7 +109,7 @@ export default function RenderMenu({
               />
             ))}
           {isLoading &&
-            [0, 1, 2, 3].map((el) => (
+            [0, 1, 2].map((el) => (
               <Skeleton
                 key={el + 1}
                 className="aspect-[329/440] rounded-xl lg:rounded-3xl"

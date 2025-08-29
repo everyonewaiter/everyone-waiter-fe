@@ -26,14 +26,16 @@ export default function RefLayout({
   useEscapeKey({ handler: () => router.back() });
 
   return (
-    <div
-      ref={ref}
-      className={cn(
-        "rounded-[20px] bg-white px-4 py-5 md:p-5 lg:rounded-[30px] lg:p-8",
-        className
-      )}
-    >
-      {children}
+    <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/50">
+      <div
+        ref={ref}
+        className={cn(
+          "rounded-[20px] bg-white px-4 py-5 md:p-5 lg:rounded-[30px] lg:p-8",
+          className
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }
