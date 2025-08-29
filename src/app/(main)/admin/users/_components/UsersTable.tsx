@@ -89,7 +89,9 @@ export default function UsersTable({ data }: IProps) {
               </MobileTableRow>
               <MobileTableRow>
                 <MobileTableHead>상태</MobileTableHead>
-                <MobileTableCell>{stateTranslate[item.state]}</MobileTableCell>
+                <MobileTableCell hideBorder>
+                  {stateTranslate[item.state]}
+                </MobileTableCell>
               </MobileTableRow>
             </TableBody>
           </MobileTable>
