@@ -15,6 +15,7 @@ export default function PendingAcceptModal({ close }: IProps) {
           width={180}
           height={180}
           className="h-[120px] w-[120px] lg:h-[180px] lg:w-[180px]"
+          unoptimized
         />
         <strong className="text-gray-0 text-lg font-semibold md:mt-4 md:text-base lg:mt-10 lg:text-2xl">
           승인을 기다리는 중입니다.
