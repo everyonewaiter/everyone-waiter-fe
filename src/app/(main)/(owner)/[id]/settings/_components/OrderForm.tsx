@@ -7,6 +7,7 @@ import {
 } from "@/components/common/Form";
 import Input from "@/components/common/Input";
 import { useFormContext } from "react-hook-form";
+import { useRef } from "react";
 import { TypeSettingsOptionForm } from "../_schema/settings.schema";
 
 interface IProps {
@@ -14,6 +15,7 @@ interface IProps {
 }
 
 export default function OrderForm({ onAction }: IProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const form = useFormContext<TypeSettingsOptionForm>();
 
   const handleAddOptionText = () => {
@@ -21,6 +23,7 @@ export default function OrderForm({ onAction }: IProps) {
     if (value.trim()) {
       onAction(value);
     }
+    inputRef.current?.focus();
   };
 
   return (
@@ -40,6 +43,7 @@ export default function OrderForm({ onAction }: IProps) {
                     handleAddOptionText();
                   }
                 }}
+                ref={inputRef}
               />
             </FormControl>
 
