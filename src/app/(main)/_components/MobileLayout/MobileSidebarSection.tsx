@@ -119,7 +119,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
         )}
         <ul className="relative">
           {MENU_ITEMS[permission]?.length > 1 && (
-            <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
+            <div className="absolute top-[18px] bottom-[18px] left-[11px] z-0 w-[2px] bg-gray-600" />
           )}
           {MENU_ITEMS[permission].map((item) => (
             <SidebarMenuItem
@@ -128,7 +128,7 @@ export default function MobileSidebarSection({ onClose }: IProps) {
               active={isActive(item.href)}
               onClick={() => handleClick(item.href)}
               onPrefetchURL={() => handlePrefetchURL(item.href)}
-              className="gap-[6px]"
+              className="relative gap-[6px]"
             />
           ))}
         </ul>

@@ -21,7 +21,7 @@ export default function SidebarMenuItem({
       <button
         type="button"
         className={cn(
-          "text-s flex items-center px-2 py-[9px] transition-colors lg:text-base",
+          "text-s z-[9980] flex items-center px-2 py-[9px] transition-colors lg:text-base",
           active ? "text-primary" : "text-gray-300",
           className
         )}
