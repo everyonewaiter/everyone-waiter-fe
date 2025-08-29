@@ -1,15 +1,16 @@
 "use client";
 
 import { getClientCookie } from "@/lib/cookies/client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { PropsWithChildren, useEffect } from "react";
 
 export default function Layout({ children }: PropsWithChildren) {
   const navigate = useRouter();
+  const pathname = usePathname();
   const token = getClientCookie("accessToken");
 
   useEffect(() => {
-    if (token) {
+    if (token && (pathname === "/login" || pathname === "/signup")) {
       if (
         document.referrer &&
         document.referrer.startsWith(window.location.origin)
@@ -19,7 +20,7 @@ export default function Layout({ children }: PropsWithChildren) {
         navigate.replace("/");
       }
     }
-  }, [navigate, token]);
+  }, [navigate, token, pathname]);
 
   return children;
 }

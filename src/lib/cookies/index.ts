@@ -9,7 +9,7 @@ export type KeyType =
   | "permission";
 
 const TOKEN_EXPIRATION = {
-  accessToken: 60 * 60 * 24 * 14, // 12시간
+  accessToken: 60 * 10, // 10분
   refreshToken: 60 * 60 * 24 * 14, // 2주
   secretKey: 60 * 60 * 24 * 365, // 1년
   permission: 60 * 60 * 24 * 365, // 1년
