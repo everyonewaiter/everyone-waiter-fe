@@ -101,7 +101,6 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
       if (error.response) {
         if (error.response?.status === 401) {
           if (now - lastAlertTime > 10000) {
-            console.log(error);
             lastAlertTime = now;
             // eslint-disable-next-line no-alert
             alert(

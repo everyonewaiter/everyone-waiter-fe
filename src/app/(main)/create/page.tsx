@@ -8,8 +8,6 @@ export default async function Page({
 }) {
   const { state, storeId } = await searchParams;
 
-  console.log(state, storeId);
-
   switch (state) {
     case "pending":
       return (

@@ -86,10 +86,11 @@ export function useSSE<T>({ onMessage, lastEventId }: UseSSEProps<T>) {
         }
       });
 
-      // 연결 상태 확인
       eventSource.onopen = () => {
-        // eslint-disable-next-line no-console
-        console.log("SSE connection opened");
+        if (process.env.NODE_ENV === "development") {
+          // eslint-disable-next-line no-console
+          console.log("SSE connection opened");
+        }
       };
     })();
 
