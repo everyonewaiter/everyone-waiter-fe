@@ -1,4 +1,3 @@
-import { useRef, useEffect, useState } from "react";
 import cn from "@/lib/utils";
 
 interface DottedBorderBoxProps {
@@ -16,22 +15,27 @@ interface DottedBorderBoxProps {
   };
 }
 
+const generateDashedBorderSVG = (
+  strokeColor = "#C1C1C1",
+  strokeWidth = 3,
+  dash = 8,
+  gap = 12,
+  borderRadius = 24
+) => {
+  const encodedColor = encodeURIComponent(strokeColor);
+  return `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='${borderRadius}' ry='${borderRadius}' stroke='${encodedColor}' stroke-width='${strokeWidth}' stroke-dasharray='${dash}%2c${gap}' stroke-dashoffset='${dash}' stroke-linecap='square'/%3e%3c/svg%3e")`;
+};
+
 export default function DashedBorder({
   children,
   className = "",
   layoutClassName = "",
   strokeColor = "#C1C1C1",
-  strokeWidth = 2,
-  dash = 12,
-  gap = 8,
+  strokeWidth = 3,
+  dash = 8,
+  gap = 12,
   radius = { sm: 12, md: 16, lg: 24 },
 }: DottedBorderBoxProps) {
-  const [dimensions, setDimensions] = useState<{
-    width: number;
-    height: number;
-  }>({ width: 0, height: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const sizeList = ["sm", "md", "lg"] as const;
 
   const getSize = (size: (typeof sizeList)[number]) => {
@@ -41,46 +45,26 @@ export default function DashedBorder({
     return "hidden";
   };
 
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        setDimensions({ width: rect.width, height: rect.height });
-      }
-    };
-
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
-
   return (
     <>
       {sizeList.map((size) => (
         <div
           key={size}
-          ref={containerRef}
           className={`relative ${getSize(size)} ${layoutClassName}`}
-          style={{ borderRadius: radius[size] }}
+          style={{
+            backgroundImage: generateDashedBorderSVG(
+              strokeColor,
+              strokeWidth,
+              dash,
+              gap,
+              radius[size]
+            ),
+            borderRadius: radius[size],
+          }}
         >
-          <svg className="absolute inset-0 h-full w-full">
-            <rect
-              x={strokeWidth / 2}
-              y={strokeWidth / 2}
-              width={Math.max(0, dimensions.width - strokeWidth)}
-              height={Math.max(0, dimensions.height - strokeWidth)}
-              rx={radius[size]}
-              ry={radius[size]}
-              fill="none"
-              stroke={strokeColor}
-              strokeWidth={strokeWidth}
-              strokeDasharray={`${dash} ${gap}`}
-              strokeLinecap="square"
-            />
-          </svg>
           <div
             className={cn(
-              "relative flex w-full flex-col items-center justify-center md:gap-1 lg:gap-2",
+              "relative flex w-full flex-col items-center justify-center p-4 md:gap-1 lg:gap-2",
               className
             )}
           >
