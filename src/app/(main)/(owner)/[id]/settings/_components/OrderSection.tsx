@@ -46,6 +46,8 @@ export default function OrderSection({
   const { updateSetting } = useSettings(storeId);
 
   const handleDrag = ({ active, over }: any) => {
+    document.body.style.overflow = "hidden";
+
     if (active.id !== over?.id) {
       const oldIndex = items.indexOf(active.id);
       const newIndex = items.indexOf(over.id);
@@ -53,6 +55,7 @@ export default function OrderSection({
       setItems(changeSort);
       updateSetting({ staffCallOptions: changeSort });
     }
+    document.body.style.overflow = "";
   };
 
   useEffect(() => {
