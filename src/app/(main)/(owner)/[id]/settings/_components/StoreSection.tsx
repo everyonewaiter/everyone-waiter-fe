@@ -1,4 +1,5 @@
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import cn from "@/lib/utils";
 
 interface IProps {
   data?: string;
@@ -25,18 +26,12 @@ export default function StoreSection({ data, onAction }: IProps) {
               responsiveButtons={{
                 lg: {
                   buttonSize: "custom",
-                  className: `h-10 w-full px-5 rounded-lg`,
+                  className: `h-10 px-5 rounded-lg`,
                 },
-                md: {
-                  buttonSize: "sm",
-                  className: `w-full`,
-                },
-                sm: {
-                  buttonSize: "sm",
-                  className: `flex w-full`,
-                },
+                md: { buttonSize: "sm" },
+                sm: { buttonSize: "sm" },
               }}
-              commonClassName={isActive ? "" : "border-gray-500"}
+              commonClassName={cn("w-full", isActive ? "" : "border-gray-500")}
               onClick={() => onAction(key)}
             >
               {key === "HALL" ? "홀" : key}

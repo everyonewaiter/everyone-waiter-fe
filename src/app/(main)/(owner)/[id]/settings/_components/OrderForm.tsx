@@ -52,14 +52,8 @@ export default function OrderForm({ onAction }: IProps) {
                   buttonSize: "sm",
                   className: "relative gap-0 !w-[71px]",
                 },
-                md: {
-                  buttonSize: "sm",
-                  className: "flex",
-                },
-                sm: {
-                  buttonSize: "sm",
-                  className: "flex",
-                },
+                md: { buttonSize: "sm" },
+                sm: { buttonSize: "sm" },
               }}
             >
               추가
