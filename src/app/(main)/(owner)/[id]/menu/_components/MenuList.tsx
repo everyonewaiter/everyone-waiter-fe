@@ -2,13 +2,14 @@
 
 import { SettingsIcon } from "@/components/common/Icon/index";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useStoreContext } from "@/providers/storeProvider";
 import { useActiveCategory } from "../_hooks/useActiveCategory";
 import { useMenuSort } from "../_hooks/useMenuSort";
 import HeaderButton from "./HeaderButton";
 import RenderMenu from "./RenderMenu";
+import MenuLoadingSkeleton from "./MenuLoadingSkeleton";
 
 export default function MenuList() {
   const navigate = useRouter();
@@ -79,12 +80,14 @@ export default function MenuList() {
           onSaveSort={() => handleSortSave(() => setChangeSort(false))}
         />
       </div>
-      <RenderMenu
-        changeSort={changeSort}
-        categoryId={active}
-        handleDragEnd={handleDragEnd}
-        sortedMenus={form.watch("menus")}
-      />
+      <Suspense fallback={<MenuLoadingSkeleton />}>
+        <RenderMenu
+          changeSort={changeSort}
+          categoryId={active}
+          handleDragEnd={handleDragEnd}
+          sortedMenus={form.watch("menus")}
+        />
+      </Suspense>
     </div>
   );
 }

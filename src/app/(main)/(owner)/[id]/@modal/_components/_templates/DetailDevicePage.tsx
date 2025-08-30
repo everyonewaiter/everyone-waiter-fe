@@ -5,7 +5,6 @@ import { Form } from "@/components/common/Form";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
 import { deviceTranslate, paymentTimeTranslate } from "@/constants/translates";
-import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
 import Input from "@/components/common/Input";
 import useDeviceForm from "../../_hooks/useDeviceForm";
 import ModalButton from "../ModalButton";
@@ -20,13 +19,6 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
     deviceId,
     storeId,
   });
-
-  if (!deviceDetail)
-    return (
-      <div className="flex flex-col gap-3.5 md:h-[324px] lg:h-[488px]">
-        <SkeletonGroup />
-      </div>
-    );
 
   return (
     <Form {...form}>
