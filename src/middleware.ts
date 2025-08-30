@@ -11,6 +11,8 @@ const publicPrefixes = [
   "/device",
   "/create",
   "/stores",
+  "/not-found",
+  "/error",
 ];
 
 const deviceRequiredPrefixes = ["/pos", "/hall", "/waiting"];
@@ -68,6 +70,7 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|logo/|apple-touch-icon\\.png|icon-\\d+x\\d+\\.png|manifest\\.webmanifest|images|fonts|scripts|robots\\.txt|sitemap\\.xml|api).*)",
+    // 정적/이미지/아이콘/스크립트/API 등 제외
+    "/((?!_next/static|_next/image|favicon.ico|logo\\.svg|apple-touch-icon\\.png|icon-\\d+x\\d+\\.png|manifest\\.webmanifest|images|fonts|scripts|robots\\.txt|sitemap\\.xml|api).*)",
   ],
 };
