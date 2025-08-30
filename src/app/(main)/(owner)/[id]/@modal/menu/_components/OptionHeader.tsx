@@ -15,6 +15,7 @@ interface IProps {
   isEditing: boolean;
   hasOption: boolean;
   onComplete?: () => void;
+  onHeaderClick?: () => void;
 }
 
 export default function OptionHeader({
@@ -25,6 +26,7 @@ export default function OptionHeader({
   isEditing,
   hasOption,
   onComplete,
+  onHeaderClick,
 }: IProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -34,24 +36,36 @@ export default function OptionHeader({
   useEffect(() => {
     if (showInfo && infoButtonRef.current) {
       const rect = infoButtonRef.current.getBoundingClientRect();
+      const size = 96;
       const iconRect = infoButtonRef.current
         .querySelector("svg")
         ?.getBoundingClientRect();
 
       setInfoPosition({
-        // FloatingInfo 높이(약 80px) + 삼각형 높이(34px) + 여백을 고려하여 아이콘 위에 배치
-        top: rect.top - 96,
-        // 아이콘 중앙에서 삼각형 중앙(48.5px)을 뺀 위치
-        left: (iconRect?.left || rect.left) + (iconRect?.width || 24) / 2 - 48,
+        top: rect.top - size,
+        left:
+          (iconRect?.left || rect.left) +
+          (iconRect?.width || 24) / 2 -
+          size / 2,
       });
     }
   }, [showInfo]);
 
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onClick={() => !isOpen && onHeaderClick?.()}
+      style={{ cursor: !isOpen ? "pointer" : "default" }}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if ((e.key === "Enter" || e.key === " ") && !isOpen) {
+          onHeaderClick?.();
+        }
+      }}
+    >
       {showInfo && (
         <>
-          {/* 배경 클릭으로 닫기 */}
           <div
             role="button"
             tabIndex={0}
@@ -75,31 +89,35 @@ export default function OptionHeader({
         </>
       )}
       <div className="relative flex items-center justify-between">
-        <button
-          ref={infoButtonRef}
-          type="button"
-          className="flex items-center gap-[6px] lg:gap-2"
-          onClick={() => setShowInfo(true)}
-        >
+        <div className="flex items-center gap-[6px] lg:gap-2">
           <h3 className="font-gray-0 text-medium text-sm lg:text-lg">
             {title}
           </h3>
-          <Icon
-            iconKey="information"
-            size={24}
-            className="text-gray-0 h-5 w-5 lg:h-6 lg:w-6"
-          />
-        </button>
+          <button
+            ref={infoButtonRef}
+            type="button"
+            onClick={() => isOpen && setShowInfo(true)}
+          >
+            <Icon
+              iconKey="information"
+              size={24}
+              className="text-gray-0 h-5 w-5 lg:h-6 lg:w-6"
+            />
+          </button>
+        </div>
+
         {!hasOption && isOpen && (
           <button type="button" className="flex items-center gap-1">
             <ChevronUp className="h-4 w-4 text-gray-200" strokeWidth={2} />
           </button>
         )}
+
         {!hasOption && !isOpen && (
           <button type="button" className="flex items-center gap-1">
             <ChevronDown className="h-4 w-4 text-gray-200" strokeWidth={2} />
           </button>
         )}
+
         {hasOption && isOpen && isEditing && (
           <>
             {popupAction ? (
@@ -112,7 +130,7 @@ export default function OptionHeader({
                       "h-7 rounded-lg px-4 !text-s font-regular text-primary",
                   },
                 }}
-                onClick={() => onComplete?.()}
+                onClick={onComplete}
               >
                 완료
               </ResponsiveButton>
@@ -128,6 +146,7 @@ export default function OptionHeader({
                 />
               </button>
             )}
+
             {showPopup && (
               <Popup
                 onSetPopupAction={(value) => {
