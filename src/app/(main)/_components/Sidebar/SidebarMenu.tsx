@@ -44,10 +44,10 @@ export default function SidebarMenu({ selectedStoreId, permission }: IProps) {
   };
 
   return (
-    <div className="relative mt-2">
+    <div className="relative z-10 mt-2">
       {isPending && <Loading />}
       {MENU_ITEMS[permission]?.length > 1 && (
-        <div className="absolute top-[18px] bottom-[18px] left-[11px] w-[2px] bg-gray-600" />
+        <div className="absolute top-[18px] bottom-[18px] left-[11px] -z-10 w-[2px] bg-gray-600" />
       )}
       <ul>
         {MENU_ITEMS[permission]?.map((item) => (

@@ -1,5 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import {
   approveRegistration,
@@ -72,7 +77,7 @@ const useStores = (
   });
 
 const useStoresDetail = (registrationId: string) =>
-  useQuery({
+  useSuspenseQuery({
     queryKey: accountKeys.storeDetail(registrationId),
     queryFn: () => getDetailAdminRegistrations(registrationId),
   });
