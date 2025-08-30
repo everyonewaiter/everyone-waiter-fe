@@ -31,6 +31,11 @@ const nextConfig: NextConfig = {
         },
       ],
     });
+    // eslint-disable-next-line no-param-reassign
+    config.ignoreWarnings = [
+      /Critical dependency: the request of a dependency is an expression/,
+      /Critical dependency: require function is used in a way/,
+    ];
     return config;
   },
 };
