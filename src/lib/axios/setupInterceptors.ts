@@ -75,9 +75,16 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
 
         refreshPromise = mutex.runExclusive(async () => {
           try {
+            const refreshToken = getClientCookie("refreshToken");
+
+            if (!refreshToken) {
+              await logout();
+              return null;
+            }
+
             const res = await client.post(
               "/api/refresh",
-              {},
+              { refreshToken },
               { withCredentials: true }
             );
 
@@ -89,6 +96,11 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
             }
 
             setClientCookie("accessToken", newToken);
+
+            if (res.data?.refreshToken) {
+              setClientCookie("refreshToken", res.data.refreshToken);
+            }
+
             return newToken;
           } catch (err: any) {
             await logout();
