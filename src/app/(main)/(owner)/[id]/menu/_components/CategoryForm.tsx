@@ -101,7 +101,7 @@ export default function CategoryForm({
           <SortableContext
             items={fields.map((f: any) => ({ ...f, id: f.categoryId }))}
           >
-            <div className="mb-2 flex flex-col gap-2 md:gap-4">
+            <div className="mb-2 flex flex-col gap-3 lg:gap-4">
               {fields?.map((field: any, index) => (
                 <CategoryFormItem
                   key={field.id}
@@ -115,16 +115,15 @@ export default function CategoryForm({
           </SortableContext>
         </DndContext>
       ) : (
-        <div className="flex flex-col md:gap-3 lg:gap-4">
+        <div className="flex flex-col gap-3 lg:gap-4">
           {form.watch("categories")?.map((category, index) => (
-            <div className="mb-2 flex gap-2" key={category.categoryId}>
-              <CategoryFormItem
-                index={index}
-                categoryId={category.categoryId}
-                optionState={optionState}
-                initialCategoriesRef={initialCategoriesRef}
-              />
-            </div>
+            <CategoryFormItem
+              key={category.categoryId}
+              index={index}
+              categoryId={category.categoryId}
+              optionState={optionState}
+              initialCategoriesRef={initialCategoriesRef}
+            />
           ))}
         </div>
       )}
