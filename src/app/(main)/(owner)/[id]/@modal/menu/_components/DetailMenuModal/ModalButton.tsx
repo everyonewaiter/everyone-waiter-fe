@@ -1,9 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import ResponsiveButton, {
+  ButtonSize,
+  ScreenSize,
+} from "@/components/common/Button/ResponsiveButton";
 import { getPathnameWithoutStoreId } from "@/utils/getPathname";
 import Spinner from "@/components/common/Spinner";
+import { ButtonColors } from "@/components/common/Button/Button";
 
 interface IProps {
   color?: "primary" | "black";
@@ -35,26 +39,43 @@ export default function ModalButton({
     return "primary";
   };
 
-  return (
-    <ResponsiveButton
-      type={isEditing ? "submit" : "button"}
-      color={buttonColor()}
-      responsiveButtons={{
-        lg: {
-          buttonSize: "xl",
-          className: "!text-lg !font-semibold !h-14 py-8 w-[480px]",
-        },
-        md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
-        sm: { buttonSize: "sm", className: "!h-10 w-full" },
-      }}
-      onClick={(e) => {
-        if (!isEditing) {
-          e.preventDefault();
-          onSetEditing(true);
-        }
-      }}
-    >
+  const buttonOptions: {
+    color: ButtonColors;
+    responsiveButtons: Record<
+      ScreenSize,
+      {
+        buttonSize: ButtonSize;
+        className?: string;
+        color?: string;
+        variant?: string;
+      }
+    >;
+  } = {
+    color: buttonColor(),
+    responsiveButtons: {
+      lg: {
+        buttonSize: "xl",
+        className: "!text-lg !font-semibold !h-14 py-8 w-[480px]",
+      },
+      md: { buttonSize: "sm", className: "!h-10 w-[292px]" },
+      sm: { buttonSize: "sm", className: "!h-10 w-full" },
+    },
+  };
+
+  return isEditing ? (
+    <ResponsiveButton type="submit" {...buttonOptions}>
       {isSubmitted ? <Spinner /> : buttonText()}
+    </ResponsiveButton>
+  ) : (
+    <ResponsiveButton
+      type="button"
+      onClick={(e) => {
+        e.preventDefault();
+        onSetEditing(true);
+      }}
+      {...buttonOptions}
+    >
+      {buttonText()}
     </ResponsiveButton>
   );
 }

@@ -28,7 +28,7 @@ export default function GuideComponent({
 
   return (
     <div
-      className={`flex w-[288px] flex-col items-center md:w-[360px] lg:w-[480px] ${gap || "gap-6 md:gap-8 lg:gap-10"} rounded-4xl bg-white md:p-5 lg:p-8`}
+      className={`flex min-w-[288px] flex-col items-center md:min-w-[360px] lg:min-w-[480px] ${gap || "gap-6 md:gap-8 lg:gap-10"} rounded-4xl bg-white md:p-5 lg:p-8`}
     >
       <Image
         src={image.url}

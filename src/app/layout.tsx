@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import * as Sentry from "@sentry/nextjs";
 import ClientLayout from "./(main)/_components/ClientRootLayout";
 import "./globals.css";
 import JQueryScripts from "./(main)/_components/Scripts";
+import "../../sentry.client.config";
 
 export const metadata: Metadata = {
   title: "모두의 웨이터",
@@ -88,7 +90,9 @@ export default function RootLayout({
       <body>
         <ClientLayout>
           <JQueryScripts />
-          <main className="min-h-dvh select-none">{children}</main>
+          <Sentry.ErrorBoundary>
+            <main className="min-h-dvh select-none">{children}</main>
+          </Sentry.ErrorBoundary>
         </ClientLayout>
       </body>
     </html>

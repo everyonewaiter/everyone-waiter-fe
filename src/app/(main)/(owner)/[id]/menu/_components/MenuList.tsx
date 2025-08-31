@@ -1,14 +1,16 @@
 "use client";
 
-import { SettingsIcon } from "@/components/common/Icon/index";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useStoreContext } from "@/providers/storeProvider";
+import cn from "@/lib/utils";
+import { SettingsIcon } from "@/components/common/Icon/index";
 import { useActiveCategory } from "../_hooks/useActiveCategory";
 import { useMenuSort } from "../_hooks/useMenuSort";
 import HeaderButton from "./HeaderButton";
 import RenderMenu from "./RenderMenu";
+import MenuLoadingSkeleton from "./MenuLoadingSkeleton";
 
 export default function MenuList() {
   const navigate = useRouter();
@@ -17,6 +19,7 @@ export default function MenuList() {
   const { active, categories, setActive } = useActiveCategory(storeId);
   const { form, handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
 
+  const [isNavigating, setIsNavigating] = useState(false);
   const [changeSort, setChangeSort] = useState(false);
 
   const getBorderClass = (categoryId: string) => {
@@ -45,11 +48,18 @@ export default function MenuList() {
                 className: "h-8 !p-2 !rounded-xl",
               },
             }}
-            onClick={() => navigate.push(`/${storeId}/menu/category/add`)}
+            onClick={() => {
+              setIsNavigating(true);
+              navigate.push(`/${storeId}/menu/category/add`);
+            }}
             aria-label="카테고리 등록 및 수정"
             disabled={changeSort}
           >
-            <SettingsIcon size={18} strokeWidth={1.5} />
+            <SettingsIcon
+              size={18}
+              strokeWidth={1.5}
+              className={cn(isNavigating && "animate-spin")}
+            />
           </ResponsiveButton>
           {categories?.map((cat) => (
             <ResponsiveButton
@@ -79,12 +89,14 @@ export default function MenuList() {
           onSaveSort={() => handleSortSave(() => setChangeSort(false))}
         />
       </div>
-      <RenderMenu
-        changeSort={changeSort}
-        categoryId={active}
-        handleDragEnd={handleDragEnd}
-        sortedMenus={form.watch("menus")}
-      />
+      <Suspense fallback={<MenuLoadingSkeleton />}>
+        <RenderMenu
+          changeSort={changeSort}
+          categoryId={active}
+          handleDragEnd={handleDragEnd}
+          sortedMenus={form.watch("menus")}
+        />
+      </Suspense>
     </div>
   );
 }

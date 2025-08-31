@@ -3,14 +3,20 @@ import { getToken, setCookie } from "@/lib/cookies";
 
 export async function POST() {
   const refreshToken = await getToken("refreshToken");
-  if (!refreshToken) return new Response("Unauthorized", { status: 401 });
+
+  if (!refreshToken) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
   try {
-    const { accessToken } = await renewToken({ refreshToken });
+    const response = await renewToken({ refreshToken });
+    const { accessToken, refreshToken: newRefreshToken } = response;
+
     await setCookie("accessToken", accessToken);
+    await setCookie("refreshToken", newRefreshToken);
 
     return Response.json({ accessToken });
-  } catch {
+  } catch (error) {
     return new Response("Unauthorized", { status: 401 });
   }
 }

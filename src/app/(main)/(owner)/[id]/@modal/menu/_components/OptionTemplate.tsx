@@ -76,19 +76,37 @@ export default function OptionTemplate({
     return value;
   };
 
+  const handleContainerClick = (e: React.MouseEvent) => {
+    if (e.target !== e.currentTarget) return;
+
+    if (!form.watch(type).length && onClick) {
+      onClick();
+    }
+  };
+
+  const handleHeaderClick = () => {
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
     <div
       className={cn(
         "relative flex flex-col gap-4 overflow-visible rounded-xl border border-gray-600 p-4 md:p-3 lg:rounded-3xl lg:p-6",
-        props.isOpen ? "h-[388px] md:h-[calc(100%-57px-40px)]" : "",
+        props.isOpen
+          ? "h-[388px] cursor-default md:h-[calc(100%-57px-40px)]"
+          : "cursor-pointer",
         className
       )}
-      onClick={onClick}
+      onClick={handleContainerClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          onClick?.();
+        if ((e.key === "Enter" || e.key === " ") && !form.watch(type).length) {
+          if (e.target === e.currentTarget) {
+            onClick?.();
+          }
         }
       }}
     >
@@ -102,10 +120,12 @@ export default function OptionTemplate({
           setPopupAction("");
           form.trigger(type);
         }}
+        onHeaderClick={handleHeaderClick}
       />
       {props.isOpen ? (
         <div className="flex h-full flex-col gap-4">
-          {popupAction === "순서 변경" && isEditing && (
+          {/* 순서 변경 모드 */}
+          {popupAction === "순서 변경" && (
             <DndContext
               modifiers={[restrictToParentElement, restrictToVerticalAxis]}
               onDragEnd={({ active, over }: DragEndEvent) => {
@@ -131,14 +151,10 @@ export default function OptionTemplate({
                 <div
                   className={cn(
                     "scrollbar-hide flex h-[266px] flex-col gap-3 overflow-y-auto md:h-auto",
-                    isEditing ? "cursor-pointer" : ""
+                    groups.length > 1
+                      ? "md:h-[calc(100%-95px)]"
+                      : "md:h-[calc(100%-40px)]"
                   )}
-                  style={{
-                    height:
-                      groups.length > 1
-                        ? "calc(100% - 95px)"
-                        : "calc(100% - 40px)",
-                  }}
                 >
                   {groups?.map((el: any, i: number) => (
                     <OptionItem
@@ -149,8 +165,11 @@ export default function OptionTemplate({
                       popupAction={popupAction}
                       id={el.id as string}
                       onDelete={() => {
+                        if (groups.length === 1) {
+                          form.trigger(type);
+                          setPopupAction("");
+                        }
                         removeGroup(i);
-                        form.trigger(type);
                       }}
                     />
                   ))}
@@ -158,16 +177,16 @@ export default function OptionTemplate({
               </SortableContext>
             </DndContext>
           )}
-          {!popupAction && isEditing && (
+
+          {/* 일반 모드 (편집 중이고 순서 변경이 아닐 때) */}
+          {isEditing && popupAction !== "순서 변경" && (
             <div
               className={cn(
                 "scrollbar-hide flex h-[266px] flex-col gap-3 overflow-y-auto md:h-auto",
-                isEditing ? "cursor-pointer" : ""
+                groups.length > 1
+                  ? "md:h-[calc(100%-95px)]"
+                  : "md:h-[calc(100%-40px)]"
               )}
-              style={{
-                height:
-                  groups.length > 1 ? "calc(100%-95px)" : "calc(100%-40px)",
-              }}
             >
               {groups?.map((el: any, i: number) => (
                 <OptionItem
@@ -178,22 +197,29 @@ export default function OptionTemplate({
                   popupAction={popupAction}
                   id={el.id as string}
                   onDelete={() => {
+                    if (groups.length === 1) {
+                      form.trigger(type);
+                      setPopupAction("");
+                    }
                     removeGroup(i);
-                    form.trigger(type);
                   }}
                 />
               ))}
             </div>
           )}
+
+          {/* 편집 모드가 아닐 때 빈 상태 메시지 */}
           {!groups.length && !isEditing && (
             <div className="center h-full w-full text-xs text-gray-300">
               현재 등록된 {type.startsWith("required") ? "필수" : "선택"} 옵션이
               없습니다.
             </div>
           )}
-          {/* 하단 버튼 고정 */}
-          {isEditing && !popupAction && (
+
+          {/* 하단 추가 버튼 - 편집 중이고 순서 변경 모드가 아닐 때만 표시 */}
+          {isEditing && popupAction !== "순서 변경" && (
             <ResponsiveButton
+              type="button"
               variant="outline"
               color="black"
               responsiveButtons={{

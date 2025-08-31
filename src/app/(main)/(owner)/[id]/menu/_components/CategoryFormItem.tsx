@@ -83,9 +83,9 @@ export default function CategoryFormItem({
       {...attributes}
       {...listeners}
     >
-      <FormLabel>카테고리 {index + 1}</FormLabel>
-      <div className="flex items-center gap-2">
-        <FormControl className="flex flex-1 gap-2">
+      <FormLabel className="mb-0">카테고리 {index + 1}</FormLabel>
+      <div className="flex items-center gap-1">
+        <FormControl className="flex-1">
           <Controller
             control={form.control}
             name={`categories.${index}.name`}
@@ -115,19 +115,25 @@ export default function CategoryFormItem({
             responsiveButtons={{
               lg: {
                 buttonSize: "custom",
-                className: cn(
-                  "h-10 w-10 rounded-xl border justify-center items-center bg-white",
-                  optionState === "move" && "border-gray-600",
-                  optionState === "delete" && "border-status-error"
-                ),
+                className:
+                  "h-10 w-10 rounded-xl border justify-center items-center bg-white flex-shrink-0",
               },
               md: {
                 buttonSize: "custom",
-                className: "w-7 h-7 rounded-lg border-gray-600 border",
+                className: "w-7 h-7 rounded-lg  border flex-shrink-0",
+              },
+              sm: {
+                buttonSize: "custom",
+                className: "w-7 h-7 rounded-lg border flex-shrink-0",
               },
             }}
             onClick={() => (optionState === "delete" ? handleDelete() : null)}
-            commonClassName="hover:!bg-white"
+            commonClassName={cn(
+              "hover:!bg-white",
+              optionState === "delete"
+                ? "border-status-error"
+                : "border-gray-600"
+            )}
             ref={optionState === "move" ? setActivatorNodeRef : undefined}
             {...(optionState === "move" ? { ...attributes, ...listeners } : {})}
           >
@@ -135,7 +141,7 @@ export default function CategoryFormItem({
               iconKey={optionState === "move" ? "move" : "trash"}
               className={cn(
                 optionState === "move" ? "text-black" : "text-status-error",
-                "md:h-4 md:w-4 lg:h-5 lg:w-5"
+                "h-3.5 w-3.5 md:h-4 md:w-4 lg:h-5 lg:w-5"
               )}
               size={20}
             />

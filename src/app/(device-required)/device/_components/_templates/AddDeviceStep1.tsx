@@ -10,9 +10,8 @@ import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import useOverlay from "@/hooks/useOverlay";
 import Spinner from "@/components/common/Spinner";
-import SkeletonGroup from "@/components/common/Skeleton/SkeletonGroup";
-import SkeletonInput from "@/components/common/Skeleton/SkeletonInput";
 import useAuthReducer from "@/hooks/useAuthReducer";
+import { Skeleton } from "@/components/common/Skeleton/Skeleton";
 import { deviceQueries } from "../../_queries/useDeviceInfo";
 import useStep1Form from "../../_hooks/useStep1Form";
 
@@ -165,7 +164,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
               </FormErrorMessage>
             </div>
 
-            <Suspense fallback={<SkeletonGroup />}>
+            <Suspense fallback={<Skeleton.FieldGroup total={1} />}>
               <div className="flex flex-col gap-2">
                 <Label>인증 번호</Label>
                 <Controller
@@ -221,7 +220,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
                   <Input value={stores[0].name} disabled />
                 </div>
               ) : (
-                <Suspense fallback={<SkeletonInput />}>
+                <Suspense fallback={<Skeleton.FieldGroup total={1} />}>
                   <div className="mt-4 flex w-full flex-col gap-2">
                     <Label disabled>매장 선택</Label>
                     <Dropdown

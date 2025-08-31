@@ -5,13 +5,13 @@
 import dynamic from "next/dynamic";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useMediaQuery } from "react-responsive";
 import { Plus } from "@/components/common/Icon/index";
 import QueryProviders from "@/app/query-providers";
 import Paginations from "@/components/common/Pagination/Paginations";
 import useOverlay from "@/hooks/useOverlay";
 import { getClientCookie } from "@/lib/cookies/client";
 import Loading from "@/components/Loading";
+import useBetterMediaQuery from "@/hooks/useBetterMediaQuery";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { storesQueries } from "../../../(owner)/[id]/store/_queries/useStores";
 import Tables from "../Tables";
@@ -42,7 +42,7 @@ interface IProps {
 export default function StoreList({ storeId }: IProps) {
   const pathname = usePathname();
   const navigate = useRouter();
-  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isMobile = useBetterMediaQuery({ query: "(max-width: 767px)" });
   const permission = getClientCookie("permission");
 
   const [currentPage, setCurrentPage] = useState(1);

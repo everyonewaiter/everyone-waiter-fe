@@ -1,30 +1,20 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useState } from "react";
+import { lazy, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMediaQuery } from "react-responsive";
 import { PlusIcon } from "@/components/common/Icon/index";
 import DashedBorder from "@/components/DashedBorder";
 import { useStoreContext } from "@/providers/storeProvider";
-import Spinner from "@/components/common/Spinner";
 import { rectSortingStrategy } from "@/components/dnd";
-import { Skeleton } from "@/components/common/Skeleton/Skeleton";
 import Loading from "@/components/Loading";
+import useBetterMediaQuery from "@/hooks/useBetterMediaQuery";
 import { TypeMenuList } from "../_schema/menu.schema";
 import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
 import { useMenuSelection } from "../_stores/useMenuSelection";
 
-const Sortable = dynamic(() => import("@/components/Sortable"), {
-  ssr: false,
-  loading: () => <Spinner />,
-});
-
-const SortableItem = dynamic(() => import("./SortableItem"), {
-  ssr: false,
-  loading: () => <Spinner />,
-});
+const Sortable = lazy(() => import("@/components/Sortable"));
+const SortableItem = lazy(() => import("./SortableItem"));
 
 interface IProps {
   changeSort: boolean;
@@ -40,17 +30,24 @@ export default function RenderMenu({
   sortedMenus,
 }: IProps) {
   const navigate = useRouter();
-  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isMobile = useBetterMediaQuery({ query: "(max-width: 767px)" });
 
   const [isNavigating, setIsNavigating] = useState(false);
 
   const { storeId } = useStoreContext();
   const { isSelected } = useMenuSelection();
 
-  const { data, isLoading } = menuQueries.useMenuList(storeId, categoryId);
+  const { data } = menuQueries.useMenuList(storeId, categoryId);
 
   const handleNavigate = (menuId: string) =>
     `/${storeId}/menu/${menuId}/category/${categoryId}?hideModal=${isMobile}`;
+
+  const handleCreateMenu = () => {
+    setIsNavigating(true);
+    navigate.push(
+      `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
+    );
+  };
 
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
@@ -76,13 +73,7 @@ export default function RenderMenu({
             <button
               type="button"
               className="aspect-[329/440] h-full"
-              onClick={() => {
-                setIsNavigating(true);
-                navigate.push(
-                  `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
-                );
-                setIsNavigating(false);
-              }}
+              onClick={handleCreateMenu}
             >
               <DashedBorder
                 layoutClassName="bg-gray-700 cursor-pointer h-full"
@@ -98,21 +89,13 @@ export default function RenderMenu({
               </DashedBorder>
             </button>
           )}
-          {data &&
-            !changeSort &&
+          {!changeSort &&
             data?.menus?.map((item) => (
               <MenuCard
                 key={item.menuId}
                 isSelected={isSelected(item.menuId)}
                 onClick={() => navigate.push(handleNavigate(item.menuId))}
                 {...item}
-              />
-            ))}
-          {isLoading &&
-            [0, 1, 2].map((el) => (
-              <Skeleton
-                key={el + 1}
-                className="aspect-[329/440] rounded-xl lg:rounded-3xl"
               />
             ))}
         </div>
