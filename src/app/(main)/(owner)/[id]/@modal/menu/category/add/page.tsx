@@ -27,7 +27,7 @@ export default function Page() {
   const [optionState, setOptionState] = useState<OptionState | null>(null);
 
   return (
-    <div className="lg h-full md:w-[340px] lg:w-[540px]">
+    <div className="lg h-full w-[calc(100dvw-60px)] md:w-[340px] lg:w-[540px]">
       <FormProvider {...form}>
         <ModalTitle
           title="카테고리"
