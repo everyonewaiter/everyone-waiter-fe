@@ -4,8 +4,8 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "react-responsive";
 import { Controller } from "react-hook-form";
+import useBetterMediaQuery from "@/hooks/useBetterMediaQuery";
 import { Form, FormErrorMessage } from "@/components/common/Form";
 import LabeledInput from "@/components/common/LabeledInput";
 import Spinner from "@/components/common/Spinner";
@@ -39,7 +39,7 @@ export default function Signup() {
 
   const { state, dispatch } = useAuthReducer();
 
-  const isPC = useMediaQuery({ query: "(max-width: 1920px)" });
+  const isPC = useBetterMediaQuery({ query: "(max-width: 1920px)" });
 
   const { form, submitHandler, disableFormButton } = useSignupForm({
     isAuthActive: state.authDisabled,

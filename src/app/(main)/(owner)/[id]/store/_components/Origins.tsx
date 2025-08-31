@@ -1,12 +1,12 @@
-import Icon from "@/components/common/Icon/Icon";
 import { PropsWithChildren } from "react";
 import {
   FieldArrayWithId,
   UseFieldArrayRemove,
   useFormContext,
 } from "react-hook-form";
-import { useMediaQuery } from "react-responsive";
+import Icon from "@/components/common/Icon/Icon";
 import { TypeStoreInfo } from "@/schema/store.schema";
+import useBetterMediaQuery from "@/hooks/useBetterMediaQuery";
 
 function TableRow({
   children,
@@ -32,7 +32,7 @@ export default function Origins({
   removeOrigin,
   isSubmitted,
 }: IProps) {
-  const isLargeScreen = useMediaQuery({ query: "(min-width: 961px)" });
+  const isLargeScreen = useBetterMediaQuery({ query: "(min-width: 961px)" });
 
   const form = useFormContext<TypeStoreInfo>();
 

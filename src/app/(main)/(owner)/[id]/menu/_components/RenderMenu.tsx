@@ -2,12 +2,12 @@
 
 import { lazy, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMediaQuery } from "react-responsive";
 import { PlusIcon } from "@/components/common/Icon/index";
 import DashedBorder from "@/components/DashedBorder";
 import { useStoreContext } from "@/providers/storeProvider";
 import { rectSortingStrategy } from "@/components/dnd";
 import Loading from "@/components/Loading";
+import useBetterMediaQuery from "@/hooks/useBetterMediaQuery";
 import { TypeMenuList } from "../_schema/menu.schema";
 import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
@@ -30,7 +30,7 @@ export default function RenderMenu({
   sortedMenus,
 }: IProps) {
   const navigate = useRouter();
-  const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isMobile = useBetterMediaQuery({ query: "(max-width: 767px)" });
 
   const [isNavigating, setIsNavigating] = useState(false);
 
