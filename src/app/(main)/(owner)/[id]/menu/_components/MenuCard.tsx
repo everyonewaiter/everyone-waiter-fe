@@ -77,27 +77,51 @@ export default function MenuCard({
           />
         )}
         <div className="mt-auto flex flex-col gap-1 rounded-xl bg-white p-2 lg:gap-2 lg:rounded-[20px] lg:px-5 lg:py-4">
-          {menu.label !== null && menu.label !== "DEFAULT" && (
-            <ResponsiveButton
-              responsiveButtons={{
-                lg: {
-                  buttonSize: "custom",
-                  className:
-                    "w-fit px-4 py-1 bg-[#3900B508] !text-[#3900B5] border-none text-sm font-regular  rounded-3xl",
-                },
-                md: {
-                  buttonSize: "custom",
-                  className: "w-fit h-6 px-3 py-1 rounded-3xl text-xs",
-                },
-                sm: {
-                  buttonSize: "custom",
-                  className: "w-fit h-6 px-3 py-1 rounded-3xl text-xs",
-                },
-              }}
-            >
-              {menuLabelTranslate[menu.label]}
-            </ResponsiveButton>
-          )}
+          <div className="flex items-center justify-start gap-2">
+            {menu.label !== null && menu.label !== "DEFAULT" && (
+              <ResponsiveButton
+                responsiveButtons={{
+                  lg: {
+                    buttonSize: "custom",
+                    className:
+                      "w-fit px-4 py-1 bg-[#3900B508] !text-[#3900B5] border-none text-sm font-regular  rounded-3xl",
+                  },
+                  md: {
+                    buttonSize: "custom",
+                    className: "w-fit h-6 px-3 py-1 rounded-3xl text-xs",
+                  },
+                  sm: {
+                    buttonSize: "custom",
+                    className: "w-fit h-6 px-3 py-1 rounded-3xl text-xs",
+                  },
+                }}
+              >
+                {menuLabelTranslate[menu.label]}
+              </ResponsiveButton>
+            )}
+            {menu.state !== "DEFAULT" && (
+              <ResponsiveButton
+                color="grey"
+                responsiveButtons={{
+                  lg: {
+                    buttonSize: "custom",
+                    className:
+                      "w-fit px-4 py-1 bg-[#3900B508] !text-[#3900B5] border-none text-sm font-regular rounded-3xl",
+                  },
+                  md: {
+                    buttonSize: "custom",
+                    className: "w-fit h-6 px-3 py-1 rounded-3xl text-xs",
+                  },
+                  sm: {
+                    buttonSize: "custom",
+                    className: "w-fit h-6 px-3 py-1 rounded-3xl text-xs",
+                  },
+                }}
+              >
+                {menu.state === "SOLD_OUT" ? "품절" : "숨김"}
+              </ResponsiveButton>
+            )}
+          </div>
           <div className="flex flex-col items-start justify-between gap-1 lg:flex-row lg:items-center">
             <span className="text-gray-0 text-s font-medium lg:text-lg lg:font-semibold">
               {menu.name}
