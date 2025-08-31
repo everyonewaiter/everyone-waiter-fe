@@ -30,7 +30,7 @@ export default function Page() {
     <div className="lg h-full w-[calc(100dvw-60px)] md:w-[340px] lg:w-[540px]">
       <FormProvider {...form}>
         <ModalTitle
-          title="카테고리"
+          title={optionState === "move" ? "카테고리 순서변경" : "카테고리"}
           topRightComponent={
             !optionState &&
             !form.formState.isDirty && (

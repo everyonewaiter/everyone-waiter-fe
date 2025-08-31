@@ -5,7 +5,7 @@ import Button, { ButtonColors } from "./Button";
 import buttonVariants from "./styles";
 
 export type ButtonSize = "sm" | "md" | "lg" | "xl" | "custom";
-type ScreenSize = "sm" | "md" | "lg";
+export type ScreenSize = "sm" | "md" | "lg";
 
 interface IProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color"> {

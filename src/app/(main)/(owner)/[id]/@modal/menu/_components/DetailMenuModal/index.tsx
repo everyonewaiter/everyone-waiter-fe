@@ -31,13 +31,15 @@ export default function DetailMenuModal({
   onSetEditing,
   type,
   data,
-  isPage,
+  isPage = false,
   initialCategoryId,
 }: IProps) {
   const navigate = useRouter();
-
   const { storeId } = useStoreContext();
-  const { form } = useMenuModalForm({ data, initialCategoryId });
+  const { form } = useMenuModalForm({
+    data,
+    initialCategoryId,
+  });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showInfo, setShowInfo] = useState<Record<OptionType, boolean>>({
@@ -64,6 +66,18 @@ export default function DetailMenuModal({
     onError: () => setIsSubmitted(false),
   });
 
+  const toggleOption = () => {
+    setCurrentOption(
+      currentOption === OptionType.REQUIRED
+        ? OptionType.OPTIONAL
+        : OptionType.REQUIRED
+    );
+  };
+
+  const updateShowInfo = (optionType: OptionType, value: boolean) => {
+    setShowInfo((prev) => ({ ...prev, [optionType]: value }));
+  };
+
   return (
     <FormProvider {...form}>
       <form
@@ -74,10 +88,10 @@ export default function DetailMenuModal({
       >
         {/* 헤더 */}
         <div className="shrink-0">
-          <Header onNavigate={() => navigate.back()} isPage={isPage!} />
+          <Header onNavigate={() => navigate.back()} isPage={isPage} />
         </div>
-        {/* 콘텐츠 */}
 
+        {/* 콘텐츠 */}
         <div className="mt-5 overflow-hidden md:mt-0">
           <div className="scrollbar-hide flex h-full w-full flex-col md:flex-row md:gap-3 md:overflow-y-auto lg:gap-[18px]">
             {/* 이미지 표시 및 등록 */}
@@ -91,17 +105,11 @@ export default function DetailMenuModal({
               <OptionTemplate
                 title="필수 옵션"
                 onSetShowInfo={(value) =>
-                  setShowInfo({ ...showInfo, required: value })
+                  updateShowInfo(OptionType.REQUIRED, value)
                 }
-                showInfo={showInfo.required}
-                onClick={() => {
-                  if (currentOption === OptionType.REQUIRED) {
-                    setCurrentOption(OptionType.OPTIONAL);
-                  } else {
-                    setCurrentOption(OptionType.REQUIRED);
-                  }
-                }}
-                isOpen={currentOption === "required"}
+                showInfo={showInfo[OptionType.REQUIRED]}
+                onClick={toggleOption}
+                isOpen={currentOption === OptionType.REQUIRED}
                 type="requiredOptions"
                 isEditing={isEditing}
                 data={form.watch("requiredOptions")}
@@ -110,23 +118,19 @@ export default function DetailMenuModal({
               <OptionTemplate
                 title="선택 옵션"
                 onSetShowInfo={(value) =>
-                  setShowInfo({ ...showInfo, optional: value })
+                  updateShowInfo(OptionType.OPTIONAL, value)
                 }
-                showInfo={showInfo.optional}
-                onClick={() => {
-                  if (currentOption === OptionType.OPTIONAL) {
-                    setCurrentOption(OptionType.REQUIRED);
-                  } else {
-                    setCurrentOption(OptionType.OPTIONAL);
-                  }
-                }}
-                isOpen={currentOption === "optional"}
+                showInfo={showInfo[OptionType.OPTIONAL]}
+                onClick={toggleOption}
+                isOpen={currentOption === OptionType.OPTIONAL}
                 type="optionalOptions"
                 isEditing={isEditing}
                 data={form.watch("optionalOptions")}
                 isUpdate={type === "update"}
               />
             </section>
+
+            {/* 모바일 버튼 */}
             <div className="mt-5 mb-8 flex w-full justify-center md:hidden">
               <ModalButton
                 color="primary"
@@ -139,7 +143,7 @@ export default function DetailMenuModal({
           </div>
         </div>
 
-        {/* 바텀 버튼 */}
+        {/* 데스크톱 버튼 */}
         <div className="hidden w-full justify-center md:flex">
           <ModalButton
             isEditing={isEditing}
