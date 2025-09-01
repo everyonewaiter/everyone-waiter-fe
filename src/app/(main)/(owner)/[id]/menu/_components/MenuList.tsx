@@ -49,13 +49,14 @@ export default function MenuList() {
             onClick={() => {
               navigate.push(`/${storeId}/menu/category/add`);
             }}
+            commonClassName="group"
             aria-label="카테고리 등록 및 수정"
             disabled={changeSort}
           >
             <SettingsIcon
               size={18}
               strokeWidth={1.5}
-              className="hover:animate-spin"
+              className="group-hover:animate-spin"
             />
           </ResponsiveButton>
           {categories?.map((cat) => (
