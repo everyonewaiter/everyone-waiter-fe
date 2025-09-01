@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useStoreContext } from "@/providers/storeProvider";
-import cn from "@/lib/utils";
 import { SettingsIcon } from "@/components/common/Icon/index";
 import { useActiveCategory } from "../_hooks/useActiveCategory";
 import { useMenuSort } from "../_hooks/useMenuSort";
@@ -19,7 +18,6 @@ export default function MenuList() {
   const { active, categories, setActive } = useActiveCategory(storeId);
   const { form, handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
 
-  const [isNavigating, setIsNavigating] = useState(false);
   const [changeSort, setChangeSort] = useState(false);
 
   const getBorderClass = (categoryId: string) => {
@@ -49,7 +47,6 @@ export default function MenuList() {
               },
             }}
             onClick={() => {
-              setIsNavigating(true);
               navigate.push(`/${storeId}/menu/category/add`);
             }}
             aria-label="카테고리 등록 및 수정"
@@ -58,7 +55,7 @@ export default function MenuList() {
             <SettingsIcon
               size={18}
               strokeWidth={1.5}
-              className={cn(isNavigating && "animate-spin")}
+              className="hover:animate-spin"
             />
           </ResponsiveButton>
           {categories?.map((cat) => (
