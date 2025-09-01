@@ -1,21 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { getClientCookie } from "@/lib/cookies/client";
 import { addStoreSchema, TypeAddStoreForm } from "@/schema/store.schema";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { getClientCookie } from "@/lib/cookies/client";
+import { useRouter } from "next/navigation";
+import useLeaveGuard from "@/hooks/useCheckLeave";
 import { storesQueries } from "../../(owner)/[id]/store/_queries/useStores";
 
-export default function useCreateForm(storeId?: string) {
-  const navigate = useRouter();
-  const { mutate } = storesQueries.useRegister();
-
-  const permission = getClientCookie("permission");
-
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
+export default function useCreateForm(storeId: string) {
   const form = useForm<TypeAddStoreForm>({
     mode: "onSubmit",
     resolver: zodResolver(addStoreSchema),
@@ -30,8 +24,17 @@ export default function useCreateForm(storeId?: string) {
     },
   });
 
-  const handleSubmit = (data: TypeAddStoreForm) => {
-    setIsSubmitted(true);
+  const navigate = useRouter();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const permission = getClientCookie("permission");
+
+  const { mutate } = storesQueries.useRegister();
+
+  const handleSubmit = async (data: TypeAddStoreForm) => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
 
     const formData = new FormData();
     formData.append("name", data.name);
@@ -42,10 +45,8 @@ export default function useCreateForm(storeId?: string) {
     if (data.image) {
       formData.append("file", data.image);
     }
-    setIsSubmitted(false);
 
     mutate(formData, {
-      onError: () => setIsSubmitted(false),
       onSuccess: () => {
         setTimeout(() => {
           if (permission === "USER") {
@@ -54,15 +55,16 @@ export default function useCreateForm(storeId?: string) {
             navigate.replace(`/${storeId}`);
           }
         }, 300);
-        setIsSubmitted(false);
       },
-      onSettled: () => setIsSubmitted(false),
+      onError: () => setIsSubmitting(false),
     });
   };
 
-  return {
-    form,
-    onSubmit: handleSubmit,
-    isSubmitted,
-  };
+  useLeaveGuard({
+    shouldBlock: form.formState.isDirty,
+    allowNavigation: false,
+    isSubmitting,
+  });
+
+  return { form, isSubmitting, handleSubmit };
 }
