@@ -1,4 +1,3 @@
-import { useFormContext } from "react-hook-form";
 import { menuQueries } from "../../../menu/_queries/useMenu";
 import { formToRequest } from "./useMenuForm";
 import { TypeMenuForm } from "../../../menu/_schema/menu.schema";
@@ -20,9 +19,7 @@ export default function useHandleMenuSubmit({
   onSetIsSubmitted,
   propsData,
 }: IProps) {
-  const form = useFormContext<TypeMenuForm>();
-
-  const add = menuQueries.useAddMenu(storeId, form);
+  const add = menuQueries.useAddMenu(storeId);
   const updateWithImg = menuQueries.useUpdateWithImage(
     storeId,
     propsData.categoryId

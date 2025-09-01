@@ -33,7 +33,7 @@ export default function TableBox({
       role="button"
       tabIndex={0}
       className={cn(
-        "flex h-[320px] w-[432px] cursor-pointer flex-col justify-between rounded-3xl border-[2px] p-7 text-left",
+        "flex aspect-[432/320] cursor-pointer flex-col justify-between rounded-3xl border-[2px] p-7 text-left",
         props.orderMenuCount > 0 ? "border-primary" : "border-gray-500",
         isMoving && hasAnimation ? "animate-wiggle" : ""
       )}
@@ -83,7 +83,7 @@ export default function TableBox({
           </Button>
         </div>
       </div>
-      <h1 className="font-gray-0 text-4xl font-bold">
+      <h1 className="font-gray-0 font-bold md:text-3xl lg:text-4xl">
         {props.tableNo}번 테이블
       </h1>
       <div className="flex flex-row gap-8">

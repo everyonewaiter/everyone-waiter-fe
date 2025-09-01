@@ -44,19 +44,20 @@ export default function DetailTableOrder() {
     device?.storeId as string
   );
   const allMenus = menus?.categories?.map((el) => el.menus).flat();
-  const selectedCategory = menus?.categories?.find(
+  const filteredMenus = allMenus?.filter((el) => el.state !== "HIDE");
+  const selectedCategory = filteredMenus?.filter(
     (el) => el.categoryId === isActive
-  )?.menus;
+  );
 
   const { data } = posQueries.useActivity(Number(tableNo));
 
   useEffect(() => {
-    if (!isLoading && (data || menus)) {
+    if (!isLoading && (data || filteredMenus)) {
       setHasLoadedOnce(true);
     }
-  }, [data, menus, isLoading]);
+  }, [data, filteredMenus, isLoading]);
 
-  const list = isActive === "전체" ? allMenus : selectedCategory;
+  const list = isActive === "전체" ? filteredMenus : selectedCategory;
 
   const isSameOrder = (a: CustomOrder, b: CustomOrder): boolean => {
     if (a.menuId !== b.menuId) return false;

@@ -6,6 +6,7 @@ import cn from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import { FormErrorMessage } from "@/components/common/Form";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import PdfViewer from "@/app/(main)/create/_components/PdfViewer";
 import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
 
 interface IProps {
@@ -16,8 +17,24 @@ export default function ImageSection({ isEditing }: IProps) {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const { watch, setValue, formState } = useFormContext<TypeMenuForm>();
 
+  const imgFile = watch("imgFile");
+  const imgString = watch("imgString");
+  const isPdf = imgFile?.type === "application/pdf";
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "application/pdf",
+    ];
+    if (!allowedTypes.includes(file?.type!)) {
+      // eslint-disable-next-line
+      alert("PNG, JPG 및 PDF 파일만 업로드 가능합니다.");
+      return;
+    }
+
     if (file) {
       setValue("imgFile", file, { shouldDirty: true, shouldValidate: true });
       setValue("imgString", URL.createObjectURL(file), {
@@ -31,41 +48,48 @@ export default function ImageSection({ isEditing }: IProps) {
     <section className="flex basis-[28.44%] flex-col gap-1 lg:gap-2">
       <div
         className={cn(
-          "h-[373px] overflow-hidden rounded-xl md:h-[280px] lg:h-[478px] lg:rounded-3xl",
-          watch("imgString") ? "" : "border border-gray-500",
-          formState.errors.imgString ? "border-status-error" : ""
+          "aspect-[364/478] h-[373px] overflow-hidden rounded-xl border border-gray-500 md:h-[280px] lg:h-[478px] lg:rounded-3xl",
+          formState.errors.imgString || formState.errors.imgFile
+            ? "border-status-error"
+            : ""
         )}
       >
-        {watch("imgString") && watch("imgString").startsWith("blob") && (
-          <Image
-            src={watch("imgString")}
-            alt="menu image"
-            width={364}
-            height={478}
-            unoptimized
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
+        {isPdf ? (
+          <PdfViewer file={imgFile} />
+        ) : (
+          <>
+            {imgString && imgString.startsWith("blob") && (
+              <Image
+                src={imgString}
+                alt="menu image"
+                width={364}
+                height={478}
+                unoptimized
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            )}
+            {imgString && !imgString.startsWith("blob") && (
+              <ImageWithFallback
+                src={imgString}
+                alt="menu image"
+                width={364}
+                height={478}
+                unoptimized
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            )}
+          </>
         )}
-        {watch("imgString") && !watch("imgString").startsWith("blob") && (
-          <ImageWithFallback
-            src={watch("imgString")}
-            alt="menu image"
-            width={364}
-            height={478}
-            unoptimized
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
-        )}
-        {!watch("imgString") && (
+        {!imgString && (
           <div className="center h-full w-full">
             <Image
               src="/logo/logo-medium-gray.svg"
               alt="메뉴 이미지 없음"
               width={100}
               height={100}
-              className="opacity-10"
+              className="object-cover opacity-10"
             />
           </div>
         )}
@@ -73,6 +97,11 @@ export default function ImageSection({ isEditing }: IProps) {
       {isEditing && formState.errors.imgString && (
         <FormErrorMessage>
           {formState.errors.imgString?.message?.toString()}
+        </FormErrorMessage>
+      )}
+      {isEditing && formState.errors.imgFile && (
+        <FormErrorMessage>
+          {formState.errors.imgFile?.message?.toString()}
         </FormErrorMessage>
       )}
       {isEditing && (
@@ -86,7 +115,7 @@ export default function ImageSection({ isEditing }: IProps) {
           </button>
           <input
             type="file"
-            accept="image/*"
+            accept=".jpeg,.jpg,.png,.pdf"
             hidden
             ref={fileRef}
             onChange={handleFileChange}
