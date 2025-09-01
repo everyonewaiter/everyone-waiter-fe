@@ -40,7 +40,7 @@ export default function ModalLayout({ children, onClose }: ModalLayoutProps) {
   });
 
   return (
-    <div className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm">
+    <div className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div ref={ref} className="relative rounded-md bg-white p-4 lg:p-5">
         <button
           type="button"
