@@ -125,6 +125,9 @@ dependencies:
   react-lottie:
     specifier: ^1.2.10
     version: 1.2.10(react@19.1.0)
+  react-native-sse:
+    specifier: ^1.2.1
+    version: 1.2.1
   react-pdf:
     specifier: ^10.0.1
     version: 10.0.1(@types/react@19.1.8)(react-dom@19.1.0)(react@19.1.0)
@@ -9784,6 +9787,10 @@ packages:
       lottie-web: 5.13.0
       prop-types: 15.8.1
       react: 19.1.0
+    dev: false
+
+  /react-native-sse@1.2.1:
+    resolution: {integrity: sha512-zejanlScF+IB9tYnbdry0MT34qjBXbiV/E72qGz33W/tX1bx8MXsbB4lxiuPETc9v/008vYZ60yjIstW22VlVg==}
     dev: false
 
   /react-pdf@10.0.1(@types/react@19.1.8)(react-dom@19.1.0)(react@19.1.0):
