@@ -128,6 +128,10 @@
   input[type="number"] {
     -moz-appearance: textfield;
   }
+
+  [data-dnd-draggable] {
+    touch-action: none;
+  }
 }
 
 .center {
