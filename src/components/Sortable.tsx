@@ -28,11 +28,21 @@ export default function Sortable({
 }: PropsWithChildren<IProps>) {
   const sensors = useSensors(useSensor(PointerSensor));
 
+  const handleDragStart = () => {
+    document.body.style.overflow = "hidden";
+  };
+
+  const handleDragEnd = (event: any) => {
+    document.body.style.overflow = "";
+    onDragEnd(event);
+  };
+
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
-      onDragEnd={onDragEnd}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       {...props}
     >
       <SortableContext
