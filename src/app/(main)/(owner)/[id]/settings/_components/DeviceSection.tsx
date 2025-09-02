@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import {
   Form,
@@ -15,6 +15,7 @@ import Input from "@/components/common/Input";
 import QueryProviders from "@/app/query-providers";
 import useOverlay from "@/hooks/useOverlay";
 import Alert from "@/components/common/Alert/Alert";
+import Spinner from "@/components/common/Spinner";
 import {
   deviceNumberSchema,
   TypeSettingsDeviceForm,
@@ -26,6 +27,8 @@ interface IProps {
 }
 
 export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const form = useForm<TypeSettingsDeviceForm>({
     mode: "onSubmit",
     resolver: zodResolver(deviceNumberSchema),
@@ -69,8 +72,9 @@ export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
         </QueryProviders>
       ));
     } else {
-      form.setValue("deviceNumber", ksnetDeviceNo || "");
-      close();
+      setIsSubmitted(true);
+      onAction(form.watch("deviceNumber"));
+      setIsSubmitted(false);
     }
   };
 
@@ -110,8 +114,12 @@ export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
                       md: { buttonSize: "sm" },
                       sm: { buttonSize: "sm" },
                     }}
+                    disabled={
+                      form.watch("deviceNumber") === ksnetDeviceNo ||
+                      isSubmitted
+                    }
                   >
-                    등록
+                    {isSubmitted ? <Spinner /> : "등록"}
                   </ResponsiveButton>
                 </div>
                 <FormErrorMessage className="mb-[1.5px]" />
