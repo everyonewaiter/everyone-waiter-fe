@@ -10,10 +10,11 @@ import {
 import { deviceKeys } from "./keys";
 import { TypeDeviceStep1Form } from "../_schema/device.schema";
 
-const useDeviceDetail = () =>
+const useDeviceDetail = (enabled = true) =>
   useQuery({
     queryKey: deviceKeys.detail,
     queryFn: getDeviceDetail,
+    enabled,
   });
 
 const useAddDevice = () =>

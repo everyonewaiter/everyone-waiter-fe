@@ -1,13 +1,24 @@
 "use client";
 
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
 import { SseService } from "@/utils/sse";
+import { usePathname } from "next/navigation";
 
 const SseContext = createContext(null);
 
 export function SseProvider({ children }: { children: React.ReactNode }) {
-  const { data: device, isSuccess } = deviceQueries.useDeviceDetail();
+  const pathname = usePathname();
+  const [canActive, setCanActive] = useState(false);
+  const { data: device, isSuccess } = deviceQueries.useDeviceDetail(canActive);
+
+  useEffect(() => {
+    if (pathname === "/device") {
+      setCanActive(false);
+    } else {
+      setCanActive(true);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (!device || !isSuccess) {
