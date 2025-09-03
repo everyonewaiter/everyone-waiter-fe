@@ -1,10 +1,7 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import {
-  getCategories,
-  getMenuList,
-} from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
+import { getCategories } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
 import getQueryClient from "@/app/get-query-client";
-import { categoryKeys, menuKeys } from "../../../_queries/keys";
+import { categoryKeys } from "../../../_queries/keys";
 
 export default async function Layout({
   children,
@@ -19,11 +16,6 @@ export default async function Layout({
   await queryClient.prefetchQuery({
     queryKey: categoryKeys.all(id),
     queryFn: () => getCategories({ storeId: id }),
-  });
-
-  await queryClient.prefetchQuery({
-    queryKey: menuKeys.category(id, ""),
-    queryFn: () => getMenuList({ storeId: id, categoryId: "" }),
   });
 
   return (

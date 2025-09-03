@@ -96,7 +96,6 @@ export default function MenuList() {
           ))}
         </div>
         <HeaderButton
-          categoryId={active}
           changeSort={changeSort}
           onSetChangeSort={setChangeSort}
           onSaveSort={() => handleSortSave(() => setChangeSort(false))}

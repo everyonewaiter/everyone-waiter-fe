@@ -54,8 +54,8 @@ export default function RenderMenu({
   const data = categoryId === "전체" ? categoriesWithMenus : menus;
   const isLoading = categoryId === "전체" ? categoriesLoading : menusLoading;
 
-  const handleNavigate = (menuId: string) =>
-    `/${storeId}/menu/${menuId}/category/${categoryId}?hideModal=${isMobile}`;
+  const handleNavigate = (category: string, menuId: string) =>
+    `/${storeId}/menu/${menuId}/category/${category}?hideModal=${isMobile}`;
 
   const handleCreateMenu = () => {
     setIsNavigating(true);
@@ -70,9 +70,7 @@ export default function RenderMenu({
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  if (isLoading) return <Loading />;
 
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
@@ -89,7 +87,9 @@ export default function RenderMenu({
                 <SortableItem
                   key={item.menuId!}
                   item={item}
-                  onClick={() => navigate.push(handleNavigate(item.menuId!))}
+                  onClick={() =>
+                    navigate.push(handleNavigate(item.category, item.menuId!))
+                  }
                 />
               ))}
             </Sortable>
@@ -118,8 +118,10 @@ export default function RenderMenu({
             data?.menus?.map((item) => (
               <MenuCard
                 key={item.menuId}
-                isSelected={isSelected(item.menuId)}
-                onClick={() => navigate.push(handleNavigate(item.menuId))}
+                isSelected={isSelected(item.menuId, item.categoryId)}
+                onClick={() =>
+                  navigate.push(handleNavigate(item.categoryId, item.menuId))
+                }
                 {...item}
               />
             ))}

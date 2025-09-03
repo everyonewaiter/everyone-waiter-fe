@@ -22,7 +22,7 @@ export default function MenuCard({
   className,
   ...menu
 }: IProps) {
-  const { toggle } = useMenuSelection();
+  const { addId, deleteId, hasId } = useMenuSelection();
 
   return (
     <div
@@ -69,7 +69,13 @@ export default function MenuCard({
           <Checkbox
             className="mt-2 ml-2 h-6 w-6"
             checked={isSelected}
-            onCheckedChange={() => toggle(menu.menuId)}
+            onCheckedChange={() => {
+              if (hasId(menu.menuId)) {
+                deleteId(menu.menuId, menu.categoryId);
+              } else {
+                addId(menu.menuId, menu.categoryId);
+              }
+            }}
             onClick={(e) => {
               e.stopPropagation();
             }}

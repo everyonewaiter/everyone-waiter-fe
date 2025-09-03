@@ -11,7 +11,8 @@ export const useCategoriesWithMenus = (storeId: string) => {
         queryKey: menuKeys.category(storeId, category.categoryId),
         queryFn: () =>
           getMenuList({ storeId, categoryId: category.categoryId }),
-        enabled: !!storeId && !!category.categoryId,
+        enabled:
+          !!storeId && !!category.categoryId && category.categoryId !== "전체",
       })) || [],
   });
 

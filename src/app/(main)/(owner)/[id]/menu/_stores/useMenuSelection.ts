@@ -1,25 +1,35 @@
 import { create } from "zustand";
 
 type State = {
-  selectedIds: string[];
+  selectedIds: { menuId: string; categoryId: string }[];
 };
 
 type Actions = {
-  isSelected: (id: string) => boolean;
-  toggle: (id: string) => void;
+  isSelected: (menuId: string, categoryId: string) => boolean;
+  addId: (menuId: string, categoryId: string) => void;
+  deleteId: (menuId: string, categoryId: string) => void;
   reset: () => void;
-  setSelected: (ids: string[]) => void;
+  setSelected: (ids: { menuId: string; categoryId: string }[]) => void;
+  hasId: (menuId: string) => boolean;
 };
 
 export const useMenuSelection = create<State & Actions>((set, get) => ({
   selectedIds: [],
-  toggle: (id) =>
+  addId: (menuId, categoryId) =>
     set((state) => ({
-      selectedIds: state.selectedIds.includes(id)
-        ? state.selectedIds.filter((x) => x !== id)
-        : [...state.selectedIds, id],
+      selectedIds: [...state.selectedIds, { menuId, categoryId }],
     })),
-  isSelected: (id) => get().selectedIds.includes(id),
+  deleteId: (menuId, categoryId) =>
+    set((state) => ({
+      selectedIds: state.selectedIds.filter(
+        (el) => !(el.menuId === menuId && el.categoryId === categoryId)
+      ),
+    })),
+  isSelected: (menuId, categoryId) =>
+    get().selectedIds.some(
+      (item) => item.menuId === menuId && item.categoryId === categoryId
+    ),
   reset: () => set({ selectedIds: [] }),
   setSelected: (ids) => set({ selectedIds: ids }),
+  hasId: (menuId) => get().selectedIds.some((item) => item.menuId === menuId),
 }));

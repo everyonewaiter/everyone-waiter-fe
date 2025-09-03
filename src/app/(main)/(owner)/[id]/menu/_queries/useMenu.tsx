@@ -27,7 +27,11 @@ const useMenuList = (
   useQuery({
     queryKey: menuKeys.category(storeId, categoryId),
     queryFn: () => getMenuList({ storeId, categoryId }),
-    enabled: options?.enabled !== false && !!storeId && !!categoryId,
+    enabled:
+      categoryId !== "전체" &&
+      options?.enabled !== false &&
+      !!storeId &&
+      !!categoryId,
     staleTime: 1000 * 60 * 5,
   });
 
