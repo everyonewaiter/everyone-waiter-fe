@@ -14,7 +14,7 @@ export default function Page() {
   const { data, isLoading } = categoryQueries.useCategories(storeId);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="scrollbar-hide flex h-full flex-col">
       {isLoading && <Spinner />}
       {data?.categories?.length! > 0 ? (
         <>

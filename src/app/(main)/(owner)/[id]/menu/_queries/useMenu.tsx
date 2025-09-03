@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   deleteMenu,
   deleteMultipleMenus,
@@ -19,10 +19,15 @@ import { TypeMenuForm } from "../_schema/menu.schema";
 
 const queryClient = getQueryClient();
 
-const useMenuList = (storeId: string, categoryId: string) =>
-  useSuspenseQuery({
+const useMenuList = (
+  storeId: string,
+  categoryId: string,
+  options?: { enabled?: boolean }
+) =>
+  useQuery({
     queryKey: menuKeys.category(storeId, categoryId),
     queryFn: () => getMenuList({ storeId, categoryId }),
+    enabled: options?.enabled !== false && !!storeId && !!categoryId,
     staleTime: 1000 * 60 * 5,
   });
 
