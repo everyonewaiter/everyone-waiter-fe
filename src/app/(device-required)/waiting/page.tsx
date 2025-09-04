@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
-import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
@@ -22,7 +21,6 @@ export default function Waiting() {
 
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
   const { data: list } = waitingQueries.useWaitingList(waitingEnabled);
-  const addWaiting = waitingQueries.useAddWaiting();
 
   useEffect(() => {
     resetWaiting();
@@ -44,14 +42,6 @@ export default function Waiting() {
       );
     };
   }, [incrementWaiting]);
-
-  const handleAddWaiting = () => {
-    addWaiting.mutate({
-      phoneNumber: "01036833426",
-      adult: 1,
-      infant: 0,
-    });
-  };
 
   return (
     <div className="min-h-dvh w-dvw bg-gray-700">
@@ -80,15 +70,6 @@ export default function Waiting() {
         </div>
         <div className="h-[1px] w-full bg-gray-500" />
       </header>
-      <div className="mb-6 flex w-full items-center justify-between">
-        <Button
-          color="primary"
-          className="text-gray-0 button-lg"
-          onClick={handleAddWaiting}
-        >
-          웨이팅 추가
-        </Button>
-      </div>
       <div className="flex w-full flex-row gap-4 px-15 pb-8">
         <section className="flex w-full flex-row gap-[25px]">
           <div className="flex w-12 flex-col gap-4">
