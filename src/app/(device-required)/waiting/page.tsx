@@ -3,15 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
-import { useSSE } from "@/hooks/useSSE";
 import Button from "@/components/common/Button/Button";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
-import getQueryClient from "@/app/get-query-client";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
 import { waitingQueries } from "./_queries/useWaiting";
 import { useNotificationStore } from "../_stores/useNotificationStore";
-import { waitingKeys } from "./_queries/keys";
 
 const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
   ssr: false,
@@ -19,26 +16,13 @@ const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
 
 export default function Waiting() {
   const navigate = useRouter();
-  const queryClient = getQueryClient();
   const { deviceInfo, isLoading } = useDeviceInfo();
   const { handleOpenModal } = useWaitingModal();
-  const { orderCount, resetWaiting, incrementOrder } = useNotificationStore();
+  const { orderCount, resetWaiting } = useNotificationStore();
 
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
   const { data: list } = waitingQueries.useWaitingList(waitingEnabled);
   const addWaiting = waitingQueries.useAddWaiting();
-
-  useSSE({
-    onMessage: (data) => {
-      if (data.category === "RECEIPT") {
-        incrementOrder();
-      } else if (data.category === "WAITING") {
-        queryClient.invalidateQueries({
-          queryKey: waitingKeys.all(),
-        });
-      }
-    },
-  });
 
   useEffect(() => {
     resetWaiting();
