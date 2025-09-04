@@ -100,7 +100,12 @@ export default function WaitingModal({ close, type, ...waiting }: IProps) {
                   마지막 호출 시간
                 </span>
                 <span className="text-status-error text-xl">
-                  {getFormattedLastCallTime(new Date(), waiting.lastCallTime)}전
+                  {getFormattedLastCallTime(
+                    new Date(),
+                    waiting.lastCallTime,
+                    "whole"
+                  )}
+                  전
                 </span>
               </div>
             )}

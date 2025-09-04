@@ -7,7 +7,6 @@ import useElapsedMinutes from "../_hooks/useElapsedMinutes";
 import ActionButton from "./ActionButton";
 import { formatCreatedTime } from "../_utils/formatCreatedTime";
 import { getFormattedLastCallTime } from "../_utils/getFormattedLastCallTime";
-import { isInitialValue } from "../_utils/isInitialValue";
 
 interface IProps extends Waiting {
   onCall: () => void;
@@ -51,22 +50,6 @@ export default function WaitingSection({
               </>
             )}
           </div>
-          {waiting.lastCallTime && !isInitialValue(waiting.lastCallTime) && (
-            <>
-              <div className="flex h-10 w-fit flex-row items-center justify-between gap-5 rounded-3xl bg-gray-700 px-5">
-                <span>총 호출 횟수</span>
-                <strong>{waiting.callCount}회</strong>
-              </div>
-              <div className="border-status-error flex h-10 w-fit flex-row items-center justify-between gap-[6px] rounded-3xl border px-5">
-                <Icon iconKey="bell" className="text-status-error h-6 w-6" />
-                <span className="text-status-error">
-                  마지막 호출 :{" "}
-                  {getFormattedLastCallTime(currentTime, waiting.lastCallTime)}{" "}
-                  전
-                </span>
-              </div>
-            </>
-          )}
         </div>
         <strong className="text-3xl font-bold">
           총 {waiting.adult + waiting.infant}명
@@ -94,7 +77,17 @@ export default function WaitingSection({
           iconClassName="text-white"
           text="호출"
           onClick={onCall}
-        />
+        >
+          <span className="text-sm font-medium text-white">
+            총 {waiting.callCount}회 ·{" "}
+            {getFormattedLastCallTime(
+              currentTime,
+              waiting.lastCallTime,
+              "minutes"
+            )}
+            전
+          </span>
+        </ActionButton>
         <ActionButton
           type="button"
           iconKey="door-open"
