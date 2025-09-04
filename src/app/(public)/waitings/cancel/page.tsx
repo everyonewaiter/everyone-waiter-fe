@@ -14,14 +14,20 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ *
+ * @param param0 - 웨이팅 취소할 매장 ID
+ * @param param1 - 웨이팅 접근 가능한 토큰
+ * @param param2 - 인증 번호
+ */
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ storeId: string; accessKey: string }>;
+  searchParams: Promise<{ storeId: string; accessKey: string; number: string }>;
 }) {
-  const { storeId, accessKey } = await searchParams;
+  const params = await searchParams;
 
-  if (!storeId || !accessKey) {
+  if (!params.accessKey) {
     throw new Error("필수 파라미터가 누락되었습니다.");
   }
 
@@ -30,23 +36,23 @@ export default async function Page({
   try {
     const data = await queryClient.fetchQuery({
       queryKey: ["front-of-my-turn"],
-      queryFn: () => getTeamsFrontOfMe({ storeId, accessKey }),
+      queryFn: () => getTeamsFrontOfMe({ ...params }),
     });
 
     if (data?.state === "CANCEL") {
-      redirect(`/waitings/result?type=cancel&storeId=${storeId}`);
+      redirect(`/waitings/result?type=cancel&storeId=${params.storeId}`);
     } else if (data?.state === "COMPLETE") {
-      redirect(`/waitings/result?type=enter&storeId=${storeId}`);
+      redirect(`/waitings/result?type=enter&storeId=${params.storeId}`);
     }
 
     return (
       <Suspense fallback={<Spinner />}>
-        <CancelTurnPage storeId={storeId} key={accessKey} />
+        <CancelTurnPage {...params} />
       </Suspense>
     );
   } catch (error: any) {
     if (error?.response?.data?.code === "WAITING_NOT_FOUND") {
-      redirect(`/waitings/result?type=error&storeId=${storeId}`);
+      redirect(`/waitings/result?type=error&storeId=${params.storeId}`);
     }
     throw error;
   }

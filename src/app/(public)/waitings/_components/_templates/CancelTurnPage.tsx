@@ -13,10 +13,11 @@ import { publicQueries } from "../../../_queries/usePublic";
 
 interface IProps {
   storeId: string;
-  key: string;
+  accessKey: string;
+  number: string;
 }
 
-export default function CancelTurnPage({ storeId, key }: IProps) {
+export default function CancelTurnPage({ storeId, accessKey, number }: IProps) {
   const navigate = useRouter();
 
   const cancelMyTurn = publicQueries.useCancelMyTurn();
@@ -24,16 +25,19 @@ export default function CancelTurnPage({ storeId, key }: IProps) {
   const [otpValue, setOtpValue] = useState("");
 
   const handleCancel = () => {
-    // TODO: optValue 안 보냄 - 백엔드 요청
+    if (number !== otpValue) {
+      // eslint-disable-next-line
+      alert("대기번호가 일치하지 않습니다.");
+      return;
+    }
+
     cancelMyTurn.mutate(
       {
         storeId,
-        accessKey: key,
+        accessKey,
       },
       {
-        onSuccess: () => {
-          navigate.push("/result?type=cancel");
-        },
+        onSuccess: () => navigate.push("/result?type=cancel"),
       }
     );
   };
