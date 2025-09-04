@@ -18,7 +18,7 @@ export default function Waiting() {
   const navigate = useRouter();
   const { deviceInfo, isLoading } = useDeviceInfo();
   const { handleOpenModal } = useWaitingModal();
-  const { orderCount, resetWaiting } = useNotificationStore();
+  const { orderCount, resetWaiting, incrementWaiting } = useNotificationStore();
 
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
   const { data: list } = waitingQueries.useWaitingList(waitingEnabled);
@@ -27,6 +27,23 @@ export default function Waiting() {
   useEffect(() => {
     resetWaiting();
   }, [resetWaiting]);
+
+  // SSE 웨이팅 알림 이벤트 리스너
+  useEffect(() => {
+    const handleWaitingNotification = () => incrementWaiting();
+
+    window.addEventListener(
+      "sse-waiting-notification",
+      handleWaitingNotification
+    );
+
+    return () => {
+      window.removeEventListener(
+        "sse-waiting-notification",
+        handleWaitingNotification
+      );
+    };
+  }, [incrementWaiting]);
 
   const handleAddWaiting = () => {
     addWaiting.mutate({
