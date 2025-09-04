@@ -65,9 +65,6 @@ dependencies:
   '@tanstack/react-query-devtools':
     specifier: ^5.71.3
     version: 5.81.2(@tanstack/react-query@5.81.2)(react@19.1.0)
-  '@types/event-source-polyfill':
-    specifier: ^1.0.5
-    version: 1.0.5
   '@types/react-lottie':
     specifier: ^1.2.10
     version: 1.2.10
@@ -92,9 +89,6 @@ dependencies:
   dayjs:
     specifier: ^1.11.13
     version: 1.11.13
-  event-source-polyfill:
-    specifier: ^1.0.31
-    version: 1.0.31
   immer:
     specifier: ^10.1.1
     version: 10.1.1
@@ -125,6 +119,9 @@ dependencies:
   react-lottie:
     specifier: ^1.2.10
     version: 1.2.10(react@19.1.0)
+  react-native-sse:
+    specifier: ^1.2.1
+    version: 1.2.1
   react-pdf:
     specifier: ^10.0.1
     version: 10.0.1(@types/react@19.1.8)(react-dom@19.1.0)(react@19.1.0)
@@ -4912,10 +4909,6 @@ packages:
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
     dev: false
 
-  /@types/event-source-polyfill@1.0.5:
-    resolution: {integrity: sha512-iaiDuDI2aIFft7XkcwMzDWLqo7LVDixd2sR6B4wxJut9xcp/Ev9bO4EFg4rm6S9QxATLBj5OPxdeocgmhjwKaw==}
-    dev: false
-
   /@types/graceful-fs@4.1.9:
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
     dependencies:
@@ -7133,10 +7126,6 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /event-source-polyfill@1.0.31:
-    resolution: {integrity: sha512-4IJSItgS/41IxN5UVAVuAyczwZF7ZIEsM1XAoUzIHA6A+xzusEZUutdXz2Nr+MQPLxfTiCvqE79/C8HT8fKFvA==}
-    dev: false
 
   /eventemitter3@5.0.1:
     resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
@@ -9784,6 +9773,10 @@ packages:
       lottie-web: 5.13.0
       prop-types: 15.8.1
       react: 19.1.0
+    dev: false
+
+  /react-native-sse@1.2.1:
+    resolution: {integrity: sha512-zejanlScF+IB9tYnbdry0MT34qjBXbiV/E72qGz33W/tX1bx8MXsbB4lxiuPETc9v/008vYZ60yjIstW22VlVg==}
     dev: false
 
   /react-pdf@10.0.1(@types/react@19.1.8)(react-dom@19.1.0)(react@19.1.0):

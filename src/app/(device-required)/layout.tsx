@@ -4,6 +4,7 @@ import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import { DeviceProvider } from "@/providers/deviceStoreProvider";
 import { usePathname, useRouter } from "next/navigation";
 import { getDecryptedItem } from "@/lib/auth/secureStorage";
+import { SseProvider } from "@/providers/sseProvider";
 import FirstLoading from "../(main)/_components/FirstLoading";
 
 export default function Layout({
@@ -43,9 +44,11 @@ export default function Layout({
   if (checking) return <FirstLoading />;
 
   return (
-    <DeviceProvider>
-      {children}
-      {modal}
-    </DeviceProvider>
+    <SseProvider>
+      <DeviceProvider>
+        {children}
+        {modal}
+      </DeviceProvider>
+    </SseProvider>
   );
 }

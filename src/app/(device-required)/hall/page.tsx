@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
 import cn from "@/lib/utils";
-import { useSSE } from "@/hooks/useSSE";
-import getQueryClient from "@/app/get-query-client";
 import Spinner from "@/components/common/Spinner";
 import CallingCard from "./_components/CallingCard";
 import OrderRow from "./_components/OrderRow";
@@ -18,9 +16,8 @@ enum ActiveTab {
 }
 
 export default function Hall() {
-  const queryClient = getQueryClient();
   const [activeTab, setActiveTab] = useState<ActiveTab>(ActiveTab.order);
-  const { resetOrder, incrementWaiting } = useNotificationStore();
+  const { resetOrder } = useNotificationStore();
 
   const {
     data: staffCalls,
@@ -33,18 +30,6 @@ export default function Hall() {
     isLoading: ordersLoading,
     isError: ordersError,
   } = hallQueries.useOrderList(false);
-
-  useSSE({
-    onMessage: (data) => {
-      if (data.category === "RECEIPT") {
-        queryClient.invalidateQueries({
-          queryKey: ["order-list"],
-        });
-      } else if (data.category === "WAITING") {
-        incrementWaiting();
-      }
-    },
-  });
 
   useEffect(() => {
     resetOrder();
