@@ -1,4 +1,5 @@
 import ImageWithFallback from "@/components/common/ImageWithFallback";
+import cn from "@/lib/utils";
 import Image from "next/image";
 import { memo } from "react";
 
@@ -7,11 +8,29 @@ interface IProps extends Menu {
 }
 
 const POSMenuCard = memo(({ onClick, ...props }: IProps) => (
-  <button
-    type="button"
-    className="relative h-[340px] overflow-hidden rounded-3xl border-[1.5px] border-gray-600"
-    onClick={onClick}
+  <div
+    role="button"
+    tabIndex={0}
+    className={cn(
+      "relative aspect-[270/340] overflow-hidden rounded-2xl border-[1.5px] border-gray-600 lg:rounded-3xl",
+      props?.state === "SOLD_OUT" ? "cursor-default" : "cursor-pointer"
+    )}
+    onClick={() => props.state !== "SOLD_OUT" && onClick?.()}
+    onKeyDown={(e) => {
+      if ((e.key === "Enter" || e.key === " ") && props?.state !== "SOLD_OUT") {
+        e.preventDefault();
+        onClick?.();
+      }
+    }}
   >
+    {props.state === "SOLD_OUT" && (
+      <div className="absolute top-0 left-0 z-10 flex h-full w-full items-center justify-center bg-black/70">
+        <span className="text-xl font-semibold text-white lg:text-2xl">
+          SOLD OUT
+        </span>
+      </div>
+    )}
+    <div className="absolute top-0 left-0 h-full w-full bg-black/70">hi</div>
     {props.image ? (
       <ImageWithFallback
         src={props.image}
@@ -38,7 +57,7 @@ const POSMenuCard = memo(({ onClick, ...props }: IProps) => (
         {props.price.toLocaleString()}원
       </strong>
     </div>
-  </button>
+  </div>
 ));
 
 export default POSMenuCard;

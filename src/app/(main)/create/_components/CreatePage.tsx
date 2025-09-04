@@ -1,9 +1,4 @@
-"use client";
-
 import Logo from "@/components/Logo";
-import { Form } from "@/components/common/Form";
-import useCheckLeave from "@/hooks/useCheckLeave";
-import useCreateForm from "../_hooks/useCreateForm";
 import CreateForm from "./CreateForm";
 
 interface IProps {
@@ -11,10 +6,6 @@ interface IProps {
 }
 
 export default function CreatePage({ storeId }: IProps) {
-  const { form, onSubmit, isSubmitted } = useCreateForm(storeId);
-
-  useCheckLeave(form.formState.isDirty, true);
-
   return (
     <div className="flex items-start justify-between rounded-4xl bg-white md:w-[722px] md:p-8 lg:w-[888px]">
       <div className="hidden flex-col md:flex">
@@ -36,9 +27,7 @@ export default function CreatePage({ storeId }: IProps) {
         <h1 className="text-gray-0 flex w-full justify-center text-xl font-semibold md:hidden">
           매장 등록
         </h1>
-        <Form {...form}>
-          <CreateForm isSubmitted={isSubmitted} onSubmit={onSubmit} />
-        </Form>
+        <CreateForm storeId={storeId} />
       </div>
     </div>
   );

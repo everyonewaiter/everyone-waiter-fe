@@ -12,6 +12,7 @@ import { TypeMenuList } from "../_schema/menu.schema";
 import { menuQueries } from "../_queries/useMenu";
 import MenuCard from "./MenuCard";
 import { useMenuSelection } from "../_stores/useMenuSelection";
+import { useCategoriesWithMenus } from "../_queries/useCategoriesWithMenus";
 
 const Sortable = lazy(() => import("@/components/Sortable"));
 const SortableItem = lazy(() => import("./SortableItem"));
@@ -37,17 +38,39 @@ export default function RenderMenu({
   const { storeId } = useStoreContext();
   const { isSelected } = useMenuSelection();
 
-  const { data } = menuQueries.useMenuList(storeId, categoryId);
+  const { data: menus, isLoading: menusLoading } = menuQueries.useMenuList(
+    storeId,
+    categoryId,
+    {
+      enabled: categoryId !== "전체",
+    }
+  );
+  const {
+    data: categoriesWithMenus,
+    isLoading: categoriesLoading,
+    categories,
+  } = useCategoriesWithMenus(storeId);
 
-  const handleNavigate = (menuId: string) =>
-    `/${storeId}/menu/${menuId}/category/${categoryId}?hideModal=${isMobile}`;
+  const data = categoryId === "전체" ? categoriesWithMenus : menus;
+  const isLoading = categoryId === "전체" ? categoriesLoading : menusLoading;
+
+  const handleNavigate = (category: string, menuId: string) =>
+    `/${storeId}/menu/${menuId}/category/${category}?hideModal=${isMobile}`;
 
   const handleCreateMenu = () => {
     setIsNavigating(true);
-    navigate.push(
-      `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
-    );
+    if (categoryId === "전체") {
+      navigate.push(
+        `/${storeId}/menu/create?categoryId=${categories.data?.categories?.[0]?.categoryId}hideModal=${isMobile}`
+      );
+    } else {
+      navigate.push(
+        `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
+      );
+    }
   };
+
+  if (isLoading) return <Loading />;
 
   return (
     <div className="mt-4 mb-4 flex flex-1 flex-col lg:mt-6 lg:mb-0">
@@ -64,7 +87,9 @@ export default function RenderMenu({
                 <SortableItem
                   key={item.menuId!}
                   item={item}
-                  onClick={() => navigate.push(handleNavigate(item.menuId!))}
+                  onClick={() =>
+                    navigate.push(handleNavigate(item.category, item.menuId!))
+                  }
                 />
               ))}
             </Sortable>
@@ -93,8 +118,10 @@ export default function RenderMenu({
             data?.menus?.map((item) => (
               <MenuCard
                 key={item.menuId}
-                isSelected={isSelected(item.menuId)}
-                onClick={() => navigate.push(handleNavigate(item.menuId))}
+                isSelected={isSelected(item.menuId, item.categoryId)}
+                onClick={() =>
+                  navigate.push(handleNavigate(item.categoryId, item.menuId))
+                }
                 {...item}
               />
             ))}

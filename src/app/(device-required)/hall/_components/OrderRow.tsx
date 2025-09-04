@@ -116,14 +116,16 @@ export default function OrderRow({ completed, ...props }: IProps) {
         <div className="flex w-full flex-1 flex-col">
           <ScrollArea className="h-full w-full">
             <div className="flex w-max gap-[10px]">
-              {props.orderMenus.map((menu) => (
-                <OrderCard
-                  key={menu.orderMenuId}
-                  completed={completed}
-                  orderId={props.orderId}
-                  {...menu}
-                />
-              ))}
+              {props.orderMenus
+                .sort((a, b) => Number(a.served) - Number(b.served))
+                .map((menu) => (
+                  <OrderCard
+                    key={menu.orderMenuId}
+                    completed={completed}
+                    orderId={props.orderId}
+                    {...menu}
+                  />
+                ))}
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>

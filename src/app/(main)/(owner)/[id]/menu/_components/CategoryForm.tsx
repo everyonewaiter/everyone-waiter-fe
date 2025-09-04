@@ -1,7 +1,6 @@
 import { RefObject, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { SortableContext } from "@dnd-kit/sortable";
-import { DndContext } from "@dnd-kit/core";
+import Sortable from "@/components/Sortable";
 import CategoryFormItem from "./CategoryFormItem";
 import { TypeCategoryForm } from "../_schema/category.schema";
 import { categoryQueries } from "../_queries/useCategories";
@@ -66,7 +65,8 @@ export default function CategoryForm({
       ref={scrollRef}
     >
       {optionState === "move" ? (
-        <DndContext
+        <Sortable
+          items={fields.map((f: any) => ({ ...f, id: f.categoryId }))}
           modifiers={[restrictToParentElement, restrictToVerticalAxis]}
           onDragEnd={(event) => {
             const activeId = event?.active?.id as string | undefined;
@@ -98,22 +98,18 @@ export default function CategoryForm({
             }
           }}
         >
-          <SortableContext
-            items={fields.map((f: any) => ({ ...f, id: f.categoryId }))}
-          >
-            <div className="mb-2 flex flex-col gap-3 lg:gap-4">
-              {fields?.map((field: any, index) => (
-                <CategoryFormItem
-                  key={field.id}
-                  index={index}
-                  categoryId={field.categoryId}
-                  optionState={optionState}
-                  initialCategoriesRef={initialCategoriesRef}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
+          <div className="mb-2 flex flex-col gap-3 lg:gap-4">
+            {fields?.map((field: any, index) => (
+              <CategoryFormItem
+                key={field.id}
+                index={index}
+                categoryId={field.categoryId}
+                optionState={optionState}
+                initialCategoriesRef={initialCategoriesRef}
+              />
+            ))}
+          </div>
+        </Sortable>
       ) : (
         <div className="flex flex-col gap-3 lg:gap-4">
           {form.watch("categories")?.map((category, index) => (

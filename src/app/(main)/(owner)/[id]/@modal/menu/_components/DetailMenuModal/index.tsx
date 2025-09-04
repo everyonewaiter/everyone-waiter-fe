@@ -112,7 +112,6 @@ export default function DetailMenuModal({
                 isOpen={currentOption === OptionType.REQUIRED}
                 type="requiredOptions"
                 isEditing={isEditing}
-                data={form.watch("requiredOptions")}
                 isUpdate={type === "update"}
               />
               <OptionTemplate
@@ -125,7 +124,6 @@ export default function DetailMenuModal({
                 isOpen={currentOption === OptionType.OPTIONAL}
                 type="optionalOptions"
                 isEditing={isEditing}
-                data={form.watch("optionalOptions")}
                 isUpdate={type === "update"}
               />
             </section>

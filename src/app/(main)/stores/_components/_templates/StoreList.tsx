@@ -76,7 +76,7 @@ export default function StoreList({ storeId }: IProps) {
 
   function AddButton() {
     return (
-      <div className="z-10 flex w-full justify-end">
+      <div className="z-[9998] flex w-full justify-end">
         <ResponsiveButton
           variant="outline"
           color="primary"

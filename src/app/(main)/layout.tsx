@@ -35,7 +35,7 @@ export default async function Layout({ children }: PropsWithChildren) {
       </HydrationBoundary>
       <div className="flex flex-1 flex-col overflow-x-hidden md:py-5 md:pr-5 md:pl-0 lg:py-8">
         <MobileHeader />
-        <main className="relative flex-1 overflow-x-hidden overflow-y-auto rounded-[20px] px-5 md:h-auto md:bg-white md:px-6 md:py-5 lg:p-8">
+        <main className="scrollbar-hide relative flex-1 overflow-x-hidden overflow-y-auto rounded-[20px] px-5 md:h-auto md:bg-white md:px-6 md:py-5 lg:p-8">
           <Suspense fallback={<Loading />}>
             <div className="flex h-full flex-col">
               <ContentWrapper>{children}</ContentWrapper>

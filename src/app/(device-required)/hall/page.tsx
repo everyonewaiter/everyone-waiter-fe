@@ -17,7 +17,7 @@ enum ActiveTab {
 
 export default function Hall() {
   const [activeTab, setActiveTab] = useState<ActiveTab>(ActiveTab.order);
-  const { resetOrder } = useNotificationStore();
+  const { resetOrder, incrementOrder } = useNotificationStore();
 
   const {
     data: staffCalls,
@@ -34,6 +34,20 @@ export default function Hall() {
   useEffect(() => {
     resetOrder();
   }, [resetOrder]);
+
+  // SSE 주문 알림 이벤트 리스너
+  useEffect(() => {
+    const handleOrderNotification = () => incrementOrder();
+
+    window.addEventListener("sse-order-notification", handleOrderNotification);
+
+    return () => {
+      window.removeEventListener(
+        "sse-order-notification",
+        handleOrderNotification
+      );
+    };
+  }, [incrementOrder]);
 
   const tabList: Record<ActiveTab, HallOrder[]> = {
     [ActiveTab.order]: orders?.orders ?? [],

@@ -1,16 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useStoreContext } from "@/providers/storeProvider";
-import cn from "@/lib/utils";
 import { SettingsIcon } from "@/components/common/Icon/index";
 import { useActiveCategory } from "../_hooks/useActiveCategory";
 import { useMenuSort } from "../_hooks/useMenuSort";
 import HeaderButton from "./HeaderButton";
 import RenderMenu from "./RenderMenu";
-import MenuLoadingSkeleton from "./MenuLoadingSkeleton";
 
 export default function MenuList() {
   const navigate = useRouter();
@@ -18,8 +16,6 @@ export default function MenuList() {
   const { storeId } = useStoreContext();
   const { active, categories, setActive } = useActiveCategory(storeId);
   const { form, handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
-
-  const [isNavigating, setIsNavigating] = useState(false);
   const [changeSort, setChangeSort] = useState(false);
 
   const getBorderClass = (categoryId: string) => {
@@ -49,17 +45,34 @@ export default function MenuList() {
               },
             }}
             onClick={() => {
-              setIsNavigating(true);
               navigate.push(`/${storeId}/menu/category/add`);
             }}
+            commonClassName="group"
             aria-label="카테고리 등록 및 수정"
             disabled={changeSort}
           >
             <SettingsIcon
               size={18}
               strokeWidth={1.5}
-              className={cn(isNavigating && "animate-spin")}
+              className="group-hover:animate-spin"
             />
+          </ResponsiveButton>
+          <ResponsiveButton
+            variant={active === "전체" ? "default" : "outline"}
+            color={active === "전체" ? "black" : "grey"}
+            responsiveButtons={{
+              lg: {
+                buttonSize: "md",
+                className: "h-10 !text-[15px]",
+              },
+              md: { buttonSize: "sm" },
+              sm: { buttonSize: "sm" },
+            }}
+            commonClassName={getBorderClass("전체")}
+            onClick={() => setActive("전체")}
+            disabled={changeSort}
+          >
+            전체
           </ResponsiveButton>
           {categories?.map((cat) => (
             <ResponsiveButton
@@ -83,20 +96,17 @@ export default function MenuList() {
           ))}
         </div>
         <HeaderButton
-          categoryId={active}
           changeSort={changeSort}
           onSetChangeSort={setChangeSort}
           onSaveSort={() => handleSortSave(() => setChangeSort(false))}
         />
       </div>
-      <Suspense fallback={<MenuLoadingSkeleton />}>
-        <RenderMenu
-          changeSort={changeSort}
-          categoryId={active}
-          handleDragEnd={handleDragEnd}
-          sortedMenus={form.watch("menus")}
-        />
-      </Suspense>
+      <RenderMenu
+        changeSort={changeSort}
+        categoryId={active}
+        handleDragEnd={handleDragEnd}
+        sortedMenus={form.watch("menus")}
+      />
     </div>
   );
 }

@@ -39,7 +39,8 @@ const useServeOrder = () =>
   useMutation({
     mutationFn: serveOrder,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["order-list"] });
+      queryClient.invalidateQueries({ queryKey: ["order-list", true] });
+      queryClient.invalidateQueries({ queryKey: ["order-list", false] });
     },
   });
 

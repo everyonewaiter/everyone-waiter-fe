@@ -34,7 +34,11 @@ export default function PopupButton({ storeId }: { storeId?: string }) {
       onClick={handleOpenPopup}
       aria-label="프로필 메뉴 열기"
     >
-      <Icon iconKey="user" size={24} className="md:h-6 md:w-6 lg:h-8 lg:w-8" />
+      <Icon
+        iconKey="user"
+        size={24}
+        className="hover:animate-pulse md:h-6 md:w-6 lg:h-8 lg:w-8"
+      />
     </button>
   );
 }

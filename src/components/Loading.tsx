@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import riceWhite from "@/assets/json/rice-white.json";
+import { useEffect } from "react";
 
 const Lottie = dynamic(() => import("react-lottie"), {
   ssr: false,
@@ -17,6 +18,14 @@ const Lottie = dynamic(() => import("react-lottie"), {
 });
 
 export default function Loading() {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-[9999] bg-black/60">
       <div className="flex h-dvh w-dvw flex-col items-center justify-center gap-3">

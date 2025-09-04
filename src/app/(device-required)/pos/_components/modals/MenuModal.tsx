@@ -137,7 +137,7 @@ function MenuModal({
           )}
         </div>
         <div className="flex flex-1 flex-col gap-6">
-          <ScrollArea className="flex flex-col md:h-[428px] lg:h-[522px]">
+          <ScrollArea className="flex h-full flex-col">
             <div className="flex gap-2">
               {data?.label !== "DEFAULT" && (
                 <ResponsiveButton
@@ -183,9 +183,31 @@ function MenuModal({
                   {"🌶️".repeat(data?.spicy)}
                 </ResponsiveButton>
               )}
+              {data?.state === "SOLD_OUT" && (
+                <ResponsiveButton
+                  variant="outline"
+                  responsiveButtons={{
+                    lg: {
+                      buttonSize: "md",
+                      className:
+                        "font-regular !h-10 !rounded-[40px] text-[15px]",
+                    },
+                    md: {
+                      buttonSize: "sm",
+                      className: "!h-8 !rounded-[40px] !px-4 !text-s",
+                    },
+                    sm: {
+                      buttonSize: "sm",
+                      className: "!h-8 !rounded-[40px] !px-4 !text-s",
+                    },
+                  }}
+                >
+                  품절
+                </ResponsiveButton>
+              )}
             </div>
             <div className="mt-4 lg:mt-5">
-              <h1 className="text-gray-0 text-lg font-semibold md:text-xl lg:text-3xl lg:font-bold">
+              <h1 className="text-gray-0 text-2xl font-semibold lg:text-3xl lg:font-bold">
                 {data?.name}
               </h1>
               <p className="font-regular text-gray-0 mt-[10px] text-sm md:mt-3 lg:mt-4 lg:text-lg">
@@ -236,7 +258,7 @@ function MenuModal({
               </>
             )}
           </ScrollArea>
-          {type === "order" && data?.state !== "SOLD_OUT" && (
+          {type === "order" && (
             <Button
               color="primary"
               className="button-xl flex gap-2 !text-[15px] !font-medium"
@@ -261,10 +283,17 @@ function MenuModal({
                 });
                 close?.();
               }}
+              disabled={data?.state === "SOLD_OUT"}
             >
-              총{handleTotalPrice().toLocaleString()}
-              원 <div className="bg-black-opacity-1 h-1 w-1 rounded-full" />{" "}
-              메뉴 추가
+              {data?.state === "SOLD_OUT" ? (
+                "품절"
+              ) : (
+                <>
+                  총{handleTotalPrice().toLocaleString()}원{" "}
+                  <div className="mt-0.5 h-1 w-1 rounded-full bg-white" /> 메뉴
+                  추가
+                </>
+              )}
             </Button>
           )}
         </div>

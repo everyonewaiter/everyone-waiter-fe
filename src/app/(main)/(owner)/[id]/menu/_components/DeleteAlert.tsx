@@ -5,12 +5,11 @@ import { menuQueries } from "../_queries/useMenu";
 import { useMenuSelection } from "../_stores/useMenuSelection";
 
 interface IProps {
-  categoryId: string;
   storeId: string;
   close: () => void;
 }
 
-export default function DeleteAlert({ categoryId, storeId, close }: IProps) {
+export default function DeleteAlert({ storeId, close }: IProps) {
   const remove = menuQueries.useDeleteMenu(storeId);
   const multiRemove = menuQueries.useMultiDelete(storeId);
 
@@ -34,16 +33,18 @@ export default function DeleteAlert({ categoryId, storeId, close }: IProps) {
     if (selectedIds?.length === 1) {
       remove.mutate(
         {
-          categoryId,
           storeId,
-          menuId: selectedIds[0],
+          ...selectedIds[0],
         },
         handleResponse()
       );
       return;
     }
 
-    multiRemove.mutate({ menuIds: selectedIds, storeId }, handleResponse());
+    multiRemove.mutate(
+      { menuIds: selectedIds.map((el) => el.menuId), storeId },
+      handleResponse()
+    );
   };
 
   return (

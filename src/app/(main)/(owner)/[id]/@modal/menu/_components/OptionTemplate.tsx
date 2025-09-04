@@ -20,7 +20,6 @@ interface IProps {
   className?: string;
   type: "requiredOptions" | "optionalOptions";
   isEditing: boolean;
-  data?: TypeMenuForm["requiredOptions"] | TypeMenuForm["optionalOptions"];
   isUpdate?: boolean;
 }
 
@@ -28,7 +27,6 @@ export default function OptionTemplate({
   onClick,
   className,
   type,
-  data,
   isEditing,
   isUpdate,
   ...props
@@ -179,7 +177,7 @@ export default function OptionTemplate({
           )}
 
           {/* 일반 모드 (편집 중이고 순서 변경이 아닐 때) */}
-          {isEditing && popupAction !== "순서 변경" && (
+          {popupAction !== "순서 변경" && (
             <div
               className={cn(
                 "scrollbar-hide flex h-[266px] flex-col gap-3 overflow-y-auto md:h-auto",

@@ -11,14 +11,12 @@ const DeleteAlert = dynamic(() => import("./DeleteAlert"), {
 });
 
 interface IProps {
-  categoryId: string;
   changeSort: boolean;
   onSetChangeSort: (value: boolean) => void;
   onSaveSort: () => void;
 }
 
 export default function HeaderButton({
-  categoryId,
   changeSort,
   onSetChangeSort,
   onSaveSort,
@@ -29,7 +27,7 @@ export default function HeaderButton({
   const handleDeleteSelected = () => {
     open(() => (
       <QueryProviders>
-        <DeleteAlert categoryId={categoryId} storeId={storeId} close={close} />
+        <DeleteAlert storeId={storeId} close={close} />
       </QueryProviders>
     ));
   };
