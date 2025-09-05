@@ -59,13 +59,17 @@ export default function RenderMenu({
 
   const handleCreateMenu = () => {
     setIsNavigating(true);
+
+    const isMobileNow =
+      typeof window !== "undefined" && window.innerWidth <= 959;
+
     if (categoryId === "전체") {
       navigate.push(
-        `/${storeId}/menu/create?categoryId=${categories.data?.categories?.[0]?.categoryId}hideModal=${isMobile}`
+        `/${storeId}/menu/create?categoryId=${categories.data?.categories?.[0]?.categoryId}&hideModal=${isMobileNow}`
       );
     } else {
       navigate.push(
-        `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobile}`
+        `/${storeId}/menu/create?categoryId=${categoryId}&hideModal=${isMobileNow}`
       );
     }
   };

@@ -168,7 +168,7 @@ export default function usePayment() {
       amount: totalPaymentPrice,
       tax: totalPaymentPrice - nonTax,
       nonTax,
-      installment: "",
+      installment: "00",
       type: "0",
     });
     await window.$.ajax({
