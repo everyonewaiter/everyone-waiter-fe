@@ -8,8 +8,7 @@ import {
 const useCheckWaiting = (storeId: string, accessKey: string) =>
   useQuery({
     queryKey: ["front-of-my-turn"],
-    queryFn: () =>
-      getTeamsFrontOfMe({ storeId: storeId!, accessKey: accessKey! }),
+    queryFn: () => getTeamsFrontOfMe({ storeId, accessKey }),
     enabled: !!storeId && !!accessKey,
   });
 

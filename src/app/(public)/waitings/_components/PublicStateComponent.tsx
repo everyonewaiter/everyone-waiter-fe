@@ -22,6 +22,10 @@ export default function PublicStateComponent({
 }: IProps) {
   const navigate = useRouter();
 
+  const handleClose = () => {
+    window.location.href = "kakaotalk://inappbrowser/close";
+  };
+
   const renderButton = () => {
     switch (buttonType) {
       case "agree":
@@ -29,9 +33,7 @@ export default function PublicStateComponent({
           <Button
             color="black"
             className="button-lg w-full"
-            onClick={() => {
-              window.location.href = "kakaotalk://inappbrowser/close";
-            }}
+            onClick={handleClose}
           >
             확인
           </Button>
@@ -41,11 +43,9 @@ export default function PublicStateComponent({
           <Button
             color="grey"
             className="button-lg w-full"
-            onClick={() => {
-              window.location.href = "kakaotalk://inappbrowser/close";
-            }}
+            onClick={handleClose}
           >
-            돌아가기
+            닫기
           </Button>
         );
       case "see-menu":
@@ -54,9 +54,7 @@ export default function PublicStateComponent({
             <Button
               color="grey"
               className="button-lg w-[100px]"
-              onClick={() => {
-                window.location.href = "kakaotalk://inappbrowser/close";
-              }}
+              onClick={handleClose}
             >
               돌아가기
             </Button>
