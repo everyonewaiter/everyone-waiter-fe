@@ -3,18 +3,17 @@ import getQueryClient from "@/app/get-query-client";
 import {
   completeStaffCall,
   getStaffCalls,
-  getWaitingsList,
-  orderList,
+  getHallWaitingsList,
   serveMenu,
   serveOrder,
 } from "../_api/hall.api";
 
 const queryClient = getQueryClient();
 
-const useWaitingList = () =>
+const useHallWaitingList = () =>
   useQuery({
-    queryKey: ["waitings-list"],
-    queryFn: getWaitingsList,
+    queryKey: ["hall-waitings-list"],
+    queryFn: getHallWaitingsList,
     placeholderData: keepPreviousData,
     retry: false,
   });
@@ -27,30 +26,18 @@ const useStaffCallList = () =>
     retry: false,
   });
 
-const useOrderList = (served: boolean) =>
-  useQuery({
-    queryKey: ["order-list", served],
-    queryFn: () => orderList(served),
-    placeholderData: keepPreviousData,
-    retry: false,
-  });
-
 const useServeOrder = () =>
   useMutation({
     mutationFn: serveOrder,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["order-list", true] });
-      queryClient.invalidateQueries({ queryKey: ["order-list", false] });
-    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["order-list"] }),
   });
 
 const useServeMenu = () =>
   useMutation({
     mutationFn: serveMenu,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["order-list", true] });
-      queryClient.invalidateQueries({ queryKey: ["order-list", false] });
-    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["order-list"] }),
   });
 
 const useComompleteStaffCall = () =>
@@ -63,9 +50,8 @@ const useComompleteStaffCall = () =>
 
 export const hallQueries = {
   useStaffCallList,
-  useWaitingList,
+  useHallWaitingList,
   useServeOrder,
   useServeMenu,
   useComompleteStaffCall,
-  useOrderList,
 };

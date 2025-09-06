@@ -3,14 +3,17 @@
 import dynamic from "next/dynamic";
 import riceWhite from "@/assets/json/rice-white.json";
 import { useEffect } from "react";
+import Image from "next/image";
 
 const Lottie = dynamic(() => import("react-lottie"), {
   ssr: false,
   loading: () => (
     <div className="h-[120px] w-[120px]">
-      <img
+      <Image
         src="/images/loading-replace.svg"
         alt="Loading animation"
+        width={120}
+        height={120}
         className="h-full w-full"
       />
     </div>

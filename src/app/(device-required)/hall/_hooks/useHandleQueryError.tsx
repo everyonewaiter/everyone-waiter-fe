@@ -23,8 +23,7 @@ export default function useHandleQueryError(
           handleOpenAlert(message);
           shownRef.current = true;
 
-          queryClient.cancelQueries({ queryKey: ["order-list", false] });
-          queryClient.cancelQueries({ queryKey: ["order-list", true] });
+          queryClient.cancelQueries({ queryKey: ["order-list"] });
           queryClient.cancelQueries({ queryKey: ["staff-calls"] });
           setHasError({ staffCall: true, servedList: true, orders: true });
           return true;

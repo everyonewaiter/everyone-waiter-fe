@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ storeId: string; accessKey: string; number: string }>;
+  searchParams: Promise<{ storeId: string; accessKey: string; phone: string }>;
 }) {
   const params = await searchParams;
 
@@ -36,7 +36,11 @@ export default async function Page({
   try {
     const data = await queryClient.fetchQuery({
       queryKey: ["front-of-my-turn"],
-      queryFn: () => getTeamsFrontOfMe({ ...params }),
+      queryFn: () =>
+        getTeamsFrontOfMe({
+          storeId: params.storeId,
+          accessKey: params.accessKey,
+        }),
     });
 
     if (data?.state === "CANCEL") {

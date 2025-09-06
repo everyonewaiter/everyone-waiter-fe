@@ -7,8 +7,8 @@ export default async function Layout({ children }: PropsWithChildren) {
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["order-list", true],
-    queryFn: () => orderList(true),
+    queryKey: ["order-list"],
+    queryFn: orderList,
   });
 
   return (

@@ -2,7 +2,6 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/useOverlay";
-import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 
 const AddDiscountAlert = dynamic(() => import("../modals/AddDiscountAlert"), {
   ssr: false,
@@ -22,14 +21,8 @@ export default function SideBottom({
   onAddDiscount,
 }: IProps) {
   const { open, close } = useOverlay();
-  const { selectedOrder } = useSelectItemStore();
 
   const handleDiscount = () => {
-    if (!selectedOrder?.orderId) {
-      // eslint-disable-next-line no-alert
-      alert("전체 금액을 결제합니다.");
-    }
-
     open(() => (
       <QueryProviders>
         <AddDiscountAlert

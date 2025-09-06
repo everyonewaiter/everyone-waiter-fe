@@ -6,8 +6,8 @@ import dynamic from "next/dynamic";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
-import { waitingQueries } from "./_queries/useWaiting";
 import { useNotificationStore } from "../_stores/useNotificationStore";
+import { useWaitingList } from "./_queries/useWaitingList";
 
 const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
   ssr: false,
@@ -17,31 +17,17 @@ export default function Waiting() {
   const navigate = useRouter();
   const { deviceInfo, isLoading } = useDeviceInfo();
   const { handleOpenModal } = useWaitingModal();
-  const { orderCount, resetWaiting, incrementWaiting } = useNotificationStore();
+  const { orderCount, resetWaiting } = useNotificationStore();
 
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
-  const { data: list } = waitingQueries.useWaitingList(waitingEnabled);
+  const { data: list } = useWaitingList(waitingEnabled);
 
   useEffect(() => {
-    resetWaiting();
+    localStorage.setItem("@lastWaitingVisit", new Date().toISOString());
+    setTimeout(() => {
+      resetWaiting();
+    }, 0);
   }, [resetWaiting]);
-
-  // SSE 웨이팅 알림 이벤트 리스너
-  useEffect(() => {
-    const handleWaitingNotification = () => incrementWaiting();
-
-    window.addEventListener(
-      "sse-waiting-notification",
-      handleWaitingNotification
-    );
-
-    return () => {
-      window.removeEventListener(
-        "sse-waiting-notification",
-        handleWaitingNotification
-      );
-    };
-  }, [incrementWaiting]);
 
   return (
     <div className="min-h-dvh w-dvw bg-gray-700">

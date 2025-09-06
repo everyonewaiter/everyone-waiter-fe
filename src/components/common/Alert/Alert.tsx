@@ -92,7 +92,7 @@ function Alert({
               onClick={handleAction}
               noResponsive={noResponsive}
               className="flex-1"
-              disabled={disabled}
+              disabled={disabled || isSubmitted}
               customButtonStyle={customButtonStyle}
             >
               {isSubmitted ? <Spinner /> : <span>{buttonText}</span>}

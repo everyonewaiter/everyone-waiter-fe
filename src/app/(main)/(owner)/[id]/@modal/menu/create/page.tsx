@@ -11,7 +11,7 @@ export default async function Page({
   if (hideModal === "true") return null;
 
   return (
-    <ClientRefWrapper className="aspect-[1344/832] md:h-auto md:min-w-[1000px] lg:h-[832px] lg:w-[1344px]">
+    <ClientRefWrapper className="aspect-[1344/832] md:h-auto md:min-w-[930px] lg:h-[832px] lg:w-[1344px]">
       <DetailMenuModal isEditing type="create" initialCategoryId={categoryId} />
     </ClientRefWrapper>
   );
