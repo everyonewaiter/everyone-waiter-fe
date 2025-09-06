@@ -24,6 +24,7 @@ export const print = ({
   try {
     window.checkPrinterStatus();
   } catch (error) {
+    // eslint-disable-next-line
     const userChoice = window.confirm(
       "프린터가 연결되어있지 않습니다. 영수증을 인쇄하지 않고 진행하시겠습니까?"
     );
