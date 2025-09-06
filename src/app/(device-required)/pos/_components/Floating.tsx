@@ -6,12 +6,12 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Icon from "@/components/common/Icon/Icon";
 import useOverlay from "@/hooks/useOverlay";
-import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import useLeaveGuard from "@/hooks/useCheckLeave";
 import { posQueries } from "../_queries/usePos";
 import ReceiptModal from "./modals/ReceiptModal";
 import MemoListAlert from "./modals/MemoListAlert";
 import { useOrderStore } from "../_hooks/useOrderStore";
+import usePayment from "../_queries/usePayment";
 
 const ResendAlert = dynamic(() => import("./modals/ResendAlert"), {
   ssr: false,
@@ -49,8 +49,10 @@ export default function Floating({ hasData, tableNo }: IProps) {
   const navigate = useRouter();
   const { open, close } = useOverlay();
 
-  const { data } = posQueries.useActivity(tableNo);
-  const { storeId } = useDeviceContext();
+  const { printReceipt } = usePayment();
+
+  const { data: activity } = posQueries.useActivity(tableNo);
+  const { data: stores } = posQueries.useStoreInfo(activity?.storeId!);
   const { orders, resetOrders } = useOrderStore();
   const { checkCanLeave } = useLeaveGuard(orders.length > 0);
 
@@ -63,7 +65,7 @@ export default function Floating({ hasData, tableNo }: IProps) {
     else if (type === "rotate")
       navigate.push(`/pos/tables?sourceTableNo=${tableNo}`);
     else if (type === "book") {
-      const memos = (data?.orders ?? [])
+      const memos = (activity?.orders ?? [])
         .map((order, index) =>
           order.memo && order.memo.trim().length > 0
             ? {
@@ -95,7 +97,15 @@ export default function Floating({ hasData, tableNo }: IProps) {
     } else {
       open(() => (
         <QueryProviders>
-          <ReceiptModal close={close} tableNo={tableNo} storeId={storeId!} />
+          <ReceiptModal
+            close={close}
+            onConfirm={() => {
+              printReceipt({
+                activity: activity!,
+                stores: stores!,
+              });
+            }}
+          />
         </QueryProviders>
       ));
     }

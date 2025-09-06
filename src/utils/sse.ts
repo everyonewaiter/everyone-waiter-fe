@@ -139,11 +139,9 @@ export class SseService {
         case "WAITING":
           queryClient.invalidateQueries({ queryKey: ["waiting-list"] });
           queryClient.invalidateQueries({ queryKey: ["waitings-list"] });
-          window.dispatchEvent(new CustomEvent("sse-waiting-notification"));
           break;
         case "ORDER":
           queryClient.invalidateQueries({ queryKey: ["order-list"] });
-          window.dispatchEvent(new CustomEvent("sse-order-notification"));
           break;
         case "STAFF_CALL":
           queryClient.invalidateQueries({ queryKey: ["staff-calls"] });

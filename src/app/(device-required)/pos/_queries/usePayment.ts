@@ -108,15 +108,27 @@ export default function usePayment() {
     amount,
     tableNo,
     successHandler,
+    errorHandler,
   }: {
     form: UseFormReturn<TypePayForm, any, TypePayForm>;
     amount: number;
     tableNo: number;
     successHandler: (res: PaymentResponse) => void;
+    errorHandler: () => void;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
     const installment =
       form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
+
+    let isCompleted = false;
+
+    const timeoutId = setTimeout(() => {
+      if (!isCompleted) {
+        // eslint-disable-next-line
+        alert("결제 기기가 연결되어있지 않거나 결제할 수 없는 상태입니다.");
+        errorHandler();
+      }
+    }, 3000);
 
     const req = makeKSCATApprovalREQ({
       amount,
@@ -134,6 +146,9 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
+        isCompleted = true;
+        clearTimeout(timeoutId);
+
         handlePayWithCard({
           tableNo,
           body: {
@@ -164,6 +179,17 @@ export default function usePayment() {
   }) => {
     const nonTax = Math.floor(totalPaymentPrice / 1.1);
 
+    let isCompleted = false;
+
+    const timeoutId = setTimeout(() => {
+      if (!isCompleted) {
+        // eslint-disable-next-line
+        alert(
+          "결제 기기가 연결되어있지 않거나 결제를 취소할 수 없는 상태입니다."
+        );
+      }
+    }, 3000);
+
     const req = makeKSCATApprovalREQ({
       amount: totalPaymentPrice,
       tax: totalPaymentPrice - nonTax,
@@ -180,6 +206,9 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
+        isCompleted = true;
+        clearTimeout(timeoutId);
+
         cancelPay.mutate({
           orderPaymentId: "",
           body: {
