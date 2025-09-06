@@ -9,6 +9,7 @@ import CallingCard from "./_components/CallingCard";
 import OrderRow from "./_components/OrderRow";
 import { hallQueries } from "./_query/useHall";
 import { useNotificationStore } from "../_stores/useNotificationStore";
+import { useOrderList } from "./_query/useOrderList";
 
 enum ActiveTab {
   order = "주문",
@@ -17,41 +18,29 @@ enum ActiveTab {
 
 export default function Hall() {
   const [activeTab, setActiveTab] = useState<ActiveTab>(ActiveTab.order);
-  const { resetOrder, incrementOrder } = useNotificationStore();
+  const { resetOrder } = useNotificationStore();
 
   const {
     data: staffCalls,
     isLoading: staffCallsLoading,
     isError: staffCallsError,
   } = hallQueries.useStaffCallList();
-  const { data: servedList } = hallQueries.useOrderList(true);
   const {
     data: orders,
     isLoading: ordersLoading,
     isError: ordersError,
-  } = hallQueries.useOrderList(false);
+  } = useOrderList();
 
   useEffect(() => {
-    resetOrder();
+    localStorage.setItem("@lastHallVisit", new Date().toISOString());
+    setTimeout(() => {
+      resetOrder();
+    }, 0);
   }, [resetOrder]);
 
-  // SSE 주문 알림 이벤트 리스너
-  useEffect(() => {
-    const handleOrderNotification = () => incrementOrder();
-
-    window.addEventListener("sse-order-notification", handleOrderNotification);
-
-    return () => {
-      window.removeEventListener(
-        "sse-order-notification",
-        handleOrderNotification
-      );
-    };
-  }, [incrementOrder]);
-
   const tabList: Record<ActiveTab, HallOrder[]> = {
-    [ActiveTab.order]: orders?.orders ?? [],
-    [ActiveTab.served]: servedList?.orders ?? [],
+    [ActiveTab.order]: orders?.unserved ?? [],
+    [ActiveTab.served]: orders?.served ?? [],
   };
 
   return (
@@ -75,7 +64,7 @@ export default function Hall() {
         </div>
         {activeTab === "완료" && (
           <div className="mt-6 flex flex-col gap-6">
-            {servedList?.orders.map((item) => (
+            {orders?.served?.map((item) => (
               <OrderRow key={item.orderId} {...item} completed />
             ))}
           </div>
@@ -93,7 +82,7 @@ export default function Hall() {
             {!staffCallsLoading && staffCalls?.staffCalls?.length! > 0 && (
               <ScrollArea className="h-full w-full">
                 <div className="flex w-max gap-6">
-                  {staffCalls?.staffCalls.map((call) => (
+                  {staffCalls?.staffCalls?.map((call) => (
                     <CallingCard key={call.staffCallId} {...call} />
                   ))}
                 </div>
@@ -109,16 +98,16 @@ export default function Hall() {
             )}
           </div>
           <div className="flex w-full flex-col gap-6 rounded-4xl bg-white p-8">
-            {!ordersLoading && orders?.orders?.length! > 0 && (
+            {!ordersLoading && orders?.unserved?.length! > 0 && (
               <div className="w-full rounded-4xl">
                 <div className="flex flex-col gap-6">
-                  {orders?.orders.map((item) => (
+                  {orders?.unserved?.map((item) => (
                     <OrderRow key={item.orderId} {...item} />
                   ))}
                 </div>
               </div>
             )}
-            {!ordersLoading && !orders?.orders?.length && !ordersError && (
+            {!ordersLoading && !orders?.unserved?.length && !ordersError && (
               <span>주문 내역이 없습니다.</span>
             )}
             {ordersLoading && !ordersError && <Spinner />}

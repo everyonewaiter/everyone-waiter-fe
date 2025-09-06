@@ -8,7 +8,9 @@ export const getStaffCalls = async (): Promise<{ staffCalls: StaffCall[] }> => {
   return response.data;
 };
 
-export const getWaitingsList = async (): Promise<{ waitings: Waiting[] }> => {
+export const getHallWaitingsList = async (): Promise<{
+  waitings: Waiting[];
+}> => {
   const response = await signatureInstance.get(`${API_PATH.waitings}`);
   return response.data;
 };
@@ -49,13 +51,10 @@ export const getActiveOrders = async (): Promise<{ orders: TableOrder[] }> => {
   return response.data;
 };
 
-export const orderList = async (
-  served: boolean
-): Promise<{
-  orders: HallOrder[];
+export const orderList = async (): Promise<{
+  served: HallOrder[];
+  unserved: HallOrder[];
 }> => {
-  const response = await signatureInstance.get(`${API_PATH.orders}/hall`, {
-    params: { served },
-  });
+  const response = await signatureInstance.get(`${API_PATH.orders}/hall`);
   return response.data;
 };
