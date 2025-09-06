@@ -72,6 +72,7 @@ export default function AddDiscountAlert({
           <RadioGroup
             {...form.register("discountType")}
             className="flex items-center gap-6"
+            defaultValue="fixed"
             onValueChange={(value) => {
               form.setValue("discountType", value as "fixed" | "percent");
               form.setValue("discount", null);
@@ -111,11 +112,26 @@ export default function AddDiscountAlert({
                         <Input
                           {...field}
                           type="text"
-                          value={field.value || ""}
+                          value={
+                            field.value
+                              ? Number(field.value).toLocaleString()
+                              : ""
+                          }
                           onChange={(e) => {
-                            field.onChange(e.target.value);
+                            const rawValue = e.target.value.replace(/,/g, "");
+                            const numericValue =
+                              rawValue === "" ? null : Number(rawValue);
 
-                            const discount = Number(form.watch("discount"));
+                            if (
+                              rawValue !== "" &&
+                              Number.isNaN(Number(numericValue))
+                            ) {
+                              return;
+                            }
+
+                            field.onChange(numericValue);
+
+                            const discount = numericValue || 0;
                             const discountType = form.watch("discountType");
 
                             let result = total;
@@ -126,7 +142,7 @@ export default function AddDiscountAlert({
                               result -= total * (discount / 100);
                             }
 
-                            form.setValue("result", result);
+                            form.setValue("result", Math.round(result));
                           }}
                           className="!pl-9 text-base font-medium"
                           placeholder={
@@ -155,14 +171,17 @@ export default function AddDiscountAlert({
                         <Input
                           {...field}
                           type="text"
-                          value={field.value || ""}
+                          value={
+                            typeof field.value === "number"
+                              ? field.value.toLocaleString()
+                              : ""
+                          }
                           className="text-base font-medium"
                           placeholder="할인할 금액을 먼저 입력해주세요."
-                          disabled={!field.value}
+                          disabled={typeof field.value !== "number"}
+                          readOnly
                         />
-                        <strong className="text-xl font-semibold">
-                          {form.watch("discountType") === "fixed" ? "원" : "%"}
-                        </strong>
+                        <strong className="text-xl font-semibold">원</strong>
                       </div>
                     </FormControl>
                     <FormMessage />

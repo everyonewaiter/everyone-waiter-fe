@@ -211,7 +211,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
               <strong className="mt-2 text-2xl font-semibold">
                 {(hasOrderId
                   ? selectedOrdersTotal
-                  : props.totalOrderPrice
+                  : props.remainingPaymentPrice
                 ).toLocaleString()}
                 원
               </strong>
