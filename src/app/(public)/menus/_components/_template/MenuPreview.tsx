@@ -41,7 +41,8 @@ export default function MenuPreview({ storeId }: IProps) {
       : data?.categories
           .filter((v) => v.name === activeTab)
           .map((el) => el.menus)
-          .flat();
+          .flat()
+          .filter((el) => el.state !== "HIDE");
 
   const { open, close } = useOverlay();
 
