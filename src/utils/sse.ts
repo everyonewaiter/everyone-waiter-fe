@@ -148,6 +148,12 @@ export class SseService {
           break;
         case "RECEIPT":
           // TODO: 주방 프린터 연결 상태 확인 후 주방 프린터 출력
+          if (sseEvent.hasData && sseEvent.data) {
+            queryClient.setQueryData(["kitchen-receipt-trigger"], {
+              data: JSON.parse(sseEvent.data),
+              timestamp: Date.now(),
+            });
+          }
           break;
         case "POS":
           queryClient.invalidateQueries({ queryKey: ["table-list"] });

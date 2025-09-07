@@ -1,13 +1,12 @@
 "use client";
 
-import { PropsWithChildren, useEffect } from "react";
-import getQueryClient from "@/app/get-query-client";
+import { useQuery } from "@tanstack/react-query";
 import { getStoreInfoDetail } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import { storeKeys } from "@/app/(main)/(owner)/[id]/store/_queries/keys";
-import { useQuery } from "@tanstack/react-query";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
-import Header from "./_components/Header";
-import { printToKitchen } from "../pos/_utils/print-receipt";
+import getQueryClient from "@/app/get-query-client";
+import { PropsWithChildren, useEffect } from "react";
+import { printToKitchen } from "./_utils/print-receipt";
 
 export default function Layout({ children }: PropsWithChildren) {
   const { storeId } = useDeviceContext();
@@ -40,7 +39,7 @@ export default function Layout({ children }: PropsWithChildren) {
 
     if (
       receiptTrigger?.printNo &&
-      settingData?.setting?.printerLocation === "HALL"
+      settingData?.setting?.printerLocation === "POS"
     ) {
       printToKitchen(receiptTrigger);
       queryClient.removeQueries({ queryKey: ["kitchen-receipt-trigger"] });
@@ -48,10 +47,5 @@ export default function Layout({ children }: PropsWithChildren) {
     // eslint-disable-next-line
   }, [receiptTrigger]);
 
-  return (
-    <div className="scrollbar-hide flex min-h-dvh flex-col items-center gap-4 bg-gray-700 px-[60px] py-8">
-      <Header href="/hall" />
-      {children}
-    </div>
-  );
+  return children;
 }

@@ -51,7 +51,7 @@ export default async function Page({
 
     return (
       <Suspense fallback={<Spinner />}>
-        <CancelTurnPage {...params} />
+        <CancelTurnPage {...params} publicAccessKey={params?.accessKey} />
       </Suspense>
     );
   } catch (error: any) {

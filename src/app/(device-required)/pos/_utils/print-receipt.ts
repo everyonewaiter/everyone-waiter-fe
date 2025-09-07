@@ -1,11 +1,4 @@
-export const print = ({
-  type,
-  activity,
-  payment,
-  stores,
-  successHandler,
-  cashReceiptPhoneNo,
-}: {
+interface IProps {
   type: "kitchen" | "cash-receipt" | "card-receipt";
   activity: PosTableActivity;
   payment?: {
@@ -18,73 +11,89 @@ export const print = ({
   stores?: PosStore;
   successHandler?: () => void;
   cashReceiptPhoneNo?: string;
-}) => {
+  printerName?: "Printer1" | "Printer2";
+}
+
+function getDisplayWidth(str: string) {
+  return str
+    .split("")
+    .reduce((sum, char) => sum + (char.charCodeAt(0) > 255 ? 2 : 1), 0);
+}
+
+function padString(
+  str: string,
+  width: number,
+  align: "left" | "right" | "center"
+) {
+  const displayWidth = getDisplayWidth(str);
+  const padding = width - displayWidth;
+
+  if (padding <= 0) return str;
+
+  if (align === "left") return str + " ".repeat(padding);
+  if (align === "right") return " ".repeat(padding) + str;
+  const left = Math.floor(padding / 2);
+  const right = padding - left;
+  return " ".repeat(left) + str + " ".repeat(right);
+}
+
+function formatReceiptRow(
+  name: string,
+  qty: string,
+  price: string,
+  total: string
+) {
+  const nameWidth = 19;
+  const qtyWidth = 5;
+  const priceWidth = 9;
+  const totalWidth = 9;
+
+  return (
+    padString(name, nameWidth, "left") +
+    padString(qty, qtyWidth, "right") +
+    padString(price, priceWidth, "right") +
+    padString(total, totalWidth, "right")
+  );
+}
+
+function formatAlignLeftRight(left: string, right: string, totalWidth = 42) {
+  const leftWidth = getDisplayWidth(left);
+  const rightWidth = getDisplayWidth(right);
+  const spacing = totalWidth - leftWidth - rightWidth;
+
+  if (spacing <= 0) return left + right;
+
+  return left + " ".repeat(spacing) + right;
+}
+
+/**
+ *
+ * @param printerName - Printer1 (기본 프린터 - POS), Printer2 (주방 프린터)
+ * @returns
+ */
+export const print = ({
+  type,
+  activity,
+  payment,
+  stores,
+  successHandler,
+  cashReceiptPhoneNo,
+  printerName = "Printer1",
+}: IProps) => {
   window.setPosId(1);
 
   try {
     window.checkPrinterStatus();
   } catch (error) {
     // eslint-disable-next-line
-    const userChoice = window.confirm(
-      "프린터가 연결되어있지 않습니다. 영수증을 인쇄하지 않고 진행하시겠습니까?"
+    alert(
+      "영수증 프린터 기기가 연결되어있지 않거나 출력할 수 없는 상태입니다."
     );
-    if (!userChoice) return;
+    return;
   }
 
   const now = new Date();
   const formatDate = now.toLocaleString();
-
-  function getDisplayWidth(str: string) {
-    return str
-      .split("")
-      .reduce((sum, char) => sum + (char.charCodeAt(0) > 255 ? 2 : 1), 0);
-  }
-
-  function padString(
-    str: string,
-    width: number,
-    align: "left" | "right" | "center"
-  ) {
-    const displayWidth = getDisplayWidth(str);
-    const padding = width - displayWidth;
-
-    if (padding <= 0) return str;
-
-    if (align === "left") return str + " ".repeat(padding);
-    if (align === "right") return " ".repeat(padding) + str;
-    const left = Math.floor(padding / 2);
-    const right = padding - left;
-    return " ".repeat(left) + str + " ".repeat(right);
-  }
-
-  function formatReceiptRow(
-    name: string,
-    qty: string,
-    price: string,
-    total: string
-  ) {
-    const nameWidth = 19;
-    const qtyWidth = 5;
-    const priceWidth = 9;
-    const totalWidth = 9;
-
-    return (
-      padString(name, nameWidth, "left") +
-      padString(qty, qtyWidth, "right") +
-      padString(price, priceWidth, "right") +
-      padString(total, totalWidth, "right")
-    );
-  }
-
-  function formatAlignLeftRight(left: string, right: string, totalWidth = 42) {
-    const leftWidth = getDisplayWidth(left);
-    const rightWidth = getDisplayWidth(right);
-    const spacing = totalWidth - leftWidth - rightWidth;
-
-    if (spacing <= 0) return left + right;
-
-    return left + " ".repeat(spacing) + right;
-  }
 
   const printKitchen = () => {
     window.printText(`주  문  서\n`, 0, 2, true, false, false, 0, 1);
@@ -545,7 +554,109 @@ export const print = ({
 
   const strSubmit = window.getPosData();
   try {
-    window.requestPrint("Printer1", strSubmit, () => {
+    window.requestPrint(printerName, strSubmit, () => {
+      successHandler?.();
+    });
+  } catch (error) {
+    successHandler?.();
+  }
+};
+
+interface KitchenProps {
+  memo: string;
+  printNo: number;
+  tableNo: number;
+  receiptMenu: {
+    name: string;
+    quantity: number;
+    options: string[];
+  }[];
+  successHandler?: () => void;
+}
+
+export const printToKitchen = ({
+  printNo,
+  tableNo,
+  receiptMenu,
+  memo,
+  successHandler,
+}: KitchenProps) => {
+  window.printText(`주  문  서\n`, 0, 2, true, false, false, 0, 1);
+  window.printText(`주문번호: ${printNo}\n`, 0, 1, true, false, false, 0, 0);
+  window.printText(`테이블번호: ${tableNo}\n`, 0, 1, true, false, false, 0, 0);
+  window.printText(
+    "------------------------------------------\n",
+    0,
+    0,
+    false,
+    false,
+    false,
+    0,
+    0
+  );
+  window.printText(
+    `${formatReceiptRow("품명", "", "", "수량")}\n`,
+    0,
+    0,
+    false,
+    false,
+    false,
+    0,
+    0
+  );
+  window.printText(
+    "------------------------------------------\n",
+    0,
+    0,
+    false,
+    false,
+    false,
+    0,
+    0
+  );
+
+  receiptMenu.forEach((menu) => {
+    window.printText(
+      `${formatReceiptRow(menu.name, "", "", String(menu.quantity))}\n`,
+      1,
+      0,
+      true,
+      false,
+      false,
+      0,
+      0
+    );
+    menu.options.forEach((option) => {
+      window.printText(
+        `${formatReceiptRow(`└ ${option}`, "", "", "")}\n`,
+        1,
+        0,
+        true,
+        false,
+        false,
+        0,
+        0
+      );
+    });
+    window.printText(`[메모] ${memo}\n\n`, 0, 0, false, false, true, 0, 0);
+  });
+
+  window.printText(
+    "------------------------------------------\n",
+    0,
+    0,
+    false,
+    false,
+    false,
+    0,
+    0
+  );
+
+  window.cutPaper(1);
+
+  const strSubmit = window.getPosData();
+  try {
+    window.requestPrint("Printer2", strSubmit, () => {
       successHandler?.();
     });
   } catch (error) {

@@ -13,11 +13,15 @@ import { publicQueries } from "../../../_queries/usePublic";
 
 interface IProps {
   storeId: string;
-  accessKey: string;
+  publicAccessKey: string;
   phone: string;
 }
 
-export default function CancelTurnPage({ storeId, accessKey, phone }: IProps) {
+export default function CancelTurnPage({
+  storeId,
+  publicAccessKey,
+  phone,
+}: IProps) {
   const inputOTPRef = useRef<HTMLInputElement>(null);
   const navigate = useRouter();
 
@@ -41,7 +45,7 @@ export default function CancelTurnPage({ storeId, accessKey, phone }: IProps) {
     cancelMyTurn.mutate(
       {
         storeId,
-        accessKey,
+        accessKey: publicAccessKey,
       },
       {
         onSuccess: () => navigate.push("/result?type=cancel"),

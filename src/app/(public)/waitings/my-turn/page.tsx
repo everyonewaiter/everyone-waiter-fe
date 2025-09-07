@@ -21,7 +21,7 @@ export default async function Page({
 }) {
   const { storeId, accessKey } = await searchParams;
 
-  if (!storeId || !accessKey) {
+  if (!accessKey) {
     throw new Error("필수 파라미터가 누락되었습니다.");
   }
 
@@ -41,7 +41,7 @@ export default async function Page({
 
     return (
       <Suspense fallback={<Spinner />}>
-        <MyTurnPage storeId={storeId} key={accessKey} />
+        <MyTurnPage storeId={storeId} publicAccessKey={accessKey} />
       </Suspense>
     );
   } catch (error: any) {

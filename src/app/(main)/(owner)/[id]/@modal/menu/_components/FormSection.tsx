@@ -1,6 +1,5 @@
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Controller, useFormContext } from "react-hook-form";
-import { useEffect } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import Dropdown from "@/components/common/Dropdown";
 import Label from "@/components/common/Label";
@@ -26,13 +25,6 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
 
   const inputGap = "gap-1 lg:gap-2";
   const marginTop = "mt-2 lg:mt-4";
-
-  useEffect(() => {
-    form.setValue("label", form.watch("label") ?? "DEFAULT");
-    form.setValue("state", form.watch("state") ?? "DEFAULT");
-    form.setValue("spicy", form.watch("spicy") ?? 0);
-    form.setValue("printEnabled", form.watch("printEnabled") ?? true);
-  }, []);
 
   const labelValue =
     form.watch("label") ?? form.getValues("label") ?? "DEFAULT";
