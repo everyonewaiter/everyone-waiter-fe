@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
 import cn from "@/lib/utils";
@@ -8,7 +8,6 @@ import Spinner from "@/components/common/Spinner";
 import CallingCard from "./_components/CallingCard";
 import OrderRow from "./_components/OrderRow";
 import { hallQueries } from "./_query/useHall";
-import { useNotificationStore } from "../_stores/useNotificationStore";
 import { useOrderList } from "./_query/useOrderList";
 
 enum ActiveTab {
@@ -18,7 +17,6 @@ enum ActiveTab {
 
 export default function Hall() {
   const [activeTab, setActiveTab] = useState<ActiveTab>(ActiveTab.order);
-  const { resetOrder } = useNotificationStore();
 
   const {
     data: staffCalls,
@@ -30,13 +28,6 @@ export default function Hall() {
     isLoading: ordersLoading,
     isError: ordersError,
   } = useOrderList();
-
-  useEffect(() => {
-    localStorage.setItem("@lastHallVisit", new Date().toISOString());
-    setTimeout(() => {
-      resetOrder();
-    }, 0);
-  }, [resetOrder]);
 
   const tabList: Record<ActiveTab, HallOrder[]> = {
     [ActiveTab.order]: orders?.unserved ?? [],
