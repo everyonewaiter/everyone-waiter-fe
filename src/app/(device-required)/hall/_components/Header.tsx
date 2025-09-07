@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button/Button";
 import Logo from "@/components/Logo";
 import cn from "@/lib/utils";
-import { useOrderList } from "../_query/useOrderList";
+import { useWaitingList } from "../../waiting/_queries/useWaitingList";
 
 interface IProps {
   href?: string;
@@ -12,7 +12,7 @@ interface IProps {
 
 export default function Header({ href }: IProps) {
   const navigate = useRouter();
-  const { count } = useOrderList();
+  const { count } = useWaitingList();
 
   return (
     <header className="flex w-full items-center justify-between rounded-4xl bg-white px-8 py-6">

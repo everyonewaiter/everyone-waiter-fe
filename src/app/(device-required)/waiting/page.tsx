@@ -6,6 +6,7 @@ import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import useDeviceInfo from "./_hooks/useDeviceInfo";
 import useWaitingModal from "./_hooks/useWaitingModal";
 import { useWaitingList } from "./_queries/useWaitingList";
+import { useOrderList } from "../hall/_query/useOrderList";
 
 const WaitingSection = dynamic(() => import("./_components/WaitingSection"), {
   ssr: false,
@@ -17,7 +18,8 @@ export default function Waiting() {
   const { handleOpenModal } = useWaitingModal();
 
   const waitingEnabled = !!deviceInfo?.deviceId && !isLoading;
-  const { data, count } = useWaitingList(waitingEnabled);
+  const { data } = useWaitingList(waitingEnabled);
+  const { count } = useOrderList();
 
   return (
     <div className="min-h-dvh w-dvw bg-gray-700">

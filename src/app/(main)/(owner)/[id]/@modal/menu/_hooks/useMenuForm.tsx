@@ -71,7 +71,7 @@ export const formToRequest = (form: TypeMenuForm) => {
       name: form.name,
       description: form.description,
       price: Number(String(form.price ?? "").replace(/,/g, "") || 0),
-      spicy: (form.spicy ?? 1) as number,
+      spicy: form.spicy,
       state: form.state,
       label: form.label,
       printEnabled: form.printEnabled,
