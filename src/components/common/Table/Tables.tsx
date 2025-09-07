@@ -71,7 +71,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "hidden w-full cursor-pointer items-center justify-center md:flex md:h-10 md:flex-row lg:h-16",
+      "hidden w-full cursor-pointer items-center justify-center md:flex md:h-12 md:flex-row lg:h-16",
       isHead ? "" : "border-b border-b-gray-600",
       className
     )}
