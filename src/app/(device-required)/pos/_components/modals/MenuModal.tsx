@@ -104,7 +104,7 @@ function MenuModal({
 
   return (
     <div
-      className="bg-opacity-100 fixed inset-0 z-[9999] flex items-center justify-center bg-black/50"
+      className="bg-opacity-100 fixed inset-0 z-[999999] flex items-center justify-center bg-black/50"
       onClick={handleClose}
       role="button"
       tabIndex={0}
@@ -114,7 +114,7 @@ function MenuModal({
     >
       <div
         className={cn(
-          "relative flex h-[650px] w-full flex-col gap-6 rounded-3xl bg-white p-5 md:h-[460px] md:flex-row md:p-4 lg:gap-8 lg:p-6",
+          "relative z-[999999] flex h-[650px] w-full flex-col gap-6 rounded-3xl bg-white p-5 md:h-[460px] md:flex-row md:p-4 lg:gap-8 lg:p-6",
           layoutClassName
         )}
         onClick={(e) => e.stopPropagation()}
@@ -158,10 +158,12 @@ function MenuModal({
                     },
                   }}
                 >
-                  {data?.label}
+                  {data?.label === "BEST" && "인기!"}
+                  {data?.label === "NEW" && "새로 나온!"}
+                  {data?.label === "RECOMMEND" && "추천!"}
                 </ResponsiveButton>
               )}
-              {data?.spicy && (
+              {data?.spicy > 0 && (
                 <ResponsiveButton
                   variant="outline"
                   responsiveButtons={{
@@ -180,7 +182,9 @@ function MenuModal({
                     },
                   }}
                 >
-                  {"🌶️".repeat(data?.spicy)}
+                  {data?.spicy === 1 && "🌶️"}
+                  {data?.spicy === 2 && "🌶️🌶️"}
+                  {data?.spicy === 3 && "🌶️🌶️🌶️"}
                 </ResponsiveButton>
               )}
               {data?.state === "SOLD_OUT" && (
