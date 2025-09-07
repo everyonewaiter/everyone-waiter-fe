@@ -1,7 +1,6 @@
 "use client";
 
 import { CalendarDays as CalendarIcon } from "@/components/common/Icon/index";
-import dynamic from "next/dynamic";
 import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import {
@@ -9,13 +8,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/common/Popover";
+import Calendar from "@/components/common/Calender";
 import cn from "@/lib/utils";
-import Spinner from "./Spinner";
-
-const Calendar = dynamic(() => import("@/components/common/Calender"), {
-  ssr: false,
-  loading: () => <Spinner />,
-});
 
 interface IProps {
   date: Date | null;

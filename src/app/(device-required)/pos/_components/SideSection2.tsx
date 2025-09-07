@@ -12,6 +12,7 @@ import { posQueries } from "../_queries/usePos";
 import MenuBox from "./MenuBox";
 import CancelAlert from "./modals/CancelAlert";
 import { print } from "../_utils/print-receipt";
+import SideBottom from "./SideSection/SideBottom";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -114,7 +115,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
         </div>
       </div>
       <div className="flex flex-1 flex-col">
-        <ScrollArea className="h-[calc(100dvh-300px)] w-full pt-8">
+        <ScrollArea className="h-[calc(100dvh-500px)] w-full pt-8">
           {selectedRow &&
             Array.isArray(activity?.orders) &&
             activity?.orders?.map((item, index, arr) => (
@@ -127,12 +128,19 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
             ))}
         </ScrollArea>
       </div>
-      <div className="absolute bottom-0 flex w-full gap-3 bg-white py-8">
+      <SideBottom
+        type="history"
+        totalOrderPrice={activity?.totalOrderPrice ?? 0}
+        discount={activity?.discount ?? 0}
+        remainingPaymentPrice={activity?.totalPaymentPrice ?? 0}
+        onAddDiscount={() => {}}
+      />
+      <div className="bottom-0 flex w-full gap-3 bg-white pt-6">
         {selectedRow?.cancellable && (
           <Button
             variant="outline"
             color="black"
-            className="flex h-[64px] w-[180px] rounded-xl px-8 text-xl"
+            className="button-xl flex w-[180px] rounded-xl px-8 text-xl"
             disabled={!selectedRow}
             onClick={handleCancelPayment}
           >
@@ -141,7 +149,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
         )}
         <Button
           color="black"
-          className="flex h-[64px] flex-1 rounded-xl px-8 text-xl"
+          className="button-xl flex flex-1 rounded-xl px-8 text-xl"
           disabled={!selectedRow}
           onClick={handlePrintReceipt}
         >

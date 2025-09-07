@@ -59,7 +59,7 @@ export default function PosHistory() {
   return (
     <div className="flex h-dvh w-full flex-col">
       <POSHeader2 />
-      <div className="flex w-full">
+      <div className="flex h-full w-full">
         <div className="relative flex w-full flex-1 flex-col px-[60px] pt-8 pb-6">
           <DatePicker
             date={date}

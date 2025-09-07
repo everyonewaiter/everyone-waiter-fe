@@ -12,6 +12,7 @@ interface IProps {
   discount: number;
   remainingPaymentPrice: number;
   onAddDiscount: (discount: number) => void;
+  type?: "pos" | "history";
 }
 
 export default function SideBottom({
@@ -19,6 +20,7 @@ export default function SideBottom({
   discount,
   remainingPaymentPrice,
   onAddDiscount,
+  type = "pos",
 }: IProps) {
   const { open, close } = useOverlay();
 
@@ -37,17 +39,19 @@ export default function SideBottom({
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <span className="font-regular text-xl text-gray-300">할인</span>
-        <Button
-          variant="outline"
-          color="black"
-          className="h-10 rounded-lg border border-[#4f4f4f] px-5"
-          onClick={handleDiscount}
-        >
-          할인수단 {discount ? "수정" : "추가"}
-        </Button>
-      </div>
+      {type === "pos" && (
+        <div className="flex items-center justify-between">
+          <span className="font-regular text-xl text-gray-300">할인</span>
+          <Button
+            variant="outline"
+            color="black"
+            className="h-10 rounded-lg border border-[#4f4f4f] px-5"
+            onClick={handleDiscount}
+          >
+            할인수단 {discount ? "수정" : "추가"}
+          </Button>
+        </div>
+      )}
       <div className="mt-5 flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
@@ -55,7 +59,7 @@ export default function SideBottom({
               총 주문 금액
             </span>
             <span className="text-xl">
-              {totalOrderPrice.toLocaleString()}원
+              {totalOrderPrice?.toLocaleString()}원
             </span>
           </div>
           <div className="flex items-center justify-between">
@@ -68,7 +72,9 @@ export default function SideBottom({
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <strong className="text-2xl font-semibold">결제할 금액</strong>
+          <strong className="text-2xl font-semibold">
+            결제{type === "pos" ? "할" : "된"} 금액
+          </strong>
           <strong className="text-4xl font-bold">
             {remainingPaymentPrice.toLocaleString()}원
           </strong>
