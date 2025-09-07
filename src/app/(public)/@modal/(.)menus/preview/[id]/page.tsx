@@ -34,11 +34,11 @@ export default async function Page({
     );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50">
       <MenuModal
         data={menu as MenuDetail}
         type="preview"
-        layoutClassName="!w-[320px]  md:!w-[664px]  lg:!w-[1148px] h-fit pb-6"
+        layoutClassName="!w-[320px] md:!w-[664px] lg:!w-[1148px] h-fit pb-6"
       />
     </div>
   );
