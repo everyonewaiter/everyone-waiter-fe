@@ -88,6 +88,11 @@ export default function PayAlert({ close, type, ...props }: IProps) {
 
   const receiptOverlay = useOverlay();
 
+  const navigateTables = () => {
+    navigate.push("/pos/tables");
+    queryClient.invalidateQueries({ queryKey: posKeys.tables });
+  };
+
   const handlePrintCard = (res: PaymentResponse) => {
     print({
       type: "card-receipt",
@@ -95,9 +100,8 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       stores: stores!,
       payment: { ...res, INSTALLMENT: form.watch("monthlyPlan") },
       successHandler: () => {
-        close();
         if (props.orders?.length === 0) {
-          navigate.push("/pos/tables");
+          navigateTables();
         }
       },
     });
@@ -108,7 +112,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       type: "cash-receipt",
       activity: activityData!,
       stores: stores!,
-      successHandler: () => setIsSubmitting(false),
+      successHandler: navigateTables,
       cashReceiptPhoneNo: form.watch("phoneNumber"),
     });
   };
@@ -123,15 +127,12 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           } else {
             handlePrintCash();
           }
-          queryClient.invalidateQueries({
-            queryKey: posKeys.activity(props.tableNo),
-          });
+          receiptOverlay.close();
+          navigateTables();
         }}
         onCancel={() => {
           receiptOverlay.close();
-          queryClient.invalidateQueries({
-            queryKey: posKeys.activity(props.tableNo),
-          });
+          navigateTables();
         }}
       />
     ));
@@ -146,12 +147,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   const handlePayment = () => {
     setIsSubmitting(true);
 
-    let amount = 0;
-    if (hasOrderId) {
-      amount = selectedOrdersTotal;
-    } else {
-      amount = props.totalOrderPrice;
-    }
+    const amount = hasOrderId
+      ? selectedOrdersTotal
+      : props.remainingPaymentPrice;
 
     if (type === "credit-card") {
       payCard({

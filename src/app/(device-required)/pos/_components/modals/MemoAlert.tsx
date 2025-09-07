@@ -1,8 +1,11 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import getQueryClient from "@/app/get-query-client";
 import Textarea from "@/components/common/TextArea";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { orderQueries } from "../../_queries/useOrder";
+import { posKeys } from "../../_queries/keys";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -15,6 +18,8 @@ interface IProps {
 }
 
 export default function MemoAlert({ close, isOrder, tableNo }: IProps) {
+  const navigate = useRouter();
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [memo, setMemo] = useState("");
 
@@ -37,9 +42,14 @@ export default function MemoAlert({ close, isOrder, tableNo }: IProps) {
       },
       {
         onSuccess: () => {
+          const queryClient = getQueryClient();
+
           resetOrders();
           setMemo("");
           close();
+
+          navigate.push("/pos/tables");
+          queryClient.invalidateQueries({ queryKey: posKeys.tables });
         },
         onError: () => setIsSubmitted(false),
       }
