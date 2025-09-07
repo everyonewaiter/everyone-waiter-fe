@@ -37,7 +37,7 @@ export default function Header({ href }: IProps) {
         >
           웨이팅 관리 이동
         </Button>
-        {count && (
+        {count > 0 && (
           <div className="bg-primary center absolute -top-5 -right-5 h-10 w-10 rounded-full text-xl font-semibold text-white">
             {count}
           </div>

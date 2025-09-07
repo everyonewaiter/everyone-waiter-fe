@@ -39,7 +39,7 @@ export default function Waiting() {
             >
               홀 화면 이동
             </ResponsiveButton>
-            {count && (
+            {count > 0 && (
               <div className="bg-primary center absolute -top-5 -right-5 h-10 w-10 rounded-full text-xl font-semibold text-white">
                 {count}
               </div>

@@ -10,5 +10,5 @@ export const useOrderList = (enabled?: boolean) => {
     retry: false,
   });
 
-  return { data, count: data?.unserved.length, isSuccess, ...rest };
+  return { data, count: data?.unserved.length ?? 0, isSuccess, ...rest };
 };

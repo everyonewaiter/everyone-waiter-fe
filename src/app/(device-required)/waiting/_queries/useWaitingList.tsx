@@ -11,5 +11,5 @@ export const useWaitingList = (enabled?: boolean) => {
     retry: false,
   });
 
-  return { data, count: data?.waitings?.length, isSuccess, ...rest };
+  return { data, count: data?.waitings?.length ?? 0, isSuccess, ...rest };
 };
