@@ -56,20 +56,17 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
           주문 초기화
         </Button>
       )}
-      {!hasOrders &&
-        data &&
-        data.orderType === "POSTPAID" &&
-        !data.totalPaymentPrice && (
-          <Button
-            asChild={false}
-            variant="outline"
-            color="primary"
-            className="button-lg !rounded-lg text-base !font-medium"
-            onClick={() => handleCancel("order-cancel")}
-          >
-            전체 주문 취소
-          </Button>
-        )}
+      {data && data.orderType === "POSTPAID" && (
+        <Button
+          asChild={false}
+          variant="outline"
+          color="primary"
+          className="button-lg !rounded-lg text-base !font-medium"
+          onClick={() => handleCancel("order-cancel")}
+        >
+          전체 주문 취소
+        </Button>
+      )}
     </header>
   );
 }

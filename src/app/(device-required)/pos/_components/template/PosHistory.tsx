@@ -59,7 +59,7 @@ export default function PosHistory() {
   return (
     <div className="flex h-dvh w-full flex-col">
       <POSHeader2 />
-      <div className="flex h-[calc(100dvh-133px)] w-full">
+      <div className="flex w-full">
         <div className="relative flex w-full flex-1 flex-col px-[60px] pt-8 pb-6">
           <DatePicker
             date={date}
@@ -68,8 +68,8 @@ export default function PosHistory() {
               setSelectedRow(null);
             }}
           />
-          <div className="h-[704px]">
-            <Table className="mt-6 w-full">
+          <div className="h-[calc(100dvh-300px)]">
+            <Table className="mt-6 w-full overflow-hidden">
               <TableHeader>
                 <TableRow isHead>
                   {Object.keys(itemWidth).map((item) => (

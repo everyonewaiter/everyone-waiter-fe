@@ -1,9 +1,11 @@
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import cn from "@/lib/utils";
 import getQueryClient from "@/app/get-query-client";
 import { orderQueries } from "../../_queries/useOrder";
 import usePayment from "../../_queries/usePayment";
 import { useOrderStore } from "../../_hooks/useOrderStore";
+import { posKeys } from "../../_queries/keys";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -22,6 +24,7 @@ export default function CancelAlert({
   type,
   hasMultiCancel,
 }: IProps) {
+  const navigate = useRouter();
   const queryClient = getQueryClient();
 
   const { resetOrders } = useOrderStore();
@@ -31,11 +34,6 @@ export default function CancelAlert({
 
   const handleCancel = async () => {
     // 주문 진행중 -> 취소
-    if (type === "order-reset") {
-      resetOrders();
-      close();
-      return;
-    }
 
     if (type === "pay-cancel") {
       // 결제 취소 (선결제)
@@ -72,8 +70,20 @@ export default function CancelAlert({
     close();
   };
 
-  const onAction = () =>
-    hasMultiCancel ? handleMultiCancel() : handleCancel();
+  const onAction = () => {
+    if (type === "order-reset") {
+      resetOrders();
+      close();
+      navigate.push("/pos/tables");
+      queryClient.invalidateQueries({ queryKey: posKeys.tables });
+      return;
+    }
+    if (hasMultiCancel) {
+      handleMultiCancel();
+    } else {
+      handleCancel();
+    }
+  };
 
   return (
     <Alert
