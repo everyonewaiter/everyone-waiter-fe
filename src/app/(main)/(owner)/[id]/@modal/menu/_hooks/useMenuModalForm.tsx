@@ -29,7 +29,7 @@ export default function useMenuModalForm({
       name: "",
       description: "",
       price: "",
-      spicy: 1,
+      spicy: 0,
       state: "DEFAULT",
       label: "DEFAULT",
       printEnabled: true,
