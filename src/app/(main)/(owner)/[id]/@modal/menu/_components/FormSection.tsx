@@ -28,24 +28,11 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
   const marginTop = "mt-2 lg:mt-4";
 
   useEffect(() => {
-    form.register("label");
-    form.register("state");
-    form.register("spicy");
-    form.register("printEnabled");
-
-    if (form.getValues("label") == null) {
-      form.setValue("label", "DEFAULT");
-    }
-    if (form.getValues("state") == null) {
-      form.setValue("state", "DEFAULT");
-    }
-    if (form.getValues("spicy") == null) {
-      form.setValue("spicy", 0);
-    }
-    if (form.getValues("printEnabled") == null) {
-      form.setValue("printEnabled", true);
-    }
-  }, [form]);
+    form.setValue("label", form.watch("label") ?? "DEFAULT");
+    form.setValue("state", form.watch("state") ?? "DEFAULT");
+    form.setValue("spicy", form.watch("spicy") ?? 0);
+    form.setValue("printEnabled", form.watch("printEnabled") ?? true);
+  }, []);
 
   const labelValue =
     form.watch("label") ?? form.getValues("label") ?? "DEFAULT";
@@ -172,12 +159,12 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
           </div>
           <Separator className="my-2 h-[2px] bg-gray-600" />
           <div className="flex items-center gap-2">
-            {["🌶️", "🌶️🌶️", "🌶️🌶️🌶️"].map((key) => (
+            {["🌶️", "🌶️🌶️", "🌶️🌶️🌶️"].map((key, i) => (
               <ResponsiveButton
                 key={key}
                 type="button"
                 variant="outline"
-                color={spicyValue === key.length ? "primary" : "grey"}
+                color={spicyValue === i + 1 ? "primary" : "grey"}
                 responsiveButtons={{
                   lg: {
                     buttonSize: "sm",
@@ -195,7 +182,7 @@ export default function FormSection({ isEditing, storeId, type }: IProps) {
                 onClick={() => {
                   if (!isEditing) return;
                   const current = form.watch("spicy");
-                  const next = key.length;
+                  const next = i + 1;
                   form.setValue("spicy", current === next ? 0 : next);
                 }}
                 commonClassName={
