@@ -7,6 +7,8 @@ import { FormErrorMessage } from "@/components/common/Form";
 import cn from "@/lib/utils";
 import formatLicenseNumber from "@/lib/formatting/formatLicenseNumber";
 import { Controller, useFormContext } from "react-hook-form";
+import { X } from "lucide-react";
+import { useRef, useState } from "react";
 import { TypePayForm } from "../../_schema/pos.schema";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import { ReceiptType } from "./PayAlert";
@@ -20,16 +22,25 @@ interface IProps extends PosTableActivity {
   hasOrderId?: string;
   selectedOrdersTotal: number;
   type: "credit-card" | "cash";
+  onClose: () => void;
 }
 
 export default function PayAlertForm({
   hasOrderId,
   selectedOrdersTotal,
   type,
+  onClose,
   ...props
 }: IProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const form = useFormContext<TypePayForm>();
 
+  const INITIAL_VALUE = hasOrderId
+    ? selectedOrdersTotal
+    : props.remainingPaymentPrice;
+
+  const [changeToInput, setChangeToInput] = useState(false);
+  const [value, setValue] = useState(String(INITIAL_VALUE));
   const { selectedOrder } = useSelectItemStore();
 
   const menus = hasOrderId
@@ -40,13 +51,9 @@ export default function PayAlertForm({
     <div className="-mt-4 flex w-full flex-col gap-10">
       <div className="flex items-center justify-between">
         <h3 className="text-[28px] font-semibold">{props.tableNo}번 테이블</h3>
-        <Button
-          variant="outline"
-          color="primary"
-          className="button-lg !rounded-lg text-[15px] !font-medium"
-        >
-          결제 취소
-        </Button>
+        <button type="button" onClick={onClose}>
+          <X size={30} />
+        </button>
       </div>
       <div className="flex flex-col gap-8">
         <div className="flex flex-col items-start">
@@ -61,15 +68,44 @@ export default function PayAlertForm({
             )}
           </strong>
         </div>
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start gap-2">
           <Label className="text-[15px] font-medium">결제할 금액</Label>
-          <strong className="mt-2 text-2xl font-semibold">
-            {(hasOrderId
-              ? selectedOrdersTotal
-              : props.remainingPaymentPrice
-            ).toLocaleString()}
-            원
-          </strong>
+          <div className="group flex">
+            {changeToInput ? (
+              <Input
+                ref={inputRef}
+                value={Number(value).toLocaleString()}
+                onChange={(e) => {
+                  const origin = e.target.value.replaceAll(",", "");
+                  if (Number(origin) <= Number(INITIAL_VALUE)) setValue(origin);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") setChangeToInput(false);
+                }}
+                className="!h-[34px] !rounded-none border-t-0 border-r-0 border-l-0 !px-0 !text-2xl !font-semibold"
+                style={{ width: `${String(INITIAL_VALUE).length}rem` }}
+                max={Number(INITIAL_VALUE)}
+              />
+            ) : (
+              <button
+                type="button"
+                className="group-hover:decoration-gray-0 cursor-pointer text-2xl font-semibold underline decoration-gray-400 decoration-dotted underline-offset-4"
+                onClick={() => {
+                  setChangeToInput(true);
+                  setTimeout(() => {
+                    if (inputRef.current) {
+                      inputRef.current.focus();
+                      const { length } = inputRef.current.value;
+                      inputRef.current.setSelectionRange(length, length);
+                    }
+                  }, 0);
+                }}
+              >
+                {Number(value).toLocaleString()}
+              </button>
+            )}
+            <strong className="text-2xl font-semibold">원</strong>
+          </div>
         </div>
         {type === "cash" ? (
           <>
@@ -173,7 +209,7 @@ export default function PayAlertForm({
               data={monthlyPlan}
               defaultText="할부 개월을 선택해주세요."
               active={form.watch("monthlyPlan").toString()}
-              setActive={(value) => form.setValue("monthlyPlan", value)}
+              setActive={(v) => form.setValue("monthlyPlan", v)}
               triggerClassName="text-sm font-medium rounded-xl"
             />
           </div>

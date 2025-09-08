@@ -62,7 +62,7 @@ const buttonVariants = cva(
       {
         variant: "outline",
         color: "primary",
-        class: "text-primary border-primary hover:text-white",
+        class: "text-primary border-primary",
       },
       {
         variant: "outline",
@@ -72,20 +72,17 @@ const buttonVariants = cva(
       {
         variant: "outline",
         color: "grey",
-        class:
-          "text-gray-300 border-gray-700 hover:bg-gray-700 hover:text-gray-300",
+        class: "text-gray-300 border-gray-700 hover:bg-gray-700",
       },
       {
         variant: "outline",
         color: "apply",
-        class:
-          "text-gray-400 border-gray-400 hover:bg-gray-400 hover:text-white",
+        class: "text-gray-400 border-gray-400 hover:bg-gray-400",
       },
       {
         variant: "outline",
         color: "reject",
-        class:
-          "text-[#FF5555] border-[#FF5555] hover:bg-[#FF5555] hover:text-white",
+        class: "text-[#FF5555] border-[#FF5555] hover:bg-[#FF5555]",
       },
       {
         variant: "outline",

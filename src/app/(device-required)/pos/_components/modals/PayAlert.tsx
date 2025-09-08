@@ -75,7 +75,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     mode: "onChange",
     resolver: zodResolver(paySchema),
     defaultValues: {
-      receiptType: "개인소득공제용",
+      receiptType: "신청안함",
       phoneNumber: "",
       licenseNumber: "",
       monthlyPlan: "일시불",
@@ -89,8 +89,14 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   const receiptOverlay = useOverlay();
 
   const navigateTables = () => {
-    navigate.push("/pos/tables");
-    queryClient.invalidateQueries({ queryKey: posKeys.tables });
+    if (activityData?.remainingPaymentPrice) {
+      queryClient.invalidateQueries({
+        queryKey: posKeys.activity(activityData?.tableNo),
+      });
+    } else {
+      navigate.push("/pos/tables");
+      queryClient.invalidateQueries({ queryKey: posKeys.tables });
+    }
   };
 
   const handlePrintCard = (res: PaymentResponse) => {
@@ -197,6 +203,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           type={type}
           hasOrderId={hasOrderId}
           selectedOrdersTotal={selectedOrdersTotal}
+          onClose={close}
           {...props}
         />
       </Form>
