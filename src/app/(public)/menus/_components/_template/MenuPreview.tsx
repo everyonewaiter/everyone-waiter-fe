@@ -35,14 +35,14 @@ export default function MenuPreview({ storeId }: IProps) {
 
   const { data: storedata } = storesQueries.useStoresDetail(storeId);
   const { data, isLoading } = publicQueries.usePreviewMenu(storeId);
-  const menuList =
+  const menuList = (
     activeTab === "전체"
-      ? data?.categories.map((el) => el.menus).flat()
-      : data?.categories
-          .filter((v) => v.name === activeTab)
-          .map((el) => el.menus)
-          .flat()
-          .filter((el) => el.state !== "HIDE");
+      ? data?.categories
+      : data?.categories.filter((v) => v.name === activeTab)
+  )
+    ?.map((el) => el.menus)
+    .flat()
+    .filter((el) => el.state !== "HIDE");
 
   const { open, close } = useOverlay();
 

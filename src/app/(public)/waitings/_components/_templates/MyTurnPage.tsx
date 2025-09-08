@@ -43,7 +43,7 @@ export default function MyTurnPage({ storeId, publicAccessKey }: IProps) {
               currentNumber <= 2 ? "items-end" : ""
             )}
           >
-            {currentNumber <= 2 && (
+            {currentNumber <= 2 ? (
               <div
                 className={cn(
                   "bg-primary -mb-[1px] w-fit rounded-3xl px-3 py-2 text-xs font-semibold text-white",
@@ -52,18 +52,16 @@ export default function MyTurnPage({ storeId, publicAccessKey }: IProps) {
               >
                 매장 앞으로 와주세요!
               </div>
-            )}
-            {currentNumber > 2 && (
+            ) : (
               <div
                 className="bg-primary -mb-[1px] w-fit rounded-3xl px-3 py-2 text-xs font-semibold text-white"
                 style={{
-                  marginLeft:
-                    currentNumber <= 5 ? positionPx - 98 : positionPx - 134,
+                  // marginLeft:
+                  // currentNumber <= 5 ? positionPx - 98 : positionPx - 134,
+                  marginLeft: positionPx - 134,
                 }}
               >
-                {currentNumber <= 5
-                  ? "매장 앞으로 와주세요!"
-                  : "조금 있으면 입장할 수 있어요!"}
+                조금 있으면 입장할 수 있어요!
               </div>
             )}
           </div>

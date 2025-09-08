@@ -14,7 +14,7 @@ import { publicQueries } from "../../../_queries/usePublic";
 interface IProps {
   storeId: string;
   publicAccessKey: string;
-  phone: string;
+  phone: string; // 01012341234
 }
 
 export default function CancelTurnPage({
@@ -29,7 +29,7 @@ export default function CancelTurnPage({
   const [otpValue, setOtpValue] = useState("");
 
   const handleCancel = () => {
-    if (phone !== otpValue) {
+    if (phone.slice(-4) !== otpValue) {
       // eslint-disable-next-line
       alert("전화번호가 일치하지 않습니다.");
       setOtpValue("");
