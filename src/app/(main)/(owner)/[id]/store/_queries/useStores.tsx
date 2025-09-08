@@ -10,6 +10,7 @@ import {
   registerStore,
 } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
 import getQueryClient from "@/app/get-query-client";
+import { isNumber } from "@/utils/validate";
 import { storeKeys } from "./keys";
 
 const queryClient = getQueryClient();
@@ -45,7 +46,7 @@ const useStoresDetail = (storeId: string) =>
   useQuery({
     queryKey: storeKeys.detail(storeId),
     queryFn: () => getStoreInfoDetail(storeId),
-    enabled: !!storeId,
+    enabled: !!storeId && isNumber(storeId),
     staleTime: 1000 * 60 * 5,
   });
 

@@ -172,7 +172,7 @@ export default function DevicePage() {
                           },
                         }}
                       >
-                        {item.purpose}
+                        {deviceTranslate[item.purpose]}
                       </ResponsiveButton>
                     </div>
                   </TableCell>

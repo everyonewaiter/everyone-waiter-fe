@@ -15,6 +15,7 @@ import Input from "@/components/common/Input";
 import Label from "@/components/common/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/common/Radio";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isNumber } from "@/utils/validate";
 import { discountSchema, TypeDiscountForm } from "../../_schema/pos.schema";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
@@ -122,10 +123,7 @@ export default function AddDiscountAlert({
                             const numericValue =
                               rawValue === "" ? null : Number(rawValue);
 
-                            if (
-                              rawValue !== "" &&
-                              Number.isNaN(Number(numericValue))
-                            ) {
+                            if (rawValue !== "" && !isNumber(numericValue)) {
                               return;
                             }
 

@@ -6,6 +6,7 @@ import { getStoreInfoDetail } from "@/app/(main)/(owner)/[id]/store/_api/stores.
 import { storeKeys } from "@/app/(main)/(owner)/[id]/store/_queries/keys";
 import { useQuery } from "@tanstack/react-query";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
+import { isNumber } from "@/utils/validate";
 import Header from "./_components/Header";
 import { printToKitchen } from "../pos/_utils/print-receipt";
 
@@ -33,6 +34,7 @@ export default function Layout({ children }: PropsWithChildren) {
   const { data: settingData } = useQuery({
     queryKey: storeKeys.detail(storeId!),
     queryFn: () => getStoreInfoDetail(storeId!),
+    enabled: !!storeId && isNumber(storeId),
   });
 
   useEffect(() => {
