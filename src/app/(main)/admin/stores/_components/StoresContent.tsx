@@ -5,11 +5,7 @@ import cn from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import StoresTable from "./StoresTable";
 
-interface IProps {
-  data: AdminStores[];
-}
-
-export default function StoresContent({ data }: IProps) {
+export default function StoresContent(data?: ResWithPagination<AdminStores[]>) {
   const { watch, setValue } = useFormContext();
 
   const toggleCheck = () => setValue("isChecked", !watch("isChecked"));
@@ -68,7 +64,7 @@ export default function StoresContent({ data }: IProps) {
           />
         </div>
       </div>
-      <StoresTable data={data!} />
+      <StoresTable {...data!} />
     </div>
   );
 }

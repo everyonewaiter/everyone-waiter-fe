@@ -137,8 +137,8 @@ export default function StoreList({ storeId }: IProps) {
           size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
-          hasNext={data?.hasNext}
-          hasPrevious={data?.hasPrevious}
+          hasNext={!data?.isLast}
+          hasPrevious={!data?.isFirst}
           fastForwardTarget={data?.fastForwardPage}
           fastBackwardTarget={data?.fastBackwardPage}
           className="my-8"

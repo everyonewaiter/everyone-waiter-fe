@@ -46,15 +46,15 @@ export default function StoresPage() {
   return (
     <div className="flex h-full flex-col">
       <FormProvider {...form}>
-        <StoresContent data={data?.content!} />
+        <StoresContent {...data!} />
       </FormProvider>
       <Paginations
         size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         className="my-8"
-        hasNext={data?.hasNext}
-        hasPrevious={data?.hasPrevious}
+        hasNext={!data?.isLast}
+        hasPrevious={!data?.isFirst}
         fastForwardTarget={data?.fastForwardPage}
         fastBackwardTarget={data?.fastBackwardPage}
       />

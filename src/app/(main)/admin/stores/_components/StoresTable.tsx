@@ -42,11 +42,7 @@ const itemWidths = {
   },
 };
 
-interface IProps {
-  data: AdminStores[];
-}
-
-export default function StoresTable({ data }: IProps) {
+export default function StoresTable(data: ResWithPagination<AdminStores[]>) {
   const navigate = useRouter();
 
   return (
@@ -67,7 +63,7 @@ export default function StoresTable({ data }: IProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((item, idx) => (
+          {data?.content?.map((item, idx) => (
             <TableRow
               key={item.registrationId.toString()}
               onClick={() =>
@@ -78,7 +74,10 @@ export default function StoresTable({ data }: IProps) {
               }
             >
               <TableCell className={itemWidths["No."].className}>
-                {idx + 1}
+                {(data?.page ?? 1) * (data?.size ?? 10) -
+                  (data?.size ?? 20) +
+                  idx +
+                  1}
               </TableCell>
               <TableCell className={itemWidths.신청일.className}>
                 {transformDate(item.createdAt)}
@@ -119,7 +118,7 @@ export default function StoresTable({ data }: IProps) {
         </TableBody>
       </Table>
       <div className="flex flex-col gap-4">
-        {data?.map((item, index) => (
+        {data?.content?.map((item, index) => (
           <MobileTable
             className="z-10"
             key={item.registrationId.toString()}

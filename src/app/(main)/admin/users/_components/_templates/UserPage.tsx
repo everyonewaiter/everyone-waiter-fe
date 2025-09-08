@@ -94,8 +94,8 @@ export default function UserPage() {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         className="my-8"
-        hasNext={data?.hasNext}
-        hasPrevious={data?.hasPrevious}
+        hasNext={!data?.isLast}
+        hasPrevious={!data?.isFirst}
         fastForwardTarget={data?.fastForwardPage}
         fastBackwardTarget={data?.fastBackwardPage}
       />

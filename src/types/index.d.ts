@@ -6,8 +6,6 @@ declare global {
     count: number;
     fastBackwardPage: number;
     fastForwardPage: number;
-    hasNext: boolean;
-    hasPrevious: boolean;
     isFirst: boolean;
     isLast: boolean;
     page: number;

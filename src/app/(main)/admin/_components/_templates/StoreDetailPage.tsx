@@ -77,6 +77,7 @@ export default function StoreDetailPage() {
                       dataObj[key as keyof typeof dataObj] as keyof StoreDetail
                     ] as string
                   }
+                  className="cursor-default"
                   readOnly
                 />
               </div>
