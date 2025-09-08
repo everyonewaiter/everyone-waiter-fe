@@ -1,3 +1,5 @@
+import { PRINTERNAME } from "@/constants/printerName";
+
 interface IProps {
   type: "kitchen" | "cash-receipt" | "card-receipt";
   activity: PosTableActivity;
@@ -11,7 +13,7 @@ interface IProps {
   stores?: PosStore;
   successHandler?: () => void;
   cashReceiptPhoneNo?: string;
-  printerName?: "Printer1" | "Printer2";
+  printerName?: PRINTERNAME.PRINTER1 | PRINTERNAME.PRINTER2;
 }
 
 function getDisplayWidth(str: string) {
@@ -68,7 +70,7 @@ function formatAlignLeftRight(left: string, right: string, totalWidth = 42) {
 
 /**
  *
- * @param printerName - Printer1 (기본 프린터 - POS), Printer2 (주방 프린터)
+ * @param printerName - typeof PRINTERNAME
  * @returns
  */
 export const print = ({
@@ -78,7 +80,7 @@ export const print = ({
   stores,
   successHandler,
   cashReceiptPhoneNo,
-  printerName = "Printer1",
+  printerName = PRINTERNAME.PRINTER1,
 }: IProps) => {
   window.setPosId(1);
 
@@ -175,16 +177,18 @@ export const print = ({
           });
         });
       });
-      window.printText(
-        `[메모] ${order.memo}\n\n`,
-        0,
-        0,
-        false,
-        false,
-        true,
-        0,
-        0
-      );
+      if (order.memo) {
+        window.printText(
+          `[메모] ${order.memo}\n\n`,
+          0,
+          0,
+          false,
+          false,
+          true,
+          0,
+          0
+        );
+      }
     });
 
     window.printText(
@@ -384,7 +388,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("결제방법", `${payment?.CARDNAME}`)}\n`,
+        `${formatAlignLeftRight("결제방법", `${payment?.CARDNAME.split("(")[0]}`)}\n`,
         0,
         0,
         false,
@@ -582,7 +586,7 @@ export const printToKitchen = ({
   successHandler,
 }: KitchenProps) => {
   window.printText(`주  문  서\n`, 0, 2, true, false, false, 0, 1);
-  window.printText(`주문번호: ${printNo}\n`, 0, 1, true, false, false, 0, 0);
+  window.printText(`#${printNo}\n`, 0, 1, true, false, false, 0, 1);
   window.printText(`테이블번호: ${tableNo}\n`, 0, 1, true, false, false, 0, 0);
   window.printText(
     "------------------------------------------\n",
@@ -638,7 +642,9 @@ export const printToKitchen = ({
         0
       );
     });
-    window.printText(`[메모] ${memo}\n\n`, 0, 0, false, false, true, 0, 0);
+    if (memo) {
+      window.printText(`[메모] ${memo}\n\n`, 0, 0, false, false, true, 0, 0);
+    }
   });
 
   window.printText(
@@ -656,7 +662,7 @@ export const printToKitchen = ({
 
   const strSubmit = window.getPosData();
   try {
-    window.requestPrint("Printer2", strSubmit, () => {
+    window.requestPrint(PRINTERNAME.PRINTER2, strSubmit, () => {
       successHandler?.();
     });
   } catch (error) {
