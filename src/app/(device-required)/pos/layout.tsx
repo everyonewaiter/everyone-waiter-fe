@@ -6,6 +6,7 @@ import { storeKeys } from "@/app/(main)/(owner)/[id]/store/_queries/keys";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import getQueryClient from "@/app/get-query-client";
 import { PropsWithChildren, useEffect } from "react";
+import { isNumber } from "@/utils/validate";
 import { printToKitchen } from "./_utils/print-receipt";
 
 export default function Layout({ children }: PropsWithChildren) {
@@ -32,6 +33,7 @@ export default function Layout({ children }: PropsWithChildren) {
   const { data: settingData } = useQuery({
     queryKey: storeKeys.detail(storeId!),
     queryFn: () => getStoreInfoDetail(storeId!),
+    enabled: !!storeId && isNumber(storeId),
   });
 
   useEffect(() => {

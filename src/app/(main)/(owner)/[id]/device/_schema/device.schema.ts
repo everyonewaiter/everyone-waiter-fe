@@ -1,4 +1,5 @@
 import { deviceNumberSchema } from "@/schema";
+import { isNumber } from "@/utils/validate";
 import { z } from "zod";
 
 export const deviceFormSchema = z.object({
@@ -7,11 +8,9 @@ export const deviceFormSchema = z.object({
   state: z.enum(["ACTIVE", "INACTIVE"]).nullable().optional(),
   purpose: z.enum(["HALL", "POS", "WAITING", "TABLE"]),
   paymentType: z.enum(["POSTPAID", "PREPAID"]),
-  tableNo: z
-    .string()
-    .refine((val) => !Number.isNaN(Number(val)) && Number(val) >= 1, {
-      message: "테이블 번호는 1 이상의 숫자여야 합니다.",
-    }),
+  tableNo: z.string().refine((val) => isNumber(val) && Number(val) >= 1, {
+    message: "테이블 번호는 1 이상의 숫자여야 합니다.",
+  }),
   deviceNumber: deviceNumberSchema,
 });
 

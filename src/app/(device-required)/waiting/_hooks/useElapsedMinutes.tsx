@@ -1,3 +1,4 @@
+import { isNumber } from "@/utils/validate";
 import { useEffect, useState } from "react";
 
 export default function useElapsedTime(dateString: string | Date | null) {
@@ -9,7 +10,7 @@ export default function useElapsedTime(dateString: string | Date | null) {
     const createdDate =
       typeof dateString === "string" ? new Date(dateString) : dateString;
 
-    if (Number.isNaN(createdDate.getTime())) {
+    if (!isNumber(createdDate.getTime())) {
       setElapsedTime("00:00:00");
       return;
     }

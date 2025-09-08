@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
 import axios, { AxiosError } from "axios";
+import { isNumber } from "@/utils/validate";
 import {
   closeStore,
   getDetailActivity,
@@ -103,7 +104,7 @@ const useActivity = (tableNo: number) =>
   useQuery({
     queryKey: posKeys.activity(tableNo),
     queryFn: () => getTableActivity({ tableNo }),
-    enabled: !!tableNo && !Number.isNaN(tableNo),
+    enabled: !!tableNo && isNumber(tableNo),
     staleTime: 1000 * 60 * 5,
   });
 
