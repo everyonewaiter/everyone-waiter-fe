@@ -34,7 +34,7 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
       <strong className="text-gray-0 text-[28px] font-semibold">
         {tableNo}번 테이블 {hasOrders && "추가 주문 내역"}
       </strong>
-      {!hasOrders && data && data.orderType === "PREPAID" && (
+      {data?.orders?.length > 0 && data.orderType === "PREPAID" && (
         <Button
           asChild={false}
           variant="outline"

@@ -142,6 +142,7 @@ export class SseService {
           break;
         case "ORDER":
           queryClient.invalidateQueries({ queryKey: ["order-list"] });
+          queryClient.invalidateQueries({ queryKey: ["activity"] });
           break;
         case "STAFF_CALL":
           queryClient.invalidateQueries({ queryKey: ["staff-calls"] });

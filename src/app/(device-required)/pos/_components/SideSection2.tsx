@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
+import { useRouter } from "next/navigation";
 import { posQueries } from "../_queries/usePos";
 import MenuBox from "./MenuBox";
 import CancelAlert from "./modals/CancelAlert";
@@ -21,6 +22,7 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
   const openReceipt = useOverlay();
   const cancel = useOverlay();
+  const navigate = useRouter();
 
   const { storeId } = useDeviceContext();
 
@@ -52,6 +54,8 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
           cashReceiptPhoneNo: payment.cashReceiptNo,
         });
       }
+      openReceipt.close();
+      navigate.push("/pos/history");
     });
   };
 
@@ -111,7 +115,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
               : "bg-gray-700 text-gray-300"
           )}
         >
-          {selectedRow ? selectedRow.orderPaymentId : "-"}
+          {selectedRow ? selectedRow?.posTableActivityId : "-"}
         </div>
       </div>
       <div className="flex flex-1 flex-col">

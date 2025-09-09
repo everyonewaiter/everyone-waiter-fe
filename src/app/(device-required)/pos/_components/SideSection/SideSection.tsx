@@ -100,12 +100,11 @@ export default function SideSection() {
         hasOrders={orders.length > 0}
         data={data!}
       />
-      {orders.length === 0 && !data && (
+      {data?.orders?.length === 0 ? (
         <div className="center w-full flex-1 flex-col">
           생성된 주문이 없습니다.
         </div>
-      )}
-      {(orders.length || data?.orders) && (
+      ) : (
         <>
           <div className="">
             <SideControl
