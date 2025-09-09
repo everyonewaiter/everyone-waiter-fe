@@ -1,5 +1,6 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/app/get-query-client";
+import { isNumber } from "@/utils/validate";
 import { getTableActivity } from "../../_api/pos.api";
 
 export default async function Layout({
@@ -13,11 +14,13 @@ export default async function Layout({
   const { id } = await params;
   const tableNo = id;
 
-  await queryClient.prefetchQuery({
-    queryKey: ["table", tableNo],
-    queryFn: () => getTableActivity({ tableNo: Number(tableNo) }),
-    staleTime: 1000 * 60 * 5,
-  });
+  if (isNumber(tableNo)) {
+    await queryClient.prefetchQuery({
+      queryKey: ["table", tableNo],
+      queryFn: () => getTableActivity({ tableNo: Number(tableNo) }),
+      staleTime: 1000 * 60 * 5,
+    });
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

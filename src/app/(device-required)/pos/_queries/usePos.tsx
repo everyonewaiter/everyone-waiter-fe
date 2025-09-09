@@ -80,7 +80,7 @@ const useStoreInfo = (storeId: string) =>
   useQuery({
     queryKey: posKeys.stores,
     queryFn: () => getStoreInfo({ storeId }),
-    enabled: !!storeId,
+    enabled: !!storeId && isNumber(storeId),
     staleTime: 1000 * 60 * 5,
   });
 
