@@ -21,7 +21,7 @@ export default function SalesModal({ close }: { close: () => void }) {
     if (formatted) {
       refetch();
     }
-  }, [formatted, refetch]);
+  }, [formatted]);
 
   return (
     <ModalWithTitle onClose={close} className="!w-fit">

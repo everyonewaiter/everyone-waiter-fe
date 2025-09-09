@@ -24,7 +24,12 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
   ) => {
     open(() => (
       <QueryProviders>
-        <CancelAlert close={close} type={type} activityData={activity!} />
+        <CancelAlert
+          close={close}
+          type={type}
+          activityData={activity!}
+          tableNo={tableNo}
+        />
       </QueryProviders>
     ));
   };

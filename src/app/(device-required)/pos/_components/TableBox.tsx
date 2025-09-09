@@ -48,7 +48,7 @@ export default function TableBox({
       <div className="flex items-center justify-between">
         {props.orderType ? (
           <Button
-            variant="default"
+            variant="outline"
             className={cn("button-sm !rounded-3xl", getChipColor())}
           >
             {

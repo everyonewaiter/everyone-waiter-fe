@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
 import { posQueries } from "../_queries/usePos";
@@ -14,7 +14,11 @@ export default function Page() {
 
   const { data } = posQueries.useStoreInfo(storeId!);
 
-  if (data?.status === "CLOSE") navigate.replace("/pos");
+  useEffect(() => {
+    if (data?.status === "CLOSE") {
+      navigate.replace("/pos");
+    }
+  }, [data?.status]);
 
   return (
     <Suspense fallback={<div>로딩 중...</div>}>

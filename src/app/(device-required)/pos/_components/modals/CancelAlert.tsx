@@ -16,6 +16,7 @@ interface IProps {
   type: "order-cancel" | "pay-cancel" | "order-reset";
   activityData: PosTableActivity;
   hasMultiCancel?: boolean;
+  tableNo?: number;
 }
 
 export default function CancelAlert({
@@ -23,12 +24,14 @@ export default function CancelAlert({
   activityData,
   type,
   hasMultiCancel,
+  tableNo,
 }: IProps) {
   const navigate = useRouter();
   const queryClient = getQueryClient();
 
   const { resetOrders } = useOrderStore();
 
+  const complete = orderQueries.useCompleteOrder();
   const cancel = orderQueries.useCancelOrder();
   const { cancelCard } = usePayment();
 
@@ -71,13 +74,33 @@ export default function CancelAlert({
   };
 
   const onAction = () => {
-    if (type === "order-reset") {
-      resetOrders();
-      close();
-      navigate.push("/pos/tables");
-      queryClient.invalidateQueries({ queryKey: posKeys.tables });
+    if (type.startsWith("order")) {
+      try {
+        resetOrders();
+
+        complete.mutate(
+          { tableNo: tableNo as number },
+          {
+            onSuccess: () => {
+              close();
+              navigate.push("/pos/tables");
+              queryClient.invalidateQueries({ queryKey: posKeys.tables });
+            },
+            onError: (error) => {
+              // eslint-disable-next-line
+              console.error("테이블 완료 처리 실패:", error);
+              close();
+            },
+          }
+        );
+      } catch (error) {
+        // eslint-disable-next-line
+        console.error("주문 초기화 실패:", error);
+        close();
+      }
       return;
     }
+
     if (hasMultiCancel) {
       handleMultiCancel();
     } else {

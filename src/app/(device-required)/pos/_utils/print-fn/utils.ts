@@ -15,6 +15,7 @@ const PAPER_CONFIGS: PaperConfig = {
 };
 
 function getDisplayWidth(str: string) {
+  if (!str) return 0;
   return str
     .split("")
     .reduce((sum, char) => sum + (char.charCodeAt(0) > 255 ? 2 : 1), 0);
