@@ -10,7 +10,7 @@ import { useState } from "react";
 import useOverlay from "@/hooks/useOverlay";
 import { Form } from "@/components/common/Form";
 import usePayment from "../../_queries/usePayment";
-import { print } from "../../_utils/print-receipt";
+import { print } from "../../_utils/print-fn/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import { posQueries } from "../../_queries/usePos";
 import { paySchema, TypePayForm } from "../../_schema/pos.schema";
@@ -120,6 +120,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       stores: stores!,
       successHandler: navigateTables,
       cashReceiptPhoneNo: form.watch("phoneNumber"),
+      makePersonalPayment: form.watch("receiptType") === "개인소득공제용",
     });
   };
 
