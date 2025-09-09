@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
@@ -8,11 +9,10 @@ import { ScrollArea } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
-import { useRouter } from "next/navigation";
 import { posQueries } from "../_queries/usePos";
 import MenuBox from "./MenuBox";
 import CancelAlert from "./modals/CancelAlert";
-import { print } from "../_utils/print-receipt";
+import { print } from "../_utils/print-fn/print-receipt";
 import SideBottom from "./SideSection/SideBottom";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
@@ -52,6 +52,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
           activity: activity!,
           stores: stores!,
           cashReceiptPhoneNo: payment.cashReceiptNo,
+          makePersonalPayment: payment.cashReceiptType === "DEDUCTION",
         });
       }
       openReceipt.close();
