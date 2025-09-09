@@ -148,11 +148,13 @@ export class SseService {
           queryClient.invalidateQueries({ queryKey: ["staff-calls"] });
           break;
         case "RECEIPT":
-          // TODO: 주방 프린터 연결 상태 확인 후 주방 프린터 출력
-          if (sseEvent.hasData && sseEvent.data) {
-            queryClient.setQueryData(["kitchen-receipt-trigger"], {
-              data: JSON.parse(sseEvent.data),
-              timestamp: Date.now(),
+          if (sseEvent.hasData) {
+            queryClient.setQueryData(
+              ["kitchen-receipt-trigger"],
+              sseEvent.data
+            );
+            queryClient.invalidateQueries({
+              queryKey: ["kitchen-receipt-trigger"],
             });
           }
           break;
