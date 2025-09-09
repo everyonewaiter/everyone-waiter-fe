@@ -3,7 +3,7 @@ import { UseFormReturn } from "react-hook-form";
 import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
 import makeKSCATApprovalREQ from "../_utils/make-approval-req";
-import { print } from "../_utils/print-receipt";
+import { print } from "../_utils/print-fn/print-receipt";
 import { TypePayForm } from "../_schema/pos.schema";
 
 export default function usePayment() {

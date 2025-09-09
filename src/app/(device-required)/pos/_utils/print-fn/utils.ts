@@ -1,0 +1,101 @@
+interface PaperConfig {
+  totalWidth: number;
+  nameWidth: number;
+  qtyWidth: number;
+  priceWidth: number;
+  totalPriceWidth: number;
+}
+
+const PAPER_CONFIGS: PaperConfig = {
+  totalWidth: 42,
+  nameWidth: 19,
+  qtyWidth: 5,
+  priceWidth: 9,
+  totalPriceWidth: 9,
+};
+
+function getDisplayWidth(str: string) {
+  return str
+    .split("")
+    .reduce((sum, char) => sum + (char.charCodeAt(0) > 255 ? 2 : 1), 0);
+}
+
+function padString(
+  str: string,
+  width: number,
+  align: "left" | "right" | "center"
+) {
+  const displayWidth = getDisplayWidth(str);
+  const padding = width - displayWidth;
+
+  if (padding <= 0) return str;
+
+  if (align === "left") return str + " ".repeat(padding);
+  if (align === "right") return " ".repeat(padding) + str;
+  const left = Math.floor(padding / 2);
+  const right = padding - left;
+  return " ".repeat(left) + str + " ".repeat(right);
+}
+
+function formatReceiptRow(
+  name: string,
+  qty: string,
+  price: string,
+  total: string
+) {
+  const config = PAPER_CONFIGS;
+
+  return (
+    padString(name, config.nameWidth, "left") +
+    padString(qty, config.qtyWidth, "right") +
+    padString(price, config.priceWidth, "right") +
+    padString(total, config.totalPriceWidth, "right")
+  );
+}
+
+function formatAlignLeftRight(left: string, right: string) {
+  const config = PAPER_CONFIGS;
+  const leftWidth = getDisplayWidth(left);
+  const rightWidth = getDisplayWidth(right);
+  const spacing = config.totalWidth - leftWidth - rightWidth;
+
+  if (spacing <= 0) return left + right;
+
+  return left + " ".repeat(spacing) + right;
+}
+
+function createPaperConfig(totalWidth: number): PaperConfig {
+  const nameRatio = 0.45;
+  const qtyRatio = 0.12;
+  const priceRatio = 0.215;
+  const totalPriceRatio = 0.215;
+
+  return {
+    totalWidth,
+    nameWidth: Math.floor(totalWidth * nameRatio),
+    qtyWidth: Math.floor(totalWidth * qtyRatio),
+    priceWidth: Math.floor(totalWidth * priceRatio),
+    totalPriceWidth: Math.floor(totalWidth * totalPriceRatio),
+  };
+}
+
+function printDivider() {
+  return window.printText(
+    `${"-".repeat(PAPER_CONFIGS.totalWidth)}\n`,
+    0,
+    0,
+    false,
+    false,
+    false,
+    0,
+    0
+  );
+}
+
+export {
+  formatAlignLeftRight,
+  formatReceiptRow,
+  createPaperConfig,
+  PAPER_CONFIGS,
+  printDivider,
+};
