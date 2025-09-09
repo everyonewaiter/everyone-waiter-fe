@@ -72,6 +72,7 @@ export const printToKitchen = ({ successHandler, ...props }: IProps) => {
           res.includes("No printers") ||
           res === "")
       ) {
+        // eslint-disable-next-line
         alert(
           "프린터 연결을 확인해주세요. Web Print SDK가 실행되지 않았거나 프린터가 연결되지 않았습니다."
         );

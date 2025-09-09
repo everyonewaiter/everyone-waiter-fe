@@ -357,8 +357,20 @@ export const print = ({
 
   const strSubmit = window.getPosData();
   try {
-    window.requestPrint(printerName, strSubmit, () => {
-      successHandler?.();
+    window.requestPrint(printerName, strSubmit, (res) => {
+      if (
+        typeof res === "string" &&
+        (res.includes("Cannot connect to server") ||
+          res.includes("No printers") ||
+          res === "")
+      ) {
+        // eslint-disable-next-line
+        alert(
+          "프린터 연결을 확인해주세요. Web Print SDK가 실행되지 않았거나 프린터가 연결되지 않았습니다."
+        );
+      } else {
+        successHandler?.();
+      }
     });
   } catch (error) {
     successHandler?.();
