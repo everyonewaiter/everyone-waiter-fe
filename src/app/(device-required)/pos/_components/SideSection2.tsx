@@ -57,7 +57,6 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
         });
       }
       openReceipt.close();
-      navigate.push("/pos/history");
     });
   };
 
