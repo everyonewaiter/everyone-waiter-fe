@@ -8,6 +8,7 @@ import { getDecryptedItem } from "../auth/secureStorage";
 type CacheKey = `${string}:${string}`;
 
 const signatureMutex = new Mutex();
+let hasShownPurposeAlert = false;
 
 const signatureCache: Record<
   CacheKey,
@@ -52,6 +53,24 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
           return config;
         }
 
+        const currentPath = window.location.pathname;
+        const pathPurpose = currentPath.split("/")[1];
+
+        if (
+          deviceInfo.purpose.toLowerCase() !== pathPurpose &&
+          !hasShownPurposeAlert
+        ) {
+          hasShownPurposeAlert = true;
+          // eslint-disable-next-line
+          alert(
+            `${window.location.href.split("/")[3].toUpperCase()} 기기가 아닙니다. 기기를 등록해주세요.`
+          );
+          setTimeout(() => {
+            window.location.href = "/device";
+          }, 10);
+          return config;
+        }
+
         const timestamp = Date.now().toString();
         const signature = makeSignature({
           uri: `/v1${uri}`,
@@ -87,41 +106,15 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
     return config;
   });
 
-  let lastErrorMessage = "";
-  let lastErrorTime = 0;
-  let lastAlertTime = 0;
-
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-      const errorMsg =
-        error?.response?.data?.message || error.message || "Unknown error";
-      const now = Date.now();
-
       if (error.response) {
-        if (error.response?.status === 401) {
-          if (now - lastAlertTime > 10000) {
-            lastAlertTime = now;
-            // eslint-disable-next-line no-alert
-            alert(
-              `${window.location.href.split("/")[3].toUpperCase()} 기기가 아닙니다. 기기를 등록해주세요.`
-            );
-            setTimeout(() => {
-              window.location.href = "/device";
-            }, 10);
-          }
-        }
-
         if (error.response?.status === 404) {
           const customError = new Error("NOT_FOUND");
           (customError as any).code = "NOT_FOUND";
           throw customError;
         }
-      }
-
-      if (errorMsg !== lastErrorMessage || now - lastErrorTime > 3000) {
-        lastErrorMessage = errorMsg;
-        lastErrorTime = now;
       }
 
       return Promise.reject(error);
