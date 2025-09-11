@@ -46,87 +46,8 @@ export const print = ({
     return;
   }
 
-  const printKitchen = () => {
-    window.printText(`주  문  서\n`, 0, 2, true, false, false, 0, 1);
-    window.printText(
-      `주문번호: ${activity?.posTableActivityId}\n`,
-      0,
-      1,
-      true,
-      false,
-      false,
-      0,
-      0
-    );
-    window.printText(
-      `테이블번호: ${activity?.tableNo}\n`,
-      0,
-      1,
-      true,
-      false,
-      false,
-      0,
-      0
-    );
-    printDivider();
-    window.printText(
-      `${formatReceiptRow("품명", "", "", "수량")}\n`,
-      0,
-      0,
-      false,
-      false,
-      false,
-      0,
-      0
-    );
-    printDivider();
-
-    activity?.orders.forEach((order) => {
-      order.orderMenus.forEach((menu) => {
-        window.printText(
-          formatAlignLeftRight(menu.name, String(menu.quantity)),
-          1,
-          0,
-          true,
-          false,
-          false,
-          0,
-          0
-        );
-        menu.orderOptionGroups.forEach((option) => {
-          option.orderOptions.forEach((o) => {
-            window.printText(
-              `${formatReceiptRow(`└ ${option.name}`, o.name, "", "")}\n`,
-              1,
-              0,
-              true,
-              false,
-              false,
-              0,
-              0
-            );
-          });
-        });
-      });
-      if (order.memo) {
-        window.printText(
-          `[메모] ${order.memo}\n\n`,
-          0,
-          0,
-          false,
-          false,
-          true,
-          0,
-          0
-        );
-      }
-    });
-
-    printDivider();
-  };
-
   const printReceipt = () => {
-    window.printText(`영  수  증\n`, 0, 2, true, false, false, 0, 1);
+    window.printText(`영수증\n\n`, 1, 1, true, false, false, 0, 1);
     window.printText(
       `${stores?.name}\n${stores?.address}\n사업자: ${stores?.license}\n전화번호: ${stores?.landline}\n`,
       0,
@@ -174,9 +95,9 @@ export const print = ({
           0
         );
         menu.orderOptionGroups.forEach((option) => {
-          option.orderOptions.forEach((o) => {
+          option.orderOptions.forEach((o, i, arr) => {
             window.printText(
-              `${formatAlignLeftRight(`└ ${o.name}`, o.price ? `${o.price.toLocaleString()}` : "")}\n`,
+              `${formatAlignLeftRight(`└ ${o.name}`, o.price ? `${o.price.toLocaleString()}` : "")}${i === arr.length - 1 ? "" : "\n"}`,
               0,
               0,
               false,
@@ -334,7 +255,7 @@ export const print = ({
       }
 
       window.printText(
-        `${formatAlignLeftRight("승인 일시", paymentTradeTime as string)}\n`,
+        `${formatAlignLeftRight("승인 일시", paymentTradeTime as string)}\n\n`,
         0,
         0,
         false,
@@ -346,13 +267,8 @@ export const print = ({
     }
   };
 
-  // NOTE: 영수증 코드
-  if (type === "kitchen") {
-    printKitchen();
-  } else {
-    printReceipt();
-    printAddition();
-  }
+  printReceipt();
+  printAddition();
 
   window.cutPaper(1);
 

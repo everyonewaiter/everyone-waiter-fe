@@ -6,7 +6,17 @@ interface IProps extends ReceiptSSE {
 }
 
 export const printToKitchen = ({ successHandler, ...props }: IProps) => {
-  window.printText(`${props.printNo}\n`, 2, 2, true, false, false, 0, 1);
+  window.printText(`주문서\n\n`, 1, 1, true, false, false, 0, 1);
+  window.printText(
+    `주문번호: ${props.printNo}\n`,
+    2,
+    2,
+    true,
+    false,
+    false,
+    0,
+    1
+  );
   window.printText(
     `테이블번호: ${props.tableNo}\n`,
     0,
@@ -45,7 +55,7 @@ export const printToKitchen = ({ successHandler, ...props }: IProps) => {
   }
   props.receiptMenus.forEach((menu) => {
     window.printText(
-      `${formatAlignLeftRight(menu.name, String(menu.quantity))}\n`,
+      `${formatAlignLeftRight(menu.name, String(menu.quantity), 1)}\n`,
       1,
       1,
       true,
@@ -55,7 +65,7 @@ export const printToKitchen = ({ successHandler, ...props }: IProps) => {
       0
     );
     menu.options.forEach((option) => {
-      window.printText(`└ ${option}\n`, 1, 0, true, false, false, 0, 0);
+      window.printText(`${option}\n`, 0, 1, true, false, false, 0, 0);
     });
   });
 

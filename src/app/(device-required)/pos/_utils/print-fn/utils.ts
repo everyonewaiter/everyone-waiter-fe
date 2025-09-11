@@ -54,15 +54,34 @@ function formatReceiptRow(
   );
 }
 
-function formatAlignLeftRight(left: string, right: string) {
-  const config = PAPER_CONFIGS;
-  const leftWidth = getDisplayWidth(left);
-  const rightWidth = getDisplayWidth(right);
-  const spacing = config.totalWidth - leftWidth - rightWidth;
+function calculateStringWidth(str: string) {
+  if (!str || typeof str !== "string") return 0;
+
+  return str
+    .split("")
+    .reduce((sum, char) => sum + (/[가-힣]/.test(char) ? 1 : 0.5), 0);
+}
+
+function formatAlignLeftRight(
+  left: string,
+  right: string,
+  fontSizeX: number = 0
+) {
+  const maxChars = {
+    0: 21, // 42 ÷ 2
+    1: 10.5, // 42 ÷ 4
+    2: 7, // 42 ÷ 6
+  };
+
+  const totalChars = maxChars[fontSizeX as keyof typeof maxChars];
+
+  const leftChars = calculateStringWidth(left);
+  const rightChars = calculateStringWidth(right);
+  const spacing = totalChars - leftChars - rightChars;
 
   if (spacing <= 0) return left + right;
 
-  return left + " ".repeat(spacing) + right;
+  return left + " ".repeat(Math.floor(spacing)) + right;
 }
 
 function createPaperConfig(totalWidth: number): PaperConfig {
