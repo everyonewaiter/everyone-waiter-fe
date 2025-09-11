@@ -111,6 +111,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           navigateTables();
         }
       },
+      close: receiptOverlay.close,
     });
   };
 
@@ -123,6 +124,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       cashReceiptPhoneNo: form.watch("phoneNumber"),
       makePersonalPayment: form.watch("receiptType") === "개인소득공제용",
       paymentTradeTime: props.payment?.TRADETIME || "",
+      close: receiptOverlay.close,
     });
   };
 

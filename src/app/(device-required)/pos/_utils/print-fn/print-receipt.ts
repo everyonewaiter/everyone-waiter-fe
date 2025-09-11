@@ -1,5 +1,5 @@
 import { PRINTERNAME } from "@/constants/printerName";
-import { formatAlignLeftRight, formatReceiptRow, printDivider } from "./utils";
+import { checkPrinter, formatAlignLeftRight, formatReceiptRow, printDivider } from "./utils";
 
 interface IProps {
   type: "kitchen" | "cash-receipt" | "card-receipt";
@@ -15,14 +15,10 @@ interface IProps {
   successHandler?: () => void;
   cashReceiptPhoneNo?: string;
   makePersonalPayment?: boolean;
-  printerName?: PRINTERNAME.PRINTER1 | PRINTERNAME.PRINTER2;
+  close?: () => void;
 }
 
-/**
- *
- * @param printerName - typeof PRINTERNAME
- * @returns
- */
+
 export const print = ({
   type,
   activity,
@@ -32,7 +28,7 @@ export const print = ({
   cashReceiptPhoneNo,
   makePersonalPayment,
   paymentTradeTime,
-  printerName = PRINTERNAME.PRINTER1,
+  close,
 }: IProps) => {
   window.setPosId(1);
 
@@ -273,23 +269,18 @@ export const print = ({
   window.cutPaper(1);
 
   const strSubmit = window.getPosData();
-  try {
-    window.requestPrint(printerName, strSubmit, (res) => {
-      if (
-        typeof res === "string" &&
-        (res.includes("Cannot connect to server") ||
-          res.includes("No printers") ||
-          res === "")
-      ) {
-        // eslint-disable-next-line
-        alert(
-          "프린터 연결을 확인해주세요. Web Print SDK가 실행되지 않았거나 프린터가 연결되지 않았습니다."
-        );
-      } else {
-        successHandler?.();
+  checkPrinter(PRINTERNAME.PRINTER1, (exists) => {
+    if (!exists) {
+      alert("POS 프린터 연결을 확인해주세요. Web Print SDK가 실행되지 않았거나 프린터가 연결되지 않았습니다.");
+      if (close) {
+        close();
       }
-    });
-  } catch (error) {
-    successHandler?.();
-  }
+      return;
+    }
+    
+    window.requestPrint(PRINTERNAME.PRINTER2, strSubmit, (res) => {
+     console.log(res)
+     successHandler?.();
+  });
+ });
 };
