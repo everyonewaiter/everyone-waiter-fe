@@ -9,8 +9,8 @@ interface IProps {
     FILLER: string;
     INSTALLMENT: string;
     APPROVALNO: string;
-    TRADETIME: string;
   };
+  paymentTradeTime?: string;
   stores?: PosStore;
   successHandler?: () => void;
   cashReceiptPhoneNo?: string;
@@ -31,6 +31,7 @@ export const print = ({
   successHandler,
   cashReceiptPhoneNo,
   makePersonalPayment,
+  paymentTradeTime,
   printerName = PRINTERNAME.PRINTER1,
 }: IProps) => {
   window.setPosId(1);
@@ -295,7 +296,7 @@ export const print = ({
       );
 
       window.printText(
-        `${formatAlignLeftRight("승인일시", payment?.TRADETIME!)}\n\n\n`,
+        `${formatAlignLeftRight("승인일시", paymentTradeTime!)}\n\n\n`,
         0,
         0,
         false,
@@ -333,7 +334,7 @@ export const print = ({
       }
 
       window.printText(
-        `${formatAlignLeftRight("승인 일시", payment?.TRADETIME as string)}\n`,
+        `${formatAlignLeftRight("승인 일시", paymentTradeTime as string)}\n`,
         0,
         0,
         false,

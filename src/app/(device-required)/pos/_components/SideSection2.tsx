@@ -43,8 +43,8 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
             FILLER: payment.cardNo,
             INSTALLMENT: payment.installment,
             APPROVALNO: payment.approvalNo,
-            TRADETIME: payment.tradeTime,
           },
+          paymentTradeTime: payment.tradeTime || "",
         });
       } else {
         print({
@@ -53,6 +53,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
           stores: stores!,
           cashReceiptPhoneNo: payment.cashReceiptNo,
           makePersonalPayment: payment.cashReceiptType === "DEDUCTION",
+          paymentTradeTime: payment.tradeTime || "",
         });
       }
       openReceipt.close();

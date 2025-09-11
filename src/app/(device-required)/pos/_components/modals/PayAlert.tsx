@@ -105,6 +105,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       activity: activityData!,
       stores: stores!,
       payment: { ...res, INSTALLMENT: form.watch("monthlyPlan") },
+      paymentTradeTime: res.TRADETIME || "",
       successHandler: () => {
         if (props.orders?.length === 0) {
           navigateTables();
@@ -121,6 +122,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       successHandler: navigateTables,
       cashReceiptPhoneNo: form.watch("phoneNumber"),
       makePersonalPayment: form.watch("receiptType") === "개인소득공제용",
+      paymentTradeTime: props.payment?.TRADETIME || "",
     });
   };
 
