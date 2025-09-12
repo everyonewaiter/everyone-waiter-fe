@@ -1,8 +1,10 @@
 import { PRINTERNAME } from "@/constants/printerName";
 import {
   checkPrinter,
+  countUnits,
   formatAlignLeftRight,
   formatReceiptRow,
+  printBaseRow,
   printDivider,
 } from "./utils";
 
@@ -49,7 +51,7 @@ export const printRefund = ({
     );
     printDivider();
     window.printText(
-      `영수증 번호: #${activity?.posTableActivityId}\n`,
+      `영수증 번호: ${activity?.posTableActivityId}\n`,
       0,
       0,
       true,
@@ -58,16 +60,20 @@ export const printRefund = ({
       0,
       0
     );
-    // window.printText(
-    //   `취소일시: #${activity?.posTableActivityId}\n`,
-    //   0,
-    //   0,
-    //   true,
-    //   false,
-    //   false,
-    //   0,
-    //   0
-    // );
+
+    const [date, time] = new Date().toISOString().split("T");
+    const [h, m, s] = time.split(":");
+
+    window.printText(
+      `취소일시: #${date.replaceAll(".", " .")} ${h}시 ${m}분 ${s}초\n`,
+      0,
+      0,
+      true,
+      false,
+      false,
+      0,
+      0
+    );
     printDivider();
     window.printText(
       `${formatReceiptRow("메뉴명", "수량", "단가", "금액")}\n`,
@@ -113,7 +119,7 @@ export const printRefund = ({
     printDivider();
 
     window.printText(
-      `${formatAlignLeftRight("취소금액", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
+      `취소 금액${" ".repeat(42 - 9 - countUnits(activity?.totalOrderPrice.toLocaleString()))}${activity?.totalOrderPrice.toLocaleString()}원\n`,
       0,
       1,
       true,
@@ -128,7 +134,7 @@ export const printRefund = ({
     if (type === "card-receipt") {
       printDivider();
       window.printText(
-        `${formatAlignLeftRight("결제방법", `${payments?.issuerName?.trim() as string} 취소`)}\n`,
+        printBaseRow("결제방법", `${payments?.issuerName?.trim()} 취소`),
         0,
         0,
         false,
@@ -138,7 +144,7 @@ export const printRefund = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("카드번호", payments?.cardNo?.trim() as string)}\n`,
+        printBaseRow("카드번호", payments?.cardNo?.trim()),
         0,
         0,
         false,
@@ -148,7 +154,7 @@ export const printRefund = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("취소금액", `${payments?.amount.toLocaleString()}원`)}\n`,
+        printBaseRow("취소금액", `${payments?.amount.toLocaleString()}원`),
         0,
         0,
         false,
@@ -158,7 +164,10 @@ export const printRefund = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("취소승인번호", payments?.approvalNo?.trim() as string)}\n`,
+        printBaseRow(
+          "원승인번호",
+          payments?.approvalNo?.trim() || " ".repeat(12)
+        ),
         0,
         0,
         false,
@@ -169,7 +178,7 @@ export const printRefund = ({
       );
 
       window.printText(
-        `${formatAlignLeftRight("원승인일시", payments.tradeTime!)}\n\n\n`,
+        printBaseRow("원승인일시", payments?.tradeTime),
         0,
         0,
         false,
@@ -183,7 +192,7 @@ export const printRefund = ({
     if (type === "cash-receipt") {
       printDivider();
       window.printText(
-        `${formatAlignLeftRight("결제방법", "현금 취소")}\n`,
+        printBaseRow("결제방법", "현금 취소"),
         0,
         0,
         false,
@@ -194,7 +203,7 @@ export const printRefund = ({
       );
 
       window.printText(
-        `${formatAlignLeftRight("승인 일시", payments?.tradeTime as string)}\n\n`,
+        printBaseRow("원승인일시", payments?.tradeTime),
         0,
         0,
         false,
@@ -204,6 +213,8 @@ export const printRefund = ({
         0
       );
     }
+
+    window.printText("\n", 0, 0, false, false, false, 0, 0);
   };
 
   printReceipt();

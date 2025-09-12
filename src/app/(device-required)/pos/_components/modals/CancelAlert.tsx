@@ -98,6 +98,9 @@ export default function CancelAlert({
 
       if (deletePromises) {
         await Promise.all(deletePromises).then(() => {
+          if (isFromPosTable) {
+            queryClient.invalidateQueries({ queryKey: ["payments-list"] });
+          }
           queryClient.invalidateQueries({ queryKey: ["table-list"] });
           close();
         });

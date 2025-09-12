@@ -30,7 +30,7 @@ export default function SalesModal({ close }: { close: () => void }) {
         <DatePicker date={date} onSetDate={(d) => setDate(d)} />
         {date && (
           <div>
-            {data?.totalPaymentPrice ? (
+            {data && Object.values(data).some((value) => !!value) ? (
               <div className="mt-8 flex flex-col gap-10">
                 <div className="flex items-center justify-between text-2xl font-semibold">
                   <h1 className="text-gray-0">
@@ -81,13 +81,19 @@ export default function SalesModal({ close }: { close: () => void }) {
                       <div className="text-gray-0 flex items-center justify-between font-medium">
                         <span className="text-lg">카드</span>
                         <span className="text-xl">
-                          {data?.cardPaymentCancelPrice.toLocaleString()}원
+                          {data?.cardPaymentCancelPrice
+                            ? `-${data?.cardPaymentCancelPrice.toLocaleString()}`
+                            : "0"}
+                          원
                         </span>
                       </div>
                       <div className="text-gray-0 mt-3 flex items-center justify-between font-medium">
                         <span className="text-lg">현금</span>
                         <span className="text-xl">
-                          {data?.cashPaymentCancelPrice.toLocaleString()}원
+                          {data?.cashPaymentCancelPrice
+                            ? `-${data?.cashPaymentCancelPrice.toLocaleString()}`
+                            : "0"}
+                          원
                         </span>
                       </div>
                     </div>

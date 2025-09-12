@@ -1,6 +1,7 @@
 import { PRINTERNAME } from "@/constants/printerName";
 import {
   checkPrinter,
+  countUnits,
   formatAlignLeftRight,
   formatReceiptRow,
   printDivider,
@@ -164,16 +165,6 @@ export const print = ({
 
   const printAddition = () => {
     if (type === "card-receipt") {
-      const countUnits = (text: string | null | undefined) => {
-        const safeText = text || "";
-        return safeText.split("").reduce((totalUnits, char) => {
-          if (/[가-힣]/.test(char)) {
-            return totalUnits + 2;
-          }
-          return totalUnits + 1;
-        }, 0);
-      };
-
       printDivider();
       window.printText(
         `결제방법${" ".repeat(42 - 8 - countUnits(payment?.CARDNAME?.trim() as string))}\n`,

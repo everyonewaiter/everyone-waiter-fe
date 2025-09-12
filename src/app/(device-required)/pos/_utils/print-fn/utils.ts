@@ -130,6 +130,22 @@ const checkPrinter = (
   testReq.send();
 };
 
+const countUnits = (text: string | null | undefined) => {
+  const safeText = text || "";
+  return safeText.split("").reduce((totalUnits, char) => {
+    if (/[가-힣]/.test(char)) {
+      return totalUnits + 2;
+    }
+    return totalUnits + 1;
+  }, 0);
+};
+
+const printBaseRow = (text: string, value: string) => {
+  const INIT = 42;
+  const spacing = " ".repeat(INIT - countUnits(text) - countUnits(value));
+  return `${text + spacing + value}\n`;
+};
+
 export {
   formatAlignLeftRight,
   formatReceiptRow,
@@ -137,4 +153,6 @@ export {
   PAPER_CONFIGS,
   printDivider,
   checkPrinter,
+  countUnits,
+  printBaseRow,
 };
