@@ -18,7 +18,14 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
 });
 
-export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
+interface IProps extends OrderPaymentsList {
+  resetSelectedRow: () => void;
+}
+
+export default function SideSection2({
+  resetSelectedRow,
+  ...selectedRow
+}: IProps) {
   const openReceipt = useOverlay();
   const cancel = useOverlay();
 
@@ -89,7 +96,10 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
     cancel.open(() => (
       <QueryProviders>
         <CancelAlert
-          close={cancel.close}
+          close={() => {
+            cancel.close();
+            resetSelectedRow();
+          }}
           orderPayment={selectedRow}
           activity={activity!}
           type="pay-cancel"
@@ -133,7 +143,7 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
         type="history"
         totalOrderPrice={activity?.totalOrderPrice ?? 0}
         discount={activity?.discount ?? 0}
-        remainingPaymentPrice={activity?.totalPaymentPrice ?? 0}
+        remainingPaymentPrice={activity?.remainingPaymentPrice ?? 0}
         onAddDiscount={() => {}}
       />
       <div className="bottom-0 flex w-full gap-3 bg-white pt-6">
