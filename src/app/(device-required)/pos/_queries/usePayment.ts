@@ -233,23 +233,14 @@ export default function usePayment() {
 
   const handleCancelCard = async ({
     totalPaymentPrice,
+    orderPaymentId,
     successHandler,
   }: {
     totalPaymentPrice: number;
-    successHandler?: () => void;
+    orderPaymentId: string;
+    successHandler?: (res: PaymentResponse) => void;
   }) => {
     const nonTax = Math.floor(totalPaymentPrice / 1.1);
-
-    let isCompleted = false;
-
-    const timeoutId = setTimeout(() => {
-      if (!isCompleted) {
-        // eslint-disable-next-line
-        alert(
-          "결제 기기가 연결되어있지 않거나 결제를 취소할 수 없는 상태입니다."
-        );
-      }
-    }, 3000);
 
     const req = makeKSCATApprovalREQ({
       amount: totalPaymentPrice,
@@ -267,20 +258,40 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
-        isCompleted = true;
-        clearTimeout(timeoutId);
-
+        console.log(res);
         cancelPay.mutate({
-          orderPaymentId: "",
+          orderPaymentId,
           body: {
             approvalNo: res.APPROVALNO,
             tradeTime: res.TRADETIME,
             tradeUniqueNo: res.TRADEUNIQUENO,
           },
         });
-        successHandler?.();
+        successHandler?.(res);
       },
     });
+  };
+
+  const handleCancelCash = ({
+    orderPayment,
+    successHandler,
+  }: {
+    orderPayment: OrderPaymentsList;
+    successHandler: () => void;
+  }) => {
+    cancelPay.mutate(
+      {
+        orderPaymentId: orderPayment.orderPaymentId,
+        body: {
+          approvalNo: orderPayment.approvalNo,
+          tradeTime: orderPayment.tradeTime,
+          tradeUniqueNo: orderPayment.tradeUniqueNo,
+        },
+      },
+      {
+        onSuccess: successHandler,
+      }
+    );
   };
 
   return {
@@ -289,6 +300,7 @@ export default function usePayment() {
     payCard: handleCard,
     payCash: handleCash,
     cancelCard: handleCancelCard,
+    cancelCash: handleCancelCash,
     printReceipt: handlePrintCashReceipt,
   };
 }

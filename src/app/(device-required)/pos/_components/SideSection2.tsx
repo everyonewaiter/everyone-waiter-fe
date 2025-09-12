@@ -90,7 +90,8 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
       <QueryProviders>
         <CancelAlert
           close={cancel.close}
-          activityData={activity!}
+          orderPayment={selectedRow}
+          activity={activity!}
           type="pay-cancel"
           hasMultiCancel
         />

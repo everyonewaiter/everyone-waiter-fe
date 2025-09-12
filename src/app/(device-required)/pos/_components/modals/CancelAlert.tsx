@@ -1,11 +1,13 @@
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import cn from "@/lib/utils";
 import getQueryClient from "@/app/get-query-client";
+import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
+import useOverlay from "@/hooks/useOverlay";
 import { orderQueries } from "../../_queries/useOrder";
 import usePayment from "../../_queries/usePayment";
 import { useOrderStore } from "../../_hooks/useOrderStore";
-import { posKeys } from "../../_queries/keys";
+import { printRefund } from "../../_utils/print-fn/print-refund";
+import ReceiptModal from "./ReceiptModal";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -14,42 +16,76 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 interface IProps {
   close: () => void;
   type: "order-cancel" | "pay-cancel" | "order-reset";
-  activityData: PosTableActivity;
-  hasMultiCancel?: boolean;
-  tableNo?: number;
+  orderPayment: OrderPaymentsList;
+  activity: PosTableActivity;
 }
 
 export default function CancelAlert({
   close,
-  activityData,
+  orderPayment,
+  activity,
   type,
-  hasMultiCancel,
-  tableNo,
 }: IProps) {
-  const navigate = useRouter();
   const queryClient = getQueryClient();
 
   const { resetOrders } = useOrderStore();
 
-  const complete = orderQueries.useCompleteOrder();
   const cancel = orderQueries.useCancelOrder();
-  const { cancelCard } = usePayment();
+  const { cancelCard, cancelCash } = usePayment();
+  const { data: stores } = storesQueries.useStoresDetail(orderPayment.storeId);
+
+  const receiptOverlay = useOverlay();
+
+  const handleReceiptModal = () => {
+    receiptOverlay.open(() => (
+      <ReceiptModal
+        close={receiptOverlay.close}
+        onConfirm={() => {
+          printRefund({
+            type:
+              orderPayment.method === "CARD" ? "card-receipt" : "cash-receipt",
+            activity,
+            payments: orderPayment,
+            stores,
+            successHandler: () => {
+              receiptOverlay.close();
+            },
+          });
+        }}
+      />
+    ));
+  };
 
   const handleCancel = async () => {
-    // 주문 진행중 -> 취소
+    // 주문 요청 직전 리스트 취소
+    if (type === "order-reset") {
+      resetOrders();
+      return;
+    }
 
     if (type === "pay-cancel") {
       // 결제 취소 (선결제)
-      if (!activityData.totalPaymentPrice) return;
-      cancelCard({ totalPaymentPrice: activityData.totalPaymentPrice! });
+      if (!activity.totalPaymentPrice) return;
+      if (orderPayment.method === "CARD") {
+        cancelCard({
+          orderPaymentId: orderPayment.orderPaymentId,
+          totalPaymentPrice: activity.totalPaymentPrice!,
+          successHandler: handleReceiptModal,
+        });
+      } else {
+        cancelCash({
+          orderPayment,
+          successHandler: handleReceiptModal,
+        });
+      }
       return;
     }
 
     // 주문 취소 (후결제)
-    const deletePromises = activityData?.orders.map((order) =>
+    const deletePromises = activity?.orders.map((order) =>
       cancel.mutateAsync({
         orderId: order.orderId,
-        tableNo: activityData?.tableNo,
+        tableNo: activity?.tableNo,
       })
     );
 
@@ -61,58 +97,11 @@ export default function CancelAlert({
     }
   };
 
-  // 결제 내역에서 결제 취소 시
-  const handleMultiCancel = async () => {
-    if (type !== "pay-cancel") return;
-
-    const cancelPromises = activityData.orderPayments.map((payment) =>
-      cancelCard({ totalPaymentPrice: payment.amount })
-    );
-
-    await Promise.all(cancelPromises);
-    close();
-  };
-
-  const onAction = () => {
-    if (type.startsWith("order")) {
-      try {
-        resetOrders();
-
-        complete.mutate(
-          { tableNo: tableNo as number },
-          {
-            onSuccess: () => {
-              close();
-              navigate.push("/pos/tables");
-              queryClient.invalidateQueries({ queryKey: posKeys.tables });
-            },
-            onError: (error) => {
-              // eslint-disable-next-line
-              console.error("테이블 완료 처리 실패:", error);
-              close();
-            },
-          }
-        );
-      } catch (error) {
-        // eslint-disable-next-line
-        console.error("주문 초기화 실패:", error);
-        close();
-      }
-      return;
-    }
-
-    if (hasMultiCancel) {
-      handleMultiCancel();
-    } else {
-      handleCancel();
-    }
-  };
-
   return (
     <Alert
       onClose={close}
       buttonColor="primary"
-      onAction={onAction}
+      onAction={handleCancel}
       buttonText="취소하기"
       noResponsive
     >
@@ -120,12 +109,12 @@ export default function CancelAlert({
         {type !== "order-reset" && (
           <div className="flex items-center justify-between rounded-xl border border-gray-600 px-6 py-4">
             <span className="text-2xl font-semibold">
-              {activityData.tableNo}번 테이블
+              {activity.tableNo}번 테이블
             </span>
             <strong className="text-primary text-3xl font-bold">
               {(type === "order-cancel"
-                ? activityData?.totalOrderPrice
-                : activityData?.totalPaymentPrice
+                ? activity?.totalOrderPrice
+                : activity?.totalPaymentPrice
               )?.toLocaleString()}
               원
             </strong>
