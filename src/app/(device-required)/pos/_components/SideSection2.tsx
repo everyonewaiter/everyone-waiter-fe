@@ -93,7 +93,6 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
           orderPayment={selectedRow}
           activity={activity!}
           type="pay-cancel"
-          hasMultiCancel
         />
       </QueryProviders>
     ));

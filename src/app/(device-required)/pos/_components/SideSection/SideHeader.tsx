@@ -2,7 +2,6 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/useOverlay";
-import { posQueries } from "../../_queries/usePos";
 
 const CancelAlert = dynamic(() => import("../modals/CancelAlert"), {
   ssr: false,
@@ -15,8 +14,6 @@ interface IProps {
 }
 
 export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
-  const { data: activity } = posQueries.useActivity(tableNo);
-
   const { open, close } = useOverlay();
 
   const handleCancel = (
@@ -24,12 +21,7 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
   ) => {
     open(() => (
       <QueryProviders>
-        <CancelAlert
-          close={close}
-          type={type}
-          activityData={activity!}
-          tableNo={tableNo}
-        />
+        <CancelAlert close={close} type={type} activity={data} isFromPosTable />
       </QueryProviders>
     ));
   };

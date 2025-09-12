@@ -16,8 +16,9 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 interface IProps {
   close: () => void;
   type: "order-cancel" | "pay-cancel" | "order-reset";
-  orderPayment: OrderPaymentsList;
+  orderPayment?: OrderPaymentsList;
   activity: PosTableActivity;
+  isFromPosTable?: boolean;
 }
 
 export default function CancelAlert({
@@ -25,6 +26,7 @@ export default function CancelAlert({
   orderPayment,
   activity,
   type,
+  isFromPosTable = false,
 }: IProps) {
   const queryClient = getQueryClient();
 
@@ -32,11 +34,15 @@ export default function CancelAlert({
 
   const cancel = orderQueries.useCancelOrder();
   const { cancelCard, cancelCash } = usePayment();
-  const { data: stores } = storesQueries.useStoresDetail(orderPayment.storeId);
+  const { data: stores } = storesQueries.useStoresDetail(
+    orderPayment?.storeId || activity.storeId
+  );
 
   const receiptOverlay = useOverlay();
 
   const handleReceiptModal = () => {
+    if (!orderPayment) return;
+
     receiptOverlay.open(() => (
       <ReceiptModal
         close={receiptOverlay.close}
@@ -63,9 +69,9 @@ export default function CancelAlert({
       return;
     }
 
-    if (type === "pay-cancel") {
+    if (type === "pay-cancel" && !isFromPosTable) {
       // 결제 취소 (선결제)
-      if (!activity.totalPaymentPrice) return;
+      if (!activity.totalPaymentPrice || !orderPayment) return;
       if (orderPayment.method === "CARD") {
         cancelCard({
           orderPaymentId: orderPayment.orderPaymentId,
@@ -82,18 +88,20 @@ export default function CancelAlert({
     }
 
     // 주문 취소 (후결제)
-    const deletePromises = activity?.orders.map((order) =>
-      cancel.mutateAsync({
-        orderId: order.orderId,
-        tableNo: activity?.tableNo,
-      })
-    );
+    if (type === "order-cancel" || (type === "pay-cancel" && isFromPosTable)) {
+      const deletePromises = activity?.orders.map((order) =>
+        cancel.mutateAsync({
+          orderId: order.orderId,
+          tableNo: activity?.tableNo,
+        })
+      );
 
-    if (deletePromises) {
-      await Promise.all(deletePromises).then(() => {
-        queryClient.invalidateQueries({ queryKey: ["table-list"] });
-        close();
-      });
+      if (deletePromises) {
+        await Promise.all(deletePromises).then(() => {
+          queryClient.invalidateQueries({ queryKey: ["table-list"] });
+          close();
+        });
+      }
     }
   };
 

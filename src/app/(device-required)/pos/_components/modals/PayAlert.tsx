@@ -165,7 +165,6 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           close();
           handleModal(res);
         },
-        errorHandler: () => setIsSubmitting(false),
       });
     } else {
       payCash({
@@ -180,7 +179,6 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           close();
           handleModal();
         },
-        errorHandler: () => {},
       });
     }
   };
