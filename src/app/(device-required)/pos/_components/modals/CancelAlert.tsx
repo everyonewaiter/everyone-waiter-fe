@@ -45,7 +45,10 @@ export default function CancelAlert({
 
     receiptOverlay.open(() => (
       <ReceiptModal
-        close={receiptOverlay.close}
+        close={() => {
+          receiptOverlay.close();
+          queryClient.invalidateQueries({ queryKey: ["payments-list"] });
+        }}
         onConfirm={() => {
           printRefund({
             type:
@@ -76,12 +79,18 @@ export default function CancelAlert({
         cancelCard({
           orderPaymentId: orderPayment.orderPaymentId,
           totalPaymentPrice: activity.totalPaymentPrice!,
-          successHandler: handleReceiptModal,
+          successHandler: () => {
+            close();
+            handleReceiptModal();
+          },
         });
       } else {
         cancelCash({
           orderPayment,
-          successHandler: handleReceiptModal,
+          successHandler: () => {
+            close();
+            handleReceiptModal();
+          },
         });
       }
       return;
@@ -103,6 +112,7 @@ export default function CancelAlert({
           }
           queryClient.invalidateQueries({ queryKey: ["table-list"] });
           close();
+          if (isFromPosTable) handleReceiptModal();
         });
       }
     }

@@ -174,7 +174,10 @@ export default function PosHistory() {
         </div>
         {selectedRow && (
           <SideLayout>
-            <SideSection2 {...selectedRow} />
+            <SideSection2
+              resetSelectedRow={() => setSelectedRow(null)}
+              {...selectedRow}
+            />
           </SideLayout>
         )}
       </div>
