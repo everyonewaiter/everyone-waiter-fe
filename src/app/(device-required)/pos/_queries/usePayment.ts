@@ -97,26 +97,14 @@ export default function usePayment() {
     amount,
     tableNo,
     successHandler,
-    errorHandler,
   }: {
     receiptType: "신청안함" | "개인소득공제용" | "사업자증빙용";
     phoneNumber: string;
     amount: number;
     tableNo: number;
     successHandler: (res?: PaymentResponse) => void;
-    errorHandler: () => void;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
-
-    let isCompleted = false;
-
-    const timeoutId = setTimeout(() => {
-      if (!isCompleted) {
-        // eslint-disable-next-line
-        alert("결제 기기가 연결되어있지 않거나 결제할 수 없는 상태입니다.");
-        errorHandler();
-      }
-    }, 3000);
 
     if (receiptType !== "신청안함") {
       const req = createCashReceiptApproval({
@@ -136,9 +124,6 @@ export default function usePayment() {
           REQ: req,
         },
         success: (res: PaymentResponse) => {
-          isCompleted = true;
-          clearTimeout(timeoutId);
-
           handlePayWithCash({
             tableNo,
             body: {
@@ -169,27 +154,15 @@ export default function usePayment() {
     amount,
     tableNo,
     successHandler,
-    errorHandler,
   }: {
     form: UseFormReturn<TypePayForm, any, TypePayForm>;
     amount: number;
     tableNo: number;
     successHandler: (res: PaymentResponse) => void;
-    errorHandler: () => void;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
     const installment =
       form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
-
-    let isCompleted = false;
-
-    const timeoutId = setTimeout(() => {
-      if (!isCompleted) {
-        // eslint-disable-next-line
-        alert("결제 기기가 연결되어있지 않거나 결제할 수 없는 상태입니다.");
-        errorHandler();
-      }
-    }, 3000);
 
     const req = makeKSCATApprovalREQ({
       amount,
@@ -207,9 +180,6 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
-        isCompleted = true;
-        clearTimeout(timeoutId);
-
         handlePayWithCard({
           tableNo,
           body: {

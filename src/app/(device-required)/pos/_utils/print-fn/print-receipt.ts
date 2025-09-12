@@ -117,7 +117,7 @@ export const print = ({
     const vatAmount = Number(activity?.totalOrderPrice) - supplyAmount;
 
     window.printText(
-      `${formatAlignLeftRight("공급가", `${supplyAmount.toLocaleString()}원`)}\n`,
+      `${formatReceiptRow("공급가", "", "", `${supplyAmount.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -127,7 +127,7 @@ export const print = ({
       0
     );
     window.printText(
-      `${formatAlignLeftRight("부가세", `${vatAmount.toLocaleString()}원`)}\n`,
+      `${formatReceiptRow("부가세", "", "", `${vatAmount.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -139,7 +139,7 @@ export const print = ({
 
     if (activity?.discount) {
       window.printText(
-        `${formatAlignLeftRight("할인", `${activity?.discount.toLocaleString()}원`)}\n`,
+        `${formatReceiptRow("할인", "", "", `${activity?.discount.toLocaleString()}원`)}\n`,
         0,
         1,
         true,
@@ -151,7 +151,7 @@ export const print = ({
     }
 
     window.printText(
-      `${formatAlignLeftRight("합계", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
+      `${formatReceiptRow("합계", "", "", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -164,9 +164,19 @@ export const print = ({
 
   const printAddition = () => {
     if (type === "card-receipt") {
+      const countUnits = (text: string | null | undefined) => {
+        const safeText = text || "";
+        return safeText.split("").reduce((totalUnits, char) => {
+          if (/[가-힣]/.test(char)) {
+            return totalUnits + 2;
+          }
+          return totalUnits + 1;
+        }, 0);
+      };
+
       printDivider();
       window.printText(
-        `${formatAlignLeftRight("결제방법", payment?.CARDNAME?.trim() as string)}\n`,
+        `결제방법${" ".repeat(42 - 8 - countUnits(payment?.CARDNAME?.trim() as string))}\n`,
         0,
         0,
         false,
@@ -176,7 +186,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("카드번호", payment?.FILLER?.trim() as string)}\n`,
+        `카드번호${" ".repeat(18)}${payment?.FILLER?.trim() as string}\n`,
         0,
         0,
         false,
@@ -186,7 +196,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("결제금액", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
+        `결제금액${" ".repeat(42 - 8 - countUnits(activity?.totalOrderPrice.toLocaleString()) - 2)}${activity?.totalOrderPrice.toLocaleString()}원\n`,
         0,
         0,
         false,
@@ -196,7 +206,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("할부기간", payment?.INSTALLMENT === "일시불" || payment?.INSTALLMENT === "00" ? "일시불" : `${payment?.INSTALLMENT}개월`)}\n`,
+        `할부기간${" ".repeat(28)}${payment?.INSTALLMENT === "일시불" || payment?.INSTALLMENT === "00" ? "일시불" : `${payment?.INSTALLMENT}개월`}\n`,
         0,
         0,
         false,
@@ -206,7 +216,7 @@ export const print = ({
         0
       );
       window.printText(
-        `${formatAlignLeftRight("승인번호", payment?.APPROVALNO?.trim() as string)}\n`,
+        `승인번호${" ".repeat(24 - 12 - 8)}${payment?.APPROVALNO?.trim() as string}\n`,
         0,
         0,
         false,
@@ -217,7 +227,7 @@ export const print = ({
       );
 
       window.printText(
-        `${formatAlignLeftRight("승인일시", paymentTradeTime!)}\n\n\n`,
+        `승인일시${" ".repeat(22)}${paymentTradeTime!}\n\n\n`,
         0,
         0,
         false,
@@ -243,7 +253,7 @@ export const print = ({
 
       if (makePersonalPayment) {
         window.printText(
-          `${formatAlignLeftRight("현금 영수증 발급", `${cashReceiptPhoneNo}`)}\n`,
+          `${formatAlignLeftRight("현금 영수증", `${cashReceiptPhoneNo}`)}\n`,
           0,
           0,
           false,
@@ -285,7 +295,9 @@ export const print = ({
       return;
     }
 
-    window.requestPrint(PRINTERNAME.PRINTER2, strSubmit, (res) => {
+    window.requestPrint(PRINTERNAME.PRINTER1, strSubmit, (res) => {
+      // eslint-disable-next-line
+      console.log(strSubmit);
       // eslint-disable-next-line
       console.log(res);
       successHandler?.();
