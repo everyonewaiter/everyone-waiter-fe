@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import { posQueries } from "../../_queries/usePos";
-import usePayment from "../../_queries/usePayment";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -15,9 +14,7 @@ export default function ResendAlert({ close, tableNo }: IProps) {
   const resend = posQueries.useResendReceipt();
 
   const handleResend = () => {
-    resend.mutate(
-      { tableNo: Number(tableNo) },
-    );
+    resend.mutate({ tableNo: Number(tableNo) });
   };
 
   return (

@@ -21,6 +21,7 @@ export default function SalesModal({ close }: { close: () => void }) {
     if (formatted) {
       refetch();
     }
+    // eslint-disable-next-line
   }, [formatted]);
 
   return (

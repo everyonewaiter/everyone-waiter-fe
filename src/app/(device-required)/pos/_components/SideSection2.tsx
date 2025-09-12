@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
@@ -22,7 +21,6 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
   const openReceipt = useOverlay();
   const cancel = useOverlay();
-  const navigate = useRouter();
 
   const { storeId } = useDeviceContext();
 
@@ -32,32 +30,30 @@ export default function SideSection2({ ...selectedRow }: OrderPaymentsList) {
   const { data: stores } = posQueries.useStoreInfo(storeId as string);
 
   const handleReceipt = () => {
-    activity?.orderPayments.forEach((payment) => {
-      if (payment.method === "CARD") {
-        print({
-          type: "card-receipt",
-          activity: activity!,
-          stores: stores!,
-          payment: {
-            CARDNAME: payment.issuerName,
-            FILLER: payment.cardNo,
-            INSTALLMENT: payment.installment,
-            APPROVALNO: payment.approvalNo,
-          },
-          paymentTradeTime: payment.tradeTime || "",
-        });
-      } else {
-        print({
-          type: "cash-receipt",
-          activity: activity!,
-          stores: stores!,
-          cashReceiptPhoneNo: payment.cashReceiptNo,
-          makePersonalPayment: payment.cashReceiptType === "DEDUCTION",
-          paymentTradeTime: payment.tradeTime || "",
-        });
-      }
-      openReceipt.close();
-    });
+    if (selectedRow.method === "CARD") {
+      print({
+        type: "card-receipt",
+        activity: activity!,
+        stores: stores!,
+        payment: {
+          CARDNAME: selectedRow.issuerName,
+          FILLER: selectedRow.cardNo,
+          INSTALLMENT: selectedRow.installment,
+          APPROVALNO: selectedRow.approvalNo,
+        },
+        paymentTradeTime: selectedRow.tradeTime || "",
+      });
+    } else {
+      print({
+        type: "cash-receipt",
+        activity: activity!,
+        stores: stores!,
+        cashReceiptPhoneNo: selectedRow.cashReceiptNo,
+        makePersonalPayment: selectedRow.cashReceiptType === "DEDUCTION",
+        paymentTradeTime: selectedRow.tradeTime || "",
+      });
+    }
+    openReceipt.close();
   };
 
   const handlePrintReceipt: React.MouseEventHandler<HTMLButtonElement> = (

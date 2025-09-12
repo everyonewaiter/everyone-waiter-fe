@@ -1,5 +1,10 @@
 import { PRINTERNAME } from "@/constants/printerName";
-import { checkPrinter, formatAlignLeftRight, formatReceiptRow, printDivider } from "./utils";
+import {
+  checkPrinter,
+  formatAlignLeftRight,
+  formatReceiptRow,
+  printDivider,
+} from "./utils";
 
 interface IProps {
   type: "kitchen" | "cash-receipt" | "card-receipt";
@@ -17,7 +22,6 @@ interface IProps {
   makePersonalPayment?: boolean;
   close?: () => void;
 }
-
 
 export const print = ({
   type,
@@ -271,16 +275,20 @@ export const print = ({
   const strSubmit = window.getPosData();
   checkPrinter(PRINTERNAME.PRINTER1, (exists) => {
     if (!exists) {
-      alert("POS 프린터 연결을 확인해주세요. Web Print SDK가 실행되지 않았거나 프린터가 연결되지 않았습니다.");
+      // eslint-disable-next-line
+      alert(
+        "POS 프린터 연결을 확인해주세요. Web Print SDK가 실행되지 않았거나 프린터가 연결되지 않았습니다."
+      );
       if (close) {
         close();
       }
       return;
     }
-    
+
     window.requestPrint(PRINTERNAME.PRINTER2, strSubmit, (res) => {
-     console.log(res)
-     successHandler?.();
+      // eslint-disable-next-line
+      console.log(res);
+      successHandler?.();
+    });
   });
- });
 };

@@ -112,16 +112,23 @@ function printDivider() {
   );
 }
 
-const checkPrinter = (printerName: string, callback: (exists: boolean) => void) => {
+const checkPrinter = (
+  printerName: string,
+  callback: (exists: boolean) => void
+) => {
   const testReq = new XMLHttpRequest();
-  testReq.open("GET", `http://127.0.0.1:18080/WebPrintSDK/${printerName}/status`, true);
-  testReq.onreadystatechange = function() {
-   if (testReq.readyState === 4) {
-    callback(testReq.status === 200);
-   }
-   };
-    testReq.send();
+  testReq.open(
+    "GET",
+    `http://127.0.0.1:18080/WebPrintSDK/${printerName}/status`,
+    true
+  );
+  testReq.onreadystatechange = () => {
+    if (testReq.readyState === 4) {
+      callback(testReq.status === 200);
+    }
   };
+  testReq.send();
+};
 
 export {
   formatAlignLeftRight,
@@ -129,5 +136,5 @@ export {
   createPaperConfig,
   PAPER_CONFIGS,
   printDivider,
-  checkPrinter
+  checkPrinter,
 };

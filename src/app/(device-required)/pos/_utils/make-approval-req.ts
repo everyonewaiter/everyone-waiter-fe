@@ -4,16 +4,20 @@ export default function makeKSCATApprovalREQ({
   nonTax,
   installment,
   type,
+  transactionType = "IC",
+  phoneNumber,
 }: {
   amount: number;
   tax: number;
   nonTax: number;
   installment: string; // "00", "02", ...
   type: "0" | "1"; // 1 승인, 0 취소
+  transactionType?: "IC" | "HK";
+  phoneNumber?: string;
 }) {
   const data = {
     stx: String.fromCharCode(2),
-    transactionType: "IC",
+    transactionType,
     businessType: "01",
     messageType: type === "1" ? "0200" : "0420",
     transactionForm: "N",
@@ -28,7 +32,10 @@ export default function makeKSCATApprovalREQ({
     swModelNo: "                ",
     catModelNo: "                ",
     encryptionInfo: "                                        ",
-    cardNo: "                                     ",
+    trackii:
+      transactionType === "HK"
+        ? phoneNumber?.split("-").join("")
+        : "                                     ",
     fs: String.fromCharCode(28),
     installment,
     totalAmount: String(amount).padStart(12, "0"),
@@ -50,4 +57,34 @@ export default function makeKSCATApprovalREQ({
   const header = `AP${body.toString().padStart(4, "0")}`;
 
   return `${header}${body}`;
+}
+
+export function createCreditCardApproval(params: {
+  amount: number;
+  tax: number;
+  nonTax: number;
+  installment?: string;
+  type: "0" | "1";
+}) {
+  return makeKSCATApprovalREQ({
+    ...params,
+    transactionType: "IC",
+    installment: params.installment!,
+  });
+}
+
+export function createCashReceiptApproval(params: {
+  amount: number;
+  tax: number;
+  nonTax: number;
+  type: "0" | "1";
+  cashReceiptType: "개인소득공제용" | "사업자증빙용";
+  phoneNumber: string;
+}) {
+  return makeKSCATApprovalREQ({
+    ...params,
+    transactionType: "HK",
+    installment: params.cashReceiptType === "개인소득공제용" ? "00" : "01",
+    phoneNumber: params.phoneNumber,
+  });
 }

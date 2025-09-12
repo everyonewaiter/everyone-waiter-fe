@@ -18,6 +18,7 @@ export default function Page() {
     if (data?.status === "CLOSE") {
       navigate.replace("/pos");
     }
+    // eslint-disable-next-line
   }, [data?.status]);
 
   return (

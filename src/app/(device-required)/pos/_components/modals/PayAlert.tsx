@@ -149,12 +149,6 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     ));
   };
 
-  const cashReceiptType = () => {
-    if (form.watch("receiptType") === ReceiptType.NONE) return "NONE";
-    if (form.watch("receiptType") === ReceiptType.PROOF) return "PROOF";
-    return "DEDUCTION";
-  };
-
   const handlePayment = () => {
     setIsSubmitting(true);
 
@@ -176,18 +170,17 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     } else {
       payCash({
         tableNo: props.tableNo,
-        body: {
-          amount,
-          cashReceiptNo:
-            (form.watch("receiptType") === ReceiptType.PROOF
-              ? form.watch("licenseNumber")
-              : form.watch("phoneNumber")) ?? "",
-          cashReceiptType: cashReceiptType() as OrderReceiptType,
-        },
+        amount,
+        receiptType: form.watch("receiptType"),
+        phoneNumber:
+          form.watch("receiptType") === ReceiptType.PROOF
+            ? form.watch("licenseNumber")!
+            : form.watch("phoneNumber")!,
         successHandler: () => {
           close();
           handleModal();
         },
+        errorHandler: () => {},
       });
     }
   };
