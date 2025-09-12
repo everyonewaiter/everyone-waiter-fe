@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 import { posQueries } from "../../_queries/usePos";
-import usePayment from "../../_queries/usePayment";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -12,22 +11,10 @@ interface IProps {
 }
 
 export default function ResendAlert({ close, tableNo }: IProps) {
-  const { data: activityData } = posQueries.useActivity(tableNo);
   const resend = posQueries.useResendReceipt();
-  const { printOrder } = usePayment();
 
   const handleResend = () => {
-    resend.mutate(
-      { tableNo: Number(tableNo) },
-      {
-        onSuccess: () => {
-          printOrder({
-            activity: activityData!,
-            successHandler: () => close(),
-          });
-        },
-      }
-    );
+    resend.mutate({ tableNo: Number(tableNo) });
   };
 
   return (

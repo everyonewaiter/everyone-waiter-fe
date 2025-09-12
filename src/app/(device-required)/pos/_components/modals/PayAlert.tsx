@@ -105,11 +105,13 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       activity: activityData!,
       stores: stores!,
       payment: { ...res, INSTALLMENT: form.watch("monthlyPlan") },
+      paymentTradeTime: res.TRADETIME || "",
       successHandler: () => {
         if (props.orders?.length === 0) {
           navigateTables();
         }
       },
+      close: receiptOverlay.close,
     });
   };
 
@@ -121,13 +123,18 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       successHandler: navigateTables,
       cashReceiptPhoneNo: form.watch("phoneNumber"),
       makePersonalPayment: form.watch("receiptType") === "개인소득공제용",
+      paymentTradeTime: props.payment?.TRADETIME || "",
+      close: receiptOverlay.close,
     });
   };
 
   const handleModal = (res?: PaymentResponse) => {
     receiptOverlay.open(() => (
       <ReceiptModal
-        close={receiptOverlay.close}
+        close={() => {
+          receiptOverlay.close();
+          navigateTables();
+        }}
         onConfirm={() => {
           if (type === "credit-card") {
             handlePrintCard(res!);
@@ -137,18 +144,8 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           receiptOverlay.close();
           navigateTables();
         }}
-        onCancel={() => {
-          receiptOverlay.close();
-          navigateTables();
-        }}
       />
     ));
-  };
-
-  const cashReceiptType = () => {
-    if (form.watch("receiptType") === ReceiptType.NONE) return "NONE";
-    if (form.watch("receiptType") === ReceiptType.PROOF) return "PROOF";
-    return "DEDUCTION";
   };
 
   const handlePayment = () => {
@@ -167,19 +164,16 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           close();
           handleModal(res);
         },
-        errorHandler: () => setIsSubmitting(false),
       });
     } else {
       payCash({
         tableNo: props.tableNo,
-        body: {
-          amount,
-          cashReceiptNo:
-            (form.watch("receiptType") === ReceiptType.PROOF
-              ? form.watch("licenseNumber")
-              : form.watch("phoneNumber")) ?? "",
-          cashReceiptType: cashReceiptType() as OrderReceiptType,
-        },
+        amount,
+        receiptType: form.watch("receiptType"),
+        phoneNumber:
+          form.watch("receiptType") === ReceiptType.PROOF
+            ? form.watch("licenseNumber")!
+            : form.watch("phoneNumber")!,
         successHandler: () => {
           close();
           handleModal();

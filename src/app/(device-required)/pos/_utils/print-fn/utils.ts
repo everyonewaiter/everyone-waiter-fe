@@ -54,15 +54,34 @@ function formatReceiptRow(
   );
 }
 
-function formatAlignLeftRight(left: string, right: string) {
-  const config = PAPER_CONFIGS;
-  const leftWidth = getDisplayWidth(left);
-  const rightWidth = getDisplayWidth(right);
-  const spacing = config.totalWidth - leftWidth - rightWidth;
+function calculateStringWidth(str: string) {
+  if (!str || typeof str !== "string") return 0;
+
+  return str
+    .split("")
+    .reduce((sum, char) => sum + (/[가-힣]/.test(char) ? 1 : 0.5), 0);
+}
+
+function formatAlignLeftRight(
+  left: string,
+  right: string,
+  fontSizeX: number = 0
+) {
+  const maxChars = {
+    0: 21, // 42 ÷ 2
+    1: 10.5, // 42 ÷ 4
+    2: 7, // 42 ÷ 6
+  };
+
+  const totalChars = maxChars[fontSizeX as keyof typeof maxChars];
+
+  const leftChars = calculateStringWidth(left);
+  const rightChars = calculateStringWidth(right);
+  const spacing = totalChars - leftChars - rightChars;
 
   if (spacing <= 0) return left + right;
 
-  return left + " ".repeat(spacing) + right;
+  return left + " ".repeat(Math.floor(spacing)) + right;
 }
 
 function createPaperConfig(totalWidth: number): PaperConfig {
@@ -93,10 +112,47 @@ function printDivider() {
   );
 }
 
+const checkPrinter = (
+  printerName: string,
+  callback: (exists: boolean) => void
+) => {
+  const testReq = new XMLHttpRequest();
+  testReq.open(
+    "GET",
+    `http://127.0.0.1:18080/WebPrintSDK/${printerName}/status`,
+    true
+  );
+  testReq.onreadystatechange = () => {
+    if (testReq.readyState === 4) {
+      callback(testReq.status === 200);
+    }
+  };
+  testReq.send();
+};
+
+const countUnits = (text: string | null | undefined) => {
+  const safeText = text || "";
+  return safeText.split("").reduce((totalUnits, char) => {
+    if (/[가-힣]/.test(char)) {
+      return totalUnits + 2;
+    }
+    return totalUnits + 1;
+  }, 0);
+};
+
+const printBaseRow = (text: string, value: string) => {
+  const INIT = 42;
+  const spacing = " ".repeat(INIT - countUnits(text) - countUnits(value));
+  return `${text + spacing + value}\n`;
+};
+
 export {
   formatAlignLeftRight,
   formatReceiptRow,
   createPaperConfig,
   PAPER_CONFIGS,
   printDivider,
+  checkPrinter,
+  countUnits,
+  printBaseRow,
 };

@@ -19,6 +19,10 @@ declare global {
       data: string,
       callback: (result: unknown) => void
     ) => void;
+    checkPrinterFirst: (
+      printerName: string,
+      callback: (exists: boolean) => void
+    ) => void;
     printBitmap: (
       imageData: string, // base64 encoding
       width: number, // 이미지 원본 width - 2

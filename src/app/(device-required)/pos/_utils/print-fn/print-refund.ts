@@ -4,35 +4,25 @@ import {
   countUnits,
   formatAlignLeftRight,
   formatReceiptRow,
+  printBaseRow,
   printDivider,
 } from "./utils";
 
 interface IProps {
-  type: "kitchen" | "cash-receipt" | "card-receipt";
+  type: "cash-receipt" | "card-receipt";
   activity: PosTableActivity;
-  payment?: {
-    CARDNAME: string;
-    FILLER: string;
-    INSTALLMENT: string;
-    APPROVALNO: string;
-  };
-  paymentTradeTime?: string;
-  stores?: PosStore;
+  stores?: PosStore | StoreInfoDetail;
+  payments: OrderPayments;
   successHandler?: () => void;
-  cashReceiptPhoneNo?: string;
-  makePersonalPayment?: boolean;
   close?: () => void;
 }
 
-export const print = ({
+export const printRefund = ({
   type,
   activity,
-  payment,
   stores,
+  payments,
   successHandler,
-  cashReceiptPhoneNo,
-  makePersonalPayment,
-  paymentTradeTime,
   close,
 }: IProps) => {
   window.setPosId(1);
@@ -48,7 +38,7 @@ export const print = ({
   }
 
   const printReceipt = () => {
-    window.printText(`영수증\n\n`, 1, 1, true, false, false, 0, 1);
+    window.printText(`취소영수증\n\n`, 1, 1, true, false, false, 0, 1);
     window.printText(
       `${stores?.name}\n${stores?.address}\n사업자: ${stores?.license}\n전화번호: ${stores?.landline}\n`,
       0,
@@ -61,9 +51,23 @@ export const print = ({
     );
     printDivider();
     window.printText(
-      `영수증 번호: #${activity?.posTableActivityId}\n`,
+      `영수증 번호: ${activity?.posTableActivityId}\n`,
       0,
-      1,
+      0,
+      true,
+      false,
+      false,
+      0,
+      0
+    );
+
+    const [date, time] = new Date().toISOString().split("T");
+    const [h, m, s] = time.split(":");
+
+    window.printText(
+      `취소일시: #${date.replaceAll(".", " .")} ${h}시 ${m}분 ${s}초\n`,
+      0,
+      0,
       true,
       false,
       false,
@@ -114,45 +118,8 @@ export const print = ({
 
     printDivider();
 
-    const supplyAmount = Math.floor(Number(activity?.totalOrderPrice) / 1.1);
-    const vatAmount = Number(activity?.totalOrderPrice) - supplyAmount;
-
     window.printText(
-      `${formatReceiptRow("공급가", "", "", `${supplyAmount.toLocaleString()}원`)}\n`,
-      0,
-      1,
-      true,
-      false,
-      false,
-      0,
-      0
-    );
-    window.printText(
-      `${formatReceiptRow("부가세", "", "", `${vatAmount.toLocaleString()}원`)}\n`,
-      0,
-      1,
-      true,
-      false,
-      false,
-      0,
-      0
-    );
-
-    if (activity?.discount) {
-      window.printText(
-        `${formatReceiptRow("할인", "", "", `${activity?.discount.toLocaleString()}원`)}\n`,
-        0,
-        1,
-        true,
-        false,
-        false,
-        0,
-        0
-      );
-    }
-
-    window.printText(
-      `${formatReceiptRow("합계", "", "", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
+      `취소 금액${" ".repeat(42 - 9 - countUnits(activity?.totalOrderPrice.toLocaleString()))}${activity?.totalOrderPrice.toLocaleString()}원\n`,
       0,
       1,
       true,
@@ -167,7 +134,7 @@ export const print = ({
     if (type === "card-receipt") {
       printDivider();
       window.printText(
-        `결제방법${" ".repeat(42 - 8 - countUnits(payment?.CARDNAME?.trim() as string))}\n`,
+        printBaseRow("결제방법", `${payments?.issuerName?.trim()} 취소`),
         0,
         0,
         false,
@@ -177,7 +144,7 @@ export const print = ({
         0
       );
       window.printText(
-        `카드번호${" ".repeat(18)}${payment?.FILLER?.trim() as string}\n`,
+        printBaseRow("카드번호", payments?.cardNo?.trim()),
         0,
         0,
         false,
@@ -187,7 +154,7 @@ export const print = ({
         0
       );
       window.printText(
-        `결제금액${" ".repeat(42 - 8 - countUnits(activity?.totalOrderPrice.toLocaleString()) - 2)}${activity?.totalOrderPrice.toLocaleString()}원\n`,
+        printBaseRow("취소금액", `${payments?.amount.toLocaleString()}원`),
         0,
         0,
         false,
@@ -197,17 +164,10 @@ export const print = ({
         0
       );
       window.printText(
-        `할부기간${" ".repeat(28)}${payment?.INSTALLMENT === "일시불" || payment?.INSTALLMENT === "00" ? "일시불" : `${payment?.INSTALLMENT}개월`}\n`,
-        0,
-        0,
-        false,
-        false,
-        false,
-        0,
-        0
-      );
-      window.printText(
-        `승인번호${" ".repeat(24 - 12 - 8)}${payment?.APPROVALNO?.trim() as string}\n`,
+        printBaseRow(
+          "원승인번호",
+          payments?.approvalNo?.trim() || " ".repeat(12)
+        ),
         0,
         0,
         false,
@@ -218,7 +178,7 @@ export const print = ({
       );
 
       window.printText(
-        `승인일시${" ".repeat(22)}${paymentTradeTime!}\n\n\n`,
+        printBaseRow("원승인일시", payments?.tradeTime),
         0,
         0,
         false,
@@ -232,7 +192,7 @@ export const print = ({
     if (type === "cash-receipt") {
       printDivider();
       window.printText(
-        `${formatAlignLeftRight("결제 방법", "현금")}\n`,
+        printBaseRow("결제방법", "현금 취소"),
         0,
         0,
         false,
@@ -242,21 +202,8 @@ export const print = ({
         0
       );
 
-      if (makePersonalPayment) {
-        window.printText(
-          `${formatAlignLeftRight("현금 영수증", `${cashReceiptPhoneNo}`)}\n`,
-          0,
-          0,
-          false,
-          false,
-          false,
-          0,
-          0
-        );
-      }
-
       window.printText(
-        `${formatAlignLeftRight("승인 일시", paymentTradeTime as string)}\n\n`,
+        printBaseRow("원승인일시", payments?.tradeTime),
         0,
         0,
         false,
@@ -266,6 +213,8 @@ export const print = ({
         0
       );
     }
+
+    window.printText("\n", 0, 0, false, false, false, 0, 0);
   };
 
   printReceipt();
@@ -287,8 +236,6 @@ export const print = ({
     }
 
     window.requestPrint(PRINTERNAME.PRINTER1, strSubmit, (res) => {
-      // eslint-disable-next-line
-      console.log(strSubmit);
       // eslint-disable-next-line
       console.log(res);
       successHandler?.();

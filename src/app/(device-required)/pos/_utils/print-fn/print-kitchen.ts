@@ -1,11 +1,12 @@
 import { PRINTERNAME } from "@/constants/printerName";
-import { formatAlignLeftRight, printDivider } from "./utils";
+import { checkPrinter, formatAlignLeftRight, printDivider } from "./utils";
 
 interface IProps extends ReceiptSSE {
   successHandler?: () => void;
+  close?: () => void;
 }
 
-export const printToKitchen = ({ successHandler, ...props }: IProps) => {
+export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
   window.printText(`${props.printNo}\n`, 2, 2, true, false, false, 0, 1);
   window.printText(
     `테이블번호: ${props.tableNo}\n`,
@@ -64,23 +65,20 @@ export const printToKitchen = ({ successHandler, ...props }: IProps) => {
   window.cutPaper(1);
 
   const strSubmit = window.getPosData();
-  try {
+
+  checkPrinter(PRINTERNAME.PRINTER2, (exists) => {
+    if (!exists) {
+      // eslint-disable-next-line
+      alert(
+        "주방 프린터 연결을 확인해주세요. Web Print SDK가 실행되지 않았거나 프린터가 연결되지 않았습니다."
+      );
+      return;
+    }
+
     window.requestPrint(PRINTERNAME.PRINTER2, strSubmit, (res) => {
-      if (
-        typeof res === "string" &&
-        (res.includes("Cannot connect to server") ||
-          res.includes("No printers") ||
-          res === "")
-      ) {
-        // eslint-disable-next-line
-        alert(
-          "프린터 연결을 확인해주세요. Web Print SDK가 실행되지 않았거나 프린터가 연결되지 않았습니다."
-        );
-      } else {
-        successHandler?.();
-      }
+      // eslint-disable-next-line
+      console.log(res);
+      successHandler?.();
     });
-  } catch (error) {
-    successHandler?.();
-  }
+  });
 };
