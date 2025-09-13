@@ -19,8 +19,9 @@ export default function SideControl({
 
   const { updateQuantity, orders } = useOrderStore();
 
-  const handleQuantity = (type: "add" | "sub") =>
+  const handleQuantity = (type: "add" | "sub") => {
     updateQuantity(checkedMenu.menuId, checkedMenu.key, type);
+  };
 
   const handleUpdateMenu = (type: "add" | "sub") => {
     onUpdateOrder(type);

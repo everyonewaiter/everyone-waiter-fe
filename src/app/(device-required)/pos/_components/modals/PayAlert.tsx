@@ -47,29 +47,17 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   // 분할 계산
   const { selectedOrder } = useSelectItemStore();
   const { storeId } = useDeviceContext();
-  const hasOrderId = selectedOrder?.orderId;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const selectedOrdersTotal = (selectedOrder?.orderMenus ?? []).reduce(
-    (acc, menu) => {
-      const menuBasePrice = menu.price;
-
-      const optionPrice =
-        menu.orderOptionGroups?.reduce(
-          (groupSum, group) =>
-            groupSum +
-            (group.orderOptions?.reduce(
-              (optSum: any, o: { price: any }) => optSum + (o.price || 0),
-              0
-            ) ?? 0),
-          0
-        ) ?? 0;
-
-      return acc + (menuBasePrice + optionPrice);
-    },
-    0
-  );
+  const selectedOrdersTotal = selectedOrder.reduce((acc, menu) => {
+    const menuPrice = menu.price;
+    const optionPrice = menu.orderMenus.reduce(
+      (a, c) => a + c.price * c.quantity,
+      0
+    );
+    return acc + menuPrice + optionPrice;
+  }, 0);
 
   const form = useForm<TypePayForm>({
     mode: "onChange",
@@ -151,9 +139,10 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   const handlePayment = () => {
     setIsSubmitting(true);
 
-    const amount = hasOrderId
-      ? selectedOrdersTotal
-      : props.remainingPaymentPrice;
+    const amount =
+      selectedOrder?.length > 0
+        ? selectedOrdersTotal
+        : props.remainingPaymentPrice;
 
     if (type === "credit-card") {
       payCard({
@@ -196,7 +185,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       <Form {...form}>
         <PayAlertForm
           type={type}
-          hasOrderId={hasOrderId}
+          hasOrderId={selectedOrder?.length > 0}
           selectedOrdersTotal={selectedOrdersTotal}
           onClose={close}
           {...props}

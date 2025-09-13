@@ -4,6 +4,7 @@ import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/useOverlay";
 import useLeaveGuard from "@/hooks/useCheckLeave";
+import getQueryClient from "@/app/get-query-client";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import { orderQueries } from "../../_queries/useOrder";
@@ -14,6 +15,7 @@ import SideControl from "./SideControl";
 import SideHeader from "./SideHeader";
 import SideLayout from "./SideLayout";
 import SidePayment from "./SidePayment";
+import { posKeys } from "../../_queries/keys";
 
 const MemoAlert = dynamic(() => import("../modals/MemoAlert"), {
   ssr: false,
@@ -81,23 +83,40 @@ export default function SideSection() {
       return;
     }
 
-    updateOrder.mutate({
-      tableNo,
-      body: {
-        orders: selectedMenu.map((el) => ({
-          orderId: el.orderId,
-          orderMenus: [
-            {
-              orderMenuId: el.orderMenuId,
-              quantity:
-                type === "add"
-                  ? (el?.quantity ?? 0) + 1
-                  : (el?.quantity ?? 0) - 1,
-            },
-          ],
-        })),
+    updateOrder.mutate(
+      {
+        tableNo,
+        body: {
+          orders: selectedMenu.map((el) => ({
+            orderId: el.orderId,
+            orderMenus: [
+              {
+                orderMenuId: el.orderMenuId,
+                quantity:
+                  type === "add"
+                    ? (el?.quantity ?? 0) + 1
+                    : (el?.quantity ?? 0) - 1,
+              },
+            ],
+          })),
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          const queryClient = getQueryClient();
+          queryClient.invalidateQueries({
+            queryKey: posKeys.activity(data?.tableNo!),
+          });
+          console.log(data?.orders);
+          if (!data?.orders?.length) {
+            complete.mutate(
+              { tableNo },
+              { onSuccess: () => navigate.push("/pos/tables") }
+            );
+          }
+        },
+      }
+    );
   };
 
   useLeaveGuard(orders.length > 0);

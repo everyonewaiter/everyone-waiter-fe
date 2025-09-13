@@ -19,7 +19,7 @@ const monthlyPlan = [
 ];
 
 interface IProps extends PosTableActivity {
-  hasOrderId?: string;
+  hasOrderId?: boolean;
   selectedOrdersTotal: number;
   type: "credit-card" | "cash";
   onClose: () => void;
@@ -44,7 +44,7 @@ export default function PayAlertForm({
   const { selectedOrder } = useSelectItemStore();
 
   const menus = hasOrderId
-    ? selectedOrder?.orderMenus.map((el) => el.name)
+    ? selectedOrder.map((el) => el.orderMenus.map((v) => v.name)).flat()
     : props?.orders.map((el) => el.orderMenus.map((v) => v.name)).flat();
 
   return (
