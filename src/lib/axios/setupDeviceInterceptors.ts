@@ -53,24 +53,6 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
           return config;
         }
 
-        const currentPath = window.location.pathname;
-        const pathPurpose = currentPath.split("/")[1];
-
-        if (
-          deviceInfo.purpose.toLowerCase() !== pathPurpose &&
-          !hasShownPurposeAlert
-        ) {
-          hasShownPurposeAlert = true;
-          // eslint-disable-next-line
-          alert(
-            `${window.location.href.split("/")[3].toUpperCase()} 기기가 아닙니다. 기기를 등록해주세요.`
-          );
-          setTimeout(() => {
-            window.location.href = "/device";
-          }, 10);
-          return config;
-        }
-
         const timestamp = Date.now().toString();
         const signature = makeSignature({
           uri: `/v1${uri}`,
@@ -108,9 +90,41 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
 
   axiosInstance.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
       if (error.response) {
-        if (error.response?.status === 404) {
+        if (error.response?.status === 401) {
+          const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+
+          const deviceInfo = (await getDecryptedItem({
+            key: "@deviceInfo",
+            deviceId: meta.deviceId,
+            storeId: meta.storeId,
+          })) as Device;
+
+          const currentPath = window.location.pathname;
+          const pathPurpose = currentPath.split("/")[1];
+
+          const validatePosPurpose =
+            deviceInfo.purpose.toLowerCase() === "pos" && pathPurpose === "pos";
+          const validateHallPurpose =
+            ["hall", "waiting"].includes(deviceInfo.purpose.toLowerCase()) &&
+            (pathPurpose === "hall" || pathPurpose === "waiting");
+
+          if (
+            validatePosPurpose &&
+            validateHallPurpose &&
+            !hasShownPurposeAlert
+          ) {
+            hasShownPurposeAlert = true;
+            // eslint-disable-next-line
+            alert(
+              `${window.location.href.split("/")[3].toUpperCase()} 기기가 아닙니다. 기기를 등록해주세요.`
+            );
+            setTimeout(() => {
+              window.location.href = "/device";
+            }, 10);
+          }
+        } else if (error.response?.status === 404) {
           const customError = new Error("NOT_FOUND");
           (customError as any).code = "NOT_FOUND";
           throw customError;

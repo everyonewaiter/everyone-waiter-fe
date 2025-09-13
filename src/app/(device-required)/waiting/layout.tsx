@@ -1,10 +1,8 @@
 "use client";
 
-import { PropsWithChildren, useEffect, useState } from "react";
-import KitchenSSEGuard from "@/components/guard/KitchenSSEGuard";
-import { useRouter } from "next/navigation";
 import { getDecryptedItem } from "@/lib/auth/secureStorage";
-import Header from "./_components/Header";
+import { useRouter } from "next/navigation";
+import { PropsWithChildren, useEffect, useState } from "react";
 
 export default function Layout({ children }: PropsWithChildren) {
   const navigate = useRouter();
@@ -37,12 +35,5 @@ export default function Layout({ children }: PropsWithChildren) {
 
   if (!shouldRender) return null;
 
-  return (
-    <KitchenSSEGuard allowedPurpose="hall">
-      <div className="scrollbar-hide flex min-h-dvh flex-col items-center gap-4 bg-gray-700 px-[60px] py-8">
-        <Header href="/hall" />
-        {children}
-      </div>
-    </KitchenSSEGuard>
-  );
+  return children;
 }

@@ -1,45 +1,40 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { PropsWithChildren, useEffect } from "react";
-import { getStoreInfoDetail } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { storeKeys } from "@/app/(main)/(owner)/[id]/store/_queries/keys";
-import { useDeviceContext } from "@/providers/deviceStoreProvider";
-import { isNumber } from "@/utils/validate";
-import getQueryClient from "@/app/get-query-client";
-import { printToKitchen } from "./_utils/print-fn/print-kitchen";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getDecryptedItem } from "@/lib/auth/secureStorage";
+import KitchenSSEGuard from "@/components/guard/KitchenSSEGuard";
 
 export default function Layout({ children }: PropsWithChildren) {
-  const { storeId } = useDeviceContext();
-  const queryClient = getQueryClient();
-
-  const { data: settingData } = useQuery({
-    queryKey: storeKeys.detail(storeId!),
-    queryFn: () => getStoreInfoDetail(storeId!),
-    enabled: !!storeId && isNumber(storeId),
-  });
+  const [shouldRender, setShouldRender] = useState(false);
+  const navigate = useRouter();
 
   useEffect(() => {
-    const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
-      if (
-        event.type === "updated" &&
-        JSON.stringify(event.query.queryKey) ===
-          JSON.stringify(["kitchen-receipt-trigger"])
-      ) {
-        const receiptTrigger = event.query.state.data as ReceiptSSE;
-
-        if (
-          receiptTrigger?.printNo &&
-          settingData?.setting?.printerLocation === "POS"
-        ) {
-          printToKitchen(receiptTrigger);
-          queryClient.removeQueries({ queryKey: ["kitchen-receipt-trigger"] });
-        }
+    const checkDevice = async () => {
+      const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+      if (!meta.deviceId || !meta.storeId) {
+        navigate.replace("/device");
+        return;
       }
-    });
 
-    return () => unsubscribe();
-  }, [queryClient, settingData]);
+      const deviceInfo = (await getDecryptedItem({
+        key: "@deviceInfo",
+        deviceId: meta.deviceId,
+        storeId: meta.storeId,
+      })) as Device;
 
-  return children;
+      if (deviceInfo?.purpose?.toLowerCase() !== "pos") {
+        navigate.back();
+        return;
+      }
+
+      setShouldRender(true);
+    };
+
+    checkDevice();
+  }, [navigate]);
+
+  if (!shouldRender) return null;
+
+  return <KitchenSSEGuard allowedPurpose="pos">{children}</KitchenSSEGuard>;
 }
