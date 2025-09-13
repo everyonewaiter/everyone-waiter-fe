@@ -136,7 +136,7 @@ export async function updateDevice() {
   }
 }
 
-export async function updateDevicePurpose(): Promise<string | null> {
+export async function updateDevicePurpose() {
   try {
     const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
     if (!meta.deviceId || !meta.storeId) {
@@ -151,12 +151,9 @@ export async function updateDevicePurpose(): Promise<string | null> {
       storeId,
     })) as Device;
 
-    if (!localDeviceInfo) {
-      throw new Error("로컬 기기 정보가 없습니다.");
-    }
+    if (!localDeviceInfo) throw new Error("로컬 기기 정보가 없습니다.");
 
     const originalPurpose = localDeviceInfo.purpose;
-
     const toggledPurpose = originalPurpose === "POS" ? "HALL" : "POS";
 
     await setEncryptedItem({
@@ -182,10 +179,9 @@ export async function updateDevicePurpose(): Promise<string | null> {
       return toggledPurpose;
     }
 
-    throw new Error("예상치 못한 상황");
+    return null;
   } catch (error) {
     window.location.href = "/device";
-
     return null;
   }
 }
