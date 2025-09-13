@@ -235,9 +235,7 @@ export const printRefund = ({
       return;
     }
 
-    window.requestPrint(PRINTERNAME.PRINTER1, strSubmit, (res) => {
-      // eslint-disable-next-line
-      console.log(res);
+    window.requestPrint(PRINTERNAME.PRINTER1, strSubmit, () => {
       successHandler?.();
     });
   });
