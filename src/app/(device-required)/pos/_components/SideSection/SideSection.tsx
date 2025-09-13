@@ -74,8 +74,6 @@ export default function SideSection() {
     });
   };
 
-  console.log(selectedMenu);
-
   const handleUpdateOrderedMenu = (type: "add" | "sub") => {
     if (selectedMenu.length === 0) {
       // eslint-disable-next-line no-alert
