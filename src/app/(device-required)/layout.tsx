@@ -36,6 +36,14 @@ export default function Layout({
 
         queryClient.removeQueries({ queryKey: ["update-device"] });
         navigate.refresh();
+      } else if (
+        JSON.stringify(event.query.queryKey) ===
+        JSON.stringify(["delete-device"])
+      ) {
+        localStorage.removeItem("@meta");
+        localStorage.removeItem("@deviceInfo");
+        localStorage.removeItem("@secretKey");
+        navigate.replace("/device");
       }
     });
 
@@ -44,6 +52,12 @@ export default function Layout({
   }, [queryClient]);
 
   useEffect(() => {
+    // /device 경로에서는 검증을 건너뛰기
+    if (pathname === "/device") {
+      setIsChecking(false);
+      return;
+    }
+
     (async () => {
       try {
         const meta = localStorage.getItem("@meta");

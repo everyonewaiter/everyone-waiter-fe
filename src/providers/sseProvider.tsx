@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useEffect, useState } from "react";
-import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
+import { deviceQueries } from "@/app/(public)/device/_queries/useDeviceInfo";
 import { SseService } from "@/utils/sse";
 import { usePathname } from "next/navigation";
 

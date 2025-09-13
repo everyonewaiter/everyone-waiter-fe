@@ -4,7 +4,7 @@ import { ChevronsRight } from "@/components/common/Icon/index";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { deviceQueries } from "@/app/(device-required)/device/_queries/useDeviceInfo";
+import { deviceQueries } from "@/app/(public)/device/_queries/useDeviceInfo";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon/Icon";

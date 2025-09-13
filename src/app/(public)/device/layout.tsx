@@ -31,8 +31,7 @@ export default function Layout({ children }: PropsWithChildren) {
     };
 
     checkDeviceInfo();
-    // eslint-disable-next-line
-  }, []);
+  }, []); // navigate 의존성 제거
 
   if (isLoading) {
     return <FirstLoading />;

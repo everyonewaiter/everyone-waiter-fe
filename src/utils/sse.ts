@@ -124,8 +124,12 @@ export class SseService {
       switch (sseEvent.category) {
         case "DEVICE":
           if (sseEvent.hasData) {
+            console.log(sseEvent.hasData);
             if (sseEvent?.action === "UPDATE") {
               queryClient.setQueryData(["update-device"], sseEvent.data);
+            }
+            if (sseEvent?.action === "DELETE") {
+              queryClient.setQueryData(["delete-device"], false);
             }
             queryClient.invalidateQueries({
               queryKey: ["get-device-info-with-store"],

@@ -105,6 +105,8 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
           ) {
             window.location.href = "/pos";
           }
+        } else if (error.response?.status === 401) {
+          window.location.href = "/device";
         }
       }
 
