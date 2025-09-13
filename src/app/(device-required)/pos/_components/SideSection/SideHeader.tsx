@@ -46,14 +46,13 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
         <Button
           asChild={false}
           variant="outline"
-          color="primary"
           className="button-lg !rounded-lg text-base !font-medium"
           onClick={() => handleCancel("order-reset")}
         >
           주문 초기화
         </Button>
       )}
-      {data && data.orderType === "POSTPAID" && (
+      {!hasOrders && data && data.orderType === "POSTPAID" && (
         <Button
           asChild={false}
           variant="outline"
