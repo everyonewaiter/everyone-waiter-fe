@@ -75,9 +75,7 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
       return;
     }
 
-    window.requestPrint(PRINTERNAME.PRINTER2, strSubmit, (res) => {
-      // eslint-disable-next-line
-      console.log(res);
+    window.requestPrint(PRINTERNAME.PRINTER2, strSubmit, () => {
       successHandler?.();
     });
   });

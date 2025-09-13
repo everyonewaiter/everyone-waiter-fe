@@ -228,7 +228,6 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
-        console.log(res);
         cancelPay.mutate({
           orderPaymentId,
           body: {

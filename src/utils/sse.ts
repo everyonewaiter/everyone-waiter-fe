@@ -123,9 +123,14 @@ export class SseService {
 
       switch (sseEvent.category) {
         case "DEVICE":
-          queryClient.invalidateQueries({
-            queryKey: ["get-device-info-with-store"],
-          });
+          if (sseEvent.hasData) {
+            if (sseEvent?.action === "UPDATE") {
+              queryClient.setQueryData(["update-device"], sseEvent.data);
+            }
+            queryClient.invalidateQueries({
+              queryKey: ["get-device-info-with-store"],
+            });
+          }
           break;
         case "STORE":
           queryClient.invalidateQueries({ queryKey: ["stores"] });

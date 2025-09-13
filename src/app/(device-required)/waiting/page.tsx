@@ -34,6 +34,10 @@ export default function Waiting() {
                   buttonSize: "xl",
                   className: "bg-gray-300 text-white text-lg font-semibold",
                 },
+                md: {
+                  buttonSize: "xl",
+                  className: "bg-gray-300 text-white text-lg font-semibold",
+                },
               }}
               onClick={() => navigate.push("/hall")}
             >

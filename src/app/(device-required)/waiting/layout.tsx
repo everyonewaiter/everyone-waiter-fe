@@ -8,7 +8,7 @@ import {
 } from "@/lib/auth/secureStorage";
 import KitchenSSEGuard from "@/components/guard/KitchenSSEGuard";
 
-export default function PosLayout({ children }: PropsWithChildren) {
+export default function WaitingLayout({ children }: PropsWithChildren) {
   const [shouldRender, setShouldRender] = useState(false);
   const navigate = useRouter();
 
@@ -33,11 +33,10 @@ export default function PosLayout({ children }: PropsWithChildren) {
           return;
         }
 
-        // Purpose 검증
         const currentPurpose = await getCurrentDevicePurpose();
 
-        if (currentPurpose?.toLowerCase() !== "pos") {
-          navigate.push("/hall");
+        if (currentPurpose?.toLowerCase() !== "hall") {
+          navigate.push("/pos");
           return;
         }
 
@@ -52,5 +51,5 @@ export default function PosLayout({ children }: PropsWithChildren) {
 
   if (!shouldRender) return null;
 
-  return <KitchenSSEGuard allowedPurpose="pos">{children}</KitchenSSEGuard>;
+  return <KitchenSSEGuard allowedPurpose="hall">{children}</KitchenSSEGuard>;
 }

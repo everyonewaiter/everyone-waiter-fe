@@ -1,53 +1,62 @@
 "use client";
 
-import { PropsWithChildren, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import getQueryClient from "@/app/get-query-client";
-import { getStoreInfoDetail } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
-import { storeKeys } from "@/app/(main)/(owner)/[id]/store/_queries/keys";
-import { useDeviceContext } from "@/providers/deviceStoreProvider";
-import { isNumber } from "@/utils/validate";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  getDecryptedItem,
+  getCurrentDevicePurpose,
+} from "@/lib/auth/secureStorage";
+import KitchenSSEGuard from "@/components/guard/KitchenSSEGuard";
 import Header from "./_components/Header";
-import { printToKitchen } from "../pos/_utils/print-fn/print-kitchen";
 
-export default function Layout({ children }: PropsWithChildren) {
-  const { storeId } = useDeviceContext();
-  const queryClient = getQueryClient();
-
-  const { data: settingData } = useQuery({
-    queryKey: storeKeys.detail(storeId!),
-    queryFn: () => getStoreInfoDetail(storeId!),
-    enabled: !!storeId && isNumber(storeId),
-  });
+export default function HallLayout({ children }: PropsWithChildren) {
+  const [shouldRender, setShouldRender] = useState(false);
+  const navigate = useRouter();
 
   useEffect(() => {
-    const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
-      if (
-        event.type === "updated" &&
-        JSON.stringify(event.query.queryKey) ===
-          JSON.stringify(["kitchen-receipt-trigger"])
-      ) {
-        const receiptTrigger = event.query.state.data as ReceiptSSE;
-
-        if (
-          receiptTrigger?.printNo &&
-          settingData?.setting?.printerLocation === "HALL"
-        ) {
-          printToKitchen(receiptTrigger);
-          queryClient.removeQueries({
-            queryKey: ["kitchen-receipt-trigger"],
-          });
+    const checkDevice = async () => {
+      try {
+        const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+        if (!meta.deviceId || !meta.storeId) {
+          navigate.replace("/device");
+          return;
         }
-      }
-    });
 
-    return () => unsubscribe();
-  }, [queryClient, settingData]);
+        const secretKey = await getDecryptedItem({
+          key: "@secretKey",
+          deviceId: meta.deviceId,
+          storeId: meta.storeId,
+        });
+
+        if (!secretKey) {
+          navigate.replace("/device");
+          return;
+        }
+
+        const currentPurpose = await getCurrentDevicePurpose();
+
+        if (currentPurpose?.toLowerCase() !== "hall") {
+          navigate.push("/pos");
+          return;
+        }
+
+        setShouldRender(true);
+      } catch (error) {
+        navigate.replace("/device");
+      }
+    };
+
+    checkDevice();
+  }, [navigate]);
+
+  if (!shouldRender) return null;
 
   return (
-    <div className="scrollbar-hide flex min-h-dvh flex-col items-center gap-4 bg-gray-700 px-[60px] py-8">
-      <Header href="/hall" />
-      {children}
-    </div>
+    <KitchenSSEGuard allowedPurpose="hall">
+      <div className="scrollbar-hide flex min-h-dvh flex-col items-center gap-4 bg-gray-700 px-[60px] py-8">
+        <Header href="/hall" />
+        {children}
+      </div>
+    </KitchenSSEGuard>
   );
 }
