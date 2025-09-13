@@ -8,7 +8,6 @@ import { getDecryptedItem } from "../auth/secureStorage";
 type CacheKey = `${string}:${string}`;
 
 const signatureMutex = new Mutex();
-let hasShownPurposeAlert = false;
 
 const signatureCache: Record<
   CacheKey,
@@ -92,42 +91,20 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
     (response) => response,
     async (error) => {
       if (error.response) {
-        if (error.response?.status === 401) {
-          const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
-
-          const deviceInfo = (await getDecryptedItem({
-            key: "@deviceInfo",
-            deviceId: meta.deviceId,
-            storeId: meta.storeId,
-          })) as Device;
-
-          const currentPath = window.location.pathname;
-          const pathPurpose = currentPath.split("/")[1];
-
-          const validatePosPurpose =
-            deviceInfo.purpose.toLowerCase() === "pos" && pathPurpose === "pos";
-          const validateHallPurpose =
-            ["hall", "waiting"].includes(deviceInfo.purpose.toLowerCase()) &&
-            (pathPurpose === "hall" || pathPurpose === "waiting");
-
-          if (
-            validatePosPurpose &&
-            validateHallPurpose &&
-            !hasShownPurposeAlert
-          ) {
-            hasShownPurposeAlert = true;
-            // eslint-disable-next-line
-            alert(
-              `${window.location.href.split("/")[3].toUpperCase()} 기기가 아닙니다. 기기를 등록해주세요.`
-            );
-            setTimeout(() => {
-              window.location.href = "/device";
-            }, 10);
-          }
-        } else if (error.response?.status === 404) {
+        if (error.response?.status === 404) {
           const customError = new Error("NOT_FOUND");
           (customError as any).code = "NOT_FOUND";
           throw customError;
+        } else if (error.response?.status === 403) {
+          const { pathname } = window.location;
+          if (pathname.startsWith("/pos")) {
+            window.location.href = "/hall";
+          } else if (
+            pathname.startsWith("/hall") ||
+            pathname.startsWith("/waiting")
+          ) {
+            window.location.href = "/pos";
+          }
         }
       }
 

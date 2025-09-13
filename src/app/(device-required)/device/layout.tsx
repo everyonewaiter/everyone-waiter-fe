@@ -1,12 +1,12 @@
 "use client";
 
-import Loading from "@/components/Loading";
+import FirstLoading from "@/app/(main)/_components/FirstLoading";
 import { getDecryptedItem } from "@/lib/auth/secureStorage";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren, useEffect, useState } from "react";
 
 export default function Layout({ children }: PropsWithChildren) {
-  const router = useRouter();
+  const navigate = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function Layout({ children }: PropsWithChildren) {
         })) as Device;
 
         if (deviceInfo.purpose) {
-          router.push(`/${deviceInfo.purpose.toLowerCase()}`);
+          navigate.push(`/${deviceInfo.purpose.toLowerCase()}`);
         } else {
           setIsLoading(false);
         }
@@ -31,10 +31,10 @@ export default function Layout({ children }: PropsWithChildren) {
     };
 
     checkDeviceInfo();
-  }, [router]);
+  }, [navigate]);
 
   if (isLoading) {
-    return <Loading />;
+    return <FirstLoading />;
   }
 
   return <div className="center h-dvh w-dvw bg-gray-700">{children}</div>;

@@ -3,9 +3,14 @@
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import { DeviceProvider } from "@/providers/deviceStoreProvider";
 import { usePathname, useRouter } from "next/navigation";
-import { getDecryptedItem } from "@/lib/auth/secureStorage";
+import {
+  getDecryptedItem,
+  updateDevice,
+  updateDevicePurpose,
+} from "@/lib/auth/secureStorage";
 import { SseProvider } from "@/providers/sseProvider";
 import FirstLoading from "../(main)/_components/FirstLoading";
+import getQueryClient from "../get-query-client";
 
 export default function Layout({
   children,
@@ -13,8 +18,30 @@ export default function Layout({
 }: PropsWithChildren<{ modal: ReactNode }>) {
   const navigate = useRouter();
   const pathname = usePathname();
+  const [checking, setIsChecking] = useState(true);
+  const queryClient = getQueryClient();
 
-  const [checking, setIsChecking] = useState(false);
+  useEffect(() => {
+    updateDevice();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = queryClient.getQueryCache().subscribe(async (event) => {
+      if (
+        event.type === "updated" &&
+        JSON.stringify(event.query.queryKey) ===
+          JSON.stringify(["update-device"])
+      ) {
+        await updateDevicePurpose();
+
+        queryClient.removeQueries({ queryKey: ["update-device"] });
+        navigate.refresh();
+      }
+    });
+
+    return () => unsubscribe();
+    // eslint-disable-next-line
+  }, [queryClient]);
 
   useEffect(() => {
     (async () => {
@@ -32,9 +59,12 @@ export default function Layout({
           if (!secretKey) {
             navigate.replace("/device");
           }
+        } else {
+          navigate.replace("/device");
         }
       } catch {
         navigate.replace("/device");
+        return;
       } finally {
         setIsChecking(false);
       }

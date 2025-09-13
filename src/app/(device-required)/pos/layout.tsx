@@ -2,33 +2,49 @@
 
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getDecryptedItem } from "@/lib/auth/secureStorage";
+import {
+  getDecryptedItem,
+  getCurrentDevicePurpose,
+} from "@/lib/auth/secureStorage";
 import KitchenSSEGuard from "@/components/guard/KitchenSSEGuard";
 
-export default function Layout({ children }: PropsWithChildren) {
+export default function PosLayout({ children }: PropsWithChildren) {
   const [shouldRender, setShouldRender] = useState(false);
   const navigate = useRouter();
 
   useEffect(() => {
     const checkDevice = async () => {
-      const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
-      if (!meta.deviceId || !meta.storeId) {
+      try {
+        const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+        if (!meta.deviceId || !meta.storeId) {
+          navigate.replace("/device");
+          return;
+        }
+
+        // Secret key 확인
+        const secretKey = await getDecryptedItem({
+          key: "@secretKey",
+          deviceId: meta.deviceId,
+          storeId: meta.storeId,
+        });
+
+        if (!secretKey) {
+          navigate.replace("/device");
+          return;
+        }
+
+        // Purpose 검증
+        const currentPurpose = await getCurrentDevicePurpose();
+
+        if (currentPurpose?.toLowerCase() !== "pos") {
+          navigate.push("/hall");
+          return;
+        }
+
+        setShouldRender(true);
+      } catch (error) {
         navigate.replace("/device");
-        return;
       }
-
-      const deviceInfo = (await getDecryptedItem({
-        key: "@deviceInfo",
-        deviceId: meta.deviceId,
-        storeId: meta.storeId,
-      })) as Device;
-
-      if (deviceInfo?.purpose?.toLowerCase() !== "pos") {
-        navigate.back();
-        return;
-      }
-
-      setShouldRender(true);
     };
 
     checkDevice();
