@@ -20,7 +20,7 @@ interface IProps {
 
 export default function SideContents({ orders, activityOrders }: IProps) {
   const { checkedMenu, changeCheckedMenu } = useCheckedMenuStore();
-  const { selectedMenu, setSelectedMenu, selectedOrder, setSelectedOrder } =
+  const { hasSelectedOrder, addSelectedOrder, removeSelectedOrder } =
     useSelectItemStore();
 
   return (
@@ -50,14 +50,14 @@ export default function SideContents({ orders, activityOrders }: IProps) {
               <MenuBox
                 index={index}
                 {...item}
-                select={selectedMenu?.orderMenuId}
-                onSelect={setSelectedMenu}
-                checked={selectedOrder?.orderId === item.orderId}
-                onCheckedChange={() =>
-                  selectedOrder?.orderId === item.orderId
-                    ? setSelectedOrder(null)
-                    : setSelectedOrder(item)
-                }
+                checked={hasSelectedOrder(item.orderId)}
+                onCheckedChange={() => {
+                  if (hasSelectedOrder(item.orderId)) {
+                    removeSelectedOrder(item.orderId);
+                  } else {
+                    addSelectedOrder(item);
+                  }
+                }}
               />
               {index < arr.length - 1 && (
                 <div className="my-8 h-[2px] w-full bg-gray-700" />

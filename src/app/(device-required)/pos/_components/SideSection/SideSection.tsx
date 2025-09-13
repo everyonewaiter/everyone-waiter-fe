@@ -24,7 +24,8 @@ export default function SideSection() {
   const params = useParams();
   const tableNo = Number(params?.tableId as string);
 
-  const { selectedOrder, selectedMenu } = useSelectItemStore();
+  const { selectedOrder, selectedMenu, setSelectedOrder } =
+    useSelectItemStore();
   const { orders } = useOrderStore();
 
   const { open, close } = useOverlay();
@@ -50,21 +51,33 @@ export default function SideSection() {
     );
   };
 
-  const handleCancelOrder = () => {
-    if (!selectedOrder?.orderId) {
+  const handleCancelOrder = async () => {
+    if (selectedOrder.length === 0) {
       // eslint-disable-next-line no-alert
       alert("삭제할 주문을 선택해주세요.");
       return;
     }
 
-    cancel.mutate({
-      tableNo,
-      orderId: selectedOrder?.orderId as string,
+    const cancelPromises = selectedOrder.map((order) =>
+      cancel.mutateAsync({
+        tableNo,
+        orderId: order.orderId,
+      })
+    );
+
+    await Promise.all(cancelPromises).then(() => {
+      setSelectedOrder([]);
+      if (data?.orders.length === 0) {
+        complete.mutate({ tableNo });
+        navigate.push("/pos/tables");
+      }
     });
   };
 
+  console.log(selectedMenu);
+
   const handleUpdateOrderedMenu = (type: "add" | "sub") => {
-    if (!selectedMenu?.orderId) {
+    if (selectedMenu.length === 0) {
       // eslint-disable-next-line no-alert
       alert("수정할 메뉴를 선택해주세요.");
       return;
@@ -73,20 +86,18 @@ export default function SideSection() {
     updateOrder.mutate({
       tableNo,
       body: {
-        orders: [
-          {
-            orderId: selectedMenu?.orderId as string,
-            orderMenus: [
-              {
-                orderMenuId: selectedMenu?.orderMenuId as string,
-                quantity:
-                  type === "add"
-                    ? (selectedMenu?.quantity ?? 0) + 1
-                    : (selectedMenu?.quantity ?? 0) - 1,
-              },
-            ],
-          },
-        ],
+        orders: selectedMenu.map((el) => ({
+          orderId: el.orderId,
+          orderMenus: [
+            {
+              orderMenuId: el.orderMenuId,
+              quantity:
+                type === "add"
+                  ? (el?.quantity ?? 0) + 1
+                  : (el?.quantity ?? 0) - 1,
+            },
+          ],
+        })),
       },
     });
   };
@@ -100,7 +111,7 @@ export default function SideSection() {
         hasOrders={orders.length > 0}
         data={data!}
       />
-      {!orders.length && data?.orders?.length === 0 ? (
+      {!orders?.length && (!data?.orders || data?.orders === undefined) ? (
         <div className="center w-full flex-1 flex-col">
           생성된 주문이 없습니다.
         </div>

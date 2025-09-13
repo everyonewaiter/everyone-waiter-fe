@@ -1,11 +1,10 @@
 import Checkbox from "@/components/common/Checkbox";
 import cn from "@/lib/utils";
 import MenuBoxItem from "./MenuBoxItem";
+import { useSelectItemStore } from "../_hooks/useSelectItemStore";
 
 interface IProps extends TableOrder {
   index: number;
-  onSelect?: (menuid: (TableOrderMenu & { orderId: string }) | null) => void;
-  select?: string;
   checked?: boolean;
   onCheckedChange?: () => void;
   nonInteractive?: boolean;
@@ -13,13 +12,14 @@ interface IProps extends TableOrder {
 
 export default function MenuBox({
   index,
-  onSelect,
-  select,
   checked,
   onCheckedChange,
   nonInteractive,
   ...props
 }: IProps) {
+  const { hasSelectedMenu, addSelectedMenu, removeSelectedMenu } =
+    useSelectItemStore();
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-3">
@@ -33,24 +33,18 @@ export default function MenuBox({
         <strong className="text-2xl font-semibold">{index + 1}</strong>
       </div>
       {props.orderMenus.map((menu) => {
-        const isSelected = select === menu.orderMenuId;
         const isInteractive = !nonInteractive;
+        const isSelected = hasSelectedMenu(menu.orderMenuId);
+
         const handleClick = () => {
           if (!isInteractive) return;
           if (isSelected) {
-            onSelect?.(null);
+            removeSelectedMenu(menu.orderMenuId);
           } else {
-            onSelect?.({ ...menu, orderId: props.orderId });
-          }
-        };
-        const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-          if (!isInteractive) return;
-          if (e.key === "Enter" || e.key === " ") {
-            if (isSelected) {
-              onSelect?.(null);
-            } else {
-              onSelect?.({ ...menu, orderId: props.orderId });
-            }
+            addSelectedMenu({
+              orderId: props.orderId,
+              ...menu,
+            });
           }
         };
 
@@ -66,7 +60,7 @@ export default function MenuBox({
               role: "button",
               tabIndex: 0,
               onClick: handleClick,
-              onKeyDown: handleKeyDown,
+              // onKeyDown: handleKeyDown,
             })}
           >
             <MenuBoxItem key={menu.orderMenuId} {...menu} />
