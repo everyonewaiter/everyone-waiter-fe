@@ -21,7 +21,7 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
     false,
     false,
     0,
-    1
+    0
   );
   window.printText(
     `테이블번호: ${props.tableNo}\n`,
@@ -71,7 +71,7 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
       0
     );
     menu.options.forEach((option) => {
-      window.printText(`${option}\n`, 1, 0, true, false, false, 0, 0);
+      window.printText(`${option}\n`, 0, 1, true, false, false, 0, 0);
     });
   });
 
@@ -122,13 +122,13 @@ export const printCancelToKitchen = ({
 
   printDivider();
 
-  window.printText("취소된 품목:\n", 0, 0, false, false, false, 0, 0);
+  window.printText("취소된 품목:\n\n", 0, 0, false, false, false, 0, 0);
 
   cancelledMenus.forEach((menu) => {
     window.printText(
-      `${formatAlignLeftRight(menu.name, String(menu.quantity))}\n`,
-      0,
-      0,
+      `${menu.name} - ${menu.quantity}개`,
+      1,
+      1,
       true,
       false,
       false,
@@ -136,7 +136,7 @@ export const printCancelToKitchen = ({
       0
     );
     menu.orderOptionGroups.forEach((option) => {
-      window.printText(`${option}`, 0, 0, true, false, false, 0, 0);
+      window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
     });
   });
 
