@@ -96,7 +96,7 @@ export default function CancelAlert({
       return;
     }
 
-    // 주문 취소 (후결제)
+    // 전체 주문 취소 (후결제) 및 포스 결제 취소
     if (type === "order-cancel" || (type === "pay-cancel" && isFromPosTable)) {
       const deletePromises = activity?.orders.map((order) =>
         cancel.mutateAsync({
@@ -147,7 +147,7 @@ export default function CancelAlert({
             type === "order-reset" ? "mt-2" : ""
           )}
         >
-          {type === "order-reset" ? "전체 주문을" : "결제를"} 취소하시겠습니까?
+          {type === "pay-cancel" ? "결제를" : "전체 주문을"} 취소하시겠습니까?
         </span>
       </div>
     </Alert>
