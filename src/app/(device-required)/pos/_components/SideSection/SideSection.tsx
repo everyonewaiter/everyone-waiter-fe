@@ -69,6 +69,7 @@ export default function SideSection() {
 
     await Promise.all(cancelPromises).then(() => {
       setSelectedOrder([]);
+
       if (data?.orders.length === 0) {
         complete.mutate({ tableNo });
         navigate.push("/pos/tables");
@@ -107,7 +108,7 @@ export default function SideSection() {
           queryClient.invalidateQueries({
             queryKey: posKeys.activity(data?.tableNo!),
           });
-          console.log(data?.orders);
+
           if (!data?.orders?.length) {
             complete.mutate(
               { tableNo },

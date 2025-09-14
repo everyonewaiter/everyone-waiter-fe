@@ -124,7 +124,6 @@ export class SseService {
       switch (sseEvent.category) {
         case "DEVICE":
           if (sseEvent.hasData) {
-            console.log(sseEvent.hasData);
             if (sseEvent?.action === "UPDATE") {
               queryClient.setQueryData(["update-device"], sseEvent.data);
             }
@@ -162,9 +161,6 @@ export class SseService {
               ["kitchen-receipt-trigger"],
               sseEvent.data
             );
-            queryClient.invalidateQueries({
-              queryKey: ["kitchen-receipt-trigger"],
-            });
           }
           break;
         case "POS":
