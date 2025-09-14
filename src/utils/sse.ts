@@ -157,20 +157,10 @@ export class SseService {
           break;
         case "RECEIPT":
           if (sseEvent.hasData) {
-            // queryClient.setQueryData(
-            //   ["kitchen-receipt-trigger"],
-            //   sseEvent.data
-            // );
-            const existingData = queryClient.getQueryData([
-              "kitchen-receipt-trigger",
-            ]);
-            const newData = JSON.parse(sseEvent.data);
-            if (
-              !existingData ||
-              (existingData as any)?.printNo !== newData.printNo
-            ) {
-              queryClient.setQueryData(["kitchen-receipt-trigger"], newData);
-            }
+            queryClient.setQueryData(
+              ["kitchen-receipt-trigger"],
+              sseEvent.data
+            );
           }
           break;
         case "POS":
