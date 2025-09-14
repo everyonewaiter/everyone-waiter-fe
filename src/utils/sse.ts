@@ -161,9 +161,6 @@ export class SseService {
               ["kitchen-receipt-trigger"],
               sseEvent.data
             );
-            queryClient.invalidateQueries({
-              queryKey: ["kitchen-receipt-trigger"],
-            });
           }
           break;
         case "POS":

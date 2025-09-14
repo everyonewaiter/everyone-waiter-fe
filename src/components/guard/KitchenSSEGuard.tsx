@@ -60,6 +60,7 @@ export default function KitchenSSEGuard({
             printToKitchen(receiptTrigger);
           }
 
+          queryClient.setQueryData(["kitchen-receipt-trigger"], undefined);
           queryClient.removeQueries({ queryKey: ["kitchen-receipt-trigger"] });
         }
       }

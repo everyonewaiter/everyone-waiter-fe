@@ -61,7 +61,7 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
   }
   props.receiptMenus.forEach((menu) => {
     window.printText(
-      `${formatAlignLeftRight(menu.name, `${menu.quantity}원`, 1)}\n`,
+      `${formatAlignLeftRight(menu.name, `${menu.quantity}`, 1)}\n`,
       1,
       1,
       true,
@@ -128,13 +128,12 @@ export const printCancelToKitchen = ({
   );
 
   printDivider();
-  printDivider();
 
   window.printText("취소된 품목:\n\n", 0, 0, false, false, false, 0, 0);
 
   cancelledMenus.forEach((menu) => {
     window.printText(
-      `${formatAlignLeftRight(menu.name, `-${menu.quantity}개`, 1)}\n`,
+      `${formatAlignLeftRight(menu.name, `${menu.quantity}개`, 1)}\n`,
       1,
       1,
       true,
