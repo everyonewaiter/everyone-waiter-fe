@@ -46,7 +46,7 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
   }
   props.receiptMenus.forEach((menu) => {
     window.printText(
-      `${formatAlignLeftRight(menu.name, String(menu.quantity))}\n`,
+      `${(formatAlignLeftRight(menu.name, String(menu.quantity)), 1)}\n`,
       1,
       1,
       true,

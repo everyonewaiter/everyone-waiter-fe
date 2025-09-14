@@ -54,49 +54,32 @@ function formatReceiptRow(
   );
 }
 
-function calculateStringWidth(str: string) {
-  if (!str || typeof str !== "string") return 0;
-
-  return str
-    .split("")
-    .reduce((sum, char) => sum + (/[가-힣]/.test(char) ? 1 : 0.5), 0);
-}
+const countUnits = (text: string | null | undefined) => {
+  const safeText = text || "";
+  return safeText.split("").reduce((totalUnits, char) => {
+    if (/[가-힣]/.test(char)) {
+      return totalUnits + 2;
+    }
+    return totalUnits + 1;
+  }, 0);
+};
 
 function formatAlignLeftRight(
   left: string,
   right: string,
   fontSizeX: number = 0
 ) {
-  const maxChars = {
-    0: 21, // 42 ÷ 2
-    1: 10.5, // 42 ÷ 4
-    2: 7, // 42 ÷ 6
+  const maxWidth = {
+    0: 42, // 42 ÷ 2
+    1: 21, // 42 ÷ 4
   };
 
-  const totalChars = maxChars[fontSizeX as keyof typeof maxChars];
+  const width = maxWidth[fontSizeX as keyof typeof maxWidth];
 
-  const leftChars = calculateStringWidth(left);
-  const rightChars = calculateStringWidth(right);
-  const spacing = totalChars - leftChars - rightChars;
+  const leftLength = countUnits(left);
+  const rightLenfth = countUnits(right);
 
-  if (spacing <= 0) return left + right;
-
-  return left + " ".repeat(Math.floor(spacing)) + right;
-}
-
-function createPaperConfig(totalWidth: number): PaperConfig {
-  const nameRatio = 0.45;
-  const qtyRatio = 0.12;
-  const priceRatio = 0.215;
-  const totalPriceRatio = 0.215;
-
-  return {
-    totalWidth,
-    nameWidth: Math.floor(totalWidth * nameRatio),
-    qtyWidth: Math.floor(totalWidth * qtyRatio),
-    priceWidth: Math.floor(totalWidth * priceRatio),
-    totalPriceWidth: Math.floor(totalWidth * totalPriceRatio),
-  };
+  return `${left}${" ".repeat(width - leftLength - rightLenfth)}${right}`;
 }
 
 function printDivider() {
@@ -130,16 +113,6 @@ const checkPrinter = (
   testReq.send();
 };
 
-const countUnits = (text: string | null | undefined) => {
-  const safeText = text || "";
-  return safeText.split("").reduce((totalUnits, char) => {
-    if (/[가-힣]/.test(char)) {
-      return totalUnits + 2;
-    }
-    return totalUnits + 1;
-  }, 0);
-};
-
 const printBaseRow = (text: string, value: string) => {
   const INIT = 42;
   const spacing = " ".repeat(INIT - countUnits(text) - countUnits(value));
@@ -149,7 +122,6 @@ const printBaseRow = (text: string, value: string) => {
 export {
   formatAlignLeftRight,
   formatReceiptRow,
-  createPaperConfig,
   PAPER_CONFIGS,
   printDivider,
   checkPrinter,

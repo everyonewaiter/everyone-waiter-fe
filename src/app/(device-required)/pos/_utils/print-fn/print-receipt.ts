@@ -1,7 +1,6 @@
 import { PRINTERNAME } from "@/constants/printerName";
 import {
   checkPrinter,
-  countUnits,
   formatAlignLeftRight,
   formatReceiptRow,
   printDivider,
@@ -85,8 +84,13 @@ export const print = ({
 
     activity?.orders.forEach((order) => {
       order.orderMenus.forEach((menu) => {
+        const totalPrice =
+          menu.price * menu.quantity +
+          menu.orderOptionGroups
+            .flatMap((el) => el.orderOptions.map((v) => v.price))
+            .reduce((sum, price) => sum + price, 0);
         window.printText(
-          `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${(menu.price * menu.quantity).toLocaleString()}`)}\n`,
+          `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${totalPrice.toLocaleString()}`)}\n`,
           0,
           0,
           false,
@@ -98,7 +102,7 @@ export const print = ({
         menu.orderOptionGroups.forEach((option) => {
           option.orderOptions.forEach((o, i, arr) => {
             window.printText(
-              `${formatAlignLeftRight(`└ ${o.name}`, o.price ? `${o.price.toLocaleString()}` : "")}${i === arr.length - 1 ? "" : "\n"}`,
+              `${formatReceiptRow(`└ ${o.name}`, "", o.price ? `${o.price.toLocaleString()}` : "", "")}${i === arr.length - 1 ? "" : "\n"}`,
               0,
               0,
               false,
@@ -118,7 +122,7 @@ export const print = ({
     const vatAmount = Number(activity?.totalOrderPrice) - supplyAmount;
 
     window.printText(
-      `${formatReceiptRow("공급가", "", "", `${supplyAmount.toLocaleString()}원`)}\n`,
+      `${formatAlignLeftRight("공급가", `${supplyAmount.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -128,7 +132,7 @@ export const print = ({
       0
     );
     window.printText(
-      `${formatReceiptRow("부가세", "", "", `${vatAmount.toLocaleString()}원`)}\n`,
+      `${formatAlignLeftRight("부가세", `${vatAmount.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -140,7 +144,7 @@ export const print = ({
 
     if (activity?.discount) {
       window.printText(
-        `${formatReceiptRow("할인", "", "", `${activity?.discount.toLocaleString()}원`)}\n`,
+        `${formatAlignLeftRight("할인", `${activity?.discount.toLocaleString()}원`)}\n`,
         0,
         1,
         true,
@@ -152,7 +156,7 @@ export const print = ({
     }
 
     window.printText(
-      `${formatReceiptRow("합계", "", "", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
+      `${formatAlignLeftRight("합계", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -167,7 +171,7 @@ export const print = ({
     if (type === "card-receipt") {
       printDivider();
       window.printText(
-        `결제방법${" ".repeat(42 - 8 - countUnits(payment?.CARDNAME?.trim() as string))}\n`,
+        formatAlignLeftRight("결제방법", payment?.CARDNAME?.trim()!),
         0,
         0,
         false,
@@ -177,7 +181,10 @@ export const print = ({
         0
       );
       window.printText(
-        `카드번호${" ".repeat(18)}${payment?.FILLER?.trim() as string}\n`,
+        formatAlignLeftRight(
+          "카드번호",
+          payment?.FILLER?.trim() || " ".repeat(16)
+        ),
         0,
         0,
         false,
@@ -187,7 +194,10 @@ export const print = ({
         0
       );
       window.printText(
-        `결제금액${" ".repeat(42 - 8 - countUnits(activity?.totalOrderPrice.toLocaleString()) - 2)}${activity?.totalOrderPrice.toLocaleString()}원\n`,
+        formatAlignLeftRight(
+          "결제금액",
+          `${activity?.totalOrderPrice.toLocaleString()}원`
+        ),
         0,
         0,
         false,
@@ -197,7 +207,12 @@ export const print = ({
         0
       );
       window.printText(
-        `할부기간${" ".repeat(28)}${payment?.INSTALLMENT === "일시불" || payment?.INSTALLMENT === "00" ? "일시불" : `${payment?.INSTALLMENT}개월`}\n`,
+        formatAlignLeftRight(
+          "할부기간",
+          payment?.INSTALLMENT === "일시불" || payment?.INSTALLMENT === "00"
+            ? "일시불"
+            : `${payment?.INSTALLMENT}개월`
+        ),
         0,
         0,
         false,
@@ -207,7 +222,10 @@ export const print = ({
         0
       );
       window.printText(
-        `승인번호${" ".repeat(24 - 12 - 8)}${payment?.APPROVALNO?.trim() as string}\n`,
+        formatAlignLeftRight(
+          "승인번호",
+          payment?.APPROVALNO?.trim() || " ".repeat(12)
+        ),
         0,
         0,
         false,
@@ -218,7 +236,7 @@ export const print = ({
       );
 
       window.printText(
-        `승인일시${" ".repeat(22)}${paymentTradeTime!}\n\n\n`,
+        formatAlignLeftRight("승인일시", paymentTradeTime || " ".repeat(12)),
         0,
         0,
         false,
@@ -232,7 +250,7 @@ export const print = ({
     if (type === "cash-receipt") {
       printDivider();
       window.printText(
-        `${formatAlignLeftRight("결제 방법", "현금")}\n`,
+        `${formatAlignLeftRight("결제방법", "현금")}\n`,
         0,
         0,
         false,
@@ -244,7 +262,7 @@ export const print = ({
 
       if (makePersonalPayment) {
         window.printText(
-          `${formatAlignLeftRight("현금 영수증", `${cashReceiptPhoneNo}`)}\n`,
+          `${formatAlignLeftRight("현금영수증", `${cashReceiptPhoneNo}`)}\n`,
           0,
           0,
           false,
@@ -256,7 +274,7 @@ export const print = ({
       }
 
       window.printText(
-        `${formatAlignLeftRight("승인 일시", paymentTradeTime as string)}\n\n`,
+        formatAlignLeftRight("승인일시", paymentTradeTime || " ".repeat(12)),
         0,
         0,
         false,

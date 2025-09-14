@@ -1,10 +1,8 @@
 import { PRINTERNAME } from "@/constants/printerName";
 import {
   checkPrinter,
-  countUnits,
   formatAlignLeftRight,
   formatReceiptRow,
-  printBaseRow,
   printDivider,
 } from "./utils";
 
@@ -61,11 +59,26 @@ export const printRefund = ({
       0
     );
 
-    const [date, time] = new Date().toISOString().split("T");
-    const [h, m, s] = time.split(":");
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const period = hours >= 12 ? "오후" : "오전";
+    let displayHours: number;
+    if (hours > 12) {
+      displayHours = hours - 12;
+    } else if (hours === 0) {
+      displayHours = 12;
+    } else {
+      displayHours = hours;
+    }
+
+    const formattedTime = `${displayHours}:${minutes.toString().padStart(2, "0")}`;
 
     window.printText(
-      `취소일시: #${date.replaceAll(".", " .")} ${h}시 ${m}분 ${s}초\n`,
+      `발행일시: ${year}. ${month}. ${day}. ${period} ${formattedTime}\n`,
       0,
       0,
       true,
@@ -89,8 +102,13 @@ export const printRefund = ({
 
     activity?.orders.forEach((order) => {
       order.orderMenus.forEach((menu) => {
+        const totalPrice =
+          menu.price * menu.quantity +
+          menu.orderOptionGroups
+            .flatMap((el) => el.orderOptions.map((v) => v.price))
+            .reduce((sum, price) => sum + price, 0);
         window.printText(
-          `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${(menu.price * menu.quantity).toLocaleString()}`)}\n`,
+          `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${totalPrice.toLocaleString()}`)}\n`,
           0,
           0,
           false,
@@ -102,7 +120,7 @@ export const printRefund = ({
         menu.orderOptionGroups.forEach((option) => {
           option.orderOptions.forEach((o, i, arr) => {
             window.printText(
-              `${formatAlignLeftRight(`└ ${o.name}`, o.price ? `${o.price.toLocaleString()}` : "")}${i === arr.length - 1 ? "" : "\n"}`,
+              `${formatReceiptRow(`└ ${o.name}`, "", o.price ? `${o.price.toLocaleString()}` : "", "")}${i === arr.length - 1 ? "" : "\n"}`,
               0,
               0,
               false,
@@ -119,7 +137,10 @@ export const printRefund = ({
     printDivider();
 
     window.printText(
-      `취소 금액${" ".repeat(42 - 9 - countUnits(activity?.totalOrderPrice.toLocaleString()))}${activity?.totalOrderPrice.toLocaleString()}원\n`,
+      formatAlignLeftRight(
+        "취소 금액",
+        `${activity?.totalPaymentPrice.toLocaleString()}원`
+      ),
       0,
       1,
       true,
@@ -134,7 +155,10 @@ export const printRefund = ({
     if (type === "card-receipt") {
       printDivider();
       window.printText(
-        printBaseRow("결제방법", `${payments?.issuerName?.trim()} 취소`),
+        formatAlignLeftRight(
+          "결제방법",
+          `${payments?.issuerName?.trim()} 취소`
+        ),
         0,
         0,
         false,
@@ -144,7 +168,7 @@ export const printRefund = ({
         0
       );
       window.printText(
-        printBaseRow("카드번호", payments?.cardNo?.trim()),
+        formatAlignLeftRight("카드번호", payments?.cardNo?.trim()),
         0,
         0,
         false,
@@ -154,7 +178,10 @@ export const printRefund = ({
         0
       );
       window.printText(
-        printBaseRow("취소금액", `${payments?.amount.toLocaleString()}원`),
+        formatAlignLeftRight(
+          "취소금액",
+          `${payments?.amount.toLocaleString()}원`
+        ),
         0,
         0,
         false,
@@ -164,7 +191,7 @@ export const printRefund = ({
         0
       );
       window.printText(
-        printBaseRow(
+        formatAlignLeftRight(
           "원승인번호",
           payments?.approvalNo?.trim() || " ".repeat(12)
         ),
@@ -178,7 +205,7 @@ export const printRefund = ({
       );
 
       window.printText(
-        printBaseRow("원승인일시", payments?.tradeTime),
+        formatAlignLeftRight("원승인일시", payments?.tradeTime),
         0,
         0,
         false,
@@ -192,7 +219,7 @@ export const printRefund = ({
     if (type === "cash-receipt") {
       printDivider();
       window.printText(
-        printBaseRow("결제방법", "현금 취소"),
+        formatAlignLeftRight("결제방법", "현금 취소"),
         0,
         0,
         false,
@@ -203,7 +230,7 @@ export const printRefund = ({
       );
 
       window.printText(
-        printBaseRow("원승인일시", payments?.tradeTime),
+        formatAlignLeftRight("원승인일시", payments?.tradeTime),
         0,
         0,
         false,
