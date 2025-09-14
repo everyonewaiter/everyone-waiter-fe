@@ -119,6 +119,28 @@ const printBaseRow = (text: string, value: string) => {
   return `${text + spacing + value}\n`;
 };
 
+const formatted = (initialDate?: Date) => {
+  const now = initialDate || new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const period = hours >= 12 ? "오후" : "오전";
+  let displayHours: number;
+  if (hours > 12) {
+    displayHours = hours - 12;
+  } else if (hours === 0) {
+    displayHours = 12;
+  } else {
+    displayHours = hours;
+  }
+
+  const time = `${displayHours}:${minutes.toString().padStart(2, "0")}`;
+
+  return `${year}. ${month}. ${day}. ${period} ${time}`;
+};
+
 export {
   formatAlignLeftRight,
   formatReceiptRow,
@@ -127,4 +149,5 @@ export {
   checkPrinter,
   countUnits,
   printBaseRow,
+  formatted,
 };

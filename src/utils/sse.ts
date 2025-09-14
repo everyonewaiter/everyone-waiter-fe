@@ -124,7 +124,6 @@ export class SseService {
       switch (sseEvent.category) {
         case "DEVICE":
           if (sseEvent.hasData) {
-            console.log(sseEvent.hasData);
             if (sseEvent?.action === "UPDATE") {
               queryClient.setQueryData(["update-device"], sseEvent.data);
             }

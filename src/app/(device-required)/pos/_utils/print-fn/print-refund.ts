@@ -3,6 +3,7 @@ import {
   checkPrinter,
   formatAlignLeftRight,
   formatReceiptRow,
+  formatted,
   printDivider,
 } from "./utils";
 
@@ -59,26 +60,8 @@ export const printRefund = ({
       0
     );
 
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const period = hours >= 12 ? "오후" : "오전";
-    let displayHours: number;
-    if (hours > 12) {
-      displayHours = hours - 12;
-    } else if (hours === 0) {
-      displayHours = 12;
-    } else {
-      displayHours = hours;
-    }
-
-    const formattedTime = `${displayHours}:${minutes.toString().padStart(2, "0")}`;
-
     window.printText(
-      `발행일시: ${year}. ${month}. ${day}. ${period} ${formattedTime}\n`,
+      `발행일시: ${formatted()}\n`,
       0,
       0,
       true,

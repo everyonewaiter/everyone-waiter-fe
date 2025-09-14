@@ -16,6 +16,7 @@ import SideHeader from "./SideHeader";
 import SideLayout from "./SideLayout";
 import SidePayment from "./SidePayment";
 import { posKeys } from "../../_queries/keys";
+import { printCancelToKitchen } from "../../_utils/print-fn/print-kitchen";
 
 const MemoAlert = dynamic(() => import("../modals/MemoAlert"), {
   ssr: false,
@@ -69,10 +70,19 @@ export default function SideSection() {
 
     await Promise.all(cancelPromises).then(() => {
       setSelectedOrder([]);
-      if (data?.orders.length === 0) {
-        complete.mutate({ tableNo });
-        navigate.push("/pos/tables");
-      }
+      const now = new Date();
+
+      printCancelToKitchen({
+        cancelledMenus: selectedOrder.map((el) => el.orderMenus).flat(),
+        tableNo,
+        cancelledTime: now,
+        successHandler: () => {
+          if (data?.orders.length === 0) {
+            complete.mutate({ tableNo });
+            navigate.push("/pos/tables");
+          }
+        },
+      });
     });
   };
 
@@ -82,6 +92,12 @@ export default function SideSection() {
       alert("수정할 메뉴를 선택해주세요.");
       return;
     }
+
+    const cancelledMenus = selectedMenu.filter((el) => {
+      const newQuantity =
+        type === "add" ? (el?.quantity ?? 0) + 1 : (el?.quantity ?? 0) - 1;
+      return newQuantity <= 0;
+    });
 
     updateOrder.mutate(
       {
@@ -107,13 +123,21 @@ export default function SideSection() {
           queryClient.invalidateQueries({
             queryKey: posKeys.activity(data?.tableNo!),
           });
-          console.log(data?.orders);
-          if (!data?.orders?.length) {
-            complete.mutate(
-              { tableNo },
-              { onSuccess: () => navigate.push("/pos/tables") }
-            );
-          }
+
+          const now = new Date();
+          printCancelToKitchen({
+            cancelledMenus,
+            tableNo,
+            cancelledTime: now,
+            successHandler: () => {
+              if (!data?.orders?.length) {
+                complete.mutate(
+                  { tableNo },
+                  { onSuccess: () => navigate.push("/pos/tables") }
+                );
+              }
+            },
+          });
         },
       }
     );
