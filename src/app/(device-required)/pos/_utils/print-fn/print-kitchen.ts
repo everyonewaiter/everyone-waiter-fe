@@ -61,7 +61,7 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
   }
   props.receiptMenus.forEach((menu) => {
     window.printText(
-      `${(formatAlignLeftRight(menu.name, String(menu.quantity)), 1)}\n`,
+      `${formatAlignLeftRight(menu.name, `${menu.quantity}원`, 1)}\n`,
       1,
       1,
       true,
@@ -99,20 +99,27 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
 export const printCancelToKitchen = ({
   cancelledMenus,
   tableNo,
+  printNo,
   cancelledTime,
   successHandler,
 }: {
-  cancelledMenus: TableOrderMenu[];
+  cancelledMenus: {
+    name: string;
+    options: string[];
+    quantity: number;
+  }[];
   tableNo: number;
+  printNo: number;
   cancelledTime: Date;
   successHandler?: () => void;
 }) => {
   window.printText(`주문 취소서\n\n`, 1, 1, true, false, false, 0, 1);
+  window.printText(`주문번호: ${printNo}\n`, 0, 1, true, false, false, 0, 0);
   window.printText(`테이블번호: ${tableNo}\n`, 0, 1, true, false, false, 0, 0);
   window.printText(
     `취소 시간: ${formatted(cancelledTime)}\n`,
     0,
-    1,
+    0,
     true,
     false,
     false,
@@ -121,12 +128,13 @@ export const printCancelToKitchen = ({
   );
 
   printDivider();
+  printDivider();
 
   window.printText("취소된 품목:\n\n", 0, 0, false, false, false, 0, 0);
 
   cancelledMenus.forEach((menu) => {
     window.printText(
-      `${menu.name} - ${menu.quantity}개`,
+      `${formatAlignLeftRight(menu.name, `-${menu.quantity}개`, 1)}\n`,
       1,
       1,
       true,
@@ -135,12 +143,12 @@ export const printCancelToKitchen = ({
       0,
       0
     );
-    menu.orderOptionGroups.forEach((option) => {
+    menu.options.forEach((option) => {
       window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
     });
   });
 
-  window.printText("\n\n", 0, 0, false, false, false, 0, 0);
+  window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
 
   window.cutPaper(1);
 
