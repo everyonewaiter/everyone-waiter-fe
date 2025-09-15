@@ -13,6 +13,7 @@ import MenuBox from "./MenuBox";
 import CancelAlert from "./modals/CancelAlert";
 import { print } from "../_utils/print-fn/print-receipt";
 import SideBottom from "./SideSection/SideBottom";
+import { printRefund } from "../_utils/print-fn/print-refund";
 
 const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
   ssr: false,
@@ -41,7 +42,18 @@ export default function SideSection2({
   const { data: stores } = posQueries.useStoreInfo(storeId as string);
 
   const handleReceipt = () => {
-    if (selectedRow.method === "CARD") {
+    if (!isCancelled && selectedRow?.state === "CANCEL") {
+      printRefund({
+        type: selectedRow.method === "CARD" ? "card-receipt" : "cash-receipt",
+        activity: activity!,
+        stores: stores!,
+        payments: selectedRow,
+        successHandler: openReceipt.close,
+      });
+      return;
+    }
+
+    if (selectedRow?.state !== "CANCEL" && selectedRow.method === "CARD") {
       print({
         type: "card-receipt",
         activity: activity!,
@@ -53,8 +65,12 @@ export default function SideSection2({
           APPROVALNO: selectedRow.approvalNo,
         },
         paymentTradeTime: selectedRow.tradeTime || "",
+        successHandler: openReceipt.close,
       });
-    } else {
+      return;
+    }
+
+    if (selectedRow?.state !== "CANCEL" && selectedRow.method === "CASH") {
       print({
         type: "cash-receipt",
         activity: activity!,
@@ -62,9 +78,9 @@ export default function SideSection2({
         cashReceiptPhoneNo: selectedRow.cashReceiptNo,
         makePersonalPayment: selectedRow.cashReceiptType === "DEDUCTION",
         paymentTradeTime: selectedRow.tradeTime || "",
+        successHandler: openReceipt.close,
       });
     }
-    openReceipt.close();
   };
 
   const handlePrintReceipt: React.MouseEventHandler<HTMLButtonElement> = (
