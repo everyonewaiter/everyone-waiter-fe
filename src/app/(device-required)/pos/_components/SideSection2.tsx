@@ -21,11 +21,13 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 interface IProps extends OrderPaymentsList {
   resetSelectedRow: () => void;
   isCancelled: boolean;
+  resultPayment: number;
 }
 
 export default function SideSection2({
   resetSelectedRow,
   isCancelled,
+  resultPayment,
   ...selectedRow
 }: IProps) {
   const openReceipt = useOverlay();
@@ -110,6 +112,8 @@ export default function SideSection2({
     ));
   };
 
+  console.log(activity);
+
   return (
     <aside className="relative w-full">
       <div className="flex items-center justify-between gap-4">
@@ -146,7 +150,7 @@ export default function SideSection2({
         totalOrderPrice={activity?.totalOrderPrice ?? 0}
         discount={activity?.discount ?? 0}
         remainingPaymentPrice={activity?.remainingPaymentPrice ?? 0}
-        totalPaymentPrice={activity?.totalPaymentPrice ?? 0}
+        resultPayment={resultPayment}
         onAddDiscount={() => {}}
       />
       <div className="bottom-0 flex w-full gap-3 bg-white pt-6">
