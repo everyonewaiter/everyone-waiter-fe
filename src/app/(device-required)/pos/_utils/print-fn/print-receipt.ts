@@ -245,6 +245,8 @@ export const print = ({
         0,
         0
       );
+
+      window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
     }
 
     if (type === "cash-receipt") {

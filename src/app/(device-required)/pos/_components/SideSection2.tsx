@@ -20,10 +20,12 @@ const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
 
 interface IProps extends OrderPaymentsList {
   resetSelectedRow: () => void;
+  isCancelled: boolean;
 }
 
 export default function SideSection2({
   resetSelectedRow,
+  isCancelled,
   ...selectedRow
 }: IProps) {
   const openReceipt = useOverlay();
@@ -144,6 +146,7 @@ export default function SideSection2({
         totalOrderPrice={activity?.totalOrderPrice ?? 0}
         discount={activity?.discount ?? 0}
         remainingPaymentPrice={activity?.remainingPaymentPrice ?? 0}
+        totalPaymentPrice={activity?.totalPaymentPrice ?? 0}
         onAddDiscount={() => {}}
       />
       <div className="bottom-0 flex w-full gap-3 bg-white pt-6">
@@ -158,14 +161,20 @@ export default function SideSection2({
             결제 취소하기
           </Button>
         )}
-        <Button
-          color="black"
-          className="button-xl flex flex-1 rounded-xl px-8 text-xl"
-          disabled={!selectedRow}
-          onClick={handlePrintReceipt}
-        >
-          영수증 출력하기
-        </Button>
+        {isCancelled ? (
+          <span className="button-xl center w-full !text-xl">취소됨</span>
+        ) : (
+          <Button
+            color="black"
+            className="button-xl flex flex-1 rounded-xl px-8 text-xl"
+            disabled={!selectedRow}
+            onClick={handlePrintReceipt}
+          >
+            {selectedRow?.state === "CANCEL"
+              ? "취소 영수증 출력하기"
+              : "영수증 출력하기"}
+          </Button>
+        )}
       </div>
     </aside>
   );
