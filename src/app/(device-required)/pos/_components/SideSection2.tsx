@@ -15,9 +15,12 @@ import { print } from "../_utils/print-fn/print-receipt";
 import SideBottom from "./SideSection/SideBottom";
 import { printRefund } from "../_utils/print-fn/print-refund";
 
-const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
-  ssr: false,
-});
+const ReceiptOrderDetailModal = dynamic(
+  () => import("./modals/ReceiptOrderDetailModal"),
+  {
+    ssr: false,
+  }
+);
 
 interface IProps extends OrderPaymentsList {
   resetSelectedRow: () => void;
@@ -41,7 +44,7 @@ export default function SideSection2({
   );
   const { data: stores } = posQueries.useStoreInfo(storeId as string);
 
-  const handleReceipt = () => {
+  const handleReceipt = (printOrder: boolean) => {
     if (!isCancelled && selectedRow?.state === "CANCEL") {
       printRefund({
         type: selectedRow.method === "CARD" ? "card-receipt" : "cash-receipt",
@@ -68,6 +71,7 @@ export default function SideSection2({
         paymentTradeTime: selectedRow.tradeTime || "",
         successHandler: openReceipt.close,
         close: openReceipt.close,
+        printOrder,
       });
       return;
     }
@@ -82,6 +86,7 @@ export default function SideSection2({
         paymentTradeTime: selectedRow.tradeTime || "",
         successHandler: openReceipt.close,
         close: openReceipt.close,
+        printOrder,
       });
     }
   };
@@ -93,22 +98,11 @@ export default function SideSection2({
 
     openReceipt.open(() => (
       <QueryProviders>
-        <Alert
-          onClose={openReceipt.close}
-          primaryButton={{
-            text: "출력하기",
-            onClick: handleReceipt,
-          }}
-        >
-          <div className="flex flex-col gap-[6px] py-3">
-            <span className="text-gray-0 text-xl font-semibold">
-              영수증을 출력하시겠습니까?
-            </span>
-            <span className="text-lg font-medium text-gray-200">
-              주문 내역이 포함되어 있어요!
-            </span>
-          </div>
-        </Alert>
+        <ReceiptOrderDetailModal
+          close={openReceipt.close}
+          onConfirm={() => handleReceipt(true)}
+          onCancel={() => handleReceipt(false)}
+        />
       </QueryProviders>
     ));
   };
@@ -132,8 +126,6 @@ export default function SideSection2({
       </QueryProviders>
     ));
   };
-
-  console.log(activity);
 
   return (
     <aside className="relative w-full">

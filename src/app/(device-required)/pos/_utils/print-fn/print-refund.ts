@@ -70,52 +70,53 @@ export const printRefund = ({
       0
     );
 
-    // printDivider();
-    // window.printText(
-    //   `${formatReceiptRow("메뉴명", "수량", "단가", "금액")}\n`,
-    //   0,
-    //   0,
-    //   false,
-    //   false,
-    //   false,
-    //   0,
-    //   0
-    // );
-    // printDivider();
-
-    // activity?.orders.forEach((order) => {
-    //   order.orderMenus.forEach((menu) => {
-    //     const totalPrice =
-    //       menu.price * menu.quantity +
-    //       menu.orderOptionGroups
-    //         .flatMap((el) => el.orderOptions.map((v) => v.price))
-    //         .reduce((sum, price) => sum + price, 0);
-    //     window.printText(
-    //       `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${totalPrice.toLocaleString()}`)}\n`,
-    //       0,
-    //       0,
-    //       false,
-    //       false,
-    //       false,
-    //       0,
-    //       0
-    //     );
-    //     menu.orderOptionGroups.forEach((option) => {
-    //       option.orderOptions.forEach((o, i, arr) => {
-    //         window.printText(
-    //           `${formatReceiptRow(`└ ${o.name}`, "", o.price ? `${o.price.toLocaleString()}` : "", "")}${i === arr.length - 1 ? "" : "\n"}`,
-    //           0,
-    //           0,
-    //           false,
-    //           false,
-    //           false,
-    //           0,
-    //           0
-    //         );
+    // if (printOrder) {
+    //   printDivider();
+    //   window.printText(
+    //     `${formatReceiptRow("메뉴명", "수량", "단가", "금액")}\n`,
+    //     0,
+    //     0,
+    //     false,
+    //     false,
+    //     false,
+    //     0,
+    //     0
+    //   );
+    //   printDivider();
+    //   activity?.orders.forEach((order) => {
+    //     order.orderMenus.forEach((menu) => {
+    //       const totalPrice =
+    //         menu.price * menu.quantity +
+    //         menu.orderOptionGroups
+    //           .flatMap((el) => el.orderOptions.map((v) => v.price))
+    //           .reduce((sum, price) => sum + price, 0);
+    //       window.printText(
+    //         `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${totalPrice.toLocaleString()}`)}\n`,
+    //         0,
+    //         0,
+    //         false,
+    //         false,
+    //         false,
+    //         0,
+    //         0
+    //       );
+    //       menu.orderOptionGroups.forEach((option) => {
+    //         option.orderOptions.forEach((o, i, arr) => {
+    //           window.printText(
+    //             `${formatReceiptRow(`└ ${o.name}`, "", o.price ? `${o.price.toLocaleString()}` : "", "")}${i === arr.length - 1 ? "" : "\n"}`,
+    //             0,
+    //             0,
+    //             false,
+    //             false,
+    //             false,
+    //             0,
+    //             0
+    //           );
+    //         });
     //       });
     //     });
     //   });
-    // });
+    // }
 
     printDivider();
 
