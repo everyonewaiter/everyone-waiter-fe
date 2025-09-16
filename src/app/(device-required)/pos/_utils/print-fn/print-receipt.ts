@@ -18,7 +18,7 @@ interface IProps {
   paymentTradeTime?: string;
   stores?: PosStore;
   successHandler?: () => void;
-  cashReceiptPhoneNo?: string;
+  cashReceiptNo?: string;
   cashReceiptType?: OrderReceiptType;
   close?: () => void;
   printOrder?: boolean;
@@ -30,7 +30,7 @@ export const print = ({
   payment,
   stores,
   successHandler,
-  cashReceiptPhoneNo,
+  cashReceiptNo,
   cashReceiptType,
   paymentTradeTime,
   close,
@@ -293,7 +293,7 @@ export const print = ({
           0
         );
         window.printText(
-          `${formatAlignLeftRight("현금영수증", `${cashReceiptPhoneNo}`)}\n`,
+          `${formatAlignLeftRight("현금영수증", `${cashReceiptNo}`)}\n`,
           0,
           0,
           false,
