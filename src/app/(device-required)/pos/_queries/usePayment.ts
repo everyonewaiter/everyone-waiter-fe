@@ -4,6 +4,7 @@ import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
 import makeKSCATApprovalREQ, {
   createCashReceiptApproval,
+  createCreditCardApproval,
 } from "../_utils/make-approval-req";
 import { print } from "../_utils/print-fn/print-receipt";
 import { TypePayForm } from "../_schema/pos.schema";
@@ -169,7 +170,7 @@ export default function usePayment() {
     const installment =
       form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
 
-    const req = makeKSCATApprovalREQ({
+    const req = createCreditCardApproval({
       amount,
       tax: amount - nonTax,
       nonTax,
