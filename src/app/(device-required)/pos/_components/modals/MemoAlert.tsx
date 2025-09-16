@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import getQueryClient from "@/app/get-query-client";
 import Textarea from "@/components/common/TextArea";
+import { ButtonColors } from "@/components/common/Button/Button";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { orderQueries } from "../../_queries/useOrder";
 import { posKeys } from "../../_queries/keys";
@@ -61,17 +62,17 @@ export default function MemoAlert({ close, isOrder, tableNo }: IProps) {
     handleOrder();
   };
 
-  const alertProps = {
-    onClose: close,
-    buttonColor: isOrder ? "black" : "primary",
-    noResponsive: true,
-    buttonText: "주문하기",
-    onAction: handleAction,
-    isSubmitted,
-  };
-
   return (
-    <Alert {...alertProps}>
+    <Alert
+      onClose={close}
+      noResponsive
+      isSubmitted={isSubmitted}
+      primaryButton={{
+        text: "주문하기",
+        color: (isOrder ? "black" : "primary") as ButtonColors,
+        onClick: handleAction,
+      }}
+    >
       <div className="-mt-4 flex w-full flex-col gap-5">
         <h3 className="text-xl font-semibold">주문하시겠습니까?</h3>
         <Textarea

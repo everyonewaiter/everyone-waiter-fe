@@ -44,21 +44,23 @@ export default function Pos() {
         <QueryProviders>
           <Alert
             onClose={posControl.close}
-            buttonText="오픈하기"
-            noResponsive
-            onAction={() => {
-              open.mutate(undefined, {
-                onSuccess: successHandler,
-                onError: (e) => {
-                  if (
-                    (e as any).response.data.code === "ALREADY_STORE_OPENED"
-                  ) {
-                    // eslint-disable-next-line no-alert
-                    alert((e as any).response.data.message);
-                  }
-                },
-              });
+            primaryButton={{
+              text: "오픈하기",
+              onClick: () => {
+                open.mutate(undefined, {
+                  onSuccess: successHandler,
+                  onError: (e) => {
+                    if (
+                      (e as any).response.data.code === "ALREADY_STORE_OPENED"
+                    ) {
+                      // eslint-disable-next-line no-alert
+                      alert((e as any).response.data.message);
+                    }
+                  },
+                });
+              },
             }}
+            noResponsive
           >
             매장을 오픈하시겠습니까?
           </Alert>

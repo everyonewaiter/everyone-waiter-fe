@@ -23,11 +23,16 @@ export default function ReceiptModal({ close, onConfirm, onCancel }: IProps) {
 
   return (
     <Alert
-      onAction={handleConfirm}
-      onCancel={handleCancel}
       onClose={close}
-      buttonText="출력하기"
-      buttonColor="black"
+      primaryButton={{
+        text: "출력하기",
+        color: "black",
+        onClick: handleConfirm,
+      }}
+      secondaryButton={{
+        text: "닫기",
+        onClick: handleCancel,
+      }}
       noResponsive
     >
       <strong className="text-gray-0 text-xl font-semibold">

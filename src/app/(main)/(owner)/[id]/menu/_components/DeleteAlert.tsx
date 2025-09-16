@@ -50,8 +50,10 @@ export default function DeleteAlert({ storeId, close }: IProps) {
   return (
     <Alert
       onClose={close}
-      onAction={handleAction}
-      buttonText="삭제"
+      primaryButton={{
+        text: "삭제",
+        onClick: handleAction,
+      }}
       hasNoAction={selectedIds?.length === 0}
       disabled={remove.isPending || multiRemove.isPending}
     >

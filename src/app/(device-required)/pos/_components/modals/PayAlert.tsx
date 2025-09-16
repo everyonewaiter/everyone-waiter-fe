@@ -173,11 +173,13 @@ export default function PayAlert({ close, type, ...props }: IProps) {
 
   return (
     <Alert
+      primaryButton={{
+        text: type === "cash" ? "현금 결제하기" : "카드 결제하기",
+        onClick: handlePayment,
+        color: "black",
+      }}
       onClose={close}
       hasNoCancel
-      onAction={handlePayment}
-      buttonText={type === "cash" ? "현금 결제하기" : "카드 결제하기"}
-      buttonColor="black"
       layoutClassName="!w-[648px]"
       noResponsive
       isSubmitted={isSubmitting}

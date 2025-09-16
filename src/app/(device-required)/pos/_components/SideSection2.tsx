@@ -95,8 +95,10 @@ export default function SideSection2({
       <QueryProviders>
         <Alert
           onClose={openReceipt.close}
-          buttonText="출력하기"
-          onAction={handleReceipt}
+          primaryButton={{
+            text: "출력하기",
+            onClick: handleReceipt,
+          }}
         >
           <div className="flex flex-col gap-[6px] py-3">
             <span className="text-gray-0 text-xl font-semibold">

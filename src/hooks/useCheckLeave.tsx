@@ -81,17 +81,22 @@ export default function useLeaveGuard(
         <QueryProviders>
           <Alert
             onClose={close}
-            buttonText="이동"
-            cancelText="취소"
-            buttonColor="black"
-            onAction={() => {
-              close();
-              onConfirm();
+            primaryButton={{
+              text: "이동",
+              color: "black",
+              onClick: () => {
+                close();
+                onConfirm();
+              },
+              customButtonStyle: "w-full !button-lg",
             }}
-            onCancel={() => {
-              close();
+            secondaryButton={{
+              text: "취소",
+              onClick: () => {
+                close();
+              },
+              customButtonStyle: "w-full !button-lg",
             }}
-            customButtonStyle="w-full !button-lg"
           >
             <div className="flex flex-col gap-2 py-3">
               <span className="text-primary text-xl font-semibold">
