@@ -9,6 +9,7 @@ import getQueryClient from "@/app/get-query-client";
 import { useState } from "react";
 import useOverlay from "@/hooks/useOverlay";
 import { Form } from "@/components/common/Form";
+import { storesQueries } from "@/app/(main)/(owner)/[id]/store/_queries/useStores";
 import usePayment from "../../_queries/usePayment";
 import { print } from "../../_utils/print-fn/print-receipt";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
@@ -73,6 +74,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   const { payCard, payCash } = usePayment();
   const { data: activityData } = posQueries.useActivity(props.tableNo);
   const { data: stores } = posQueries.useStoreInfo(storeId!);
+  const { data: storesDetail } = storesQueries.useStoresDetail(storeId!);
 
   const receiptOverlay = useOverlay();
 
@@ -149,6 +151,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
         tableNo: props.tableNo,
         form,
         amount,
+        terminalId: storesDetail?.setting?.ksnetDeviceNo!,
         successHandler: (res) => {
           close();
           handleModal(res);
@@ -163,6 +166,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           form.watch("receiptType") === ReceiptType.PROOF
             ? form.watch("licenseNumber")!
             : form.watch("phoneNumber")!,
+        terminalId: storesDetail?.setting?.ksnetDeviceNo!,
         successHandler: () => {
           close();
           handleModal();

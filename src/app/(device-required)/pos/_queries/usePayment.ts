@@ -96,6 +96,7 @@ export default function usePayment() {
     phoneNumber,
     amount,
     tableNo,
+    terminalId,
     successHandler,
   }: {
     receiptType: "신청안함" | "개인소득공제용" | "사업자증빙용";
@@ -103,6 +104,7 @@ export default function usePayment() {
     amount: number;
     tableNo: number;
     successHandler: (res?: PaymentResponse) => void;
+    terminalId: string;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
 
@@ -114,6 +116,7 @@ export default function usePayment() {
         cashReceiptType: receiptType,
         type: "1",
         phoneNumber,
+        terminalId,
       });
       await window.$.ajax({
         url: "http://127.0.0.1:27098/",
@@ -153,12 +156,14 @@ export default function usePayment() {
     form,
     amount,
     tableNo,
+    terminalId,
     successHandler,
   }: {
     form: UseFormReturn<TypePayForm, any, TypePayForm>;
     amount: number;
     tableNo: number;
     successHandler: (res: PaymentResponse) => void;
+    terminalId: string;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
     const installment =
@@ -170,6 +175,7 @@ export default function usePayment() {
       nonTax,
       installment,
       type: "1",
+      terminalId,
     });
     await window.$.ajax({
       url: "http://127.0.0.1:27098/",
@@ -205,10 +211,12 @@ export default function usePayment() {
     totalPaymentPrice,
     orderPaymentId,
     successHandler,
+    terminalId,
   }: {
     totalPaymentPrice: number;
     orderPaymentId: string;
     successHandler?: (res: PaymentResponse) => void;
+    terminalId: string;
   }) => {
     const nonTax = Math.floor(totalPaymentPrice / 1.1);
 
@@ -218,6 +226,7 @@ export default function usePayment() {
       nonTax,
       installment: "00",
       type: "0",
+      terminalId,
     });
     await window.$.ajax({
       url: "http://127.0.0.1:27098/",
