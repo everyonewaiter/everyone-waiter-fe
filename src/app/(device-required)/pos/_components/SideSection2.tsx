@@ -49,6 +49,7 @@ export default function SideSection2({
         stores: stores!,
         payments: selectedRow,
         successHandler: openReceipt.close,
+        close: openReceipt.close,
       });
       return;
     }
@@ -66,6 +67,7 @@ export default function SideSection2({
         },
         paymentTradeTime: selectedRow.tradeTime || "",
         successHandler: openReceipt.close,
+        close: openReceipt.close,
       });
       return;
     }
@@ -79,6 +81,7 @@ export default function SideSection2({
         makePersonalPayment: selectedRow.cashReceiptType === "DEDUCTION",
         paymentTradeTime: selectedRow.tradeTime || "",
         successHandler: openReceipt.close,
+        close: openReceipt.close,
       });
     }
   };
