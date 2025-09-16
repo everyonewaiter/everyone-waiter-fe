@@ -121,19 +121,16 @@ export default function PayAlert({ close, type, ...props }: IProps) {
   const handleModal = (res?: PaymentResponse) => {
     receiptOverlay.open(() => (
       <ReceiptModal
-        close={() => {
-          receiptOverlay.close();
-          navigateTables();
-        }}
+        close={receiptOverlay.close}
         onConfirm={() => {
           if (type === "credit-card") {
             handlePrintCard(res!);
           } else {
             handlePrintCash();
           }
-          receiptOverlay.close();
           navigateTables();
         }}
+        onCancel={navigateTables}
       />
     ));
   };

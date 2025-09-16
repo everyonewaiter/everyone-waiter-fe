@@ -35,8 +35,8 @@ export default function makeKSCATApprovalREQ({
     catModelNo: "                ",
     encryptionInfo: "                                        ",
     trackii:
-      transactionType === "HK"
-        ? phoneNumber?.split("-").join("")
+      transactionType === "HK" && phoneNumber
+        ? phoneNumber.replace(/-/g, "").padEnd(37, " ")
         : "                                     ",
     fs: String.fromCharCode(28),
     installment,
