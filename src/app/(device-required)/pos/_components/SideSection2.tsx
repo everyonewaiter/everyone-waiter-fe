@@ -82,7 +82,7 @@ export default function SideSection2({
         activity: activity!,
         stores: stores!,
         cashReceiptPhoneNo: selectedRow.cashReceiptNo,
-        makePersonalPayment: selectedRow.cashReceiptType === "DEDUCTION",
+        cashReceiptType: selectedRow.cashReceiptType,
         paymentTradeTime: selectedRow.tradeTime || "",
         successHandler: openReceipt.close,
         close: openReceipt.close,

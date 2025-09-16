@@ -112,7 +112,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       stores: stores!,
       successHandler: navigateTables,
       cashReceiptPhoneNo: form.watch("phoneNumber"),
-      makePersonalPayment: form.watch("receiptType") === "개인소득공제용",
+      cashReceiptType: form.watch("receiptType") as OrderReceiptType,
       paymentTradeTime: props.payment?.TRADETIME || "",
       close: receiptOverlay.close,
     });

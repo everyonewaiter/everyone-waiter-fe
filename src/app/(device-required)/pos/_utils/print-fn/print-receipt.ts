@@ -19,7 +19,7 @@ interface IProps {
   stores?: PosStore;
   successHandler?: () => void;
   cashReceiptPhoneNo?: string;
-  makePersonalPayment?: boolean;
+  cashReceiptType?: OrderReceiptType;
   close?: () => void;
   printOrder?: boolean;
 }
@@ -31,7 +31,7 @@ export const print = ({
   stores,
   successHandler,
   cashReceiptPhoneNo,
-  makePersonalPayment,
+  cashReceiptType,
   paymentTradeTime,
   close,
   printOrder = true,
@@ -271,18 +271,29 @@ export const print = ({
 
     if (type === "cash-receipt") {
       printDivider();
-      window.printText(
-        `${formatAlignLeftRight("결제방법", "현금")}\n`,
-        0,
-        0,
-        false,
-        false,
-        false,
-        0,
-        0
-      );
 
-      if (makePersonalPayment) {
+      if (cashReceiptType === "NONE") {
+        window.printText(
+          `${formatAlignLeftRight("결제방법", `현금`)}\n`,
+          0,
+          0,
+          false,
+          false,
+          false,
+          0,
+          0
+        );
+      } else {
+        window.printText(
+          `${formatAlignLeftRight("결제방법", `현금${cashReceiptType === "DEDUCTION" ? "(소득공제)" : "(지출증빙)"}`)}\n`,
+          0,
+          0,
+          false,
+          false,
+          false,
+          0,
+          0
+        );
         window.printText(
           `${formatAlignLeftRight("현금영수증", `${cashReceiptPhoneNo}`)}\n`,
           0,
@@ -305,6 +316,8 @@ export const print = ({
         0,
         0
       );
+
+      window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
     }
   };
 
