@@ -13,19 +13,25 @@ import MenuBox from "./MenuBox";
 import CancelAlert from "./modals/CancelAlert";
 import { print } from "../_utils/print-fn/print-receipt";
 import SideBottom from "./SideSection/SideBottom";
+import { printRefund } from "../_utils/print-fn/print-refund";
 
-const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
-  ssr: false,
-});
+const ReceiptOrderDetailModal = dynamic(
+  () => import("./modals/ReceiptOrderDetailModal"),
+  {
+    ssr: false,
+  }
+);
 
 interface IProps extends OrderPaymentsList {
   resetSelectedRow: () => void;
   isCancelled: boolean;
+  resultPayment: number;
 }
 
 export default function SideSection2({
   resetSelectedRow,
   isCancelled,
+  resultPayment,
   ...selectedRow
 }: IProps) {
   const openReceipt = useOverlay();
@@ -38,8 +44,20 @@ export default function SideSection2({
   );
   const { data: stores } = posQueries.useStoreInfo(storeId as string);
 
-  const handleReceipt = () => {
-    if (selectedRow.method === "CARD") {
+  const handleReceipt = (printOrder: boolean) => {
+    if (!isCancelled && selectedRow?.state === "CANCEL") {
+      printRefund({
+        type: selectedRow.method === "CARD" ? "card-receipt" : "cash-receipt",
+        activity: activity!,
+        stores: stores!,
+        payments: selectedRow,
+        successHandler: openReceipt.close,
+        close: openReceipt.close,
+      });
+      return;
+    }
+
+    if (selectedRow?.state !== "CANCEL" && selectedRow.method === "CARD") {
       print({
         type: "card-receipt",
         activity: activity!,
@@ -51,8 +69,14 @@ export default function SideSection2({
           APPROVALNO: selectedRow.approvalNo,
         },
         paymentTradeTime: selectedRow.tradeTime || "",
+        successHandler: openReceipt.close,
+        close: openReceipt.close,
+        printOrder,
       });
-    } else {
+      return;
+    }
+
+    if (selectedRow?.state !== "CANCEL" && selectedRow.method === "CASH") {
       print({
         type: "cash-receipt",
         activity: activity!,
@@ -60,9 +84,11 @@ export default function SideSection2({
         cashReceiptPhoneNo: selectedRow.cashReceiptNo,
         makePersonalPayment: selectedRow.cashReceiptType === "DEDUCTION",
         paymentTradeTime: selectedRow.tradeTime || "",
+        successHandler: openReceipt.close,
+        close: openReceipt.close,
+        printOrder,
       });
     }
-    openReceipt.close();
   };
 
   const handlePrintReceipt: React.MouseEventHandler<HTMLButtonElement> = (
@@ -72,20 +98,11 @@ export default function SideSection2({
 
     openReceipt.open(() => (
       <QueryProviders>
-        <Alert
-          onClose={openReceipt.close}
-          buttonText="출력하기"
-          onAction={handleReceipt}
-        >
-          <div className="flex flex-col gap-[6px] py-3">
-            <span className="text-gray-0 text-xl font-semibold">
-              영수증을 출력하시겠습니까?
-            </span>
-            <span className="text-lg font-medium text-gray-200">
-              주문 내역이 포함되어 있어요!
-            </span>
-          </div>
-        </Alert>
+        <ReceiptOrderDetailModal
+          close={openReceipt.close}
+          onConfirm={() => handleReceipt(true)}
+          onCancel={() => handleReceipt(false)}
+        />
       </QueryProviders>
     ));
   };
@@ -146,7 +163,7 @@ export default function SideSection2({
         totalOrderPrice={activity?.totalOrderPrice ?? 0}
         discount={activity?.discount ?? 0}
         remainingPaymentPrice={activity?.remainingPaymentPrice ?? 0}
-        totalPaymentPrice={activity?.totalPaymentPrice ?? 0}
+        resultPayment={resultPayment}
         onAddDiscount={() => {}}
       />
       <div className="bottom-0 flex w-full gap-3 bg-white pt-6">

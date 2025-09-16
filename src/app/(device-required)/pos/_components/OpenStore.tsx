@@ -34,11 +34,13 @@ export default function OpenStore() {
       <QueryProviders>
         <Alert
           onClose={modal.close}
-          buttonText={isStoreOpen ? "마감하기" : "오픈하기"}
-          onAction={() => {
-            if (isStoreOpen)
-              storeClose.mutate(undefined, { onSuccess: successHandler });
-            else storeOpen.mutate(undefined, { onSuccess: successHandler });
+          primaryButton={{
+            text: isStoreOpen ? "마감하기" : "오픈하기",
+            onClick: () => {
+              if (isStoreOpen)
+                storeClose.mutate(undefined, { onSuccess: successHandler });
+              else storeOpen.mutate(undefined, { onSuccess: successHandler });
+            },
           }}
         >
           매장을 {isStoreOpen ? "마감" : "오픈"}하시겠습니까?

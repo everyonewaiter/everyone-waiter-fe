@@ -53,12 +53,14 @@ export default function DeviceSection({ ksnetDeviceNo, onAction }: IProps) {
               close();
               form.setValue("deviceNumber", ksnetDeviceNo || "");
             }}
-            buttonText="등록하기"
-            onAction={() => {
-              const value = form.getValues("deviceNumber");
-              if (value.trim()) {
-                onAction(value);
-              }
+            primaryButton={{
+              text: "등록하기",
+              onClick: () => {
+                const value = form.getValues("deviceNumber");
+                if (value.trim()) {
+                  onAction(value);
+                }
+              },
             }}
           >
             <div className="mt-2">

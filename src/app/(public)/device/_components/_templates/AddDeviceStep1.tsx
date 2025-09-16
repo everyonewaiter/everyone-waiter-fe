@@ -51,7 +51,12 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
   const { open, close } = useOverlay();
   const handleOpenAlert = (key: string) => {
     open(() => (
-      <Alert onClose={close} buttonText="확인" hasNoAction>
+      <Alert
+        onClose={close}
+        primaryButton={{ text: "", onClick: () => {} }}
+        secondaryButton={{ text: "확인", onClick: close }}
+        hasNoAction
+      >
         <span>{key}된 매장이 없습니다.</span>
         <br />
         <span>매장을 먼저 {key}해주세요!</span>

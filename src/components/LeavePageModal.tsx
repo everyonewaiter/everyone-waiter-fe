@@ -10,12 +10,17 @@ export default function LeavePageModal({ onAction, onCancel, close }: IProps) {
   return (
     <Alert
       onClose={close}
-      buttonText="뒤로가기"
-      cancelText="닫기"
-      buttonColor="black"
-      onAction={onAction}
-      onCancel={onCancel}
-      customButtonStyle="w-full !button-lg"
+      primaryButton={{
+        text: "뒤로가기",
+        color: "black",
+        onClick: onAction,
+        customButtonStyle: "w-full !button-lg",
+      }}
+      secondaryButton={{
+        text: "닫기",
+        onClick: onCancel,
+        customButtonStyle: "w-full !button-lg",
+      }}
     >
       <div className="flex flex-col gap-2 py-3">
         <span className="text-primary text-xl font-semibold">

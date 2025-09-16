@@ -15,37 +15,41 @@ import {
 } from "./Components";
 import Spinner from "../Spinner";
 
+type Color = ButtonColors | undefined;
+
 interface IProps {
-  onAction?: () => void;
   onClose: () => void;
-  onCancel?: () => void;
   hasNoCancel?: boolean;
   hasNoAction?: boolean;
-  buttonText?: string;
-  cancelText?: string;
-  buttonColor?: string;
   layoutClassName?: string;
   noResponsive?: boolean;
   disabled?: boolean;
-  customButtonStyle?: string;
   isSubmitted?: boolean;
+  primaryButton: {
+    color?: Color;
+    text: string;
+    onClick: () => void;
+    customButtonStyle?: string;
+  };
+  secondaryButton?: {
+    color?: Color;
+    text?: string;
+    onClick?: () => void;
+    customButtonStyle?: string;
+  };
 }
 
 function Alert({
   children,
-  onAction,
-  onCancel,
   onClose,
   hasNoCancel,
   hasNoAction,
-  buttonText,
-  cancelText,
   layoutClassName,
-  buttonColor = "primary",
   noResponsive,
   disabled,
-  customButtonStyle = "",
   isSubmitted,
+  primaryButton,
+  secondaryButton,
 }: PropsWithChildren<IProps>) {
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(true);
@@ -55,10 +59,6 @@ function Alert({
   const handleClose = () => {
     setOpen(false);
     onClose();
-  };
-
-  const handleAction = () => {
-    onAction?.();
   };
 
   return (
@@ -76,26 +76,27 @@ function Alert({
         <AlertDialogFooter>
           {!hasNoCancel && (
             <AlertDialogCancel
-              color="grey"
-              onClick={onCancel || handleClose}
+              color={secondaryButton?.color || "grey"}
+              onClick={secondaryButton?.onClick || handleClose}
               className="flex-[0.6]"
               hasNoAction={hasNoAction}
               noResponsive={noResponsive}
-              customButtonStyle={customButtonStyle}
+              customButtonStyle={secondaryButton?.customButtonStyle || ""}
+              disabled={isSubmitted}
             >
-              <span>{cancelText || "닫기"}</span>
+              <span>{secondaryButton?.text || "닫기"}</span>
             </AlertDialogCancel>
           )}
           {!hasNoAction && (
             <AlertDialogAction
-              color={buttonColor as ButtonColors}
-              onClick={handleAction}
               noResponsive={noResponsive}
               className="flex-1"
               disabled={disabled || isSubmitted}
-              customButtonStyle={customButtonStyle}
+              color={(primaryButton.color as Color) || "primary"}
+              {...primaryButton}
+              customButtonStyle={primaryButton.customButtonStyle || ""}
             >
-              {isSubmitted ? <Spinner /> : <span>{buttonText}</span>}
+              {isSubmitted ? <Spinner /> : <span>{primaryButton.text}</span>}
             </AlertDialogAction>
           )}
         </AlertDialogFooter>

@@ -75,11 +75,13 @@ export default function DevicePage() {
 
     alertOverlay.open(() => (
       <Alert
+        primaryButton={{
+          text: "삭제",
+          onClick: handleDeleteDevice,
+          customButtonStyle: "!w-full",
+        }}
         onClose={alertOverlay.close}
-        onAction={handleDeleteDevice}
-        buttonText="삭제"
         hasNoAction={!length}
-        customButtonStyle="!w-full"
       >
         {checkedKeys.length >= 1 ? (
           <div>

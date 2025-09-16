@@ -13,7 +13,7 @@ interface IProps {
   remainingPaymentPrice: number;
   onAddDiscount: (discount: number) => void;
   type?: "pos" | "history";
-  totalPaymentPrice: number;
+  resultPayment?: number;
 }
 
 export default function SideBottom({
@@ -22,7 +22,7 @@ export default function SideBottom({
   remainingPaymentPrice,
   onAddDiscount,
   type = "pos",
-  totalPaymentPrice,
+  resultPayment,
 }: IProps) {
   const { open, close } = useOverlay();
 
@@ -80,7 +80,7 @@ export default function SideBottom({
           <strong className="text-4xl font-bold">
             {type === "pos"
               ? remainingPaymentPrice.toLocaleString()
-              : totalPaymentPrice.toLocaleString()}
+              : resultPayment?.toLocaleString()}
             원
           </strong>
         </div>

@@ -19,10 +19,12 @@ export default function ResendAlert({ close, tableNo }: IProps) {
 
   return (
     <Alert
-      onAction={handleResend}
+      primaryButton={{
+        text: "재전송하기",
+        onClick: handleResend,
+        color: "black",
+      }}
       onClose={close}
-      buttonText="재전송하기"
-      buttonColor="black"
       noResponsive
     >
       <div className="flex flex-col gap-3">

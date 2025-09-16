@@ -54,12 +54,14 @@ export default function AddDiscountAlert({
   return (
     <Alert
       onClose={close}
-      onAction={() => {
-        onAction(total - form.watch("result")!);
-        close();
+      primaryButton={{
+        text: "할인하기",
+        color: "black",
+        onClick: () => {
+          onAction(total - form.watch("result")!);
+          close();
+        },
       }}
-      buttonColor="black"
-      buttonText="할인하기"
       noResponsive
     >
       <div className="-mt-4 flex w-full flex-col gap-10">

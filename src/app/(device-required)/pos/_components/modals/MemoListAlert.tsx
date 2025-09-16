@@ -52,11 +52,17 @@ export default function MemoListAlert({ close, tableNo, memos }: IProps) {
     <Alert
       onClose={close}
       layoutClassName="p-8 !w-[544px]"
-      buttonText={isEditing ? "수정 저장하기" : "수정하기"}
-      cancelText={isEditing ? "취소" : "닫기"}
+      primaryButton={{
+        text: isEditing ? "수정 저장하기" : "수정하기",
+        onClick: () => (isEditing ? handleUpdateMemo() : setIsEditing(true)),
+        customButtonStyle: "button-lg",
+      }}
+      secondaryButton={{
+        text: isEditing ? "취소" : "닫기",
+        onClick: () => (isEditing ? setIsEditing(false) : close()),
+        customButtonStyle: "button-lg",
+      }}
       isSubmitted={isSubmitted}
-      customButtonStyle="button-lg"
-      onAction={() => (isEditing ? handleUpdateMemo() : setIsEditing(true))}
     >
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">

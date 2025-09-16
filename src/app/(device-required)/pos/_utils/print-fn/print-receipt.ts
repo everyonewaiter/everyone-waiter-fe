@@ -21,6 +21,7 @@ interface IProps {
   cashReceiptPhoneNo?: string;
   makePersonalPayment?: boolean;
   close?: () => void;
+  printOrder?: boolean;
 }
 
 export const print = ({
@@ -33,6 +34,7 @@ export const print = ({
   makePersonalPayment,
   paymentTradeTime,
   close,
+  printOrder = true,
 }: IProps) => {
   window.setPosId(1);
 
@@ -69,70 +71,65 @@ export const print = ({
       0,
       0
     );
-    printDivider();
-    window.printText(
-      `${formatReceiptRow("메뉴명", "수량", "단가", "금액")}\n`,
-      0,
-      0,
-      false,
-      false,
-      false,
-      0,
-      0
-    );
-    printDivider();
 
-    activity?.orders.forEach((order) => {
-      order.orderMenus.forEach((menu) => {
-        const totalPrice =
-          menu.price * menu.quantity +
-          menu.orderOptionGroups
-            .flatMap((el) => el.orderOptions.map((v) => v.price))
-            .reduce((sum, price) => sum + price, 0);
-        window.printText(
-          `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${totalPrice.toLocaleString()}`)}\n`,
-          0,
-          0,
-          false,
-          false,
-          false,
-          0,
-          0
-        );
-        menu.orderOptionGroups.forEach((option) => {
-          option.orderOptions.forEach((o, i, arr) => {
-            window.printText(
-              `${formatReceiptRow(`└ ${o.name}`, "", o.price ? `${o.price.toLocaleString()}` : "", "")}${i === arr.length - 1 ? "" : "\n"}`,
-              0,
-              0,
-              false,
-              false,
-              false,
-              0,
-              0
-            );
+    if (printOrder) {
+      printDivider();
+      window.printText(
+        `${formatReceiptRow("메뉴명", "수량", "단가", "금액")}\n`,
+        0,
+        0,
+        false,
+        false,
+        false,
+        0,
+        0
+      );
+      printDivider();
+
+      activity?.orders.forEach((order) => {
+        order.orderMenus.forEach((menu) => {
+          const totalPrice =
+            menu.price * menu.quantity +
+            menu.orderOptionGroups
+              .flatMap((el) => el.orderOptions.map((v) => v.price))
+              .reduce((sum, price) => sum + price, 0);
+          window.printText(
+            `${formatReceiptRow(menu.name, String(menu.quantity), `${menu.price.toLocaleString()}`, `${totalPrice.toLocaleString()}`)}\n`,
+            0,
+            0,
+            false,
+            false,
+            false,
+            0,
+            0
+          );
+          menu.orderOptionGroups.forEach((option) => {
+            option.orderOptions.forEach((o, i, arr) => {
+              window.printText(
+                `${formatReceiptRow(`└ ${o.name}`, "", o.price ? `${o.price.toLocaleString()}` : "", "")}${i === arr.length - 1 ? "" : "\n"}`,
+                0,
+                0,
+                false,
+                false,
+                false,
+                0,
+                0
+              );
+            });
           });
         });
       });
-    });
+    }
 
     printDivider();
 
+    const resultAmount =
+      (activity?.totalOrderPrice || 0) - (activity?.discount || 0);
     const supplyAmount = Math.floor(Number(activity?.totalOrderPrice) / 1.1);
     const vatAmount = Number(activity?.totalOrderPrice) - supplyAmount;
 
     window.printText(
-      `${formatAlignLeftRight("공급가", `${supplyAmount.toLocaleString()}원`)}\n`,
-      0,
-      1,
-      true,
-      false,
-      false,
-      0,
-      0
-    );
-    window.printText(
-      `${formatAlignLeftRight("부가세", `${vatAmount.toLocaleString()}원`)}\n`,
+      `${formatAlignLeftRight("주문금액", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
@@ -144,7 +141,7 @@ export const print = ({
 
     if (activity?.discount) {
       window.printText(
-        `${formatAlignLeftRight("할인", `${activity?.discount.toLocaleString()}원`)}\n`,
+        `${formatAlignLeftRight("할인금액", `${activity?.discount.toLocaleString()}원`)}\n`,
         0,
         1,
         true,
@@ -156,10 +153,33 @@ export const print = ({
     }
 
     window.printText(
-      `${formatAlignLeftRight("합계", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
+      `${formatAlignLeftRight("받을금액", `${resultAmount?.toLocaleString()}원`)}\n`,
       0,
       1,
       true,
+      false,
+      false,
+      0,
+      0
+    );
+
+    printDivider();
+
+    window.printText(
+      `${formatAlignLeftRight("공급가", `${supplyAmount.toLocaleString()}원`)}\n`,
+      0,
+      0,
+      false,
+      false,
+      false,
+      0,
+      0
+    );
+    window.printText(
+      `${formatAlignLeftRight("부가세", `${vatAmount.toLocaleString()}원`)}\n`,
+      0,
+      0,
+      false,
       false,
       false,
       0,

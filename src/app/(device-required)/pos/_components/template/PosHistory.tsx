@@ -52,12 +52,6 @@ export default function PosHistory() {
   const { data, refetch, isLoading } =
     paymentListQueries.usePaymentsList(formatted);
 
-  console.log(
-    !!data?.orderPayments?.filter(
-      (el) => el.posTableActivityId === selectedRow?.posTableActivityId
-    )
-  );
-
   useEffect(() => {
     refetch();
   }, [formatted, refetch]);
@@ -186,10 +180,17 @@ export default function PosHistory() {
                 data?.orderPayments?.find(
                   (el) =>
                     el.posTableActivityId === selectedRow?.posTableActivityId &&
-                    el.orderPaymentId === selectedRow?.orderPaymentId
+                    el.orderPaymentId !== selectedRow?.orderPaymentId
                 )?.state === "CANCEL"
               }
               {...selectedRow}
+              resultPayment={
+                data?.orderPayments?.find(
+                  (el) =>
+                    el.posTableActivityId === selectedRow?.posTableActivityId &&
+                    el.orderPaymentId !== selectedRow?.orderPaymentId
+                )?.amount!
+              }
             />
           </SideLayout>
         )}

@@ -121,9 +121,10 @@ export default function CancelAlert({
   return (
     <Alert
       onClose={close}
-      buttonColor="primary"
-      onAction={handleCancel}
-      buttonText="취소하기"
+      primaryButton={{
+        text: "취소하기",
+        onClick: handleCancel,
+      }}
       noResponsive
     >
       <div className="-mt-4 flex w-full flex-col gap-8">
