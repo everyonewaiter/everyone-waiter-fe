@@ -59,9 +59,11 @@ export default function PosTables() {
       <QueryProviders>
         <Alert
           onClose={close}
-          buttonColor="black"
-          buttonText="이동하기"
-          onAction={handleMove}
+          primaryButton={{
+            text: "이동하기",
+            color: "black",
+            onClick: handleMove,
+          }}
         >
           <div className="flex flex-col gap-8">
             <div className="flex gap-3">

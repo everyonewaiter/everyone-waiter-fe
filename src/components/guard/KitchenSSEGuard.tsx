@@ -23,7 +23,6 @@ export default function KitchenSSEGuard({
   const queryClient = getQueryClient();
   const { storeId } = useDeviceContext();
 
-  // 처리된 printNo를 추적하여 중복 방지
   const processedPrintNos = useRef(new Set<number>());
 
   const { data: settingData } = useQuery({
@@ -34,7 +33,6 @@ export default function KitchenSSEGuard({
 
   useEffect(() => {
     const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
-      // 데이터 업데이트 이벤트만 처리
       if (event.type !== "updated") return;
 
       if (
@@ -47,15 +45,6 @@ export default function KitchenSSEGuard({
           receiptTrigger?.printNo &&
           settingData?.setting?.printerLocation === allowedPurpose.toUpperCase()
         ) {
-          // 이미 처리된 printNo인지 확인
-          if (processedPrintNos.current.has(receiptTrigger.printNo)) {
-            console.log(
-              `PrintNo ${receiptTrigger.printNo} already processed, skipping`
-            );
-            return;
-          }
-
-          // 처리된 printNo 추가
           processedPrintNos.current.add(receiptTrigger.printNo);
 
           const hasCancelledMenus = receiptTrigger.receiptMenus.some(
@@ -73,7 +62,6 @@ export default function KitchenSSEGuard({
               printNo: receiptTrigger.printNo,
               cancelledTime: new Date(),
               successHandler: () => {
-                // 성공 후 쿼리 정리
                 queryClient.setQueryData(
                   ["kitchen-receipt-trigger"],
                   undefined
@@ -87,7 +75,6 @@ export default function KitchenSSEGuard({
             printToKitchen({
               ...receiptTrigger,
               successHandler: () => {
-                // 성공 후 쿼리 정리
                 queryClient.setQueryData(
                   ["kitchen-receipt-trigger"],
                   undefined
