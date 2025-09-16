@@ -139,18 +139,16 @@ export const print = ({
       0
     );
 
-    if (activity?.discount) {
-      window.printText(
-        `${formatAlignLeftRight("할인금액", `${activity?.discount.toLocaleString()}원`)}\n`,
-        0,
-        1,
-        true,
-        false,
-        false,
-        0,
-        0
-      );
-    }
+    window.printText(
+      `${formatAlignLeftRight("할인금액", `${activity?.discount.toLocaleString()}원`)}\n`,
+      0,
+      1,
+      true,
+      false,
+      false,
+      0,
+      0
+    );
 
     window.printText(
       `${formatAlignLeftRight("받을금액", `${resultAmount?.toLocaleString()}원`)}\n`,
