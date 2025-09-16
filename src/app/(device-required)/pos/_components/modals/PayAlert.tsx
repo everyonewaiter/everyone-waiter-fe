@@ -105,17 +105,29 @@ export default function PayAlert({ close, type, ...props }: IProps) {
     });
   };
 
-  const handlePrintCash = () => {
-    print({
-      type: "cash-receipt",
+  const handlePrintCash = (res: PaymentResponse) => {
+    const options = {
+      cashReceiptNo: res.FILLER,
+      cashReceiptType: form.watch("receiptType") as OrderReceiptType,
+    };
+
+    const printOptions = {
+      type: "cash-receipt" as "kitchen" | "cash-receipt" | "card-receipt",
       activity: activityData!,
       stores: stores!,
       successHandler: navigateTables,
-      cashReceiptPhoneNo: form.watch("phoneNumber"),
-      makePersonalPayment: form.watch("receiptType") === "개인소득공제용",
-      paymentTradeTime: props.payment?.TRADETIME || "",
+      paymentTradeTime: res?.TRADETIME || "",
       close: receiptOverlay.close,
-    });
+    };
+
+    if (form.watch("receiptType") === "신청안함") {
+      print(printOptions);
+    } else {
+      print({
+        ...printOptions,
+        ...options,
+      });
+    }
   };
 
   const handleModal = (res?: PaymentResponse) => {
@@ -126,7 +138,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           if (type === "credit-card") {
             handlePrintCard(res!);
           } else {
-            handlePrintCash();
+            handlePrintCash(res!);
           }
           navigateTables();
         }}
