@@ -134,7 +134,7 @@ export default function usePayment() {
               amount,
               cashReceiptNo: phoneNumber,
               cashReceiptType:
-                receiptType === "개인소득공제용" ? "PROOF" : "DEDUCTION",
+                receiptType === "개인소득공제용" ? "DEDUCTION" : "PROOF",
             },
             successHandler: () => successHandler(res),
           });

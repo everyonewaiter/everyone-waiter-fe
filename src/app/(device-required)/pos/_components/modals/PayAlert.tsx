@@ -116,17 +116,17 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       activity: activityData!,
       stores: stores!,
       successHandler: navigateTables,
-      paymentTradeTime: res?.TRADETIME,
+      paymentTradeTime: res?.TRADETIME || "",
       close: receiptOverlay.close,
     };
 
-    if (form.watch("receiptType") !== "신청안함") {
+    if (form.watch("receiptType") === "신청안함") {
+      print(printOptions);
+    } else {
       print({
         ...printOptions,
         ...options,
       });
-    } else {
-      print(printOptions);
     }
   };
 
