@@ -78,14 +78,18 @@ export default function PayAlert({ close, type, ...props }: IProps) {
 
   const receiptOverlay = useOverlay();
 
-  const navigateTables = () => {
+  const handleNavigate = () => {
+    navigate.push("/pos/tables");
+    queryClient.invalidateQueries({ queryKey: posKeys.tables });
+  };
+
+  const handleSuccess = () => {
     if (activityData?.remainingPaymentPrice) {
       queryClient.invalidateQueries({
         queryKey: posKeys.activity(activityData?.tableNo),
       });
     } else {
-      navigate.push("/pos/tables");
-      queryClient.invalidateQueries({ queryKey: posKeys.tables });
+      handleNavigate();
     }
   };
 
@@ -98,7 +102,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       paymentTradeTime: res.TRADETIME || "",
       successHandler: () => {
         if (props.orders?.length === 0) {
-          navigateTables();
+          handleSuccess();
         }
       },
       close: receiptOverlay.close,
@@ -115,7 +119,7 @@ export default function PayAlert({ close, type, ...props }: IProps) {
       type: "cash-receipt" as "kitchen" | "cash-receipt" | "card-receipt",
       activity: activityData!,
       stores: stores!,
-      successHandler: navigateTables,
+      successHandler: handleSuccess,
       paymentTradeTime: res?.TRADETIME || "",
       close: receiptOverlay.close,
     };
@@ -140,9 +144,9 @@ export default function PayAlert({ close, type, ...props }: IProps) {
           } else {
             handlePrintCash(res!);
           }
-          navigateTables();
+          handleSuccess();
         }}
-        onCancel={navigateTables}
+        onCancel={handleNavigate}
       />
     ));
   };
