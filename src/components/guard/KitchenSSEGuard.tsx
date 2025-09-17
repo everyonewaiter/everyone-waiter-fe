@@ -48,12 +48,12 @@ export default function KitchenSSEGuard({
           processedPrintNos.current.add(receiptTrigger.printNo);
 
           const hasCancelledMenus = receiptTrigger.receiptMenus.some(
-            (menu) => menu.quantity === -1
+            (menu) => menu.quantity < 0
           );
 
           if (hasCancelledMenus) {
             const cancelledMenus = receiptTrigger.receiptMenus.filter(
-              (menu) => menu.quantity === -1
+              (menu) => menu.quantity < 0
             );
 
             printCancelToKitchen({
