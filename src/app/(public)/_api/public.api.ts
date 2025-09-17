@@ -27,7 +27,7 @@ export const cancelWaiting = async ({
   storeId: string;
   accessKey: string;
 }) => {
-  const response = await authInstance.get(
+  const response = await authInstance.post(
     `${API_PATH.stores}/${storeId}/waitings/${accessKey}/cancel`
   );
   return response.data;

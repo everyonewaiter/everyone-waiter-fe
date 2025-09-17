@@ -8,6 +8,7 @@ import {
 import { useRef, useState } from "react";
 import Button from "@/components/common/Button/Button";
 import { useRouter } from "next/navigation";
+import Spinner from "@/components/common/Spinner";
 import PublicComponent from "../PublicComponent";
 import { publicQueries } from "../../../_queries/usePublic";
 
@@ -27,6 +28,7 @@ export default function CancelTurnPage({
 
   const cancelMyTurn = publicQueries.useCancelMyTurn();
   const [otpValue, setOtpValue] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCancel = () => {
     if (phone.slice(-4) !== otpValue) {
@@ -42,6 +44,7 @@ export default function CancelTurnPage({
       return;
     }
 
+    setIsSubmitting(true);
     cancelMyTurn.mutate(
       {
         storeId,
@@ -49,6 +52,7 @@ export default function CancelTurnPage({
       },
       {
         onSuccess: () => navigate.push("/result?type=cancel"),
+        onSettled: () => setIsSubmitting(false),
       }
     );
   };
@@ -81,15 +85,21 @@ export default function CancelTurnPage({
         </div>
       </PublicComponent>
       <div className="absolute bottom-5 flex w-full gap-2 px-5">
-        <Button color="grey" className="button-lg w-20" onClick={handleClose}>
+        <Button
+          color="grey"
+          className="button-lg w-20"
+          onClick={handleClose}
+          disabled={isSubmitting}
+        >
           닫기
         </Button>
         <Button
           color="primary"
           className="button-lg w-full"
           onClick={handleCancel}
+          disabled={isSubmitting}
         >
-          웨이팅 취소
+          {isSubmitting ? <Spinner /> : "웨이팅 취소"}
         </Button>
       </div>
     </div>
