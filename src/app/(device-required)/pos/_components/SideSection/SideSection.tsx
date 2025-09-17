@@ -141,7 +141,7 @@ export default function SideSection() {
               onCancelOrder={handleCancelOrder}
               onUpdateOrder={handleUpdateOrderedMenu}
             />
-            <SideContents orders={orders} activityOrders={data?.orders!} />
+            <SideContents tableNo={tableNo} />
           </div>
           {orders.length > 0 && (
             <div className="w-full">

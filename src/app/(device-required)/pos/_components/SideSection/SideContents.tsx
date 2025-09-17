@@ -6,22 +6,20 @@ import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import getOrderKey from "../../_utils/get-order-key";
 import MenuBox from "../MenuBox";
 import OrderBox from "../OrderBox";
+import { posQueries } from "../../_queries/usePos";
+import { useOrderStore } from "../../_hooks/useOrderStore";
 
 interface IProps {
-  orders: {
-    menuId: string;
-    menuName: string;
-    quantity: number;
-    totalPrice: number;
-    menuOptionGroups: OrderOptionGroups[];
-  }[];
-  activityOrders: TableOrder[];
+  tableNo: number;
 }
 
-export default function SideContents({ orders, activityOrders }: IProps) {
+export default function SideContents({ tableNo }: IProps) {
   const { checkedMenu, changeCheckedMenu } = useCheckedMenuStore();
   const { hasSelectedOrder, addSelectedOrder, removeSelectedOrder } =
     useSelectItemStore();
+  const { orders } = useOrderStore();
+
+  const { data } = posQueries.useActivity(tableNo);
 
   return (
     <ScrollArea
@@ -45,7 +43,7 @@ export default function SideContents({ orders, activityOrders }: IProps) {
               />
             </div>
           ))
-        : activityOrders?.map((item, index, arr) => (
+        : data?.orders?.map((item, index, arr) => (
             <Fragment key={item.orderId}>
               <MenuBox
                 index={index}

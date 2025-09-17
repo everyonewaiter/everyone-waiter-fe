@@ -121,6 +121,11 @@ export class SseService {
       const queryClient = getQueryClient();
       const sseEvent: SseEvent = JSON.parse(event.data);
 
+      if (process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line
+        console.log(sseEvent);
+      }
+
       switch (sseEvent.category) {
         case "DEVICE":
           if (sseEvent.hasData) {
