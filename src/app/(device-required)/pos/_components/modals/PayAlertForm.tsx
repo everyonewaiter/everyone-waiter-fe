@@ -41,11 +41,38 @@ export default function PayAlertForm({
 
   const [changeToInput, setChangeToInput] = useState(false);
   const [value, setValue] = useState(String(INITIAL_VALUE));
+  const [isShowingAlert, setIsShowingAlert] = useState(false);
   const { selectedOrder } = useSelectItemStore();
 
   const menus = hasOrderId
     ? selectedOrder.map((el) => el.orderMenus.map((v) => v.name)).flat()
     : props?.orders.map((el) => el.orderMenus.map((v) => v.name)).flat();
+
+  const getLength = () => {
+    if (!value) {
+      return 17;
+    }
+    return String(value).length * 16.2;
+  };
+
+  const handleValidate = (val: string) => {
+    const currentValue = val.replaceAll(",", "");
+    if (!currentValue) {
+      if (!isShowingAlert) {
+        setIsShowingAlert(true);
+        // eslint-disable-next-line
+        alert("결제할 금액을 입력해주세요.");
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+          setIsShowingAlert(false);
+        }, 100);
+      }
+      return;
+    }
+    setChangeToInput(false);
+  };
 
   return (
     <div className="-mt-4 flex w-full flex-col gap-10">
@@ -74,16 +101,24 @@ export default function PayAlertForm({
             {changeToInput ? (
               <Input
                 ref={inputRef}
-                value={Number(value).toLocaleString()}
+                value={value === "" ? "" : Number(value).toLocaleString()}
                 onChange={(e) => {
                   const origin = e.target.value.replaceAll(",", "");
-                  if (Number(origin) <= Number(INITIAL_VALUE)) setValue(origin);
+                  if (
+                    origin === "" ||
+                    Number(origin) <= Number(INITIAL_VALUE)
+                  ) {
+                    setValue(origin);
+                  }
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") setChangeToInput(false);
+                  if (e.key === "Enter") {
+                    handleValidate(e.currentTarget.value);
+                  }
                 }}
+                onBlur={(e) => handleValidate(e.currentTarget.value)}
                 className="!h-[34px] !rounded-none border-t-0 border-r-0 border-l-0 !px-0 !text-2xl !font-semibold"
-                style={{ width: `${String(INITIAL_VALUE).length}rem` }}
+                style={{ width: `${getLength()}px` }}
                 max={Number(INITIAL_VALUE)}
               />
             ) : (
@@ -101,7 +136,7 @@ export default function PayAlertForm({
                   }, 0);
                 }}
               >
-                {Number(value).toLocaleString()}
+                {value === "" ? "" : Number(value).toLocaleString()}
               </button>
             )}
             <strong className="text-2xl font-semibold">원</strong>
