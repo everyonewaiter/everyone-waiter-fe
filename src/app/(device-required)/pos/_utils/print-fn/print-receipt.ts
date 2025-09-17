@@ -125,8 +125,8 @@ export const print = ({
 
     const resultAmount =
       (activity?.totalOrderPrice || 0) - (activity?.discount || 0);
-    const supplyAmount = Math.floor(Number(activity?.totalOrderPrice) / 1.1);
-    const vatAmount = Number(activity?.totalOrderPrice) - supplyAmount;
+    const supplyAmount = Math.floor(resultAmount / 1.1);
+    const vatAmount = resultAmount - supplyAmount;
 
     window.printText(
       `${formatAlignLeftRight("주문금액", `${activity?.totalOrderPrice.toLocaleString()}원`)}\n`,
