@@ -156,6 +156,12 @@ export class SseService {
         case "ORDER":
           queryClient.invalidateQueries({ queryKey: ["order-list"] });
           queryClient.invalidateQueries({ queryKey: ["activity"] });
+          queryClient.invalidateQueries({ queryKey: ["table-list"] });
+          queryClient.invalidateQueries({ queryKey: ["table"], exact: false });
+          queryClient.invalidateQueries({
+            queryKey: ["activity"],
+            exact: false,
+          });
           break;
         case "STAFF_CALL":
           queryClient.invalidateQueries({ queryKey: ["staff-calls"] });
@@ -169,9 +175,13 @@ export class SseService {
           }
           break;
         case "POS":
+          queryClient.invalidateQueries({ queryKey: ["order-list"] });
           queryClient.invalidateQueries({ queryKey: ["table-list"] });
-          queryClient.invalidateQueries({ queryKey: ["table"] });
-          queryClient.invalidateQueries({ queryKey: ["activity"] });
+          queryClient.invalidateQueries({ queryKey: ["table"], exact: false });
+          queryClient.invalidateQueries({
+            queryKey: ["activity"],
+            exact: false,
+          });
           break;
         default:
           throw new Error(`Unhandled store action event:${sseEvent}`);
