@@ -69,6 +69,7 @@ export default function CancelAlert({
     // 주문 요청 직전 리스트 취소
     if (type === "order-reset") {
       resetOrders();
+      close();
       return;
     }
 

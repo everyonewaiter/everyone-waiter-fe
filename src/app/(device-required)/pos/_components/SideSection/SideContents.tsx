@@ -25,7 +25,7 @@ export default function SideContents({ tableNo }: IProps) {
     <ScrollArea
       className={cn(
         "w-full",
-        orders?.length > 0 ? "h-[calc(100dvh-458px)]" : "h-[calc(100dvh-602px)]"
+        orders?.length > 0 ? "h-[calc(100dvh-408px)]" : "h-[calc(100dvh-602px)]"
       )}
     >
       {orders?.length > 0

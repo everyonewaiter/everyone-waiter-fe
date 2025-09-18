@@ -5,6 +5,7 @@ import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/useOverlay";
 import useLeaveGuard from "@/hooks/useCheckLeave";
 import getQueryClient from "@/app/get-query-client";
+import { useRef } from "react";
 import { useOrderStore } from "../../_hooks/useOrderStore";
 import { useSelectItemStore } from "../../_hooks/useSelectItemStore";
 import { orderQueries } from "../../_queries/useOrder";
@@ -22,7 +23,9 @@ const MemoAlert = dynamic(() => import("../modals/MemoAlert"), {
 });
 
 export default function SideSection() {
+  const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useRouter();
+
   const params = useParams();
   const tableNo = Number(params?.tableId as string);
 
@@ -166,8 +169,8 @@ export default function SideSection() {
             </div>
           )}
           {orders.length === 0 && data?.orders && (
-            <div className="flex flex-col">
-              <div className="mb-8 h-[2px] w-full bg-gray-600" />
+            <div className="flex flex-col" ref={bottomRef}>
+              <div className="mb-6 h-[2px] w-full bg-gray-600" />
               <SideBottom
                 {...data}
                 onAddDiscount={(discount) => {

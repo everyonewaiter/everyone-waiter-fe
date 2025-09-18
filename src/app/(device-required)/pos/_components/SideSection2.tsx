@@ -125,6 +125,9 @@ export default function SideSection2({
     ));
   };
 
+  console.log(activity);
+  console.log(selectedRow);
+
   return (
     <aside className="relative w-full">
       <div className="flex items-center justify-between gap-4">
@@ -146,7 +149,7 @@ export default function SideSection2({
         <ScrollArea
           className={cn(
             "w-full pt-8",
-            isCancelled ? "h-[calc(100dvh-350px)]" : "h-[calc(100dvh-500px)]"
+            isCancelled ? "h-[calc(100dvh-400px)]" : "h-[calc(100dvh-500px)]"
           )}
         >
           {selectedRow &&
@@ -161,41 +164,44 @@ export default function SideSection2({
             ))}
         </ScrollArea>
       </div>
-      {!isCancelled && (
-        <SideBottom
-          type="history"
-          totalOrderPrice={activity?.totalOrderPrice ?? 0}
-          discount={activity?.discount ?? 0}
-          remainingPaymentPrice={activity?.remainingPaymentPrice ?? 0}
-          onAddDiscount={() => {}}
-        />
-      )}
-      <div className="bottom-0 flex w-full gap-3 bg-white pt-6">
-        {selectedRow?.cancellable && (
-          <Button
-            variant="outline"
-            color="black"
-            className="button-xl flex w-[180px] rounded-xl px-8 text-xl"
-            disabled={!selectedRow}
-            onClick={handleCancelPayment}
-          >
-            결제 취소하기
-          </Button>
+      <div>
+        {!isCancelled && (
+          <SideBottom
+            type="history"
+            totalOrderPrice={activity?.totalOrderPrice ?? 0}
+            discount={activity?.discount ?? 0}
+            remainingPaymentPrice={activity?.remainingPaymentPrice ?? 0}
+            amount={selectedRow.amount ?? 0}
+            onAddDiscount={() => {}}
+          />
         )}
-        {isCancelled ? (
-          <span className="button-xl center w-full !text-xl">취소됨</span>
-        ) : (
-          <Button
-            color="black"
-            className="button-xl flex flex-1 rounded-xl px-8 text-xl"
-            disabled={!selectedRow}
-            onClick={handlePrintReceipt}
-          >
-            {selectedRow?.state === "CANCEL"
-              ? "취소 영수증 출력하기"
-              : "영수증 출력하기"}
-          </Button>
-        )}
+        <div className="bottom-0 flex w-full gap-3 bg-white pt-6">
+          {selectedRow?.cancellable && (
+            <Button
+              variant="outline"
+              color="black"
+              className="button-xl flex w-[180px] rounded-xl px-8 text-xl"
+              disabled={!selectedRow}
+              onClick={handleCancelPayment}
+            >
+              결제 취소하기
+            </Button>
+          )}
+          {isCancelled ? (
+            <span className="button-xl center w-full !text-xl">취소됨</span>
+          ) : (
+            <Button
+              color="black"
+              className="button-xl flex flex-1 rounded-xl px-8 text-xl"
+              disabled={!selectedRow}
+              onClick={handlePrintReceipt}
+            >
+              {selectedRow?.state === "CANCEL"
+                ? "취소 영수증 출력하기"
+                : "영수증 출력하기"}
+            </Button>
+          )}
+        </div>
       </div>
     </aside>
   );

@@ -28,7 +28,7 @@ export default function SideControl({
   };
 
   return orders.length ? (
-    <div className="flex justify-end gap-3 pb-8">
+    <div className="flex justify-end gap-3 pb-6">
       {/* quantity - 1 */}
       <Button
         variant="outline"
@@ -49,7 +49,7 @@ export default function SideControl({
       </Button>
     </div>
   ) : (
-    <div className="flex items-center justify-between gap-3 pb-8">
+    <div className="flex items-center justify-between gap-3 pb-6">
       <div className="flex items-center gap-3">
         {/* 메뉴 수정 (-1) */}
         <Button

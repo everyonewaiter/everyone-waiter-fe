@@ -23,6 +23,8 @@ interface IProps extends PosTableActivity {
   selectedOrdersTotal: number;
   type: "credit-card" | "cash";
   onClose: () => void;
+  payValue: number;
+  onSetPayValue: (value: number) => void;
 }
 
 export default function PayAlertForm({
@@ -30,6 +32,8 @@ export default function PayAlertForm({
   selectedOrdersTotal,
   type,
   onClose,
+  payValue,
+  onSetPayValue,
   ...props
 }: IProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +44,6 @@ export default function PayAlertForm({
     : props.remainingPaymentPrice;
 
   const [changeToInput, setChangeToInput] = useState(false);
-  const [value, setValue] = useState(String(INITIAL_VALUE));
   const [isShowingAlert, setIsShowingAlert] = useState(false);
   const { selectedOrder } = useSelectItemStore();
 
@@ -49,10 +52,10 @@ export default function PayAlertForm({
     : props?.orders.map((el) => el.orderMenus.map((v) => v.name)).flat();
 
   const getLength = () => {
-    if (!value) {
+    if (!payValue) {
       return 17;
     }
-    return String(value).length * 16.2;
+    return String(payValue).length * 16.2;
   };
 
   const handleValidate = (val: string) => {
@@ -101,14 +104,14 @@ export default function PayAlertForm({
             {changeToInput ? (
               <Input
                 ref={inputRef}
-                value={value === "" ? "" : Number(value).toLocaleString()}
+                value={payValue ? Number(payValue).toLocaleString() : ""}
                 onChange={(e) => {
                   const origin = e.target.value.replaceAll(",", "");
                   if (
                     origin === "" ||
                     Number(origin) <= Number(INITIAL_VALUE)
                   ) {
-                    setValue(origin);
+                    onSetPayValue(Number(origin));
                   }
                 }}
                 onKeyDown={(e) => {
@@ -136,7 +139,7 @@ export default function PayAlertForm({
                   }, 0);
                 }}
               >
-                {value === "" ? "" : Number(value).toLocaleString()}
+                {payValue ? Number(payValue).toLocaleString() : ""}
               </button>
             )}
             <strong className="text-2xl font-semibold">원</strong>
