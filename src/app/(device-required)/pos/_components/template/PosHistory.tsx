@@ -184,13 +184,6 @@ export default function PosHistory() {
                 )?.state === "CANCEL"
               }
               {...selectedRow}
-              resultPayment={
-                data?.orderPayments?.find(
-                  (el) =>
-                    el.posTableActivityId === selectedRow?.posTableActivityId &&
-                    el.orderPaymentId !== selectedRow?.orderPaymentId
-                )?.amount!
-              }
             />
           </SideLayout>
         )}

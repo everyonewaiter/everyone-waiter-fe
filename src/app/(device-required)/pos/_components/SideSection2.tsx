@@ -25,13 +25,11 @@ const ReceiptOrderDetailModal = dynamic(
 interface IProps extends OrderPaymentsList {
   resetSelectedRow: () => void;
   isCancelled: boolean;
-  resultPayment: number;
 }
 
 export default function SideSection2({
   resetSelectedRow,
   isCancelled,
-  resultPayment,
   ...selectedRow
 }: IProps) {
   const openReceipt = useOverlay();
@@ -145,7 +143,12 @@ export default function SideSection2({
         </div>
       </div>
       <div className="flex flex-1 flex-col">
-        <ScrollArea className="h-[calc(100dvh-500px)] w-full pt-8">
+        <ScrollArea
+          className={cn(
+            "w-full pt-8",
+            isCancelled ? "h-[calc(100dvh-350px)]" : "h-[calc(100dvh-500px)]"
+          )}
+        >
           {selectedRow &&
             Array.isArray(activity?.orders) &&
             activity?.orders?.map((item, index, arr) => (
@@ -158,14 +161,15 @@ export default function SideSection2({
             ))}
         </ScrollArea>
       </div>
-      <SideBottom
-        type="history"
-        totalOrderPrice={activity?.totalOrderPrice ?? 0}
-        discount={activity?.discount ?? 0}
-        remainingPaymentPrice={activity?.remainingPaymentPrice ?? 0}
-        resultPayment={resultPayment}
-        onAddDiscount={() => {}}
-      />
+      {!isCancelled && (
+        <SideBottom
+          type="history"
+          totalOrderPrice={activity?.totalOrderPrice ?? 0}
+          discount={activity?.discount ?? 0}
+          remainingPaymentPrice={activity?.remainingPaymentPrice ?? 0}
+          onAddDiscount={() => {}}
+        />
+      )}
       <div className="bottom-0 flex w-full gap-3 bg-white pt-6">
         {selectedRow?.cancellable && (
           <Button
