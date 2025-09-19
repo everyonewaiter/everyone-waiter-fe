@@ -51,14 +51,18 @@ export default function useHandlerPay({
   const receiptOverlay = useOverlay();
 
   const handleNavigate = () => {
-    navigate.push("/pos/tables");
+    if (activityData?.remainingPaymentPrice! > 0) {
+      close();
+    } else {
+      navigate.push("/pos/tables");
+    }
     queryClient.invalidateQueries({ queryKey: posKeys.tables });
   };
 
   const handleSuccess = () => {
-    if (activityData?.remainingPaymentPrice) {
+    if (activityData?.remainingPaymentPrice! > 0) {
       queryClient.invalidateQueries({
-        queryKey: posKeys.activity(activityData?.tableNo),
+        queryKey: posKeys.activity(activityData?.tableNo!),
       });
     } else {
       handleNavigate();

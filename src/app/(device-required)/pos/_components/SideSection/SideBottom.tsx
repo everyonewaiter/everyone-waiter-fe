@@ -70,7 +70,12 @@ export default function SideBottom({
                 결제된 금액
               </span>
               <span className="text-xl">
-                {(totalOrderPrice - remainingPaymentPrice)?.toLocaleString()}원
+                {(
+                  totalOrderPrice -
+                  remainingPaymentPrice -
+                  discount
+                )?.toLocaleString()}
+                원
               </span>
             </div>
           )}
