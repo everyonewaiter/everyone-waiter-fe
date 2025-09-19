@@ -12,6 +12,7 @@ import ReceiptModal from "../_components/modals/ReceiptModal";
 import { posKeys } from "../_queries/keys";
 import { posQueries } from "../_queries/usePos";
 import { paySchema, TypePayForm } from "../_schema/pos.schema";
+import ReceiptOrderDetailModal from "../_components/modals/ReceiptOrderDetailModal";
 
 interface IProps extends PosTableActivity {
   initialPayValue: number;
@@ -49,6 +50,7 @@ export default function useHandlerPay({
   const { data: stores } = posQueries.useStoreInfo(props.storeId!);
 
   const receiptOverlay = useOverlay();
+  const includeOrderOrNotOverlay = useOverlay();
 
   const handleNavigate = () => {
     if (payValue === activityData?.remainingPaymentPrice) {
@@ -69,13 +71,14 @@ export default function useHandlerPay({
     }
   };
 
-  const handlePrintCard = (res: PaymentResponse) => {
+  const handlePrintCard = (res?: PaymentResponse, printOrder?: boolean) => {
     print({
       type: "card-receipt",
       activity: activityData!,
       stores: stores!,
-      payment: { ...res, INSTALLMENT: form.watch("monthlyPlan") },
-      paymentTradeTime: res.TRADETIME || "",
+      payment: { ...res!, INSTALLMENT: form.watch("monthlyPlan") },
+      paymentTradeTime: res?.TRADETIME || "",
+      printOrder,
       successHandler: () => {
         if (props.orders?.length === 0) {
           handleSuccess();
@@ -85,7 +88,7 @@ export default function useHandlerPay({
     });
   };
 
-  const handlePrintCash = (res: PaymentResponse) => {
+  const handlePrintCash = (res?: PaymentResponse, printOrder?: boolean) => {
     const receiptType = form.watch("receiptType") as OrderReceiptType;
 
     const printOptions = {
@@ -101,11 +104,13 @@ export default function useHandlerPay({
     if (form.watch("receiptType") === "신청안함") {
       print({
         ...printOptions,
+        printOrder,
       });
     } else {
       print({
         ...printOptions,
         cashReceiptNo: res?.FILLER,
+        printOrder,
       });
     }
   };
@@ -116,13 +121,37 @@ export default function useHandlerPay({
         close={receiptOverlay.close}
         onConfirm={() => {
           if (type === "credit-card") {
-            handlePrintCard(res!);
+            handlePrintCard(res!, true);
           } else {
-            handlePrintCash(res!);
+            handlePrintCash(res!, true);
           }
           handleSuccess();
         }}
         onCancel={handleNavigate}
+      />
+    ));
+  };
+
+  const handleIncludeOrderOrNotModal = (res?: PaymentResponse) => {
+    includeOrderOrNotOverlay.open(() => (
+      <ReceiptOrderDetailModal
+        close={includeOrderOrNotOverlay.close}
+        onConfirm={() => {
+          if (type === "credit-card") {
+            handlePrintCard(res, true);
+          } else {
+            handlePrintCash(res, true);
+          }
+          handleSuccess();
+        }}
+        onCancel={() => {
+          if (type === "credit-card") {
+            handlePrintCard(res, false);
+          } else {
+            handlePrintCash(res, false);
+          }
+          handleSuccess();
+        }}
       />
     ));
   };
@@ -138,7 +167,9 @@ export default function useHandlerPay({
         terminalId: storesDetail?.setting?.ksnetDeviceNo!,
         successHandler: (res) => {
           close();
-          if (Number(activityData?.remainingPaymentPrice) > 0) {
+          if (activityData?.remainingPaymentPrice !== payValue) {
+            handleIncludeOrderOrNotModal(res);
+          } else {
             handleModal(res);
           }
         },
@@ -153,10 +184,12 @@ export default function useHandlerPay({
             ? form.watch("licenseNumber")!
             : form.watch("phoneNumber")!,
         terminalId: storesDetail?.setting?.ksnetDeviceNo!,
-        successHandler: () => {
+        successHandler: (res) => {
           close();
-          if (Number(activityData?.remainingPaymentPrice) > 0) {
-            handleModal();
+          if (activityData?.remainingPaymentPrice !== payValue) {
+            handleIncludeOrderOrNotModal(res);
+          } else {
+            handleModal(res);
           }
         },
       });
