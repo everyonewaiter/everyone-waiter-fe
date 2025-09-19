@@ -251,26 +251,67 @@ export default function usePayment() {
     });
   };
 
-  const handleCancelCash = ({
+  const handleCancelCash = async ({
     orderPayment,
+    terminalId,
     successHandler,
   }: {
     orderPayment: OrderPaymentsList;
     successHandler: () => void;
+    terminalId: string;
   }) => {
-    cancelPay.mutate(
-      {
-        orderPaymentId: orderPayment.orderPaymentId,
-        body: {
-          approvalNo: orderPayment.approvalNo,
-          tradeTime: orderPayment.tradeTime,
-          tradeUniqueNo: orderPayment.tradeUniqueNo,
+    if (orderPayment.cashReceiptType !== "NONE") {
+      const req = createCashReceiptApproval({
+        amount: orderPayment.amount,
+        tax: orderPayment.amount - orderPayment.vat,
+        nonTax: orderPayment.vat,
+        cashReceiptType:
+          orderPayment.cashReceiptType === "DEDUCTION"
+            ? "개인소득공제용"
+            : "사업자증빙용",
+        type: "0",
+        phoneNumber: orderPayment.cashReceiptNo,
+        terminalId,
+      });
+      await window.$.ajax({
+        url: "http://127.0.0.1:27098/",
+        dataType: "jsonp",
+        jsonp: "callback",
+        jsonpCallback: `jsonp${Date.now()}`,
+        data: {
+          REQ: req,
         },
-      },
-      {
-        onSuccess: successHandler,
-      }
-    );
+        success: (res: PaymentResponse) => {
+          cancelPay.mutate(
+            {
+              orderPaymentId: orderPayment.orderPaymentId,
+              body: {
+                approvalNo: res.APPROVALNO,
+                tradeTime: res.TRADETIME,
+                tradeUniqueNo: res.TRADEUNIQUENO,
+              },
+            },
+            {
+              onSuccess: successHandler,
+            }
+          );
+        },
+      });
+    } else {
+      cancelPay.mutate(
+        {
+          orderPaymentId: orderPayment.orderPaymentId,
+          body: {
+            approvalNo: orderPayment.approvalNo,
+            tradeTime: orderPayment.tradeTime,
+            tradeUniqueNo: orderPayment.tradeUniqueNo,
+          },
+        },
+        {
+          onSuccess: successHandler,
+        }
+      );
+    }
   };
 
   return {

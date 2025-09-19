@@ -89,6 +89,7 @@ export default function CancelAlert({
       } else {
         cancelCash({
           orderPayment,
+          terminalId: stores?.setting?.ksnetDeviceNo!,
           successHandler: () => {
             close();
             handleReceiptModal();
