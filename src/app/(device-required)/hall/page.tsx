@@ -7,8 +7,8 @@ import cn from "@/lib/utils";
 import Spinner from "@/components/common/Spinner";
 import CallingCard from "./_components/CallingCard";
 import OrderRow from "./_components/OrderRow";
-import { hallQueries } from "./_query/useHall";
 import { useOrderList } from "./_query/useOrderList";
+import { useStaffCall } from "./_query/useStaffCall";
 
 enum ActiveTab {
   order = "주문",
@@ -22,7 +22,7 @@ export default function Hall() {
     data: staffCalls,
     isLoading: staffCallsLoading,
     isError: staffCallsError,
-  } = hallQueries.useStaffCallList();
+  } = useStaffCall();
   const {
     data: orders,
     isLoading: ordersLoading,

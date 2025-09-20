@@ -125,9 +125,6 @@ export default function SideSection2({
     ));
   };
 
-  console.log(activity);
-  console.log(selectedRow);
-
   return (
     <aside className="relative w-full">
       <div className="flex items-center justify-between gap-4">
