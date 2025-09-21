@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import { PropsWithChildren, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { storeKeys } from "@/app/(main)/(owner)/[id]/store/_queries/keys";
 import { getStoreInfoDetail } from "@/app/(main)/(owner)/[id]/store/_api/stores.api";
@@ -11,7 +11,7 @@ import {
   printCancelToKitchen,
 } from "@/app/(device-required)/pos/_utils/print-fn/print-kitchen";
 import { useDeviceContext } from "@/providers/deviceStoreProvider";
-import { unlockAudio } from "@/utils/audioNotification";
+import { playNotificationSound } from "@/utils/audioNotification";
 
 interface IProps {
   allowedPurpose: string;
@@ -23,8 +23,6 @@ export default function KitchenSSEGuard({
 }: PropsWithChildren<IProps>) {
   const queryClient = getQueryClient();
   const { storeId } = useDeviceContext();
-
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   const processedPrintNos = useRef(new Set<number>());
 
@@ -100,30 +98,16 @@ export default function KitchenSSEGuard({
   }, [queryClient, settingData, allowedPurpose]);
 
   useEffect(() => {
-    const handleUserInteraction = async () => {
-      if (!hasUserInteracted) {
-        await unlockAudio();
-        setHasUserInteracted(true);
-
-        document.removeEventListener("click", handleUserInteraction);
-        document.removeEventListener("touchstart", handleUserInteraction);
-        document.removeEventListener("keydown", handleUserInteraction);
+    const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
+      if (
+        JSON.stringify(event.query.queryKey) === JSON.stringify(["ring-bell"])
+      ) {
+        playNotificationSound();
       }
-    };
+    });
 
-    if (!hasUserInteracted) {
-      document.addEventListener("click", handleUserInteraction);
-      document.addEventListener("touchstart", handleUserInteraction);
-      document.addEventListener("keydown", handleUserInteraction);
-
-      return () => {
-        document.removeEventListener("click", handleUserInteraction);
-        document.removeEventListener("touchstart", handleUserInteraction);
-        document.removeEventListener("keydown", handleUserInteraction);
-      };
-    }
-    return undefined;
-  }, [hasUserInteracted]);
+    return () => unsubscribe();
+  }, [queryClient]);
 
   return children;
 }

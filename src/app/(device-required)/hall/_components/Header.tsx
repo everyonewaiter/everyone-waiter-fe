@@ -1,6 +1,5 @@
 "use client";
 
-import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button/Button";
 import Logo from "@/components/Logo";
@@ -9,10 +8,9 @@ import { useWaitingList } from "../../waiting/_queries/useWaitingList";
 
 interface IProps {
   href?: string;
-  speakerButton: ReactNode;
 }
 
-export default function Header({ href, speakerButton }: IProps) {
+export default function Header({ href }: IProps) {
   const navigate = useRouter();
   const { count } = useWaitingList();
 
@@ -32,7 +30,6 @@ export default function Header({ href, speakerButton }: IProps) {
         </h1>
       </button>
       <div className="relative">
-        {speakerButton}
         <Button
           color="grey"
           className="button-xl bg-gray-300 text-lg font-semibold text-white"

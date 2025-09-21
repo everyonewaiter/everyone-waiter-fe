@@ -7,10 +7,6 @@ import {
   getCurrentDevicePurpose,
 } from "@/lib/auth/secureStorage";
 import KitchenSSEGuard from "@/components/guard/KitchenSSEGuard";
-import {
-  setAudioTestButtonRef,
-  playAudioDirectly,
-} from "@/utils/audioNotification";
 import Header from "./_components/Header";
 
 export default function HallLayout({ children }: PropsWithChildren) {
@@ -58,22 +54,7 @@ export default function HallLayout({ children }: PropsWithChildren) {
   return (
     <KitchenSSEGuard allowedPurpose="hall">
       <div className="scrollbar-hide flex min-h-dvh flex-col items-center gap-4 bg-gray-700 px-[60px] py-8">
-        <Header
-          href="/hall"
-          speakerButton={
-            <button
-              type="button"
-              data-audio-test-button
-              ref={(el) => {
-                setAudioTestButtonRef(el);
-              }}
-              onClick={playAudioDirectly}
-              className="button-xl hover:!text-gray-0 !text-gray-300"
-            >
-              🔊 주문 알림 테스트
-            </button>
-          }
-        />
+        <Header href="/hall" />
         {children}
       </div>
     </KitchenSSEGuard>

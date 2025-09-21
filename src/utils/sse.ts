@@ -150,10 +150,16 @@ export class SseService {
           queryClient.invalidateQueries({ queryKey: ["pos-menu-list"] });
           break;
         case "WAITING":
+          if (sseEvent?.action === "CREATE") {
+            queryClient.setQueryData(["ring-bell"], true);
+          }
           queryClient.invalidateQueries({ queryKey: ["waiting-list"] });
           queryClient.invalidateQueries({ queryKey: ["waitings-list"] });
           break;
         case "ORDER":
+          if (sseEvent?.action === "CREATE") {
+            queryClient.setQueryData(["ring-bell"], true);
+          }
           queryClient.invalidateQueries({ queryKey: ["order-list"] });
           queryClient.invalidateQueries({ queryKey: ["activity"] });
           queryClient.invalidateQueries({ queryKey: ["table-list"] });
@@ -164,6 +170,9 @@ export class SseService {
           });
           break;
         case "STAFF_CALL":
+          if (sseEvent?.action === "CREATE") {
+            queryClient.setQueryData(["ring-bell"], true);
+          }
           queryClient.invalidateQueries({ queryKey: ["staff-calls"] });
           break;
         case "RECEIPT":
