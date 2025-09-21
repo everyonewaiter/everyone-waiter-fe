@@ -1,5 +1,6 @@
 /* eslint-disable no-alert */
 import axios, { AxiosError } from "axios";
+import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import {
@@ -56,11 +57,13 @@ const useSignup = ({ form, onDispatch }: IProps) => {
     onSettled: () => onDispatch({ type: "AUTH_REQUEST_FAIL" }),
   });
 
+  const authNotify = () => toast.success("인증되었습니다.");
+
   const mutateVerifyAuthCode = useMutation({
     mutationFn: verifyAuthCode,
     onMutate: () => onDispatch({ type: "CLICK_AUTH_CODE_BTN" }),
     onSuccess: () => {
-      alert("인증되었습니다.");
+      authNotify();
       onDispatch({ type: "VERIFY_SUCCESS" });
       form.clearErrors("phone");
       form.clearErrors("authNumber");

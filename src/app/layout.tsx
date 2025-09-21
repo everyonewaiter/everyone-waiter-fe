@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import * as Sentry from "@sentry/nextjs";
+import { Toaster } from "react-hot-toast";
 import ClientLayout from "./(main)/_components/ClientRootLayout";
 import "./globals.css";
 import JQueryScripts from "./(main)/_components/Scripts";
@@ -93,6 +94,7 @@ export default function RootLayout({
           <Sentry.ErrorBoundary>
             <main className="min-h-dvh select-none">{children}</main>
           </Sentry.ErrorBoundary>
+          <Toaster />
         </ClientLayout>
       </body>
     </html>

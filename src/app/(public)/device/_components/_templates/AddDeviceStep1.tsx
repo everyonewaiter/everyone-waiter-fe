@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { Controller } from "react-hook-form";
@@ -64,6 +65,8 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
     ));
   };
 
+  const authNotify = () => toast.success("인증되었습니다.");
+
   const mutateSendPhoneAuthCode = useSendAuth();
   const mutateVerifyAuthCode = useVerifyPhone(
     () => handleOpenAlert("등록"),
@@ -71,7 +74,7 @@ export default function AddDeviceStep1({ onNextStep }: IProps) {
       setStores(data.stores);
       if (data.stores.length === 1) setActive(data.stores[0].name);
       // eslint-disable-next-line
-      alert("인증되었습니다.");
+      authNotify();
       dispatch({ type: "VERIFY_SUCCESS" });
       form.clearErrors("phone");
       form.clearErrors("authNumber");

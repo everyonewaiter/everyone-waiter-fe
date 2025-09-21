@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import useOverlay from "@/hooks/useOverlay";
 import { deviceQueries } from "@/app/(public)/device/_queries/useDeviceInfo";
 import CategoriesButton from "../../_components/CategoriesButton";
@@ -79,6 +80,8 @@ export default function DetailTableOrder() {
     });
   };
 
+  const authNotify = () => toast.error("이미 같은 메뉴와 옵션이 있습니다.");
+
   const handleOpenDetail = (menuId: string) => {
     open(() => (
       <MenuModal
@@ -91,7 +94,7 @@ export default function DetailTableOrder() {
 
           if (exists) {
             // eslint-disable-next-line no-alert
-            alert("이미 같은 메뉴와 옵션이 있습니다.");
+            authNotify();
             return;
           }
 
