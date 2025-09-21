@@ -1,4 +1,5 @@
 import { PRINTERNAME } from "@/constants/printerName";
+import { convertToTableName } from "@/utils/converter";
 import {
   checkPrinter,
   formatAlignLeftRight,
@@ -24,7 +25,7 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
     0
   );
   window.printText(
-    `테이블번호: ${props.tableNo}\n`,
+    `테이블: ${convertToTableName(props.tableNo)}\n`,
     0,
     1,
     true,
@@ -115,7 +116,16 @@ export const printCancelToKitchen = ({
 }) => {
   window.printText(`주문 취소서\n\n`, 1, 1, true, false, false, 0, 1);
   window.printText(`주문번호: ${printNo}\n`, 0, 1, true, false, false, 0, 0);
-  window.printText(`테이블번호: ${tableNo}\n`, 0, 1, true, false, false, 0, 0);
+  window.printText(
+    `테이블: ${convertToTableName(tableNo)}\n`,
+    0,
+    1,
+    true,
+    false,
+    false,
+    0,
+    0
+  );
   window.printText(
     `취소 시간: ${formatted(cancelledTime)}\n`,
     0,

@@ -22,7 +22,7 @@ import {
 } from "@/components/common/Table/Tables";
 import {
   deviceTranslate,
-  paymentTimeTranslate,
+  paymentTypeTranslate,
   stateTranslate,
 } from "@/constants/translates";
 import useOverlay from "@/hooks/useOverlay";
@@ -179,7 +179,7 @@ export default function DevicePage() {
                     </div>
                   </TableCell>
                   <TableCell className={itemWidth["결제 방식"]}>
-                    {item.paymentType || "-"}
+                    {paymentTypeTranslate[item.paymentType] || "-"}
                   </TableCell>
                   <TableCell className={itemWidth["상태"]}>
                     {stateTranslate[item.state as Status]}
@@ -249,8 +249,8 @@ export default function DevicePage() {
                     <MobileTableHead>결제 방식</MobileTableHead>
                     <MobileTableCell>
                       {
-                        paymentTimeTranslate[
-                          item.paymentType as keyof typeof paymentTimeTranslate
+                        paymentTypeTranslate[
+                          item.paymentType as keyof typeof paymentTypeTranslate
                         ]
                       }
                     </MobileTableCell>

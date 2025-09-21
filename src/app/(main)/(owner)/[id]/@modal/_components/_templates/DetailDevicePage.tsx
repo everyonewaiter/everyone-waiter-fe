@@ -4,7 +4,7 @@ import Dropdown from "@/components/common/Dropdown";
 import { Form } from "@/components/common/Form";
 import Label from "@/components/common/Label";
 import LabeledInput from "@/components/common/LabeledInput";
-import { deviceTranslate, paymentTimeTranslate } from "@/constants/translates";
+import { deviceTranslate, paymentTypeTranslate } from "@/constants/translates";
 import Input from "@/components/common/Input";
 import useDeviceForm from "../../_hooks/useDeviceForm";
 import ModalButton from "../ModalButton";
@@ -81,14 +81,16 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
             <div className="flex flex-col gap-2">
               <Label>결제 방식</Label>
               <Dropdown
-                data={Object.values(paymentTimeTranslate)}
+                data={Object.values(paymentTypeTranslate).filter(
+                  (value) => value !== "대기"
+                )}
                 active={
-                  paymentTimeTranslate[
+                  paymentTypeTranslate[
                     form.watch("paymentType") as DevicePayment
                   ]
                 }
                 setActive={(value) => {
-                  const selected = Object.entries(paymentTimeTranslate).find(
+                  const selected = Object.entries(paymentTypeTranslate).find(
                     (el) => el[1] === value
                   );
                   if (selected) {
@@ -99,7 +101,7 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
                   }
                 }}
                 defaultText={
-                  paymentTimeTranslate[
+                  paymentTypeTranslate[
                     deviceDetail?.paymentType as DevicePayment
                   ]
                 }

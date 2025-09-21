@@ -9,6 +9,7 @@ import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon/Icon";
 import useOverlay from "@/hooks/useOverlay";
+import { convertToTableName } from "@/utils/converter";
 import { posQueries } from "../../_queries/usePos";
 import POSHeader from "../POSHeader";
 import TableBox from "../TableBox";
@@ -72,7 +73,7 @@ export default function PosTables() {
                 color="grey"
                 className="text-gray-0 h-20 w-full rounded-2xl !border-gray-600 p-6"
               >
-                {moveSourceTableNo}번 테이블
+                {convertToTableName(moveSourceTableNo)}
               </Button>
               <ChevronsRight strokeWidth={1} />
               <Button
@@ -80,14 +81,14 @@ export default function PosTables() {
                 color="primary"
                 className="!text-gray-0 h-20 w-full rounded-2xl p-6"
               >
-                {tableNo}번 테이블
+                {convertToTableName(tableNo)}
               </Button>
             </div>
             <div className="flex flex-col gap-3">
               <p className="text-lg font-medium text-gray-100">
-                {moveSourceTableNo}번 테이블에서{" "}
+                {convertToTableName(moveSourceTableNo)}에서{" "}
                 <strong className="text-primary text-xl font-medium">
-                  {tableNo}번 테이블
+                  {convertToTableName(tableNo)}
                 </strong>
                 로 이동합니다.
               </p>

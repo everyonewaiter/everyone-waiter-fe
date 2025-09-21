@@ -60,7 +60,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ko"
       className={`${hakgyo.variable} ${pretendard.variable}`}
       suppressHydrationWarning
     >
