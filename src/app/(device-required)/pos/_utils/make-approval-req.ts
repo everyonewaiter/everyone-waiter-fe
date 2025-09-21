@@ -16,6 +16,9 @@ export default function makeKSCATApprovalREQ({
   transactionType?: "IC" | "HK";
   phoneNumber?: string;
   terminalId: string;
+  originalApprovalNo?: string;
+  originalApprovalDate?: string;
+  originalTradeUniqueNo?: string;
 }) {
   const data = {
     stx: String.fromCharCode(2),
@@ -93,4 +96,58 @@ export function createCashReceiptApproval(params: {
     phoneNumber: params.phoneNumber,
     terminalId: params.terminalId,
   });
+}
+
+export function cancelCardRequest({
+  amount,
+  tax,
+  terminalId,
+  orderPayment,
+}: {
+  amount: number;
+  tax: number;
+  terminalId: string;
+  orderPayment?: OrderPaymentsList;
+}) {
+  const data = {
+    stx: String.fromCharCode(2),
+    transactionType: "IC",
+    businessType: "01",
+    messageType: "0420",
+    transactionForm: "N",
+    terminalId:
+      process.env.NODE_ENV === "production" ? terminalId : "DPT0TEST03",
+    companyInfo: "    ",
+    seqNo: "000000000000",
+    posEntryMode: " ",
+    uniqueNo: "                    ",
+    unencryptedCardNo: "                    ",
+    encryptionYn: " ",
+    swModelNo: "                ",
+    catModelNo: "                ",
+    encryptionInfo: "                                        ",
+    trackii: "                                     ",
+    fs: String.fromCharCode(28),
+    installment: orderPayment?.installment,
+    totalAmount: String(amount).padStart(12, "0"),
+    serviceCharge: "000000000000",
+    tax: String(tax).padStart(12, "0"),
+    supplyAmount: String(orderPayment?.vat).padStart(12, "0"),
+    taxFreeAmount: "000000000000",
+    workingKeyIndex: "  ",
+    password: "                ",
+    originalApprovalNo: orderPayment?.approvalNo
+      ? orderPayment?.approvalNo?.padStart(12, " ")
+      : "            ",
+    originalApprovalDate: "      ",
+    userInfo: " ".repeat(163),
+    signYn: "X",
+    etx: String.fromCharCode(3),
+    cr: String.fromCharCode(13),
+  };
+
+  const body = Object.values(data).join("");
+  const header = `AP${body.length.toString().padStart(4, "0")}`;
+
+  return `${header}${body}`;
 }

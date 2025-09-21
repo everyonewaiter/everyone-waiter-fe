@@ -2,7 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
-import makeKSCATApprovalREQ, {
+import {
+  cancelCardRequest,
   createCashReceiptApproval,
   createCreditCardApproval,
 } from "../_utils/make-approval-req";
@@ -209,25 +210,23 @@ export default function usePayment() {
   };
 
   const handleCancelCard = async ({
+    orderPayment,
     totalPaymentPrice,
-    orderPaymentId,
     successHandler,
     terminalId,
   }: {
     totalPaymentPrice: number;
-    orderPaymentId: string;
     successHandler?: (res: PaymentResponse) => void;
     terminalId: string;
+    orderPayment?: OrderPaymentsList;
   }) => {
     const nonTax = Math.floor(totalPaymentPrice / 1.1);
 
-    const req = makeKSCATApprovalREQ({
+    const req = cancelCardRequest({
       amount: totalPaymentPrice,
       tax: totalPaymentPrice - nonTax,
-      nonTax,
-      installment: "00",
-      type: "0",
       terminalId,
+      orderPayment,
     });
     await window.$.ajax({
       url: "http://127.0.0.1:27098/",
@@ -238,15 +237,21 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
-        cancelPay.mutate({
-          orderPaymentId,
-          body: {
-            approvalNo: res.APPROVALNO,
-            tradeTime: res.TRADETIME,
-            tradeUniqueNo: res.TRADEUNIQUENO,
+        cancelPay.mutate(
+          {
+            orderPaymentId: orderPayment?.orderPaymentId!,
+            body: {
+              approvalNo: res.APPROVALNO,
+              tradeTime: res.TRADETIME,
+              tradeUniqueNo: res.TRADEUNIQUENO,
+            },
           },
-        });
-        successHandler?.(res);
+          {
+            onSuccess: () => {
+              successHandler?.(res);
+            },
+          }
+        );
       },
     });
   };
