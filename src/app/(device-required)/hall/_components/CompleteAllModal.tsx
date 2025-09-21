@@ -1,5 +1,6 @@
 import Button from "@/components/common/Button/Button";
 import ModalWithTitle from "@/components/modal/largeModalLayout";
+import { convertToTableName } from "@/utils/converter";
 
 interface IProps {
   close: () => void;
@@ -19,9 +20,9 @@ export default function CompleteAllModal({
   return (
     <ModalWithTitle onClose={close} topRightComponent={null}>
       <div className="center flex-col gap-1 rounded-2xl border border-gray-600 py-4">
-        <span className="text-gray-0 text-xl font-semibold">테이블 번호</span>
+        <span className="text-gray-0 text-xl font-semibold">테이블</span>
         <strong className="text-gray-0 text-3xl font-bold">
-          {String(tableNo).padStart(2, "0")}
+          {convertToTableName(tableNo)}
         </strong>
       </div>
       {type === "single-complete" && (
