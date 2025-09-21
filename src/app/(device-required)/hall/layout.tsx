@@ -8,7 +8,6 @@ import {
 } from "@/lib/auth/secureStorage";
 import KitchenSSEGuard from "@/components/guard/KitchenSSEGuard";
 import {
-  unlockAudio,
   setAudioTestButtonRef,
   playAudioDirectly,
 } from "@/utils/audioNotification";
@@ -16,7 +15,6 @@ import Header from "./_components/Header";
 
 export default function HallLayout({ children }: PropsWithChildren) {
   const [shouldRender, setShouldRender] = useState(false);
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const navigate = useRouter();
 
   useEffect(() => {
@@ -55,32 +53,6 @@ export default function HallLayout({ children }: PropsWithChildren) {
     checkDevice();
   }, [navigate]);
 
-  useEffect(() => {
-    const handleUserInteraction = async () => {
-      if (!hasUserInteracted) {
-        await unlockAudio();
-        setHasUserInteracted(true);
-
-        document.removeEventListener("click", handleUserInteraction);
-        document.removeEventListener("touchstart", handleUserInteraction);
-        document.removeEventListener("keydown", handleUserInteraction);
-      }
-    };
-
-    if (!hasUserInteracted) {
-      document.addEventListener("click", handleUserInteraction);
-      document.addEventListener("touchstart", handleUserInteraction);
-      document.addEventListener("keydown", handleUserInteraction);
-
-      return () => {
-        document.removeEventListener("click", handleUserInteraction);
-        document.removeEventListener("touchstart", handleUserInteraction);
-        document.removeEventListener("keydown", handleUserInteraction);
-      };
-    }
-    return undefined;
-  }, [hasUserInteracted]);
-
   if (!shouldRender) return null;
 
   return (
@@ -98,7 +70,7 @@ export default function HallLayout({ children }: PropsWithChildren) {
               onClick={playAudioDirectly}
               className="button-xl hover:!text-gray-0 !text-gray-300"
             >
-              🔊 주문 알림 켜기
+              🔊 주문 알림 테스트
             </button>
           }
         />
