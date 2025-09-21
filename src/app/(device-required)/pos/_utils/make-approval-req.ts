@@ -26,8 +26,7 @@ export default function makeKSCATApprovalREQ({
     businessType: "01",
     messageType: type === "1" ? "0200" : "0420",
     transactionForm: "N",
-    terminalId:
-      process.env.NODE_ENV === "production" ? terminalId : "DPT0TEST03",
+    terminalId,
     companyInfo: "    ",
     seqNo: "000000000000",
     posEntryMode: " ",
