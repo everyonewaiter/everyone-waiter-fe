@@ -11,5 +11,4 @@ type HallOrder = TableOrder & {
   createdAt: string;
   updatedAt: string;
   tableNo: number;
-  tableName: string;
 };

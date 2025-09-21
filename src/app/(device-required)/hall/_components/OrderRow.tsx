@@ -5,6 +5,7 @@ import { ScrollArea, ScrollBar } from "@/components/common/ScrollArea";
 import useOverlay from "@/hooks/useOverlay";
 import cn from "@/lib/utils";
 import dynamic from "next/dynamic";
+import { convertToTableName } from "@/utils/converter";
 import OrderCard from "./OrderCard";
 import { hallQueries } from "../_query/useHall";
 
@@ -93,10 +94,10 @@ export default function OrderRow({ completed, ...props }: IProps) {
               !completed && "mt-3"
             )}
           >
-            테이블 번호
+            테이블
           </span>
           <strong className="text-4xl font-bold">
-            {String(props.tableNo).padStart(2, "0")}
+            {convertToTableName(props.tableNo)}
           </strong>
         </div>
         {!completed && (
