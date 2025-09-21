@@ -2,7 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
-import makeKSCATApprovalREQ, {
+import {
+  cancelCardRequest,
   createCashReceiptApproval,
   createCreditCardApproval,
 } from "../_utils/make-approval-req";
@@ -187,47 +188,67 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
-        handlePayWithCard({
-          tableNo,
-          body: {
-            amount,
-            vat: amount - nonTax,
-            supplyAmount: nonTax,
-            approvalNo: res.APPROVALNO,
-            installment,
-            cardNo: res.FILLER,
-            purchaseName: res.PURCHASENAME,
-            merchantNo: res.MERCHANTNUMBER,
-            tradeTime: res.TRADETIME,
-            tradeUniqueNo: res.TRADEUNIQUENO,
-            issuerName: res.CARDNAME,
-          },
-          successHandler: () => successHandler(res),
-        });
+        switch (res.RESPCODE) {
+          case "0000":
+            handlePayWithCard({
+              tableNo,
+              body: {
+                amount,
+                vat: amount - nonTax,
+                supplyAmount: nonTax,
+                approvalNo: res.APPROVALNO,
+                installment,
+                cardNo: res.FILLER,
+                purchaseName: res.PURCHASENAME,
+                merchantNo: res.MERCHANTNUMBER,
+                tradeTime: res.TRADETIME,
+                tradeUniqueNo: res.TRADEUNIQUENO,
+                issuerName: res.CARDNAME,
+              },
+              successHandler: () => successHandler(res),
+            });
+            break;
+          case "6003":
+          case "6005":
+            alert("유효하지 않은 카드입니다.");
+            return;
+          case "8314":
+            alert("카드 승인 실패: 카드 유효기간이 경과되었습니다.");
+            return;
+          case "8325":
+          case "8326":
+          case "8327":
+          case "8328":
+          case "8329":
+          case "8330":
+          case "8331":
+          case "8332":
+            alert(
+              "카드 한도가 초과되었습니다. 다른 결제 방법을 이용해 주세요."
+            );
+            break;
+          default:
+            alert("카드 승인 실패: 카드 승인 실패");
+        }
+      },
+      onError: (error: any) => {
+        alert(error.message);
       },
     });
   };
 
   const handleCancelCard = async ({
-    totalPaymentPrice,
-    orderPaymentId,
+    orderPayment,
     successHandler,
     terminalId,
   }: {
-    totalPaymentPrice: number;
-    orderPaymentId: string;
     successHandler?: (res: PaymentResponse) => void;
     terminalId: string;
+    orderPayment?: OrderPaymentsList;
   }) => {
-    const nonTax = Math.floor(totalPaymentPrice / 1.1);
-
-    const req = makeKSCATApprovalREQ({
-      amount: totalPaymentPrice,
-      tax: totalPaymentPrice - nonTax,
-      nonTax,
-      installment: "00",
-      type: "0",
+    const req = cancelCardRequest({
       terminalId,
+      orderPayment,
     });
     await window.$.ajax({
       url: "http://127.0.0.1:27098/",
@@ -238,15 +259,41 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
-        cancelPay.mutate({
-          orderPaymentId,
-          body: {
-            approvalNo: res.APPROVALNO,
-            tradeTime: res.TRADETIME,
-            tradeUniqueNo: res.TRADEUNIQUENO,
+        cancelPay.mutate(
+          {
+            orderPaymentId: orderPayment?.orderPaymentId!,
+            body: {
+              approvalNo: res.APPROVALNO,
+              tradeTime: res.TRADETIME,
+              tradeUniqueNo: res.TRADEUNIQUENO,
+            },
           },
-        });
-        successHandler?.(res);
+          {
+            onSuccess: () => {
+              if (res.RESPCODE === "0000") {
+                successHandler?.(res);
+                return;
+              }
+
+              if (res.RESPCODE === "8009") {
+                alert("원거래를 찾을 수 없습니다.");
+                return;
+              }
+
+              if (res.RESPCODE === "8032") {
+                alert("이미 취소된 거래입니다.");
+                return;
+              }
+
+              if (orderPayment?.cardNo !== res.FILLER) {
+                alert("카드 취소 실패: 카드 번호가 일치하지 않습니다.");
+              }
+            },
+          }
+        );
+      },
+      error: (error: any) => {
+        alert(error.message);
       },
     });
   };
