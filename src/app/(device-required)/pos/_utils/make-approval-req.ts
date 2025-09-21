@@ -98,13 +98,9 @@ export function createCashReceiptApproval(params: {
 }
 
 export function cancelCardRequest({
-  amount,
-  tax,
   terminalId,
   orderPayment,
 }: {
-  amount: number;
-  tax: number;
   terminalId: string;
   orderPayment?: OrderPaymentsList;
 }) {
@@ -114,8 +110,7 @@ export function cancelCardRequest({
     businessType: "01",
     messageType: "0420",
     transactionForm: "N",
-    terminalId:
-      process.env.NODE_ENV === "production" ? terminalId : "DPT0TEST03",
+    terminalId,
     companyInfo: "    ",
     seqNo: "000000000000",
     posEntryMode: " ",
@@ -128,17 +123,19 @@ export function cancelCardRequest({
     trackii: "                                     ",
     fs: String.fromCharCode(28),
     installment: orderPayment?.installment,
-    totalAmount: String(amount).padStart(12, "0"),
+    totalAmount: String(orderPayment?.amount).padStart(12, "0"),
     serviceCharge: "000000000000",
-    tax: String(tax).padStart(12, "0"),
-    supplyAmount: String(orderPayment?.vat).padStart(12, "0"),
+    tax: String(orderPayment?.vat).padStart(12, "0"),
+    supplyAmount: String(orderPayment?.supplyAmount).padStart(12, "0"),
     taxFreeAmount: "000000000000",
     workingKeyIndex: "  ",
     password: "                ",
     originalApprovalNo: orderPayment?.approvalNo
       ? orderPayment?.approvalNo?.padStart(12, " ")
       : "            ",
-    originalApprovalDate: "      ",
+    originalApprovalDate: orderPayment?.tradeTime
+      ? orderPayment?.tradeTime?.substring(0, 6)
+      : "      ",
     userInfo: " ".repeat(163),
     signYn: "X",
     etx: String.fromCharCode(3),

@@ -12,7 +12,6 @@ import ReceiptModal from "../_components/modals/ReceiptModal";
 import { posKeys } from "../_queries/keys";
 import { posQueries } from "../_queries/usePos";
 import { paySchema, TypePayForm } from "../_schema/pos.schema";
-import ReceiptOrderDetailModal from "../_components/modals/ReceiptOrderDetailModal";
 
 interface IProps extends PosTableActivity {
   initialPayValue: number;
@@ -50,24 +49,18 @@ export default function useHandlerPay({
   const { data: stores } = posQueries.useStoreInfo(props.storeId!);
 
   const receiptOverlay = useOverlay();
-  const includeOrderOrNotOverlay = useOverlay();
-
-  const handleNavigate = () => {
-    if (payValue === activityData?.remainingPaymentPrice) {
-      navigate.push("/pos/tables");
-      queryClient.invalidateQueries({ queryKey: posKeys.tables });
-    } else {
-      close();
-    }
-  };
 
   const handleSuccess = () => {
     if (activityData?.remainingPaymentPrice! > 0) {
       queryClient.invalidateQueries({
         queryKey: posKeys.activity(activityData?.tableNo!),
       });
+      close();
+    } else if (payValue === activityData?.remainingPaymentPrice) {
+      navigate.push("/pos/tables");
+      queryClient.invalidateQueries({ queryKey: posKeys.tables });
     } else {
-      handleNavigate();
+      close();
     }
   };
 
@@ -127,30 +120,13 @@ export default function useHandlerPay({
           }
           handleSuccess();
         }}
-        onCancel={handleNavigate}
-      />
-    ));
-  };
-
-  const handleIncludeOrderOrNotModal = (res?: PaymentResponse) => {
-    includeOrderOrNotOverlay.open(() => (
-      <ReceiptOrderDetailModal
-        close={includeOrderOrNotOverlay.close}
-        onConfirm={() => {
-          if (type === "credit-card") {
-            handlePrintCard(res, true);
-          } else {
-            handlePrintCash(res, true);
-          }
-          handleSuccess();
-        }}
         onCancel={() => {
-          if (type === "credit-card") {
-            handlePrintCard(res, false);
+          if (payValue === activityData?.remainingPaymentPrice) {
+            navigate.push("/pos/tables");
+            queryClient.invalidateQueries({ queryKey: posKeys.tables });
           } else {
-            handlePrintCash(res, false);
+            close();
           }
-          handleSuccess();
         }}
       />
     ));
@@ -167,11 +143,7 @@ export default function useHandlerPay({
         terminalId: storesDetail?.setting?.ksnetDeviceNo!,
         successHandler: (res) => {
           close();
-          if (activityData?.remainingPaymentPrice !== payValue) {
-            handleIncludeOrderOrNotModal(res);
-          } else {
-            handleModal(res);
-          }
+          handleModal(res);
         },
       });
     } else {
@@ -186,11 +158,7 @@ export default function useHandlerPay({
         terminalId: storesDetail?.setting?.ksnetDeviceNo!,
         successHandler: (res) => {
           close();
-          if (activityData?.remainingPaymentPrice !== payValue) {
-            handleIncludeOrderOrNotModal(res);
-          } else {
-            handleModal(res);
-          }
+          handleModal(res);
         },
       });
     }

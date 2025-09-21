@@ -211,20 +211,14 @@ export default function usePayment() {
 
   const handleCancelCard = async ({
     orderPayment,
-    totalPaymentPrice,
     successHandler,
     terminalId,
   }: {
-    totalPaymentPrice: number;
     successHandler?: (res: PaymentResponse) => void;
     terminalId: string;
     orderPayment?: OrderPaymentsList;
   }) => {
-    const nonTax = Math.floor(totalPaymentPrice / 1.1);
-
     const req = cancelCardRequest({
-      amount: totalPaymentPrice,
-      tax: totalPaymentPrice - nonTax,
       terminalId,
       orderPayment,
     });

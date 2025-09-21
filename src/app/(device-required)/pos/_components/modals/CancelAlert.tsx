@@ -79,7 +79,6 @@ export default function CancelAlert({
       if (orderPayment.method === "CARD") {
         cancelCard({
           orderPayment,
-          totalPaymentPrice: activity.totalPaymentPrice!,
           terminalId: stores?.setting?.ksnetDeviceNo!,
           successHandler: () => {
             close();
