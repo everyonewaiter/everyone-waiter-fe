@@ -16,7 +16,7 @@ export const registerStateTranslate: Record<RegisterStatus, string> = {
   REJECT: "반려",
 } as const;
 
-export const paymentTimeTranslate = {
+export const paymentTypeTranslate = {
   PREPAID: "선결제",
   POSTPAID: "후결제",
   null: "대기",

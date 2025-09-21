@@ -1,6 +1,6 @@
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon/Icon";
-import { paymentTimeTranslate } from "@/constants/translates";
+import { paymentTypeTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
 import { convertToTableName } from "@/utils/converter";
 import useElapsedMinutes from "../../waiting/_hooks/useElapsedMinutes";
@@ -53,8 +53,8 @@ export default function TableBox({
             className={cn("button-sm !rounded-3xl", getChipColor())}
           >
             {
-              paymentTimeTranslate[
-                props.orderType as keyof typeof paymentTimeTranslate
+              paymentTypeTranslate[
+                props.orderType as keyof typeof paymentTypeTranslate
               ]
             }
           </Button>
