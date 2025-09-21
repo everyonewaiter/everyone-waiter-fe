@@ -2,6 +2,7 @@ import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon/Icon";
 import { paymentTimeTranslate } from "@/constants/translates";
 import cn from "@/lib/utils";
+import { convertToTableName } from "@/utils/converter";
 import useElapsedMinutes from "../../waiting/_hooks/useElapsedMinutes";
 
 type IProps = POSTableList & {
@@ -84,7 +85,7 @@ export default function TableBox({
         </div>
       </div>
       <h1 className="font-gray-0 font-bold md:text-3xl lg:text-4xl">
-        {props.tableNo}번 테이블
+        {convertToTableName(props.tableNo)}
       </h1>
       <div className="flex flex-row gap-8">
         <div className="flex flex-[0.59] flex-col gap-[11px]">

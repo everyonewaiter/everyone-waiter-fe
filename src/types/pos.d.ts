@@ -1,7 +1,6 @@
 interface POSTables {
   posTableId: string;
   storeId: string;
-  name: string;
   tableNo: number;
 }
 
@@ -68,7 +67,6 @@ interface PosTableActivity {
   posTableActivityId: string;
   storeId: string;
   posTableId: string;
-  name: string;
   tableNo: number;
   orderType: DevicePayment;
   totalOrderPrice: number;

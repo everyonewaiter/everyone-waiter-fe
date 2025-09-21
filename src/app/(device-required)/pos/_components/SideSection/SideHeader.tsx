@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import QueryProviders from "@/app/query-providers";
 import Button from "@/components/common/Button/Button";
 import useOverlay from "@/hooks/useOverlay";
+import { convertToTableName } from "@/utils/converter";
 
 const CancelAlert = dynamic(() => import("../modals/CancelAlert"), {
   ssr: false,
@@ -29,7 +30,7 @@ export default function SideHeader({ data, tableNo, hasOrders }: IProps) {
   return (
     <header className="flex items-center justify-between">
       <strong className="text-gray-0 text-[28px] font-semibold">
-        {tableNo}번 테이블 {hasOrders && "추가 주문 내역"}
+        {convertToTableName(tableNo)} {hasOrders && "추가 주문 내역"}
       </strong>
       {data?.orders?.length > 0 && data.orderType === "PREPAID" && (
         <Button
