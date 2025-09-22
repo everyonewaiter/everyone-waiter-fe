@@ -36,7 +36,11 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
         <div className="flex flex-col gap-2">
           <Label>권한</Label>
           <Dropdown
-            data={Object.values(deviceTranslate)}
+            data={
+              ["POS", "HALL"].includes(form.watch("purpose"))
+                ? ["POS", "HALL"]
+                : ["WAITING", "TABLE"]
+            }
             active={
               deviceTranslate[
                 form.watch("purpose") as keyof typeof deviceTranslate
