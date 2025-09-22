@@ -62,7 +62,7 @@ export default function useCreateForm(storeId: string) {
 
   useLeaveGuard({
     shouldBlock: form.formState.isDirty,
-    allowNavigation: false,
+    allowNavigation: true,
     isSubmitting,
   });
 

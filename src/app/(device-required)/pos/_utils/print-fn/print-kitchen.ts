@@ -34,6 +34,18 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
     0,
     0
   );
+  if (props.memo) {
+    window.printText(
+      `[메모] ${props.memo}\n\n`,
+      1,
+      1,
+      false,
+      false,
+      true,
+      0,
+      0
+    );
+  }
 
   printDivider();
   window.printText(
@@ -48,18 +60,6 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
   );
   printDivider();
 
-  if (props.memo) {
-    window.printText(
-      `[메모] ${props.memo}\n\n`,
-      0,
-      0,
-      false,
-      false,
-      true,
-      0,
-      0
-    );
-  }
   props.receiptMenus.forEach((menu) => {
     window.printText(
       `${formatAlignLeftRight(menu.name, `${menu.quantity}`, 1)}\n`,

@@ -4,6 +4,7 @@ import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
 import {
   cancelCardRequest,
+  cancelCashRequest,
   createCashReceiptApproval,
   createCreditCardApproval,
 } from "../_utils/make-approval-req";
@@ -129,16 +130,36 @@ export default function usePayment() {
           REQ: req,
         },
         success: (res: PaymentResponse) => {
-          handlePayWithCash({
-            tableNo,
-            body: {
-              amount,
-              cashReceiptNo: phoneNumber,
-              cashReceiptType:
-                receiptType === "개인소득공제용" ? "DEDUCTION" : "PROOF",
-            },
-            successHandler: () => successHandler(res),
-          });
+          switch (res.RESPCODE) {
+            case "0000":
+              handlePayWithCash({
+                tableNo,
+                body: {
+                  amount,
+                  cashReceiptNo: phoneNumber,
+                  cashReceiptType:
+                    receiptType === "개인소득공제용" ? "DEDUCTION" : "PROOF",
+                },
+                successHandler: () => successHandler(res),
+              });
+              break;
+            case "5001":
+              // eslint-disable-next-line
+              alert("현금 영수증 발급 실패: 미등록 단말기");
+              break;
+            case "5002":
+              // eslint-disable-next-line
+              alert("현금 영수증 발급 실패: 현금 거래 불가 (국세청 전화요망)");
+              break;
+            case "5004":
+              // eslint-disable-next-line
+              alert(
+                "현금 영수증 발급 실패: 금액 오류 (승인 금액은 5천원 이상)"
+              );
+              break;
+            default:
+              break;
+          }
         },
       });
     } else {
@@ -309,15 +330,12 @@ export default function usePayment() {
     terminalId: string;
   }) => {
     if (orderPayment.cashReceiptType !== "NONE") {
-      const req = createCashReceiptApproval({
-        amount: orderPayment.amount,
-        tax: orderPayment.amount - orderPayment.vat,
-        nonTax: orderPayment.vat,
+      const req = cancelCashRequest({
+        orderPayment,
         cashReceiptType:
           orderPayment.cashReceiptType === "DEDUCTION"
             ? "개인소득공제용"
             : "사업자증빙용",
-        type: "0",
         phoneNumber: orderPayment.cashReceiptNo,
         terminalId,
       });
@@ -330,19 +348,47 @@ export default function usePayment() {
           REQ: req,
         },
         success: (res: PaymentResponse) => {
-          cancelPay.mutate(
-            {
-              orderPaymentId: orderPayment.orderPaymentId,
-              body: {
-                approvalNo: res.APPROVALNO,
-                tradeTime: res.TRADETIME,
-                tradeUniqueNo: res.TRADEUNIQUENO,
-              },
-            },
-            {
-              onSuccess: successHandler,
-            }
-          );
+          switch (res.RESPCODE) {
+            case "0000":
+              cancelPay.mutate(
+                {
+                  orderPaymentId: orderPayment.orderPaymentId,
+                  body: {
+                    approvalNo: res.APPROVALNO,
+                    tradeTime: res.TRADETIME,
+                    tradeUniqueNo: res.TRADEUNIQUENO,
+                  },
+                },
+                {
+                  onSuccess: successHandler,
+                }
+              );
+              break;
+            case "5006":
+              // eslint-disable-next-line
+              alert("현금 영수증 취소 실패: 취소 내역 불일치");
+              break;
+            case "5002":
+              // eslint-disable-next-line
+              alert("현금 영수증 취소 실패: 현금 거래 불가 (국세청 전화요망)");
+              break;
+            case "5004":
+              // eslint-disable-next-line
+              alert(
+                "현금 영수증 취소 실패: 금액 오류 (승인 금액은 5천원 이상)"
+              );
+              break;
+            case "5008":
+              // eslint-disable-next-line
+              alert("현금 영수증 취소 실패: 이미 취소된 거래입니다.");
+              break;
+            case "5011":
+              // eslint-disable-next-line
+              alert("현금 영수증 취소 실패: KSNET 전산 장애");
+              break;
+            default:
+              break;
+          }
         },
       });
     } else {
