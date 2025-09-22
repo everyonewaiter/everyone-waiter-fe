@@ -27,6 +27,8 @@ export default function Layout({
 
   useEffect(() => {
     const unsubscribe = queryClient.getQueryCache().subscribe(async (event) => {
+      const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+
       if (
         JSON.stringify(event.query.queryKey) ===
         JSON.stringify(["update-device"])
@@ -36,8 +38,6 @@ export default function Layout({
         queryClient.removeQueries({ queryKey: ["update-device"] });
         navigate.refresh();
       }
-
-      const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
 
       if (
         JSON.stringify(event.query.queryKey) ===

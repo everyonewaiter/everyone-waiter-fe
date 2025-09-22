@@ -133,51 +133,44 @@ export async function updateDevice() {
 }
 
 export async function updateDevicePurpose() {
-  try {
-    const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
-    if (!meta.deviceId || !meta.storeId) {
-      throw new Error("메타 정보가 없습니다.");
+  const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+  if (!meta.deviceId || !meta.storeId) {
+    throw new Error("메타 정보가 없습니다.");
+  }
+
+  const { deviceId, storeId } = meta;
+
+  const localDeviceInfo = (await getDecryptedItem({
+    key: "@deviceInfo",
+    deviceId,
+    storeId,
+  })) as Device;
+
+  if (!localDeviceInfo) throw new Error("로컬 기기 정보가 없습니다.");
+
+  const originalPurpose = localDeviceInfo.purpose;
+  const toggledPurpose = originalPurpose === "POS" ? "HALL" : "POS";
+
+  const response = await signatureInstance.get(`/devices`);
+
+  if (response.status === 200) {
+    const purposePath = getPurposePath(toggledPurpose.toLowerCase());
+    const currentPath = window.location.pathname;
+
+    if (!currentPath.startsWith(purposePath)) {
+      await setEncryptedItem({
+        key: "@deviceInfo",
+        value: {
+          ...localDeviceInfo,
+          purpose: response?.data?.purpose,
+        },
+        deviceId,
+        storeId,
+      });
+
+      window.location.href = purposePath;
     }
-
-    const { deviceId, storeId } = meta;
-
-    const localDeviceInfo = (await getDecryptedItem({
-      key: "@deviceInfo",
-      deviceId,
-      storeId,
-    })) as Device;
-
-    if (!localDeviceInfo) throw new Error("로컬 기기 정보가 없습니다.");
-
-    const originalPurpose = localDeviceInfo.purpose;
-    const toggledPurpose = originalPurpose === "POS" ? "HALL" : "POS";
-
-    await setEncryptedItem({
-      key: "@deviceInfo",
-      value: {
-        ...localDeviceInfo,
-        purpose: toggledPurpose,
-      },
-      deviceId,
-      storeId,
-    });
-
-    const response = await signatureInstance.get(`/devices/${deviceId}`);
-
-    if (response.status === 200) {
-      const purposePath = getPurposePath(toggledPurpose);
-      const currentPath = window.location.pathname;
-
-      if (!currentPath.startsWith(purposePath)) {
-        window.location.href = purposePath;
-      }
-
-      return toggledPurpose;
-    }
-
-    return null;
-  } catch (error) {
+  } else {
     window.location.href = "/device";
-    return null;
   }
 }

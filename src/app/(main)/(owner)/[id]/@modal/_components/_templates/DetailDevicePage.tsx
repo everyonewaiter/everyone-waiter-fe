@@ -38,8 +38,8 @@ export default function DetailDevicePage({ deviceId, storeId }: IProps) {
           <Dropdown
             data={
               ["POS", "HALL"].includes(form.watch("purpose"))
-                ? ["POS", "HALL"]
-                : ["WAITING", "TABLE"]
+                ? ["POS", "홀"]
+                : ["웨이팅", "테이블"]
             }
             active={
               deviceTranslate[
