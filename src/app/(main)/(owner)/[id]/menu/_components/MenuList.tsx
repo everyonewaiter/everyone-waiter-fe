@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { FormProvider } from "react-hook-form";
 import { useState } from "react";
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
 import { useStoreContext } from "@/providers/storeProvider";
@@ -101,12 +102,14 @@ export default function MenuList() {
           onSaveSort={() => handleSortSave(() => setChangeSort(false))}
         />
       </div>
-      <RenderMenu
-        changeSort={changeSort}
-        categoryId={active}
-        handleDragEnd={handleDragEnd}
-        sortedMenus={form.watch("menus")}
-      />
+      <FormProvider {...form}>
+        <RenderMenu
+          changeSort={changeSort}
+          categoryId={active}
+          handleDragEnd={handleDragEnd}
+          sortedMenus={form.watch("menus")}
+        />
+      </FormProvider>
     </div>
   );
 }

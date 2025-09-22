@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { lazy, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PlusIcon } from "@/components/common/Icon/index";
 import DashedBorder from "@/components/DashedBorder";
@@ -33,6 +34,8 @@ export default function RenderMenu({
   const navigate = useRouter();
   const isMobile = useBetterMediaQuery({ query: "(max-width: 767px)" });
 
+  const form = useFormContext<TypeMenuList>();
+
   const [isNavigating, setIsNavigating] = useState(false);
 
   const { storeId } = useStoreContext();
@@ -50,6 +53,18 @@ export default function RenderMenu({
     isLoading: categoriesLoading,
     categories,
   } = useCategoriesWithMenus(storeId);
+
+  useEffect(() => {
+    if (categoriesWithMenus?.menus?.length > 0) {
+      form.reset({
+        menus: categoriesWithMenus.menus.map((el) => ({
+          ...el,
+          price: String(el.price),
+          label: el.label || undefined,
+        })),
+      });
+    }
+  }, []);
 
   const data = categoryId === "전체" ? categoriesWithMenus : menus;
   const isLoading = categoryId === "전체" ? categoriesLoading : menusLoading;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { arrayMove } from "@/components/dnd/index";
@@ -16,7 +16,6 @@ export function useMenuSort(storeId: string, categoryId: string) {
     defaultValues: { menus: [] },
   });
 
-  const { data: menus } = menuQueries.useMenuList(storeId, categoryId);
   const move = menuQueries.useMove();
 
   const setInit = useCallback(
@@ -50,18 +49,6 @@ export function useMenuSort(storeId: string, categoryId: string) {
       },
     ]);
   };
-
-  useEffect(() => {
-    if (menus?.menus)
-      setInit(
-        menus.menus.map((el) => ({
-          ...el,
-          category: el.categoryId,
-          label: el.label!,
-          price: el.price.toLocaleString(),
-        }))
-      );
-  }, [menus?.menus, setInit]);
 
   const handleSortSave = async (successHandler: () => void) => {
     const finalList = form.watch("menus");
