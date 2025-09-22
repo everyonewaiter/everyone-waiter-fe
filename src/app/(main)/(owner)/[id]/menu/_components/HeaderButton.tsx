@@ -40,7 +40,7 @@ export default function HeaderButton({
             메뉴의 순서 변경은 메뉴를 꾹 누르신 후, 원하시는 자리로 메뉴를
             이동해주세요
           </div>
-          <ResponsiveButton
+          {/* <ResponsiveButton
             variant="outline"
             responsiveButtons={{
               lg: { buttonSize: "sm" },
@@ -63,6 +63,18 @@ export default function HeaderButton({
             onClick={() => onSetChangeSort(false)}
           >
             취소
+          </ResponsiveButton> */}
+          <ResponsiveButton
+            variant="outline"
+            color="grey"
+            responsiveButtons={{
+              lg: { buttonSize: "sm" },
+              md: { buttonSize: "sm" },
+              sm: { buttonSize: "sm" },
+            }}
+            onClick={onSaveSort}
+          >
+            순서 변경 닫기
           </ResponsiveButton>
         </div>
       ) : (

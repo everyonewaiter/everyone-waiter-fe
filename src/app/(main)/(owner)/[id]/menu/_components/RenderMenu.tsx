@@ -8,6 +8,7 @@ import DashedBorder from "@/components/DashedBorder";
 import { useStoreContext } from "@/providers/storeProvider";
 import { rectSortingStrategy } from "@/components/dnd";
 import Loading from "@/components/Loading";
+import Spinner from "@/components/common/Spinner";
 import useBetterMediaQuery from "@/hooks/useBetterMediaQuery";
 import { TypeMenuList } from "../_schema/menu.schema";
 import { menuQueries } from "../_queries/useMenu";
@@ -55,16 +56,21 @@ export default function RenderMenu({
   } = useCategoriesWithMenus(storeId);
 
   useEffect(() => {
-    if (categoriesWithMenus?.menus?.length > 0) {
-      form.reset({
-        menus: categoriesWithMenus.menus.map((el) => ({
+    const sourceData =
+      categoryId === "전체" || categoryId === "" ? categoriesWithMenus : menus;
+    if (sourceData?.menus && !categoriesLoading) {
+      form.setValue(
+        "menus",
+        sourceData.menus.map((el) => ({
           ...el,
           price: String(el.price),
           label: el.label || undefined,
-        })),
-      });
+          category: el.categoryId,
+        }))
+      );
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryId, categoriesLoading]);
 
   const data = categoryId === "전체" ? categoriesWithMenus : menus;
   const isLoading = categoryId === "전체" ? categoriesLoading : menusLoading;
@@ -134,16 +140,24 @@ export default function RenderMenu({
             </button>
           )}
           {!changeSort &&
-            data?.menus?.map((item) => (
+            (form.watch("menus") ?? data?.menus)?.map((item) => (
               <MenuCard
                 key={item.menuId}
-                isSelected={isSelected(item.menuId, item.categoryId)}
+                isSelected={isSelected(item.menuId!, item.category)}
                 onClick={() =>
-                  navigate.push(handleNavigate(item.categoryId, item.menuId))
+                  navigate.push(handleNavigate(item.category, item.menuId!))
                 }
                 {...item}
+                categoryId={item.category}
+                menuId={item.menuId!}
+                description={item.description!}
+                spicy={item.spicy!}
+                state={item.state!}
+                label={item.label!}
+                price={Number(item.price)}
               />
             ))}
+          {categoriesLoading && <Spinner />}
         </div>
       </div>
     </div>

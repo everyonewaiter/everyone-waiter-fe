@@ -16,7 +16,7 @@ export default function MenuList() {
 
   const { storeId } = useStoreContext();
   const { active, categories, setActive } = useActiveCategory(storeId);
-  const { form, handleSortSave, handleDragEnd } = useMenuSort(storeId, active);
+  const { form, handleDragEnd } = useMenuSort(storeId);
   const [changeSort, setChangeSort] = useState(false);
 
   const getBorderClass = (categoryId: string) => {
@@ -99,7 +99,7 @@ export default function MenuList() {
         <HeaderButton
           changeSort={changeSort}
           onSetChangeSort={setChangeSort}
-          onSaveSort={() => handleSortSave(() => setChangeSort(false))}
+          onSaveSort={() => setChangeSort(false)}
         />
       </div>
       <FormProvider {...form}>
