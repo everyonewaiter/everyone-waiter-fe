@@ -1,24 +1,21 @@
 export default function makeKSCATApprovalREQ({
-  amount,
-  tax,
-  nonTax,
   installment,
   type,
   transactionType = "IC",
   phoneNumber,
   terminalId,
+  orderPayment,
+  originalApprovalNo,
+  originalApprovalDate,
 }: {
-  amount: number;
-  tax: number;
-  nonTax: number;
   installment: string; // "00", "02", ...
   type: "0" | "1"; // 1 승인, 0 취소
   transactionType?: "IC" | "HK";
   phoneNumber?: string;
   terminalId: string;
+  orderPayment?: OrderPaymentsList;
   originalApprovalNo?: string;
   originalApprovalDate?: string;
-  originalTradeUniqueNo?: string;
 }) {
   const data = {
     stx: String.fromCharCode(2),
@@ -42,15 +39,15 @@ export default function makeKSCATApprovalREQ({
         : "                                     ",
     fs: String.fromCharCode(28),
     installment,
-    totalAmount: String(amount).padStart(12, "0"),
+    totalAmount: String(orderPayment?.amount).padStart(12, "0"),
     serviceCharge: "000000000000",
-    tax: String(tax).padStart(12, "0"),
-    supplyAmount: String(nonTax).padStart(12, "0"),
+    tax: String(orderPayment?.vat).padStart(12, "0"),
+    supplyAmount: String(orderPayment?.supplyAmount).padStart(12, "0"),
     taxFreeAmount: "000000000000",
     workingKeyIndex: "  ",
     password: "                ",
-    originalApprovalNo: "            ",
-    originalApprovalDate: "      ",
+    originalApprovalNo: originalApprovalNo || "            ",
+    originalApprovalDate: originalApprovalDate || "      ",
     userInfo: " ".repeat(163),
     signYn: "X",
     etx: String.fromCharCode(3),
@@ -98,9 +95,7 @@ export function createCashReceiptApproval(params: {
 }
 
 export function cancelCashRequest(params: {
-  amount: number;
-  tax: number;
-  nonTax: number;
+  orderPayment: OrderPaymentsList;
   cashReceiptType: "개인소득공제용" | "사업자증빙용";
   phoneNumber: string;
   terminalId: string;
@@ -112,6 +107,12 @@ export function cancelCashRequest(params: {
     installment: params.cashReceiptType === "개인소득공제용" ? "10" : "11",
     phoneNumber: params.phoneNumber,
     terminalId: params.terminalId,
+    originalApprovalNo: params.orderPayment.approvalNo
+      ? params.orderPayment.approvalNo?.padStart(12, " ")
+      : "            ",
+    originalApprovalDate: params.orderPayment?.tradeTime
+      ? params.orderPayment?.tradeTime?.substring(0, 6)
+      : "      ",
   });
 }
 

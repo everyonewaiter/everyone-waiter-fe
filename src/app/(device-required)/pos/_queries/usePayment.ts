@@ -331,9 +331,7 @@ export default function usePayment() {
   }) => {
     if (orderPayment.cashReceiptType !== "NONE") {
       const req = cancelCashRequest({
-        amount: orderPayment.amount,
-        tax: orderPayment.amount - orderPayment.vat,
-        nonTax: orderPayment.vat,
+        orderPayment,
         cashReceiptType:
           orderPayment.cashReceiptType === "DEDUCTION"
             ? "개인소득공제용"
