@@ -100,13 +100,20 @@ export default function KitchenSSEGuard({
   useEffect(() => {
     const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
       if (
-        JSON.stringify(event.query.queryKey) === JSON.stringify(["ring-bell"])
+        JSON.stringify(event.query.queryKey) ===
+          JSON.stringify(["ring-bell"]) &&
+        (window.location.pathname.includes("/hall") ||
+          window.location.pathname.includes("/waiting")) &&
+        allowedPurpose.toUpperCase() === "HALL" &&
+        event.query.state.data === true
       ) {
         playNotificationSound();
+        queryClient.setQueryData(["ring-bell"], false);
       }
     });
 
     return () => unsubscribe();
+    // eslint-disable-next-line
   }, [queryClient]);
 
   return children;
