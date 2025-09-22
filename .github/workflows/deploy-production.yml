@@ -1,9 +1,9 @@
-name: Deploy To OCI
+name: Deploy Production
 
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   Deploy:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Setup .env
         run: |
-          echo "${{ secrets.DEV_ENV }}" > .env
+          echo "${{ secrets.PROD_ENV }}" > .env
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -37,7 +37,7 @@ jobs:
         uses: oracle-actions/get-ocir-repository@v1.3.0
         id: get-ocir-repository
         with:
-          name: frontend-development
+          name: frontend-production
           compartment: ${{ secrets.OCI_COMPARTMENT_OCID }}
 
       - name: Login to OCIR
