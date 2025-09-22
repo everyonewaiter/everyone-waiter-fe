@@ -75,11 +75,30 @@ function formatAlignLeftRight(
   };
 
   const width = maxWidth[fontSizeX as keyof typeof maxWidth];
+  const minSpacing = fontSizeX === 0 ? 8 : 4;
+  const rightLength = countUnits(right);
+  const maxLeftLength = width - rightLength - minSpacing;
 
   const leftLength = countUnits(left);
-  const rightLenfth = countUnits(right);
 
-  return `${left}${" ".repeat(width - leftLength - rightLenfth)}${right}`;
+  if (leftLength > maxLeftLength) {
+    let cutIndex = 0;
+    for (let i = 0; i < left.length; i += 1) {
+      if (countUnits(left.substring(0, i + 1)) > maxLeftLength) {
+        cutIndex = i;
+        break;
+      }
+      cutIndex = i + 1;
+    }
+
+    const firstLine = left.substring(0, cutIndex);
+    const remainingLeft = left.substring(cutIndex);
+    return `${firstLine}${" ".repeat(minSpacing)}${right}\n${remainingLeft}`;
+  }
+
+  const spaceCount = Math.max(minSpacing, width - leftLength - rightLength);
+
+  return `${left}${" ".repeat(spaceCount)}${right}`;
 }
 
 function printDivider() {
