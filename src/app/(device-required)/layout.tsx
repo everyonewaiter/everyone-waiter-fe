@@ -28,17 +28,21 @@ export default function Layout({
   useEffect(() => {
     const unsubscribe = queryClient.getQueryCache().subscribe(async (event) => {
       if (
-        event.type === "updated" &&
         JSON.stringify(event.query.queryKey) ===
-          JSON.stringify(["update-device"])
+        JSON.stringify(["update-device"])
       ) {
         await updateDevicePurpose();
 
         queryClient.removeQueries({ queryKey: ["update-device"] });
         navigate.refresh();
-      } else if (
+      }
+
+      const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+
+      if (
         JSON.stringify(event.query.queryKey) ===
-        JSON.stringify(["delete-device"])
+          JSON.stringify(["delete-device"]) &&
+        event.query.state.data === meta?.deviceId
       ) {
         localStorage.removeItem("@meta");
         localStorage.removeItem("@deviceInfo");

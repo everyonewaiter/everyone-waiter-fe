@@ -133,7 +133,7 @@ export class SseService {
               queryClient.setQueryData(["update-device"], sseEvent.data);
             }
             if (sseEvent?.action === "DELETE") {
-              queryClient.setQueryData(["delete-device"], false);
+              queryClient.setQueryData(["delete-device"], sseEvent.data);
             }
             queryClient.invalidateQueries({
               queryKey: ["get-device-info-with-store"],
