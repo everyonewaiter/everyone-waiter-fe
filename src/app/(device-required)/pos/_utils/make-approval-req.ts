@@ -97,6 +97,24 @@ export function createCashReceiptApproval(params: {
   });
 }
 
+export function cancelCashRequest(params: {
+  amount: number;
+  tax: number;
+  nonTax: number;
+  cashReceiptType: "개인소득공제용" | "사업자증빙용";
+  phoneNumber: string;
+  terminalId: string;
+}) {
+  return makeKSCATApprovalREQ({
+    ...params,
+    type: "0",
+    transactionType: "HK",
+    installment: params.cashReceiptType === "개인소득공제용" ? "10" : "11",
+    phoneNumber: params.phoneNumber,
+    terminalId: params.terminalId,
+  });
+}
+
 export function cancelCardRequest({
   terminalId,
   orderPayment,
