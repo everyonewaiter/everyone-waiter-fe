@@ -1,0 +1,176 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
+import { Fragment, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import useOverlay from "@/hooks/useOverlay";
+import { deviceQueries } from "@/app/(public)/device/_queries/useDeviceInfo";
+import CategoriesButton from "../../_components/CategoriesButton";
+import POSHeader from "../../_components/POSHeader";
+import POSMenuCard from "../../_components/POSMenuCard";
+import useCheckedMenuStore from "../../_hooks/useCheckedMenu";
+import { useOrderStore } from "../../_hooks/useOrderStore";
+import { posQueries } from "../../_queries/usePos";
+
+const MenuModal = dynamic(() => import("../../_components/modals/MenuModal"), {
+  ssr: false,
+});
+
+const Floating = dynamic(() => import("../../_components/Floating"), {
+  ssr: false,
+});
+
+const SideSection = dynamic(
+  () => import("../../_components/SideSection/SideSection"),
+  {
+    ssr: false,
+  }
+);
+
+export default function DetailTableOrder() {
+  const params = useParams();
+  const tableNo = params?.tableId as string;
+
+  const [isActive, setIsActive] = useState("전체");
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  const { orders, addOrders } = useOrderStore();
+  const { open, close } = useOverlay();
+  const { resetCheckedMenu, checkedMenu } = useCheckedMenuStore();
+
+  const { data: device } = deviceQueries.useDeviceDetail();
+
+  const { data: menus, isLoading } = posQueries.useMenuList(
+    device?.storeId as string
+  );
+  const allMenus = menus?.categories?.map((el) => el.menus).flat();
+  const filteredMenus = allMenus?.filter((el) => el.state !== "HIDE");
+  const selectedCategory = filteredMenus?.filter(
+    (el) => el.categoryId === isActive
+  );
+
+  const { data } = posQueries.useActivity(Number(tableNo));
+
+  useEffect(() => {
+    if (!isLoading && (data || filteredMenus)) {
+      setHasLoadedOnce(true);
+    }
+  }, [data, filteredMenus, isLoading]);
+
+  const list = isActive === "전체" ? filteredMenus : selectedCategory;
+
+  const isSameOrder = (a: CustomOrder, b: CustomOrder): boolean => {
+    if (a.menuId !== b.menuId) return false;
+    if (a.menuOptionGroups.length !== b.menuOptionGroups.length) return false;
+
+    return a.menuOptionGroups.every((groupA) => {
+      const groupB = b.menuOptionGroups.find(
+        (g) => g.orderOptionGroupId === groupA.orderOptionGroupId
+      );
+      if (!groupB) return false;
+      if (groupA.orderOptions.length !== groupB.orderOptions.length)
+        return false;
+
+      return groupA.orderOptions.every((optA) =>
+        groupB.orderOptions.some(
+          (optB) => optA.name === optB.name && optA.price === optB.price
+        )
+      );
+    });
+  };
+
+  const authNotify = () => toast.error("이미 같은 메뉴와 옵션이 있습니다.");
+
+  const handleOpenDetail = (menuId: string) => {
+    open(() => (
+      <MenuModal
+        data={allMenus?.find((el) => el.menuId === menuId)!}
+        type="order"
+        layoutClassName="!w-[1002px] !h-[650px]"
+        close={close}
+        onAddOrderMenu={(item) => {
+          const exists = orders.find((order) => isSameOrder(order, item));
+
+          if (exists) {
+            // eslint-disable-next-line no-alert
+            authNotify();
+            return;
+          }
+
+          addOrders(item);
+        }}
+      />
+    ));
+  };
+
+  return (
+    <div className="flex h-dvh flex-row">
+      <div
+        className="relative flex flex-1 flex-col"
+        onClick={() => {
+          if (checkedMenu) {
+            resetCheckedMenu();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            if (checkedMenu) {
+              resetCheckedMenu();
+            }
+          }
+        }}
+      >
+        <POSHeader />
+        <div className="relative h-full overflow-y-auto px-[60px] pt-8">
+          <CategoriesButton
+            categories={menus?.categories!}
+            isActive={isActive}
+            onSetIsActive={setIsActive}
+          />
+          {!hasLoadedOnce && list?.length === 0 && (
+            <div className="text-gray-0 center h-full pb-8 text-center text-xl">
+              메뉴 목록을 가져오는 중입니다.
+            </div>
+          )}
+          {hasLoadedOnce && list?.length! === 0 && !menus?.categories && (
+            <div className="text-gray-0 center flex flex-1 flex-col pt-8 text-center text-xl">
+              등록된 메뉴가 없습니다.
+            </div>
+          )}
+          <div className="">
+            {hasLoadedOnce && list?.length! > 0 && (
+              <div className="h-full w-full pt-9">
+                <div className="grid grid-cols-4 gap-x-6 gap-y-8">
+                  {list?.map((menu) => (
+                    <Fragment key={menu.menuId}>
+                      <POSMenuCard
+                        onClick={() => handleOpenDetail(menu.menuId)}
+                        {...menu}
+                      />
+                    </Fragment>
+                  ))}
+                </div>
+              </div>
+            )}
+            {hasLoadedOnce && list?.length! === 0 && menus?.categories && (
+              <div className="text-gray-0 center h-[740px] pt-8 text-center text-xl">
+                등록된 메뉴가 없습니다.
+              </div>
+            )}
+            {!hasLoadedOnce && menus?.categories && (
+              <div className="text-gray-0 center h-full pt-8 text-center text-xl">
+                메뉴 목록을 가져오는 중입니다.
+              </div>
+            )}
+          </div>
+        </div>
+        <Floating hasData={data?.active!} tableNo={Number(tableNo)} />
+      </div>
+      <SideSection />
+    </div>
+  );
+}

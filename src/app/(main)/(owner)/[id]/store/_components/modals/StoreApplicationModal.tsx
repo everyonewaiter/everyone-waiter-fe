@@ -1,0 +1,107 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import ModalWithTitle from "@/components/modal/largeModalLayout";
+import { Form } from "@/components/common/Form";
+import Spinner from "@/components/common/Spinner";
+import StoreApplyForm from "../StoreApplyForm";
+import StepIndicator from "../StepIndicator";
+import PhotoForBusiness from "./PhotoForBusiness";
+import useStoreApplyForm from "../../_hooks/useStoreApplyForm";
+
+interface IProps extends StoreDetail {
+  close: () => void;
+  isAccepted: boolean;
+  storeId: string;
+}
+
+export default function StoreApplicationModal({
+  close,
+  isAccepted,
+  storeId,
+  ...item
+}: IProps) {
+  const navigate = useRouter();
+
+  const [active, setActive] = useState(0);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [image, setImage] = useState(item.image);
+
+  const { form, submit, isSubmitted } = useStoreApplyForm(item, close);
+
+  return (
+    <ModalWithTitle onClose={close} title="매장 등록 신청 현황">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit((data) =>
+            submit(data, () => navigate.push(`/${storeId}`))
+          )}
+        >
+          <ModalWithTitle.Layout>
+            <div className="hidden w-full justify-center md:flex">
+              <StepIndicator
+                steps={["매장 정보 입력", "파일 첨부"]}
+                onSetActive={setActive}
+                isActive={active}
+              />
+            </div>
+            <div className="scrollbar-hide h-[340px] md:mt-6 md:mb-6 md:h-[292px] lg:mt-5 lg:h-[454px] lg:overflow-y-auto">
+              {active === 0 && (
+                <StoreApplyForm
+                  isUpdating={isUpdating}
+                  isAccepted={isAccepted}
+                />
+              )}
+              <div className="hidden flex-col gap-6 md:flex">
+                {active === 1 && (
+                  <PhotoForBusiness
+                    isUpdating={isUpdating}
+                    image={image}
+                    onSetImage={setImage}
+                  />
+                )}
+              </div>
+              <div className="flex flex-col gap-6 md:hidden">
+                <PhotoForBusiness
+                  isUpdating={isUpdating}
+                  image={image}
+                  onSetImage={setImage}
+                />
+              </div>
+            </div>
+          </ModalWithTitle.Layout>
+          {item.status === "REJECT" && (
+            <div className="w-full md:pt-4 lg:pt-0">
+              {isAccepted && (
+                <ModalWithTitle.Button type="button" color="grey" disabled>
+                  승인됨
+                </ModalWithTitle.Button>
+              )}
+              {isUpdating ? (
+                <ModalWithTitle.Button
+                  type="submit"
+                  color="primary"
+                  disabled={isSubmitted}
+                >
+                  {isSubmitted ? <Spinner /> : "재신청하기"}
+                </ModalWithTitle.Button>
+              ) : (
+                <ModalWithTitle.Button
+                  type="button"
+                  color="black"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsUpdating(true);
+                  }}
+                >
+                  수정하고 재신청하기
+                </ModalWithTitle.Button>
+              )}
+            </div>
+          )}
+        </form>
+      </Form>
+    </ModalWithTitle>
+  );
+}

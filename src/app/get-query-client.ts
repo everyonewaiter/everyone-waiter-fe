@@ -3,6 +3,7 @@ import {
   defaultShouldDehydrateQuery,
   isServer,
 } from "@tanstack/react-query";
+import * as Sentry from "@sentry/nextjs";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -14,6 +15,11 @@ function makeQueryClient() {
         shouldDehydrateQuery: (query) =>
           defaultShouldDehydrateQuery(query) ||
           query.state.status === "pending",
+      },
+      mutations: {
+        onError: (error) => {
+          Sentry.captureException(error);
+        },
       },
     },
   });

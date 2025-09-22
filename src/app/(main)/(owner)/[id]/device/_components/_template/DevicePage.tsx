@@ -1,0 +1,286 @@
+"use client";
+
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import Button from "@/components/common/Button/Button";
+import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import Checkbox from "@/components/common/Checkbox";
+import Icon from "@/components/common/Icon/Icon";
+import Paginations from "@/components/common/Pagination/Paginations";
+import {
+  MobileTable,
+  MobileTableCell,
+  MobileTableHead,
+  MobileTableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/common/Table/Tables";
+import {
+  deviceTranslate,
+  paymentTypeTranslate,
+  stateTranslate,
+} from "@/constants/translates";
+import useOverlay from "@/hooks/useOverlay";
+import transformDate from "@/lib/formatting/transformDate";
+import cn from "@/lib/utils";
+import useControlCheck from "@/hooks/useControlCheck";
+import { deviceQueries } from "../../_queries/useDevice";
+
+const Alert = dynamic(() => import("@/components/common/Alert/Alert"), {
+  ssr: false,
+});
+
+const itemWidth = {
+  이름: "flex flex-1",
+  권한: "flex flex-[0.5]",
+  "결제 방식": "flex flex-1",
+  상태: "flex flex-[0.5]",
+  "등록 일시": "flex flex-1",
+};
+
+export default function DevicePage() {
+  const params = useParams();
+  const storeId = params?.id as string;
+
+  const navigate = useRouter();
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { data } = deviceQueries.useDevices(storeId);
+  const remove = deviceQueries.useRemoveDevice();
+
+  const { checkedItems, allChecked, handleCheckAll, handleCheckItem } =
+    useControlCheck<Device>(data?.content!, "deviceId");
+
+  const alertOverlay = useOverlay();
+
+  const handleDeleteDevice = async () => {
+    try {
+      const deletePromises = Object.keys(checkedItems).map((deviceId) =>
+        remove.mutateAsync({ deviceId, storeId })
+      );
+
+      await Promise.all(deletePromises);
+    } finally {
+      alertOverlay.close();
+    }
+  };
+
+  const handleAlertOpen = () => {
+    const checkedKeys = Object.keys(checkedItems);
+    const { length } = checkedKeys;
+    const firstItem = checkedItems[checkedKeys[0]];
+
+    alertOverlay.open(() => (
+      <Alert
+        primaryButton={{
+          text: "삭제",
+          onClick: handleDeleteDevice,
+          customButtonStyle: "!w-full",
+        }}
+        onClose={alertOverlay.close}
+        hasNoAction={!length}
+      >
+        {checkedKeys.length >= 1 ? (
+          <div>
+            <span className="text-primary">{firstItem?.name}</span>
+            {length > 1 ? ` 외 ${length - 1}개의 ` : " "}
+            기기를 삭제하시겠습니까?
+          </div>
+        ) : (
+          <span>선택되어 있는 기기가 없습니다.</span>
+        )}
+      </Alert>
+    ));
+  };
+
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex w-full flex-1 flex-col">
+        <button
+          type="button"
+          className="mt-4 mb-4 flex w-full flex-row items-center justify-end gap-1 md:mb-0 lg:mt-6 lg:mb-[-10px]"
+          onClick={handleAlertOpen}
+        >
+          <Icon
+            iconKey="trash"
+            isActive
+            size={20}
+            className="h-[15gpx] w-[15px] lg:h-5 lg:w-5"
+          />
+          <span className="text-status-error text-sm lg:text-lg">삭제</span>
+        </button>
+        <div className="hidden w-full md:block">
+          <Table>
+            <TableHeader>
+              <TableRow isHead>
+                <TableHead className="md:w-20 lg:!w-[66px]">
+                  <Checkbox
+                    checked={allChecked}
+                    onCheckedChange={(checked) => handleCheckAll(!!checked)}
+                  />
+                </TableHead>
+                {Object.keys(itemWidth).map((item) => (
+                  <TableHead
+                    key={item}
+                    className={cn(
+                      itemWidth[item as keyof typeof itemWidth],
+                      "font-semibold"
+                    )}
+                  >
+                    {item}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data?.content?.map((item: Device) => (
+                <TableRow
+                  key={item.deviceId.toString()}
+                  onClick={() =>
+                    navigate.push(`/${storeId}/device/${item.deviceId}`)
+                  }
+                >
+                  <TableCell
+                    className="md:w-20 lg:w-[66px]"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Checkbox
+                      checked={!!checkedItems[item.deviceId.toString()]}
+                      onCheckedChange={(checked) =>
+                        handleCheckItem(item, !!checked)
+                      }
+                    />
+                  </TableCell>
+                  <TableCell className={itemWidth["이름"]}>
+                    {item.name}
+                  </TableCell>
+                  <TableCell className={itemWidth["권한"]}>
+                    <div>
+                      <ResponsiveButton
+                        variant="outline"
+                        color="primary"
+                        responsiveButtons={{
+                          lg: {
+                            buttonSize: "sm",
+                            className:
+                              "!px-5 !py-2 !rounded-[20px] text-sm font-regular",
+                          },
+                          md: {
+                            buttonSize: "custom",
+                            className: "!px-3 !py-[5px] !rounded-2xl !h-7",
+                          },
+                        }}
+                      >
+                        {deviceTranslate[item.purpose]}
+                      </ResponsiveButton>
+                    </div>
+                  </TableCell>
+                  <TableCell className={itemWidth["결제 방식"]}>
+                    {paymentTypeTranslate[item.paymentType] || "-"}
+                  </TableCell>
+                  <TableCell className={itemWidth["상태"]}>
+                    {stateTranslate[item.state as Status]}
+                  </TableCell>
+                  <TableCell className={itemWidth["등록 일시"]}>
+                    {transformDate(item.createdAt)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        {!data?.content.length && (
+          <div className="center h-full">기기 목록이 존재하지 않습니다.</div>
+        )}
+        <div className="flex flex-col gap-5 md:hidden">
+          {data?.content.map((item: Device, index: number) => (
+            <div className="flex flex-col gap-2" key={item.deviceId}>
+              <div className="text-gray-0 flex flex-row items-center gap-[10px] text-lg font-semibold">
+                <Checkbox
+                  checked={!!checkedItems[item.deviceId.toString()]}
+                  onCheckedChange={(checked) =>
+                    handleCheckItem(item, !!checked)
+                  }
+                />
+                <span>{index + 1}</span>
+              </div>
+              <MobileTable
+                className="z-10 cursor-pointer"
+                key={item.deviceId}
+                onClick={() =>
+                  navigate.push(`/${storeId}/device/${item.deviceId}`)
+                }
+              >
+                <TableBody className="flex flex-col">
+                  <MobileTableRow>
+                    <MobileTableHead>이름</MobileTableHead>
+                    <MobileTableCell>{item.name}</MobileTableCell>
+                  </MobileTableRow>
+                  <MobileTableRow>
+                    <MobileTableHead>상태</MobileTableHead>
+                    <MobileTableCell>
+                      <Button
+                        variant="outline"
+                        color="primary"
+                        className="font-regular rounded-3xl px-3 py-1 text-xs"
+                      >
+                        {
+                          stateTranslate[
+                            item.state as keyof typeof stateTranslate
+                          ]
+                        }
+                      </Button>
+                    </MobileTableCell>
+                  </MobileTableRow>
+                  <MobileTableRow>
+                    <MobileTableHead>권한</MobileTableHead>
+                    <MobileTableCell>
+                      {
+                        deviceTranslate[
+                          item.purpose as keyof typeof deviceTranslate
+                        ]
+                      }
+                    </MobileTableCell>
+                  </MobileTableRow>
+                  <MobileTableRow>
+                    <MobileTableHead>결제 방식</MobileTableHead>
+                    <MobileTableCell>
+                      {
+                        paymentTypeTranslate[
+                          item.paymentType as keyof typeof paymentTypeTranslate
+                        ]
+                      }
+                    </MobileTableCell>
+                  </MobileTableRow>
+                  <MobileTableRow>
+                    <MobileTableHead>등록 일시</MobileTableHead>
+                    <MobileTableCell hideBorder>
+                      {transformDate(item.updatedAt)}
+                    </MobileTableCell>
+                  </MobileTableRow>
+                </TableBody>
+              </MobileTable>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* TODO: 수정 필요 */}
+      <Paginations
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        size="lg:w-6 lg:h-6 md:w-5 md:h-5 hidden md:block"
+        hasNext={false}
+        hasPrevious={false}
+        fastBackwardTarget={0}
+        fastForwardTarget={0}
+        className="my-8"
+      />
+    </div>
+  );
+}

@@ -1,0 +1,10 @@
+User-agent: *
+
+Disallow: /login
+Disallow: /signup
+Disallow: /admin/
+Disallow: /pos/
+Disallow: /waiting/
+Disallow: /hall/
+
+Sitemap: https://every
