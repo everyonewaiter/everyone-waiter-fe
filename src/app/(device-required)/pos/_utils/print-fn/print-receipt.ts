@@ -265,12 +265,13 @@ export const print = ({
       );
 
       window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
-    }
-
-    if (type === "cash-receipt") {
+    } else if (type === "cash-receipt") {
       printDivider();
 
-      if (cashReceiptType === "NONE") {
+      if (
+        cashReceiptType === "NONE" &&
+        (!cashReceiptNo || cashReceiptNo === "")
+      ) {
         window.printText(
           `${formatAlignLeftRight("결제방법", `현금`)}\n`,
           0,

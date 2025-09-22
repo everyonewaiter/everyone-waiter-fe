@@ -138,8 +138,17 @@ export const printCancelToKitchen = ({
   );
 
   printDivider();
-
-  window.printText("취소된 품목:\n\n", 0, 0, false, false, false, 0, 0);
+  window.printText(
+    `${formatAlignLeftRight("품명", "수량")}\n`,
+    0,
+    0,
+    false,
+    false,
+    false,
+    0,
+    0
+  );
+  printDivider();
 
   cancelledMenus.forEach((menu) => {
     window.printText(

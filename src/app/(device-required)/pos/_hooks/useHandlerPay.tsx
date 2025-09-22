@@ -84,12 +84,20 @@ export default function useHandlerPay({
   const handlePrintCash = (res?: PaymentResponse, printOrder?: boolean) => {
     const receiptType = form.watch("receiptType") as OrderReceiptType;
 
+    const replacedTradeTime =
+      String(new Date().getFullYear()).slice(2) +
+      String(new Date().getMonth() + 1).padStart(2, "0") +
+      String(new Date().getDate()).padStart(2, "0") +
+      String(new Date().getHours()).padStart(2, "0") +
+      String(new Date().getMinutes()).padStart(2, "0") +
+      String(new Date().getSeconds()).padStart(2, "0");
+
     const printOptions = {
       type: "cash-receipt" as "kitchen" | "cash-receipt" | "card-receipt",
       activity: activityData!,
       stores: stores!,
       successHandler: handleSuccess,
-      paymentTradeTime: res?.TRADETIME || "",
+      paymentTradeTime: res?.TRADETIME || replacedTradeTime,
       close: receiptOverlay.close,
       cashReceiptType: receiptType,
     };
