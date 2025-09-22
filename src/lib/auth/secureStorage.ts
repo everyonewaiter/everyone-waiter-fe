@@ -85,22 +85,18 @@ export function getPurposePath(purpose: string): string {
 }
 
 export async function getCurrentDevicePurpose(): Promise<string | null> {
-  try {
-    const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
-    if (!meta.deviceId || !meta.storeId) {
-      return null;
-    }
-
-    const deviceInfo = (await getDecryptedItem({
-      key: "@deviceInfo",
-      deviceId: meta.deviceId,
-      storeId: meta.storeId,
-    })) as Device;
-
-    return deviceInfo?.purpose || null;
-  } catch (error) {
+  const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
+  if (!meta.deviceId || !meta.storeId) {
     return null;
   }
+
+  const deviceInfo = (await getDecryptedItem({
+    key: "@deviceInfo",
+    deviceId: meta.deviceId,
+    storeId: meta.storeId,
+  })) as Device;
+
+  return deviceInfo?.purpose || null;
 }
 
 export async function updateDevice() {

@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 
+import toast from "react-hot-toast";
 import { Mutex } from "async-mutex";
 import { AxiosInstance } from "axios";
 import makeSignature from "@/utils/make-signature";
@@ -106,7 +107,18 @@ export const setupDeviceInterceptors = (axiosInstance: AxiosInstance) => {
             window.location.href = "/pos";
           }
         } else if (error.response?.status === 401) {
-          window.location.href = "/device";
+          toast.error(
+            "디바이스 조회에 실패했습니다. 잠시 후 디바이스 등록 페이지로 이동합니다."
+          );
+
+          setTimeout(() => {
+            if (!window.location.pathname.startsWith("/device")) {
+              localStorage.removeItem("@meta");
+              localStorage.removeItem("@deviceInfo");
+              localStorage.removeItem("@secretKey");
+              window.location.href = "/device";
+            }
+          }, 1000);
         }
       }
 

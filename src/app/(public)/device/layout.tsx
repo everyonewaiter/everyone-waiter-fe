@@ -14,14 +14,24 @@ export default function Layout({ children }: PropsWithChildren) {
       try {
         const meta = JSON.parse(localStorage.getItem("@meta") || "{}");
 
+        if (!meta.deviceId || !meta.storeId) {
+          setIsLoading(false);
+          return;
+        }
+
         const deviceInfo = (await getDecryptedItem({
           key: "@deviceInfo",
           deviceId: meta.deviceId,
           storeId: meta.storeId,
         })) as Device;
 
-        if (deviceInfo.purpose) {
-          navigate.replace(`/${deviceInfo.purpose.toLowerCase()}`);
+        if (deviceInfo?.purpose) {
+          const targetPath = `/${deviceInfo.purpose.toLowerCase()}`;
+          if (window.location.pathname !== targetPath) {
+            navigate.replace(targetPath);
+          } else {
+            setIsLoading(false);
+          }
         } else {
           setIsLoading(false);
         }

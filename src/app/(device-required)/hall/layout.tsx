@@ -42,7 +42,9 @@ export default function HallLayout({ children }: PropsWithChildren) {
 
         setShouldRender(true);
       } catch (error) {
-        navigate.replace("/device");
+        if (!window.location.pathname.startsWith("/device")) {
+          navigate.replace("/device");
+        }
       }
     };
 

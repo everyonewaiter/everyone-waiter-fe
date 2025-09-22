@@ -210,9 +210,11 @@ export default function usePayment() {
             break;
           case "6003":
           case "6005":
+            // eslint-disable-next-line
             alert("유효하지 않은 카드입니다.");
             return;
           case "8314":
+            // eslint-disable-next-line
             alert("카드 승인 실패: 카드 유효기간이 경과되었습니다.");
             return;
           case "8325":
@@ -223,16 +225,15 @@ export default function usePayment() {
           case "8330":
           case "8331":
           case "8332":
+            // eslint-disable-next-line
             alert(
               "카드 한도가 초과되었습니다. 다른 결제 방법을 이용해 주세요."
             );
             break;
           default:
+            // eslint-disable-next-line
             alert("카드 승인 실패: 카드 승인 실패");
         }
-      },
-      onError: (error: any) => {
-        alert(error.message);
       },
     });
   };
@@ -276,24 +277,24 @@ export default function usePayment() {
               }
 
               if (res.RESPCODE === "8009") {
+                // eslint-disable-next-line
                 alert("원거래를 찾을 수 없습니다.");
                 return;
               }
 
               if (res.RESPCODE === "8032") {
+                // eslint-disable-next-line
                 alert("이미 취소된 거래입니다.");
                 return;
               }
 
               if (orderPayment?.cardNo !== res.FILLER) {
+                // eslint-disable-next-line
                 alert("카드 취소 실패: 카드 번호가 일치하지 않습니다.");
               }
             },
           }
         );
-      },
-      error: (error: any) => {
-        alert(error.message);
       },
     });
   };
