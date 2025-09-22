@@ -39,6 +39,13 @@ export default function SideBottom({
     ));
   };
 
+  const getDiscount = () => {
+    if (!discount) return "0";
+    return discount.toString().includes("-")
+      ? discount.toLocaleString()
+      : `- ${discount.toLocaleString()}`;
+  };
+
   return (
     <>
       {type === "pos" && (
@@ -83,9 +90,7 @@ export default function SideBottom({
             <span className="font-regular text-lg text-gray-300">
               할인된 금액
             </span>
-            <span className="text-primary text-xl">
-              {discount ? `- ${discount.toLocaleString()}` : discount}원
-            </span>
+            <span className="text-primary text-xl">{getDiscount()}원</span>
           </div>
         </div>
         {type === "pos" ? (

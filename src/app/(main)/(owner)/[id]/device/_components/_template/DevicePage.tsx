@@ -60,12 +60,15 @@ export default function DevicePage() {
   const alertOverlay = useOverlay();
 
   const handleDeleteDevice = async () => {
-    const deletePromises = Object.keys(checkedItems).map((deviceId) =>
-      remove.mutateAsync({ deviceId, storeId })
-    );
+    try {
+      const deletePromises = Object.keys(checkedItems).map((deviceId) =>
+        remove.mutateAsync({ deviceId, storeId })
+      );
 
-    await Promise.all(deletePromises);
-    alertOverlay.close();
+      await Promise.all(deletePromises);
+    } finally {
+      alertOverlay.close();
+    }
   };
 
   const handleAlertOpen = () => {
