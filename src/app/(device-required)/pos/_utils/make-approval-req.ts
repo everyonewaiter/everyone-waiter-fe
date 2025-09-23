@@ -68,12 +68,44 @@ export function createCreditCardApproval(params: {
   type: "0" | "1";
   terminalId: string;
 }) {
-  return makeKSCATApprovalREQ({
-    ...params,
+  const data = {
+    stx: String.fromCharCode(2),
     transactionType: "IC",
-    installment: params.installment!,
-    terminalId: params.terminalId,
-  });
+    businessType: "01",
+    messageType: "0200",
+    transactionForm: "N",
+    terminalId: params?.terminalId,
+    companyInfo: "    ",
+    seqNo: "000000000000",
+    posEntryMode: " ",
+    uniqueNo: "                    ",
+    unencryptedCardNo: "                    ",
+    encryptionYn: " ",
+    swModelNo: "                ",
+    catModelNo: "                ",
+    encryptionInfo: "                                        ",
+    trackii: "                                     ",
+    fs: String.fromCharCode(28),
+    installment: params?.installment!,
+    totalAmount: String(params?.amount || 0).padStart(12, "0"),
+    serviceCharge: "000000000000",
+    tax: String(params?.tax).padStart(12, "0"),
+    supplyAmount: String(params?.nonTax).padStart(12, "0"),
+    taxFreeAmount: "000000000000",
+    workingKeyIndex: "  ",
+    password: "                ",
+    originalApprovalNo: "            ",
+    originalApprovalDate: "      ",
+    userInfo: " ".repeat(163),
+    signYn: "X",
+    etx: String.fromCharCode(3),
+    cr: String.fromCharCode(13),
+  };
+
+  const body = Object.values(data).join("");
+  const header = `AP${body.length.toString().padStart(4, "0")}`;
+
+  return `${header}${body}`;
 }
 
 export function createCashReceiptApproval(params: {
