@@ -21,12 +21,20 @@ export default function TableBox({
 
   const getChipColor = () => {
     if (props.hasOrder && props.orderType === "PREPAID") {
-      return "!border-[#2E8CFF1A] !text-[#2E8CFF] !bg-transparent";
+      return "!border-none !bg-[#2E8CFF1A] !text-[#2E8CFF]";
     }
     if (props.hasOrder && props.orderType === "POSTPAID") {
       return "!border-none !bg-[#F220201A] !text-[#F22020]";
     }
     return "";
+  };
+
+  const boxBorder = () => {
+    if (props.orderMenuCount > 0) {
+      if (props.orderType === "PREPAID") return "border-[#2E8CFF]";
+      if (props.orderType === "POSTPAID") return "border-primary";
+    }
+    return "border-gray-500";
   };
 
   return (
@@ -35,7 +43,7 @@ export default function TableBox({
       tabIndex={0}
       className={cn(
         "flex aspect-[432/320] cursor-pointer flex-col justify-between rounded-3xl border-[2px] p-7 text-left",
-        props.orderMenuCount > 0 ? "border-primary" : "border-gray-500",
+        boxBorder(),
         isMoving && hasAnimation ? "animate-wiggle" : ""
       )}
       onClick={onClick}
