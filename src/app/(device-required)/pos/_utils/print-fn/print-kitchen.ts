@@ -72,22 +72,35 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
       0
     );
 
-    menu.options.forEach((option, index) => {
-      if (index === 0) {
-        window.printText(
-          `${formatAlignLeftRight(`${option}`, `${menu.quantity}개`, 1)}\n`,
-          0,
-          1,
-          true,
-          false,
-          false,
-          0,
-          0
-        );
-      } else {
-        window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
-      }
-    });
+    if (menu.options?.length! > 0) {
+      menu.options.forEach((option, index) => {
+        if (index === 0) {
+          window.printText(
+            `${formatAlignLeftRight(`${option}`, `${menu.quantity}`, 1)}\n`,
+            0,
+            1,
+            true,
+            false,
+            false,
+            0,
+            0
+          );
+        } else {
+          window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
+        }
+      });
+    } else {
+      window.printText(
+        `${formatAlignLeftRight("", `${menu.quantity}`, 1)}\n`,
+        0,
+        1,
+        true,
+        false,
+        false,
+        0,
+        0
+      );
+    }
     if (i !== props.receiptMenus.length - 1) {
       window.printText(`\n`, 0, 0, false, false, false, 0, 0);
     }
@@ -179,22 +192,36 @@ export const printCancelToKitchen = ({
       0
     );
 
-    menu.options.forEach((option, index) => {
-      if (index === 0) {
-        window.printText(
-          `${formatAlignLeftRight(`${option}`, `${menu.quantity}개`, 1)}\n`,
-          0,
-          1,
-          true,
-          false,
-          false,
-          0,
-          0
-        );
-      } else {
-        window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
-      }
-    });
+    if (menu.options?.length! > 0) {
+      menu.options.forEach((option, index) => {
+        if (index === 0) {
+          window.printText(
+            `${formatAlignLeftRight(`${option}`, `${menu.quantity}`, 1)}\n`,
+            0,
+            1,
+            true,
+            false,
+            false,
+            0,
+            0
+          );
+        } else {
+          window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
+        }
+      });
+    } else {
+      window.printText(
+        `${formatAlignLeftRight("", `${menu.quantity}`, 1)}\n`,
+        0,
+        1,
+        true,
+        false,
+        false,
+        0,
+        0
+      );
+    }
+
     if (i !== cancelledMenus.length - 1) {
       window.printText(`\n`, 0, 0, false, false, false, 0, 0);
     }
