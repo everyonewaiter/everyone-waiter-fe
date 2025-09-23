@@ -21,7 +21,7 @@ export default function TableBox({
 
   const getChipColor = () => {
     if (props.hasOrder && props.orderType === "PREPAID") {
-      return "!border-none !bg-[#2E8CFF1A] !text-[#2E8CFF]";
+      return "!border-[#2E8CFF1A] !text-[#2E8CFF] !bg-transparent";
     }
     if (props.hasOrder && props.orderType === "POSTPAID") {
       return "!border-none !bg-[#F220201A] !text-[#F22020]";
