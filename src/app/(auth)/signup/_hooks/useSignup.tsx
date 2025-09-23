@@ -54,7 +54,6 @@ const useSignup = ({ form, onDispatch }: IProps) => {
         message: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
       });
     },
-    onSettled: () => onDispatch({ type: "AUTH_REQUEST_FAIL" }),
   });
 
   const authNotify = () => toast.success("인증되었습니다.");
@@ -104,7 +103,6 @@ const useSignup = ({ form, onDispatch }: IProps) => {
         message: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
       });
     },
-    onSettled: () => onDispatch({ type: "VERIFY_FAIL" }),
     retry: false,
   });
 

@@ -1,12 +1,30 @@
+"use client";
+
 import ResponsiveButton from "@/components/common/Button/ResponsiveButton";
+import { sendAuthMail } from "@/lib/api/auth.api";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface IProps {
   title: string;
   subtitle: string;
-  onClick: () => void;
+  email: string;
 }
 
-export default function Resend({ title, subtitle, onClick }: IProps) {
+export default function Resend({ title, subtitle, email }: IProps) {
+  const navigate = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleResend = async () => {
+    try {
+      setIsLoading(true);
+      await sendAuthMail({ email });
+      navigate.push("/login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-2 text-center">
@@ -25,10 +43,11 @@ export default function Resend({ title, subtitle, onClick }: IProps) {
           sm: { buttonSize: "md" },
         }}
         commonClassName="mt-8 font-regular"
-        onClick={onClick}
+        onClick={handleResend}
+        disabled={isLoading}
       >
-        이메일 재발송하기
-      </ResponsiveButton>{" "}
+        {isLoading ? "재발송 중..." : "이메일 재발송하기"}
+      </ResponsiveButton>
     </>
   );
 }

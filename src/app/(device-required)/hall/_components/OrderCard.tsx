@@ -13,7 +13,14 @@ export default function OrderCard({ completed, orderId, ...props }: IProps) {
   const serve = hallQueries.useServeMenu();
 
   const handleComplete = () => {
-    serve.mutate({ orderId, orderMenuId: props.orderMenuId });
+    serve.mutate(
+      { orderId, orderMenuId: props.orderMenuId },
+      {
+        onSuccess: () => {
+          document.body.classList.remove("overflow-hidden");
+        },
+      }
+    );
   };
 
   return (

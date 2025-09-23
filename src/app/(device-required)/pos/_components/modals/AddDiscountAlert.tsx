@@ -38,17 +38,11 @@ export default function AddDiscountAlert({
   const form = useForm<TypeDiscountForm>({
     mode: "onChange",
     resolver: zodResolver(discountSchema),
-    defaultValues: initialValue
-      ? {
-          discount: initialValue,
-          result: total - initialValue,
-          discountType: "fixed",
-        }
-      : {
-          discount: null,
-          result: null,
-          discountType: "fixed",
-        },
+    defaultValues: {
+      discount: initialValue > 0 ? initialValue : null,
+      result: total - (initialValue || 0),
+      discountType: "fixed",
+    },
   });
 
   return (

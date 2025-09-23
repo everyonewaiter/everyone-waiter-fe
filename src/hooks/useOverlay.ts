@@ -11,8 +11,16 @@ import { useOverlayStore } from "@/providers/overlayStoreProvider";
  * - `close`: 오버레이를 제거하는 함수.
  */
 export default function useOverlay() {
-  const { addOverlay, deleteOverlay } = useOverlayStore((state) => state);
+  const { addOverlay, deleteOverlay, overlays } = useOverlayStore(
+    (state) => state
+  );
   const overlayId = useId();
+
+  const removeOverflowHidden = () => {
+    if (overlays.size === 0) {
+      document.body.classList.remove("overflow-hidden");
+    }
+  };
 
   return {
     open: (OverlayElement: (props: { close: () => void }) => ReactNode) => {
@@ -23,13 +31,14 @@ export default function useOverlay() {
         OverlayElement({
           close: () => {
             deleteOverlay(overlayId);
-            document.body.classList.remove("overflow-hidden");
+            removeOverflowHidden();
           },
         })
       );
     },
     close: () => {
       deleteOverlay(overlayId);
+      removeOverflowHidden();
     },
   };
 }

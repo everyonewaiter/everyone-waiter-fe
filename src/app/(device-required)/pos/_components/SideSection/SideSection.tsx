@@ -173,6 +173,7 @@ export default function SideSection() {
               <div className="mb-6 h-[2px] w-full bg-gray-600" />
               <SideBottom
                 {...data}
+                discount={data?.discount ?? 0}
                 onAddDiscount={(discount) => {
                   addDiscount.mutate({
                     body: {
