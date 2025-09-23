@@ -60,23 +60,31 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
   );
   printDivider();
 
-  props.receiptMenus.forEach((menu) => {
-    window.printText(
-      `${formatAlignLeftRight(menu.name, `${menu.quantity}`, 1)}\n`,
-      1,
-      1,
-      true,
-      false,
-      false,
-      0,
-      0
-    );
-    menu.options.forEach((option) => {
-      window.printText(`${option}\n`, 0, 1, true, false, false, 0, 0);
+  props.receiptMenus.forEach((menu, i) => {
+    window.printText(`${i + 1}.${menu.name}\n`, 1, 1, true, false, false, 0, 0);
+
+    menu.options.forEach((option, index) => {
+      if (index === 0) {
+        window.printText(
+          `${formatAlignLeftRight(`${option}`, `${menu.quantity}개`, 1)}\n`,
+          0,
+          1,
+          true,
+          false,
+          false,
+          0,
+          0
+        );
+      } else {
+        window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
+      }
     });
+    if (i !== props.receiptMenus.length - 1) {
+      window.printText(`\n`, 0, 0, false, false, false, 0, 0);
+    }
   });
 
-  window.printText("\n\n", 0, 0, false, false, false, 0, 0);
+  window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
 
   window.cutPaper(1);
 
@@ -150,20 +158,28 @@ export const printCancelToKitchen = ({
   );
   printDivider();
 
-  cancelledMenus.forEach((menu) => {
-    window.printText(
-      `${formatAlignLeftRight(menu.name, `${menu.quantity}개`, 1)}\n`,
-      1,
-      1,
-      true,
-      false,
-      false,
-      0,
-      0
-    );
-    menu.options.forEach((option) => {
-      window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
+  cancelledMenus.forEach((menu, i) => {
+    window.printText(`${i + 1}.${menu.name}\n`, 1, 1, true, false, false, 0, 0);
+
+    menu.options.forEach((option, index) => {
+      if (index === 0) {
+        window.printText(
+          `${formatAlignLeftRight(`${option}`, `${menu.quantity}개`, 1)}\n`,
+          0,
+          1,
+          true,
+          false,
+          false,
+          0,
+          0
+        );
+      } else {
+        window.printText(`${option}`, 0, 1, true, false, false, 0, 0);
+      }
     });
+    if (i !== cancelledMenus.length - 1) {
+      window.printText(`\n`, 0, 0, false, false, false, 0, 0);
+    }
   });
 
   window.printText("\n\n\n", 0, 0, false, false, false, 0, 0);
