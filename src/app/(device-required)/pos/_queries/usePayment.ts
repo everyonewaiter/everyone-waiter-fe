@@ -102,12 +102,14 @@ export default function usePayment() {
     tableNo,
     terminalId,
     successHandler,
+    modalClose,
   }: {
     receiptType: "신청안함" | "개인소득공제용" | "사업자증빙용";
     phoneNumber: string;
     amount: number;
     tableNo: number;
     successHandler: (res?: PaymentResponse) => void;
+    modalClose: () => void;
     terminalId: string;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
@@ -155,20 +157,24 @@ export default function usePayment() {
             case "5001":
               // eslint-disable-next-line
               alert("현금 영수증 발급 실패: 미등록 단말기");
+              modalClose();
               break;
             case "5002":
               // eslint-disable-next-line
               alert("현금 영수증 발급 실패: 현금 거래 불가 (국세청 전화요망)");
+              modalClose();
               break;
             case "5004":
               // eslint-disable-next-line
               alert(
                 "현금 영수증 발급 실패: 금액 오류 (승인 금액은 5천원 이상)"
               );
+              modalClose();
               break;
             default:
               // eslint-disable-next-line
               alert("현금 영수증 실패");
+              modalClose();
               break;
           }
         },
@@ -193,11 +199,13 @@ export default function usePayment() {
     tableNo,
     terminalId,
     successHandler,
+    modalClose,
   }: {
     form: UseFormReturn<TypePayForm, any, TypePayForm>;
     amount: number;
     tableNo: number;
     successHandler: (res: PaymentResponse) => void;
+    modalClose: () => void;
     terminalId: string;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
@@ -253,10 +261,12 @@ export default function usePayment() {
           case "6005":
             // eslint-disable-next-line
             alert("유효하지 않은 카드입니다.");
+            modalClose();
             return;
           case "8314":
             // eslint-disable-next-line
             alert("카드 승인 실패: 카드 유효기간이 경과되었습니다.");
+            modalClose();
             return;
           case "8325":
           case "8326":
@@ -270,10 +280,12 @@ export default function usePayment() {
             alert(
               "카드 한도가 초과되었습니다. 다른 결제 방법을 이용해 주세요."
             );
+            modalClose();
             break;
           default:
             // eslint-disable-next-line
             alert("카드 승인 실패: 카드 승인 실패");
+            modalClose();
         }
       },
       error: (error: any) => Sentry.captureException(error),
@@ -284,8 +296,10 @@ export default function usePayment() {
     orderPayment,
     successHandler,
     terminalId,
+    modalClose,
   }: {
     successHandler?: (res: PaymentResponse) => void;
+    modalClose: () => void;
     terminalId: string;
     orderPayment?: OrderPaymentsList;
   }) => {
@@ -328,18 +342,21 @@ export default function usePayment() {
               if (res.RESPCODE === "8009") {
                 // eslint-disable-next-line
                 alert("원거래를 찾을 수 없습니다.");
+                modalClose();
                 return;
               }
 
               if (res.RESPCODE === "8032") {
                 // eslint-disable-next-line
                 alert("이미 취소된 거래입니다.");
+                modalClose();
                 return;
               }
 
               if (orderPayment?.cardNo !== res.FILLER) {
                 // eslint-disable-next-line
                 alert("카드 취소 실패: 카드 번호가 일치하지 않습니다.");
+                modalClose();
               }
             },
           }
@@ -353,10 +370,12 @@ export default function usePayment() {
     orderPayment,
     terminalId,
     successHandler,
+    modalClose,
   }: {
     orderPayment: OrderPaymentsList;
     successHandler: () => void;
     terminalId: string;
+    modalClose: () => void;
   }) => {
     if (orderPayment.cashReceiptType !== "NONE") {
       const req = cancelCashRequest({
@@ -403,26 +422,34 @@ export default function usePayment() {
             case "5006":
               // eslint-disable-next-line
               alert("현금 영수증 취소 실패: 취소 내역 불일치");
+              modalClose();
               break;
             case "5002":
               // eslint-disable-next-line
               alert("현금 영수증 취소 실패: 현금 거래 불가 (국세청 전화요망)");
+              modalClose();
               break;
             case "5004":
               // eslint-disable-next-line
               alert(
                 "현금 영수증 취소 실패: 금액 오류 (승인 금액은 5천원 이상)"
               );
+              modalClose();
               break;
             case "5008":
               // eslint-disable-next-line
               alert("현금 영수증 취소 실패: 이미 취소된 거래입니다.");
+              modalClose();
               break;
             case "5011":
               // eslint-disable-next-line
               alert("현금 영수증 취소 실패: KSNET 전산 장애");
+              modalClose();
               break;
             default:
+              // eslint-disable-next-line
+              alert("현금 영수증 취소 실패");
+              modalClose();
               break;
           }
         },

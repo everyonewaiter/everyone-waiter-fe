@@ -153,6 +153,7 @@ export default function useHandlerPay({
           close();
           handleModal(res);
         },
+        modalClose: close,
       });
     } else {
       payCash({
@@ -168,6 +169,7 @@ export default function useHandlerPay({
           close();
           handleModal(res);
         },
+        modalClose: close,
       });
     }
   };
