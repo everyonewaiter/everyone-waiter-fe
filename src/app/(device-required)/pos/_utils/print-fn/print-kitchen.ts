@@ -62,7 +62,7 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
 
   props.receiptMenus.forEach((menu, i) => {
     window.printText(
-      `${i + 1}.${menu.name.replace(/\s/g, "")}\n`,
+      `${i + 1}. ${menu.name.replace(/\s/g, "")}\n`,
       1,
       1,
       true,
@@ -169,7 +169,7 @@ export const printCancelToKitchen = ({
 
   cancelledMenus.forEach((menu, i) => {
     window.printText(
-      `${i + 1}.${menu.name.replace(/\s/g, "")}\n`,
+      `${i + 1}. ${menu.name.replace(/\s/g, "")}\n`,
       1,
       1,
       true,
