@@ -84,6 +84,7 @@ export default function CancelAlert({
             close();
             handleReceiptModal();
           },
+          modalClose: close,
         });
       } else {
         cancelCash({
@@ -93,6 +94,7 @@ export default function CancelAlert({
             close();
             handleReceiptModal();
           },
+          modalClose: close,
         });
       }
       return;

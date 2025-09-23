@@ -31,7 +31,7 @@ export default function SideBottom({
       <QueryProviders>
         <AddDiscountAlert
           close={close}
-          total={totalOrderPrice!}
+          total={remainingPaymentPrice}
           onAction={onAddDiscount}
           initialValue={discount}
         />
