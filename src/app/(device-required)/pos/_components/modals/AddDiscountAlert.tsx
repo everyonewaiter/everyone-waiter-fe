@@ -39,7 +39,7 @@ export default function AddDiscountAlert({
     mode: "onChange",
     resolver: zodResolver(discountSchema),
     defaultValues: {
-      discount: initialValue || 0,
+      discount: initialValue > 0 ? initialValue : null,
       result: total - (initialValue || 0),
       discountType: "fixed",
     },
