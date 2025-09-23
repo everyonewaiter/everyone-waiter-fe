@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import * as Sentry from "@sentry/nextjs";
 import { UseFormReturn } from "react-hook-form";
 import { approvePayment, cancelPayment } from "../_api/payment.api";
 import { PropsWithTableNo } from "../_api/pos.api";
@@ -110,11 +111,12 @@ export default function usePayment() {
     terminalId: string;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
+    const tax = amount - nonTax;
 
     if (receiptType !== "신청안함") {
       const req = createCashReceiptApproval({
         amount,
-        tax: amount - nonTax,
+        tax,
         nonTax,
         cashReceiptType: receiptType,
         type: "1",
@@ -130,6 +132,13 @@ export default function usePayment() {
           REQ: req,
         },
         success: (res: PaymentResponse) => {
+          if (res.RESPCODE !== "0000") {
+            Sentry.captureException(new Error("현금 영수증 실패"), {
+              extra: { respCode: res.RESPCODE, response: res },
+              level: "error",
+            });
+          }
+
           switch (res.RESPCODE) {
             case "0000":
               handlePayWithCash({
@@ -158,9 +167,12 @@ export default function usePayment() {
               );
               break;
             default:
+              // eslint-disable-next-line
+              alert("현금 영수증 실패");
               break;
           }
         },
+        error: (error: any) => Sentry.captureException(error),
       });
     } else {
       handlePayWithCash({
@@ -210,6 +222,13 @@ export default function usePayment() {
         REQ: req,
       },
       success: (res: PaymentResponse) => {
+        if (res.RESPCODE !== "0000") {
+          Sentry.captureException(new Error("카드 결제 실패"), {
+            extra: { respCode: res.RESPCODE, response: res },
+            level: "error",
+          });
+        }
+
         switch (res.RESPCODE) {
           case "0000":
             handlePayWithCard({
@@ -257,6 +276,7 @@ export default function usePayment() {
             alert("카드 승인 실패: 카드 승인 실패");
         }
       },
+      error: (error: any) => Sentry.captureException(error),
     });
   };
 
@@ -293,6 +313,13 @@ export default function usePayment() {
           },
           {
             onSuccess: () => {
+              if (res.RESPCODE !== "0000") {
+                Sentry.captureException(new Error("카드 취소 실패"), {
+                  extra: { respCode: res.RESPCODE, response: res },
+                  level: "error",
+                });
+              }
+
               if (res.RESPCODE === "0000") {
                 successHandler?.(res);
                 return;
@@ -318,6 +345,7 @@ export default function usePayment() {
           }
         );
       },
+      error: (error: any) => Sentry.captureException(error),
     });
   };
 
@@ -349,6 +377,13 @@ export default function usePayment() {
           REQ: req,
         },
         success: (res: PaymentResponse) => {
+          if (res.RESPCODE !== "0000") {
+            Sentry.captureException(new Error("현금 영수증 취소 실패"), {
+              extra: { respCode: res.RESPCODE, response: res },
+              level: "error",
+            });
+          }
+
           switch (res.RESPCODE) {
             case "0000":
               cancelPay.mutate(
@@ -391,6 +426,7 @@ export default function usePayment() {
               break;
           }
         },
+        error: (error: any) => Sentry.captureException(error),
       });
     } else {
       cancelPay.mutate(
