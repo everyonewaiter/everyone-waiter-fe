@@ -117,35 +117,44 @@ export function createCashReceiptApproval(params: {
   phoneNumber: string;
   terminalId: string;
 }) {
-  return makeKSCATApprovalREQ({
-    ...params,
+  const data = {
+    stx: String.fromCharCode(2),
     transactionType: "HK",
+    businessType: "01",
+    messageType: "0200",
+    transactionForm: "N",
+    terminalId: params.terminalId,
+    companyInfo: "    ",
+    seqNo: "000000000000",
+    posEntryMode: " ",
+    uniqueNo: "                    ",
+    unencryptedCardNo: "                    ",
+    encryptionYn: " ",
+    swModelNo: "                ",
+    catModelNo: "                ",
+    encryptionInfo: "                                        ",
+    trackii: params.phoneNumber.replace(/-/g, "").padEnd(37, " "),
+    fs: String.fromCharCode(28),
     installment: params.cashReceiptType === "개인소득공제용" ? "00" : "01",
-    phoneNumber: params.phoneNumber,
-    terminalId: params.terminalId,
-  });
-}
+    totalAmount: String(params.amount).padStart(12, "0"),
+    serviceCharge: "000000000000",
+    tax: String(params.tax).padStart(12, "0"),
+    supplyAmount: String(params.nonTax).padStart(12, "0"),
+    taxFreeAmount: "000000000000",
+    workingKeyIndex: "  ",
+    password: "                ",
+    originalApprovalNo: "            ",
+    originalApprovalDate: "      ",
+    userInfo: " ".repeat(163),
+    signYn: "X",
+    etx: String.fromCharCode(3),
+    cr: String.fromCharCode(13),
+  };
 
-export function cancelCashRequest(params: {
-  orderPayment: OrderPaymentsList;
-  cashReceiptType: "개인소득공제용" | "사업자증빙용";
-  phoneNumber: string;
-  terminalId: string;
-}) {
-  return makeKSCATApprovalREQ({
-    ...params,
-    type: "0",
-    transactionType: "HK",
-    installment: params.cashReceiptType === "개인소득공제용" ? "10" : "11",
-    phoneNumber: params.phoneNumber,
-    terminalId: params.terminalId,
-    originalApprovalNo: params.orderPayment.approvalNo
-      ? params.orderPayment.approvalNo?.padStart(12, " ")
-      : "            ",
-    originalApprovalDate: params.orderPayment?.tradeTime
-      ? params.orderPayment?.tradeTime?.substring(0, 6)
-      : "      ",
-  });
+  const body = Object.values(data).join("");
+  const header = `AP${body.length.toString().padStart(4, "0")}`;
+
+  return `${header}${body}`;
 }
 
 export function cancelCardRequest({
@@ -197,4 +206,26 @@ export function cancelCardRequest({
   const header = `AP${body.length.toString().padStart(4, "0")}`;
 
   return `${header}${body}`;
+}
+
+export function cancelCashRequest(params: {
+  orderPayment: OrderPaymentsList;
+  cashReceiptType: "개인소득공제용" | "사업자증빙용";
+  phoneNumber: string;
+  terminalId: string;
+}) {
+  return makeKSCATApprovalREQ({
+    ...params,
+    type: "0",
+    transactionType: "HK",
+    installment: params.cashReceiptType === "개인소득공제용" ? "10" : "11",
+    phoneNumber: params.phoneNumber,
+    terminalId: params.terminalId,
+    originalApprovalNo: params.orderPayment.approvalNo
+      ? params.orderPayment.approvalNo?.padStart(12, " ")
+      : "            ",
+    originalApprovalDate: params.orderPayment?.tradeTime
+      ? params.orderPayment?.tradeTime?.substring(0, 6)
+      : "      ",
+  });
 }
