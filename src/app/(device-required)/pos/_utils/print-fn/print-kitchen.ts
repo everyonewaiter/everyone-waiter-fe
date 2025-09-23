@@ -61,7 +61,16 @@ export const printToKitchen = ({ successHandler, close, ...props }: IProps) => {
   printDivider();
 
   props.receiptMenus.forEach((menu, i) => {
-    window.printText(`${i + 1}.${menu.name}\n`, 1, 1, true, false, false, 0, 0);
+    window.printText(
+      `${i + 1}.${menu.name.replace(/\s/g, "")}\n`,
+      1,
+      1,
+      true,
+      false,
+      false,
+      0,
+      0
+    );
 
     menu.options.forEach((option, index) => {
       if (index === 0) {
@@ -159,7 +168,16 @@ export const printCancelToKitchen = ({
   printDivider();
 
   cancelledMenus.forEach((menu, i) => {
-    window.printText(`${i + 1}.${menu.name}\n`, 1, 1, true, false, false, 0, 0);
+    window.printText(
+      `${i + 1}.${menu.name.replace(/\s/g, "")}\n`,
+      1,
+      1,
+      true,
+      false,
+      false,
+      0,
+      0
+    );
 
     menu.options.forEach((option, index) => {
       if (index === 0) {
