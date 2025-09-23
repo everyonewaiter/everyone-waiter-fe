@@ -189,12 +189,13 @@ export default function usePayment() {
     terminalId: string;
   }) => {
     const nonTax = Math.floor(amount / 1.1);
+    const tax = amount - nonTax;
     const installment =
       form.watch("monthlyPlan") === "일시불" ? "00" : form.watch("monthlyPlan");
 
     const req = createCreditCardApproval({
       amount,
-      tax: amount - nonTax,
+      tax,
       nonTax,
       installment,
       type: "1",
