@@ -23,19 +23,11 @@ const MoveableChips = dynamic(() => import("./MoveableChips"), {
   loading: () => null,
 });
 
-interface IProps {
-  staffCallOptions?: string[];
-  showMenuPopup?: boolean;
-  showOrderTotalPrice?: boolean;
+interface IProps extends Settings {
   storeId: string;
 }
 
-export default function OrderSection({
-  staffCallOptions,
-  showMenuPopup,
-  showOrderTotalPrice,
-  storeId,
-}: IProps) {
+export default function OrderSection({ storeId, ...settings }: IProps) {
   const form = useForm<TypeSettingsOptionForm>({
     mode: "onSubmit",
     resolver: zodResolver(optionSchema),
@@ -56,8 +48,8 @@ export default function OrderSection({
   };
 
   useEffect(() => {
-    if (staffCallOptions) setItems(staffCallOptions);
-  }, [staffCallOptions]);
+    if (settings.staffCallOptions) setItems(settings.staffCallOptions);
+  }, [settings.staffCallOptions]);
 
   return (
     <div>
@@ -68,7 +60,7 @@ export default function OrderSection({
         <div className="flex w-full items-center">
           <span className="flex-1 text-sm">손님 테이블 메뉴 팝업창 띄우기</span>
           <Switch
-            checked={showMenuPopup}
+            checked={settings.showMenuPopup}
             onCheckedChange={(checked) =>
               updateSetting({ showMenuPopup: checked })
             }
@@ -79,9 +71,20 @@ export default function OrderSection({
             손님 테이블 주문 내역에서 총 주문금액 표시하기
           </span>
           <Switch
-            checked={showOrderTotalPrice}
+            checked={settings.showOrderTotalPrice}
             onCheckedChange={(checked) =>
               updateSetting({ showOrderTotalPrice: checked })
+            }
+          />
+        </div>
+        <div className="flex w-full gap-12 md:items-center md:gap-1">
+          <span className="flex-1 text-sm">
+            홀 관리 페이지에서 메뉴 사진 표시하기
+          </span>
+          <Switch
+            checked={settings.showOrderMenuImage}
+            onCheckedChange={(checked) =>
+              updateSetting({ showOrderMenuImage: checked })
             }
           />
         </div>
