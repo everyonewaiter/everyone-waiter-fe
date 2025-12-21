@@ -41,6 +41,18 @@ export default async function Page({ searchParams }: PageProps) {
         />
       );
 
+    case "already-canceled":
+      return (
+        <PublicStateComponent
+          {...{
+            gifName: "cancel",
+            title: "이미 취소된 웨이팅 입니다",
+            buttonType: "go-back",
+          }}
+          storeId={storeId!}
+        />
+      );
+
     case "enter":
       return (
         <PublicStateComponent
