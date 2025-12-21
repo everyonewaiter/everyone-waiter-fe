@@ -2,10 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addStoreSchema, TypeAddStoreForm } from "@/schema/store.schema";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { getClientCookie } from "@/lib/cookies/client";
-import useLeaveGuard from "@/hooks/useCheckLeave";
 import { storesQueries } from "../../(owner)/[id]/store/_queries/useStores";
 
 export default function useCreateForm(storeId: string) {
@@ -25,7 +24,6 @@ export default function useCreateForm(storeId: string) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const permission = getClientCookie("permission");
-  const pendingNavigationRef = useRef<string | null>(null);
 
   const { mutate } = storesQueries.useRegister();
 
@@ -50,40 +48,12 @@ export default function useCreateForm(storeId: string) {
         if (permission !== "USER" && storeId) {
           targetPath = `/${storeId}`;
         }
-        pendingNavigationRef.current = targetPath;
-
-        setIsSubmitting(false);
         form.reset();
+        window.location.href = targetPath;
       },
-      onError: () => {
-        setIsSubmitting(false);
-      },
+      onError: () => setIsSubmitting(false),
     });
   };
-
-  useEffect(() => {
-    if (
-      pendingNavigationRef.current &&
-      !isSubmitting &&
-      !form.formState.isDirty
-    ) {
-      const targetPath = pendingNavigationRef.current;
-      pendingNavigationRef.current = null;
-
-      const timeoutId = setTimeout(() => {
-        window.location.href = targetPath;
-      }, 150);
-
-      return () => clearTimeout(timeoutId);
-    }
-    return undefined;
-  }, [isSubmitting, form.formState.isDirty]);
-
-  useLeaveGuard({
-    shouldBlock: form.formState.isDirty,
-    allowNavigation: true,
-    isSubmitting,
-  });
 
   return { form, isSubmitting, handleSubmit };
 }
