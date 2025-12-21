@@ -32,7 +32,7 @@ export default function WaitingCancelModal({ close, storeId, key }: IProps) {
       },
       {
         onSuccess: () => {
-          navigate.push("/result?type=success");
+          navigate.push(`/waitings/result?type=success&storeId=${storeId}`);
         },
       }
     );

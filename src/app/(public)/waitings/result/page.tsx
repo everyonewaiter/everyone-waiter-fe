@@ -34,8 +34,19 @@ export default async function Page({ searchParams }: PageProps) {
         <PublicStateComponent
           {...{
             gifName: "cancel",
-            title: `예약이 취소되어 순번을\n확인할 수 없습니다.`,
-            subtitle: `아래 버튼을 클릭하면 새로운 웨이팅을\n등록할 수 있습니다.`,
+            title: `웨이팅이 취소되어 순번을\n확인할 수 없습니다.`,
+            buttonType: "go-back",
+          }}
+          storeId={storeId!}
+        />
+      );
+
+    case "already-canceled":
+      return (
+        <PublicStateComponent
+          {...{
+            gifName: "cancel",
+            title: "이미 취소된 웨이팅 입니다",
             buttonType: "go-back",
           }}
           storeId={storeId!}

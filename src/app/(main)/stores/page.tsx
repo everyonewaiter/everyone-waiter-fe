@@ -5,11 +5,11 @@ import { getRegisters } from "../(owner)/[id]/store/_api/stores.api";
 import StoreList from "./_components/_templates/StoreList";
 
 export default async function Page({
-  params,
+  searchParams,
 }: {
-  params: Promise<{ id: string }>;
+  searchParams: Promise<{ id?: string }>;
 }) {
-  const { id } = await params;
+  const { id } = await searchParams;
 
   const queryClient = getQueryClient();
 
@@ -21,7 +21,7 @@ export default async function Page({
   return (
     <div className="h-full">
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <StoreList storeId={id} />
+        {id && <StoreList storeId={id} />}
       </HydrationBoundary>
     </div>
   );

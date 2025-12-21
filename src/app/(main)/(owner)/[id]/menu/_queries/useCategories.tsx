@@ -8,13 +8,14 @@ import {
 } from "@/app/(main)/(owner)/[id]/menu/_api/menu.api";
 import getQueryClient from "@/app/get-query-client";
 import { useOptimisticReorderMutation } from "@/hooks/useOptimisticReorder";
+import { posKeys } from "@/app/(device-required)/pos/_queries/keys";
 import { categoryKeys } from "./keys";
 
 const queryClient = getQueryClient();
 
 const useCategories = (storeId: string) =>
   useQuery({
-    queryKey: categoryKeys.all(storeId),
+    queryKey: posKeys.menus,
     queryFn: () => getCategories({ storeId }),
     enabled: !!storeId,
     staleTime: 1000 * 60 * 5,

@@ -51,7 +51,8 @@ export default function CancelTurnPage({
         accessKey: publicAccessKey,
       },
       {
-        onSuccess: () => navigate.push("/result?type=cancel"),
+        onSuccess: () =>
+          navigate.push(`/waitings/result?type=success&storeId=${storeId}`),
         onSettled: () => setIsSubmitting(false),
       }
     );

@@ -44,7 +44,9 @@ export default async function Page({
     });
 
     if (data?.state === "CANCEL") {
-      redirect(`/waitings/result?type=cancel&storeId=${params.storeId}`);
+      redirect(
+        `/waitings/result?type=already-canceled&storeId=${params.storeId}`
+      );
     } else if (data?.state === "COMPLETE") {
       redirect(`/waitings/result?type=enter&storeId=${params.storeId}`);
     }

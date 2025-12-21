@@ -5,8 +5,6 @@ import { addStoreSchema, TypeAddStoreForm } from "@/schema/store.schema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { getClientCookie } from "@/lib/cookies/client";
-import { useRouter } from "next/navigation";
-import useLeaveGuard from "@/hooks/useCheckLeave";
 import { storesQueries } from "../../(owner)/[id]/store/_queries/useStores";
 
 export default function useCreateForm(storeId: string) {
@@ -23,8 +21,6 @@ export default function useCreateForm(storeId: string) {
       detailAddress: "",
     },
   });
-
-  const navigate = useRouter();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const permission = getClientCookie("permission");
@@ -48,23 +44,16 @@ export default function useCreateForm(storeId: string) {
 
     mutate(formData, {
       onSuccess: () => {
-        setTimeout(() => {
-          if (permission === "USER") {
-            navigate.replace("/main/create?state=pending");
-          } else {
-            navigate.replace(`/${storeId}`);
-          }
-        }, 300);
+        let targetPath = "/main/create?state=pending";
+        if (permission !== "USER" && storeId) {
+          targetPath = `/${storeId}`;
+        }
+        form.reset();
+        window.location.href = targetPath;
       },
       onError: () => setIsSubmitting(false),
     });
   };
-
-  useLeaveGuard({
-    shouldBlock: form.formState.isDirty,
-    allowNavigation: true,
-    isSubmitting,
-  });
 
   return { form, isSubmitting, handleSubmit };
 }

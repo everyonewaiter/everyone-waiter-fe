@@ -2,12 +2,17 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import cn from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import { FormErrorMessage } from "@/components/common/Form";
 import ImageWithFallback from "@/components/common/ImageWithFallback";
-import PdfViewer from "@/app/(main)/create/_components/PdfViewer";
 import { TypeMenuForm } from "../../../../menu/_schema/menu.schema";
+
+const PdfViewer = dynamic(
+  () => import("@/app/(main)/create/_components/PdfViewer"),
+  { ssr: false }
+);
 
 interface IProps {
   isEditing: boolean;
