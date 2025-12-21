@@ -3,5 +3,5 @@ export const posKeys = {
   activityById: (id: string) => ["activity", id],
   tables: ["table-list"],
   stores: ["stores"],
-  menus: ["pos-menu-list"],
+  menus: ["menus"],
 };

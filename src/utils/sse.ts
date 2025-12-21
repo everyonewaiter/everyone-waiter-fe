@@ -144,10 +144,10 @@ export class SseService {
           queryClient.invalidateQueries({ queryKey: ["stores"] });
           break;
         case "CATEGORY":
-          queryClient.invalidateQueries({ queryKey: ["pos-menu-list"] });
+          queryClient.invalidateQueries({ queryKey: ["menus"] });
           break;
         case "MENU":
-          queryClient.invalidateQueries({ queryKey: ["pos-menu-list"] });
+          queryClient.invalidateQueries({ queryKey: ["menus"] });
           break;
         case "WAITING":
           if (sseEvent?.action === "CREATE") {
