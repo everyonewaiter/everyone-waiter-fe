@@ -25,7 +25,7 @@ export default function Settings() {
           ksnetDeviceNo={settingData?.ksnetDeviceNo}
           onAction={(value) => updateSetting({ ksnetDeviceNo: value })}
         />
-        <OrderSection storeId={storeId} {...settingData} />
+        <OrderSection storeId={storeId} {...(settingData as Settings)} />
       </div>
     </div>
   );
