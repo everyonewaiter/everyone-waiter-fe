@@ -31,6 +31,7 @@ interface Settings {
   printerLocation: string;
   showMenuPopup: boolean;
   showOrderTotalPrice: boolean;
+  showCartTotalPrice: boolean;
   showOrderMenuImage: boolean;
   countryOfOrigins: CountryOfOriginItem[];
   staffCallOptions: string[];
