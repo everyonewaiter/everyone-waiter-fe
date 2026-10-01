@@ -79,6 +79,17 @@ export default function OrderSection({ storeId, ...settings }: IProps) {
         </div>
         <div className="flex w-full gap-12 md:items-center md:gap-1">
           <span className="flex-1 text-sm">
+            손님 테이블 장바구니에서 총 주문금액 표시하기
+          </span>
+          <Switch
+            checked={settings.showCartTotalPrice}
+            onCheckedChange={(checked) =>
+              updateSetting({ showCartTotalPrice: checked })
+            }
+          />
+        </div>
+        <div className="flex w-full gap-12 md:items-center md:gap-1">
+          <span className="flex-1 text-sm">
             홀 관리 페이지에서 메뉴 사진 표시하기
           </span>
           <Switch
